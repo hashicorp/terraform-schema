@@ -1,0 +1,460 @@
+{
+    "format_version": "0.1",
+    "provider_schemas": {
+        "null": {
+            "provider": {
+                "version": 0,
+                "block": {}
+            },
+            "resource_schemas": {
+                "null_resource": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "triggers": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
+                                "optional": true
+                            }
+                        }
+                    }
+                }
+            },
+            "data_source_schemas": {
+                "null_data_source": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "has_computed_default": {
+                                "type": "string",
+                                "description": "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "inputs": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
+                                "optional": true
+                            },
+                            "outputs": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "After the data source is \"read\", a copy of the `inputs` map.",
+                                "computed": true
+                            },
+                            "random": {
+                                "type": "string",
+                                "description": "A random value. This is primarily for testing and has little practical use; prefer the [random provider](https://www.terraform.io/docs/providers/random/) for more practical random number use-cases.",
+                                "computed": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "random": {
+            "provider": {
+                "version": 0,
+                "block": {}
+            },
+            "resource_schemas": {
+                "random_id": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "b64_std": {
+                                "type": "string",
+                                "description": "The generated id presented in base64 without additional transformations.",
+                                "computed": true
+                            },
+                            "b64_url": {
+                                "type": "string",
+                                "description": "The generated id presented in base64, using the URL-friendly character set: case-sensitive letters, digits and the characters `_` and `-`.",
+                                "computed": true
+                            },
+                            "byte_length": {
+                                "type": "number",
+                                "description": "The number of random bytes to produce. The minimum value is 1, which produces eight bits of randomness.",
+                                "required": true
+                            },
+                            "dec": {
+                                "type": "string",
+                                "description": "The generated id presented in non-padded decimal digits.",
+                                "computed": true
+                            },
+                            "hex": {
+                                "type": "string",
+                                "description": "The generated id presented in padded hexadecimal digits. This result will always be twice as long as the requested byte length.",
+                                "computed": true
+                            },
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "keepers": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
+                                "optional": true
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "description": "Arbitrary string to prefix the output value with. This string is supplied as-is, meaning it is not guaranteed to be URL-safe or base64 encoded.",
+                                "optional": true
+                            }
+                        }
+                    }
+                },
+                "random_integer": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "keepers": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
+                                "optional": true
+                            },
+                            "max": {
+                                "type": "number",
+                                "description": "The maximum inclusive value of the range.",
+                                "required": true
+                            },
+                            "min": {
+                                "type": "number",
+                                "description": "The minimum inclusive value of the range.",
+                                "required": true
+                            },
+                            "result": {
+                                "type": "number",
+                                "description": "The random integer result.",
+                                "computed": true
+                            },
+                            "seed": {
+                                "type": "string",
+                                "description": "A custom seed to always produce the same value.",
+                                "optional": true
+                            }
+                        }
+                    }
+                },
+                "random_password": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "keepers": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
+                                "optional": true
+                            },
+                            "length": {
+                                "type": "number",
+                                "description": "The length of the string desired.",
+                                "required": true
+                            },
+                            "lower": {
+                                "type": "bool",
+                                "description": "Include lowercase alphabet characters in the result.",
+                                "optional": true
+                            },
+                            "min_lower": {
+                                "type": "number",
+                                "description": "Minimum number of lowercase alphabet characters in the result.",
+                                "optional": true
+                            },
+                            "min_numeric": {
+                                "type": "number",
+                                "description": "Minimum number of numeric characters in the result.",
+                                "optional": true
+                            },
+                            "min_special": {
+                                "type": "number",
+                                "description": "Minimum number of special characters in the result.",
+                                "optional": true
+                            },
+                            "min_upper": {
+                                "type": "number",
+                                "description": "Minimum number of uppercase alphabet characters in the result.",
+                                "optional": true
+                            },
+                            "number": {
+                                "type": "bool",
+                                "description": "Include numeric characters in the result.",
+                                "optional": true
+                            },
+                            "override_special": {
+                                "type": "string",
+                                "description": "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
+                                "optional": true
+                            },
+                            "result": {
+                                "type": "string",
+                                "description": "The generated random string.",
+                                "computed": true,
+                                "sensitive": true
+                            },
+                            "special": {
+                                "type": "bool",
+                                "description": "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
+                                "optional": true
+                            },
+                            "upper": {
+                                "type": "bool",
+                                "description": "Include uppercase alphabet characters in the result.",
+                                "optional": true
+                            }
+                        }
+                    }
+                },
+                "random_pet": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "keepers": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
+                                "optional": true
+                            },
+                            "length": {
+                                "type": "number",
+                                "description": "The length (in words) of the pet name.",
+                                "optional": true
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "description": "A string to prefix the name with.",
+                                "optional": true
+                            },
+                            "separator": {
+                                "type": "string",
+                                "description": "The character to separate words in the pet name.",
+                                "optional": true
+                            }
+                        }
+                    }
+                },
+                "random_shuffle": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "input": {
+                                "type": [
+                                    "list",
+                                    "string"
+                                ],
+                                "description": "The list of strings to shuffle.",
+                                "required": true
+                            },
+                            "keepers": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
+                                "optional": true
+                            },
+                            "result": {
+                                "type": [
+                                    "list",
+                                    "string"
+                                ],
+                                "description": "Random permutation of the list of strings given in `input`.",
+                                "computed": true
+                            },
+                            "result_count": {
+                                "type": "number",
+                                "description": "The number of results to return. Defaults to the number of items in the `input` list. If fewer items are requested, some elements will be excluded from the result. If more items are requested, items will be repeated in the result but not more frequently than the number of items in the input list.",
+                                "optional": true
+                            },
+                            "seed": {
+                                "type": "string",
+                                "description": "Arbitrary string with which to seed the random number generator, in order to produce less-volatile permutations of the list.\n\n**Important:** Even with an identical seed, it is not guaranteed that the same permutation will be produced across different versions of Terraform. This argument causes the result to be *less volatile*, but not fixed for all time.",
+                                "optional": true
+                            }
+                        }
+                    }
+                },
+                "random_string": {
+                    "version": 1,
+                    "block": {
+                        "attributes": {
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "keepers": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
+                                "optional": true
+                            },
+                            "length": {
+                                "type": "number",
+                                "description": "The length of the string desired.",
+                                "required": true
+                            },
+                            "lower": {
+                                "type": "bool",
+                                "description": "Include lowercase alphabet characters in the result.",
+                                "optional": true
+                            },
+                            "min_lower": {
+                                "type": "number",
+                                "description": "Minimum number of lowercase alphabet characters in the result.",
+                                "optional": true
+                            },
+                            "min_numeric": {
+                                "type": "number",
+                                "description": "Minimum number of numeric characters in the result.",
+                                "optional": true
+                            },
+                            "min_special": {
+                                "type": "number",
+                                "description": "Minimum number of special characters in the result.",
+                                "optional": true
+                            },
+                            "min_upper": {
+                                "type": "number",
+                                "description": "Minimum number of uppercase alphabet characters in the result.",
+                                "optional": true
+                            },
+                            "number": {
+                                "type": "bool",
+                                "description": "Include numeric characters in the result.",
+                                "optional": true
+                            },
+                            "override_special": {
+                                "type": "string",
+                                "description": "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
+                                "optional": true
+                            },
+                            "result": {
+                                "type": "string",
+                                "description": "The generated random string.",
+                                "computed": true
+                            },
+                            "special": {
+                                "type": "bool",
+                                "description": "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
+                                "optional": true
+                            },
+                            "upper": {
+                                "type": "bool",
+                                "description": "Include uppercase alphabet characters in the result.",
+                                "optional": true
+                            }
+                        }
+                    }
+                },
+                "random_uuid": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "id": {
+                                "type": "string",
+                                "optional": true,
+                                "computed": true
+                            },
+                            "keepers": {
+                                "type": [
+                                    "map",
+                                    "string"
+                                ],
+                                "description": "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
+                                "optional": true
+                            },
+                            "result": {
+                                "type": "string",
+                                "description": "The generated uuid presented in string format.",
+                                "computed": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "terraform": {
+            "data_source_schemas": {
+                "terraform_remote_state": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "backend": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "config": {
+                                "type": "dynamic",
+                                "optional": true
+                            },
+                            "defaults": {
+                                "type": "dynamic",
+                                "optional": true
+                            },
+                            "outputs": {
+                                "type": "dynamic",
+                                "computed": true
+                            },
+                            "workspace": {
+                                "type": "string",
+                                "optional": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
