@@ -25,6 +25,7 @@ var datasourceBlockSchema = &schema.BlockSchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"provider": {
 				ValueType:   cty.DynamicPseudoType,
+				IsOptional:  true,
 				Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 				IsDepKey:    true,
 			},

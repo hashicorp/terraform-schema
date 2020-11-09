@@ -98,7 +98,7 @@ var testCoreSchema = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"alias": {ValueType: cty.String},
+					"alias": {ValueType: cty.String, IsOptional: true},
 				},
 			},
 		},
@@ -109,7 +109,7 @@ var testCoreSchema = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {ValueType: cty.Number},
+					"count": {ValueType: cty.Number, IsOptional: true},
 				},
 			},
 		},
@@ -120,7 +120,7 @@ var testCoreSchema = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {ValueType: cty.Number},
+					"count": {ValueType: cty.Number, IsOptional: true},
 				},
 			},
 		},

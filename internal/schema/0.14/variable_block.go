@@ -19,18 +19,22 @@ var variableBlockSchema = &schema.BlockSchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"description": {
 				ValueType:   cty.String,
+				IsOptional: true,
 				Description: lang.Markdown("Description to document the purpose of the variable and what value is expected"),
 			},
 			"type": {
 				ValueType:   cty.DynamicPseudoType,
+				IsOptional: true,
 				Description: lang.Markdown("Type constraint restricting the type of value to accept, e.g. `string` or `list(string)`"),
 			},
 			"default": {
 				ValueType:   cty.DynamicPseudoType,
+				IsOptional: true,
 				Description: lang.Markdown("Default value to use when variable is not explicitly set"),
 			},
 			"sensitive": {
 				ValueType: cty.Bool,
+				IsOptional: true,
 				Description: lang.Markdown("Whether the variable contains sensitive material and should be hidden in the UI"),
 			},
 		},

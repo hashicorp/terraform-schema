@@ -12,11 +12,13 @@ var terraformBlockSchema = &schema.BlockSchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"required_version": {
 				ValueType:   cty.String,
+				IsOptional: true,
 				Description: lang.Markdown("Constraint to specify which versions of Terraform can be used "+
 						"with this configuration, e.g. `~> 0.12`"),
 			},
 			"experiments": {
 				ValueType:   cty.Set(cty.DynamicPseudoType),
+				IsOptional: true,
 				Description: lang.Markdown("A set of experimental language features to enable"),
 			},
 		},
