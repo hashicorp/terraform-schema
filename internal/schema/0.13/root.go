@@ -3,19 +3,16 @@ package schema
 import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/schema"
+
+	v012_mod "github.com/hashicorp/terraform-schema/internal/schema/0.12"
 )
 
 func ModuleSchema(v *version.Version) *schema.BodySchema {
-	return &schema.BodySchema{
-		Blocks: map[string]*schema.BlockSchema{
-			"data":      datasourceBlockSchema,
-			"locals":    localsBlockSchema,
-			"module":    moduleBlockSchema,
-			"output":    outputBlockSchema,
-			"provider":  providerBlockSchema,
-			"resource":  resourceBlockSchema,
-			"variable":  variableBlockSchema,
-			"terraform": terraformBlockSchema,
-		},
-	}
+	bs := v012_mod.ModuleSchema(v)
+
+	bs.Blocks["module"] = moduleBlockSchema
+	bs.Blocks["provider"] = providerBlockSchema
+	bs.Blocks["terraform"] = terraformBlockSchema
+
+	return bs
 }
