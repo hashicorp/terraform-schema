@@ -45,14 +45,14 @@ func DecodeProviderReferences(m map[string]*hcl.File) (addrs.ProviderReferences,
 		}] = src
 	}
 
-	for name, aliases := range mod.ProviderAliases {
+	for _, cfg := range mod.ProviderConfigs {
 		src := refs[addrs.LocalProviderConfig{
-			LocalName: name,
+			LocalName: cfg.Name,
 		}]
-		for _, alias := range aliases {
+		if cfg.Alias != "" {
 			refs[addrs.LocalProviderConfig{
-				LocalName: name,
-				Alias:     alias,
+				LocalName: cfg.Name,
+				Alias:     cfg.Alias,
 			}] = src
 		}
 	}
