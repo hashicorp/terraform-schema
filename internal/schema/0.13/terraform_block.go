@@ -11,21 +11,21 @@ var terraformBlockSchema = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"required_version": {
-				ValueType:   cty.String,
+				ValueType:  cty.String,
 				IsOptional: true,
-				Description: lang.Markdown("Constraint to specify which versions of Terraform can be used "+
-						"with this configuration, e.g. `~> 0.12`"),
+				Description: lang.Markdown("Constraint to specify which versions of Terraform can be used " +
+					"with this configuration, e.g. `~> 0.12`"),
 			},
 			"experiments": {
 				ValueType:   cty.Set(cty.DynamicPseudoType),
-				IsOptional: true,
+				IsOptional:  true,
 				Description: lang.Markdown("A set of experimental language features to enable"),
 			},
 		},
 		Blocks: map[string]*schema.BlockSchema{
 			"backend": {
-				Description: lang.Markdown("Backend configuration which defines exactly where and how "+
-						"operations are performed, where state snapshots are stored, etc."),
+				Description: lang.Markdown("Backend configuration which defines exactly where and how " +
+					"operations are performed, where state snapshots are stored, etc."),
 				Labels: []*schema.LabelSchema{
 					{
 						Name:        "type",
@@ -45,7 +45,7 @@ var terraformBlockSchema = &schema.BlockSchema{
 				},
 			},
 			"required_providers": {
-				Description: lang.Markdown("What provider version to use within this configuration "+
+				Description: lang.Markdown("What provider version to use within this configuration " +
 					"and where to source it from"),
 				Body: &schema.BodySchema{
 					AnyAttribute: &schema.AttributeSchema{

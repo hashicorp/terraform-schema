@@ -17,28 +17,28 @@ var moduleBlockSchema = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"source": {
-				ValueType:   cty.String,
-				Description: lang.Markdown("Source where to load the module from, "+
-					"a local directory (e.g. `./module`) or a remote address - e.g. "+
-					"`hashicorp/consul/aws` (Terraform Registry address) or "+
+				ValueType: cty.String,
+				Description: lang.Markdown("Source where to load the module from, " +
+					"a local directory (e.g. `./module`) or a remote address - e.g. " +
+					"`hashicorp/consul/aws` (Terraform Registry address) or " +
 					"`github.com/hashicorp/example` (GitHub)"),
-				IsRequired:  true,
-				IsDepKey:    true,
+				IsRequired: true,
+				IsDepKey:   true,
 			},
 			"version": {
-				ValueType:   cty.String,
+				ValueType:  cty.String,
 				IsOptional: true,
-				Description: lang.Markdown("Constraint to set the version of the module, e.g. `~> 1.0`."+
+				Description: lang.Markdown("Constraint to set the version of the module, e.g. `~> 1.0`." +
 					" Only applicable to modules in a module registry."),
 			},
 			"providers": {
 				ValueType:   cty.Map(cty.DynamicPseudoType),
-				IsOptional: true,
+				IsOptional:  true,
 				Description: lang.Markdown("Explicit mapping of providers which the module uses"),
 			},
 			"count": {
 				ValueType:   cty.Number,
-				IsOptional: true,
+				IsOptional:  true,
 				Description: lang.Markdown("Number of instances of this module, e.g. `3`"),
 			},
 			"for_each": {
@@ -46,12 +46,12 @@ var moduleBlockSchema = &schema.BlockSchema{
 					cty.Set(cty.DynamicPseudoType),
 					cty.Map(cty.DynamicPseudoType),
 				},
-				IsOptional: true,
+				IsOptional:  true,
 				Description: lang.Markdown("A set or a map where each item represents an instance of this module"),
 			},
 			"depends_on": {
 				ValueType:   cty.Set(cty.DynamicPseudoType),
-				IsOptional: true,
+				IsOptional:  true,
 				Description: lang.Markdown("Set of references to hidden dependencies, e.g. other resources or data sources"),
 			},
 		},
