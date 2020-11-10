@@ -17,21 +17,23 @@ var moduleBlockSchema = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"source": {
-				ValueType:   cty.String,
-				Description: lang.Markdown("Source where to load the module from, "+
-					"a local directory (e.g. `./module`) or a remote address - e.g. "+
-					"`hashicorp/consul/aws` (Terraform Registry address) or "+
+				ValueType: cty.String,
+				Description: lang.Markdown("Source where to load the module from, " +
+					"a local directory (e.g. `./module`) or a remote address - e.g. " +
+					"`hashicorp/consul/aws` (Terraform Registry address) or " +
 					"`github.com/hashicorp/example` (GitHub)"),
-				IsRequired:  true,
-				IsDepKey:    true,
+				IsRequired: true,
+				IsDepKey:   true,
 			},
 			"version": {
-				ValueType:   cty.String,
-				Description: lang.Markdown("Constraint to set the version of the module, e.g. `~> 1.0`."+
+				ValueType:  cty.String,
+				IsOptional: true,
+				Description: lang.Markdown("Constraint to set the version of the module, e.g. `~> 1.0`." +
 					" Only applicable to modules in a module registry."),
 			},
 			"providers": {
 				ValueType:   cty.Map(cty.DynamicPseudoType),
+				IsOptional:  true,
 				Description: lang.Markdown("Explicit mapping of providers which the module uses"),
 			},
 		},

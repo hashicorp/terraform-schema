@@ -169,7 +169,8 @@ func convertAttributesFromJson(attributes map[string]*tfjson.SchemaAttribute) ma
 		cAttrs[name] = &schema.AttributeSchema{
 			Description:  markupContent(attr.Description, attr.DescriptionKind),
 			IsDeprecated: attr.Deprecated,
-			IsReadOnly:   (attr.Computed && !attr.Optional && !attr.Required),
+			IsComputed:   attr.Computed,
+			IsOptional:   attr.Optional,
 			IsRequired:   attr.Required,
 			ValueType:    attr.AttributeType,
 		}

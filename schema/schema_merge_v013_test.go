@@ -14,7 +14,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"alias": {ValueType: cty.String},
+					"alias": {ValueType: cty.String, IsOptional: true},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -64,7 +64,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {ValueType: cty.Number},
+					"count": {ValueType: cty.Number, IsOptional: true},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -72,16 +72,17 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"frequency":     {ValueType: cty.String},
-						"id":            {ValueType: cty.String},
-						"is_default":    {ValueType: cty.Bool},
+						"frequency":     {ValueType: cty.String, IsOptional: true},
+						"id":            {ValueType: cty.String, IsComputed: true, IsOptional: true},
+						"is_default":    {ValueType: cty.Bool, IsOptional: true},
 						"name":          {IsRequired: true, ValueType: cty.String},
-						"send_reminder": {ValueType: cty.Bool},
+						"send_reminder": {ValueType: cty.Bool, IsOptional: true},
 						"settings": {
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"type": {IsRequired: true, ValueType: cty.String},
-						"uid":  {ValueType: cty.String},
+						"uid":  {ValueType: cty.String, IsOptional: true, IsComputed: true},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_dashboard"}]}`: {
@@ -89,9 +90,9 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
 						"config_json": {IsRequired: true, ValueType: cty.String},
-						"folder":      {ValueType: cty.Number},
-						"id":          {ValueType: cty.String},
-						"slug":        {IsReadOnly: true, ValueType: cty.String},
+						"folder":      {ValueType: cty.Number, IsOptional: true},
+						"id":          {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"slug":        {IsComputed: true, ValueType: cty.String},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_data_source"}]}`: {
@@ -103,31 +104,31 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Body: &schema.BodySchema{
 								Blocks: map[string]*schema.BlockSchema{},
 								Attributes: map[string]*schema.AttributeSchema{
-									"assume_role_arn":           {ValueType: cty.String},
-									"auth_type":                 {ValueType: cty.String},
-									"conn_max_lifetime":         {ValueType: cty.Number},
-									"custom_metrics_namespaces": {ValueType: cty.String},
-									"default_region":            {ValueType: cty.String},
-									"encrypt":                   {ValueType: cty.String},
-									"es_version":                {ValueType: cty.Number},
-									"graphite_version":          {ValueType: cty.String},
-									"http_method":               {ValueType: cty.String},
-									"interval":                  {ValueType: cty.String},
-									"log_level_field":           {ValueType: cty.String},
-									"log_message_field":         {ValueType: cty.String},
-									"max_idle_conns":            {ValueType: cty.Number},
-									"max_open_conns":            {ValueType: cty.Number},
-									"postgres_version":          {ValueType: cty.Number},
-									"query_timeout":             {ValueType: cty.String},
-									"ssl_mode":                  {ValueType: cty.String},
-									"time_field":                {ValueType: cty.String},
-									"time_interval":             {ValueType: cty.String},
-									"timescaledb":               {ValueType: cty.Bool},
-									"tls_auth":                  {ValueType: cty.Bool},
-									"tls_auth_with_ca_cert":     {ValueType: cty.Bool},
-									"tls_skip_verify":           {ValueType: cty.Bool},
-									"tsdb_resolution":           {ValueType: cty.String},
-									"tsdb_version":              {ValueType: cty.String},
+									"assume_role_arn":           {ValueType: cty.String, IsOptional: true},
+									"auth_type":                 {ValueType: cty.String, IsOptional: true},
+									"conn_max_lifetime":         {ValueType: cty.Number, IsOptional: true},
+									"custom_metrics_namespaces": {ValueType: cty.String, IsOptional: true},
+									"default_region":            {ValueType: cty.String, IsOptional: true},
+									"encrypt":                   {ValueType: cty.String, IsOptional: true},
+									"es_version":                {ValueType: cty.Number, IsOptional: true},
+									"graphite_version":          {ValueType: cty.String, IsOptional: true},
+									"http_method":               {ValueType: cty.String, IsOptional: true},
+									"interval":                  {ValueType: cty.String, IsOptional: true},
+									"log_level_field":           {ValueType: cty.String, IsOptional: true},
+									"log_message_field":         {ValueType: cty.String, IsOptional: true},
+									"max_idle_conns":            {ValueType: cty.Number, IsOptional: true},
+									"max_open_conns":            {ValueType: cty.Number, IsOptional: true},
+									"postgres_version":          {ValueType: cty.Number, IsOptional: true},
+									"query_timeout":             {ValueType: cty.String, IsOptional: true},
+									"ssl_mode":                  {ValueType: cty.String, IsOptional: true},
+									"time_field":                {ValueType: cty.String, IsOptional: true},
+									"time_interval":             {ValueType: cty.String, IsOptional: true},
+									"timescaledb":               {ValueType: cty.Bool, IsOptional: true},
+									"tls_auth":                  {ValueType: cty.Bool, IsOptional: true},
+									"tls_auth_with_ca_cert":     {ValueType: cty.Bool, IsOptional: true},
+									"tls_skip_verify":           {ValueType: cty.Bool, IsOptional: true},
+									"tsdb_resolution":           {ValueType: cty.String, IsOptional: true},
+									"tsdb_version":              {ValueType: cty.String, IsOptional: true},
 								},
 							},
 						},
@@ -137,59 +138,62 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Body: &schema.BodySchema{
 								Blocks: map[string]*schema.BlockSchema{},
 								Attributes: map[string]*schema.AttributeSchema{
-									"access_key":          {ValueType: cty.String},
-									"basic_auth_password": {ValueType: cty.String},
-									"password":            {ValueType: cty.String},
-									"private_key":         {ValueType: cty.String},
-									"secret_key":          {ValueType: cty.String},
-									"tls_ca_cert":         {ValueType: cty.String},
-									"tls_client_cert":     {ValueType: cty.String},
-									"tls_client_key":      {ValueType: cty.String},
+									"access_key":          {ValueType: cty.String, IsOptional: true},
+									"basic_auth_password": {ValueType: cty.String, IsOptional: true},
+									"password":            {ValueType: cty.String, IsOptional: true},
+									"private_key":         {ValueType: cty.String, IsOptional: true},
+									"secret_key":          {ValueType: cty.String, IsOptional: true},
+									"tls_ca_cert":         {ValueType: cty.String, IsOptional: true},
+									"tls_client_cert":     {ValueType: cty.String, IsOptional: true},
+									"tls_client_key":      {ValueType: cty.String, IsOptional: true},
 								},
 							},
 						},
 					},
 					Attributes: map[string]*schema.AttributeSchema{
-						"access_mode":         {ValueType: cty.String},
-						"basic_auth_enabled":  {ValueType: cty.Bool},
-						"basic_auth_password": {ValueType: cty.String},
-						"basic_auth_username": {ValueType: cty.String},
-						"database_name":       {ValueType: cty.String},
-						"id":                  {ValueType: cty.String},
-						"is_default":          {ValueType: cty.Bool},
+						"access_mode":         {ValueType: cty.String, IsOptional: true},
+						"basic_auth_enabled":  {ValueType: cty.Bool, IsOptional: true},
+						"basic_auth_password": {ValueType: cty.String, IsOptional: true},
+						"basic_auth_username": {ValueType: cty.String, IsOptional: true},
+						"database_name":       {ValueType: cty.String, IsOptional: true},
+						"id":                  {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"is_default":          {ValueType: cty.Bool, IsOptional: true},
 						"name":                {IsRequired: true, ValueType: cty.String},
-						"password":            {ValueType: cty.String},
+						"password":            {ValueType: cty.String, IsOptional: true},
 						"type":                {IsRequired: true, ValueType: cty.String},
-						"url":                 {ValueType: cty.String},
-						"username":            {ValueType: cty.String},
+						"url":                 {ValueType: cty.String, IsOptional: true},
+						"username":            {ValueType: cty.String, IsOptional: true},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_folder"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id":    {ValueType: cty.String},
+						"id":    {ValueType: cty.String, IsComputed: true, IsOptional: true},
 						"title": {IsRequired: true, ValueType: cty.String},
-						"uid":   {IsReadOnly: true, ValueType: cty.String},
+						"uid":   {IsComputed: true, ValueType: cty.String},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_organization"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"admin_user": {ValueType: cty.String},
+						"admin_user": {ValueType: cty.String, IsOptional: true},
 						"admins": {
-							ValueType: cty.List(cty.String),
+							ValueType:  cty.List(cty.String),
+							IsOptional: true,
 						},
-						"create_users": {ValueType: cty.Bool},
+						"create_users": {ValueType: cty.Bool, IsOptional: true},
 						"editors": {
-							ValueType: cty.List(cty.String),
+							ValueType:  cty.List(cty.String),
+							IsOptional: true,
 						},
-						"id":     {ValueType: cty.String},
+						"id":     {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"name":   {IsRequired: true, ValueType: cty.String},
-						"org_id": {IsReadOnly: true, ValueType: cty.Number},
+						"org_id": {IsComputed: true, ValueType: cty.Number},
 						"viewers": {
-							ValueType: cty.List(cty.String),
+							ValueType:  cty.List(cty.String),
+							IsOptional: true,
 						},
 					},
 				},
@@ -197,13 +201,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"email": {ValueType: cty.String},
-						"id":    {ValueType: cty.String},
+						"email": {ValueType: cty.String, IsOptional: true},
+						"id":    {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"members": {
-							ValueType: cty.List(cty.String),
+							ValueType:  cty.List(cty.String),
+							IsOptional: true,
 						},
 						"name":    {IsRequired: true, ValueType: cty.String},
-						"team_id": {IsReadOnly: true, ValueType: cty.Number},
+						"team_id": {IsComputed: true, ValueType: cty.Number},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_user"}]}`: {
@@ -211,9 +216,9 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
 						"email":    {IsRequired: true, ValueType: cty.String},
-						"id":       {ValueType: cty.String},
-						"login":    {ValueType: cty.String},
-						"name":     {ValueType: cty.String},
+						"id":       {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"login":    {ValueType: cty.String, IsOptional: true},
+						"name":     {ValueType: cty.String, IsOptional: true},
 						"password": {IsRequired: true, ValueType: cty.String},
 					},
 				},
@@ -221,13 +226,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsComputed: true, IsOptional: true},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 					},
 					Description: lang.MarkupContent{
@@ -239,13 +245,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 					},
 					Description: lang.MarkupContent{
@@ -262,7 +269,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The generated id presented in base64 without additional transformations.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
 						"b64_url": {
@@ -270,7 +277,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The generated id presented in base64, using the URL-friendly character set: case-sensitive letters, digits and the characters `_` and `-`.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
 						"byte_length": {
@@ -286,7 +293,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The generated id presented in non-padded decimal digits.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
 						"hex": {
@@ -294,23 +301,25 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The generated id presented in padded hexadecimal digits. This result will always be twice as long as the requested byte length.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"prefix": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary string to prefix the output value with. This string is supplied as-is, meaning it is not guaranteed to be URL-safe or base64 encoded.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
 						},
 					},
 					Description: lang.MarkupContent{
@@ -322,13 +331,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsComputed: true, IsOptional: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"max": {
 							Description: lang.MarkupContent{
@@ -351,7 +361,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The random integer result.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.Number,
 						},
 						"seed": {
@@ -359,7 +369,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "A custom seed to always produce the same value.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
 						},
 					},
 					Description: lang.MarkupContent{
@@ -371,13 +382,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"length": {
 							Description: lang.MarkupContent{
@@ -392,56 +404,63 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Bool,
+							ValueType:  cty.Bool,
+							IsOptional: true,
 						},
 						"min_lower": {
 							Description: lang.MarkupContent{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"min_numeric": {
 							Description: lang.MarkupContent{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"min_special": {
 							Description: lang.MarkupContent{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"min_upper": {
 							Description: lang.MarkupContent{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"number": {
 							Description: lang.MarkupContent{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Bool,
+							ValueType:  cty.Bool,
+							IsOptional: true,
 						},
 						"override_special": {
 							Description: lang.MarkupContent{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
 						},
 						"result": {
 							Description: lang.MarkupContent{
 								Value: "The generated random string.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
 						"special": {
@@ -449,14 +468,16 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Bool,
+							ValueType:  cty.Bool,
+							IsOptional: true,
 						},
 						"upper": {
 							Description: lang.MarkupContent{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Bool,
+							ValueType:  cty.Bool,
+							IsOptional: true,
 						},
 					},
 					Description: lang.MarkupContent{
@@ -468,34 +489,38 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"length": {
 							Description: lang.MarkupContent{
 								Value: "The length (in words) of the pet name.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"prefix": {
 							Description: lang.MarkupContent{
 								Value: "A string to prefix the name with.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
 						},
 						"separator": {
 							Description: lang.MarkupContent{
 								Value: "The character to separate words in the pet name.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
 						},
 					},
 					Description: lang.MarkupContent{
@@ -507,7 +532,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"input": {
 							Description: lang.MarkupContent{
 								Value: "The list of strings to shuffle.",
@@ -521,14 +546,15 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"result": {
 							Description: lang.MarkupContent{
 								Value: "Random permutation of the list of strings given in `input`.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.List(cty.String),
 						},
 						"result_count": {
@@ -536,14 +562,16 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The number of results to return. Defaults to the number of items in the `input` list. If fewer items are requested, some elements will be excluded from the result. If more items are requested, items will be repeated in the result but not more frequently than the number of items in the input list.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"seed": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary string with which to seed the random number generator, in order to produce less-volatile permutations of the list.\n\n**Important:** Even with an identical seed, it is not guaranteed that the same permutation will be produced across different versions of Terraform. This argument causes the result to be *less volatile*, but not fixed for all time.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
 						},
 					},
 					Description: lang.MarkupContent{
@@ -555,13 +583,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"length": {
 							Description: lang.MarkupContent{
@@ -576,56 +605,63 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Bool,
+							ValueType:  cty.Bool,
+							IsOptional: true,
 						},
 						"min_lower": {
 							Description: lang.MarkupContent{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"min_numeric": {
 							Description: lang.MarkupContent{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"min_special": {
 							Description: lang.MarkupContent{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"min_upper": {
 							Description: lang.MarkupContent{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Number,
+							ValueType:  cty.Number,
+							IsOptional: true,
 						},
 						"number": {
 							Description: lang.MarkupContent{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Bool,
+							ValueType:  cty.Bool,
+							IsOptional: true,
 						},
 						"override_special": {
 							Description: lang.MarkupContent{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
 						},
 						"result": {
 							Description: lang.MarkupContent{
 								Value: "The generated random string.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
 						"special": {
@@ -633,14 +669,16 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Bool,
+							ValueType:  cty.Bool,
+							IsOptional: true,
 						},
 						"upper": {
 							Description: lang.MarkupContent{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Bool,
+							ValueType:  cty.Bool,
+							IsOptional: true,
 						},
 					},
 					Description: lang.MarkupContent{
@@ -652,20 +690,21 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsComputed: true, IsOptional: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"result": {
 							Description: lang.MarkupContent{
 								Value: "The generated uuid presented in string format.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
 					},
@@ -683,7 +722,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {ValueType: cty.Number},
+					"count": {ValueType: cty.Number, IsOptional: true},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -696,22 +735,25 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
+							IsComputed: true,
 						},
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsComputed: true, IsOptional: true},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"outputs": {
 							Description: lang.MarkupContent{
 								Value: "After the data source is \"read\", a copy of the `inputs` map.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.Map(cty.String),
 						},
 						"random": {
@@ -719,7 +761,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "A random value. This is primarily for testing and has little practical use; prefer the [random provider](https://www.terraform.io/docs/providers/random/) for more practical random number use-cases.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
 					},
@@ -737,22 +779,25 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.String,
+							ValueType:  cty.String,
+							IsOptional: true,
+							IsComputed: true,
 						},
-						"id": {ValueType: cty.String},
+						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType: cty.Map(cty.String),
+							ValueType:  cty.Map(cty.String),
+							IsOptional: true,
 						},
 						"outputs": {
 							Description: lang.MarkupContent{
 								Value: "After the data source is \"read\", a copy of the `inputs` map.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.Map(cty.String),
 						},
 						"random": {
@@ -760,7 +805,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "A random value. This is primarily for testing and has little practical use; prefer the [random provider](https://www.terraform.io/docs/providers/random/) for more practical random number use-cases.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsReadOnly: true,
+							IsComputed: true,
 							ValueType:  cty.String,
 						},
 					},
@@ -774,10 +819,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
 						"backend":   {IsRequired: true, ValueType: cty.String},
-						"config":    {ValueType: cty.DynamicPseudoType},
-						"defaults":  {ValueType: cty.DynamicPseudoType},
-						"outputs":   {IsReadOnly: true, ValueType: cty.DynamicPseudoType},
-						"workspace": {ValueType: cty.String},
+						"config":    {IsOptional: true, ValueType: cty.DynamicPseudoType},
+						"defaults":  {IsOptional: true, ValueType: cty.DynamicPseudoType},
+						"outputs":   {IsComputed: true, ValueType: cty.DynamicPseudoType},
+						"workspace": {IsOptional: true, ValueType: cty.String},
 					},
 				},
 			},

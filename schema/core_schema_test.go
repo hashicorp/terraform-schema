@@ -25,6 +25,35 @@ func TestCoreModuleSchemaForVersion_tooOld(t *testing.T) {
 	}
 }
 
+func TestCoreModuleSchemaForVersion_validate(t *testing.T) {
+	versions := []string{
+		"0.12.0-alpha1",
+		"0.12.0-rc1",
+		"0.12.0",
+		"0.12.20",
+		"0.13.0-alpha1",
+		"0.13.0",
+		"0.14.0-beta2",
+		"0.14.0",
+	}
+
+	for _, v := range versions {
+		ver, err := version.NewVersion(v)
+		if err != nil {
+			t.Fatal(err)
+		}
+		bodySchema, err := CoreModuleSchemaForVersion(ver)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = bodySchema.Validate()
+		if err != nil {
+			t.Fatalf("%s: %s", v, err)
+		}
+	}
+}
+
 func TestCoreModuleSchemaForVersion_matching(t *testing.T) {
 	testCases := []struct {
 		version       *version.Version

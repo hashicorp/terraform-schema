@@ -27,15 +27,18 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
 					ValueType:   cty.DynamicPseudoType,
+					IsOptional:  true,
 					Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 					IsDepKey:    true,
 				},
 				"count": {
 					ValueType:   cty.Number,
+					IsOptional:  true,
 					Description: lang.Markdown("Number of instances of this resource, e.g. `3`"),
 				},
 				"depends_on": {
 					ValueType:   cty.Set(cty.DynamicPseudoType),
+					IsOptional:  true,
 					Description: lang.Markdown("Set of references to hidden dependencies, e.g. other resources or data sources"),
 				},
 			},
@@ -52,6 +55,7 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 				cty.Set(cty.DynamicPseudoType),
 				cty.Map(cty.DynamicPseudoType),
 			},
+			IsOptional:  true,
 			Description: lang.Markdown("A set or a map where each item represents an instance of this resource"),
 		}
 	}
@@ -64,17 +68,20 @@ var lifecycleBlock = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"create_before_destroy": {
-				ValueType: cty.Bool,
+				ValueType:  cty.Bool,
+				IsOptional: true,
 				Description: lang.Markdown("Whether to reverse the default order of operations (destroy -> create) during apply " +
 					"when the resource requires replacement (cannot be updated in-place)"),
 			},
 			"prevent_destroy": {
-				ValueType: cty.Bool,
+				ValueType:  cty.Bool,
+				IsOptional: true,
 				Description: lang.Markdown("Whether to prevent accidental destruction of the resource and cause Terraform " +
 					"to reject with an error any plan that would destroy the resource"),
 			},
 			"ignore_changes": {
 				ValueType:   cty.Set(cty.DynamicPseudoType),
+				IsOptional:  true,
 				Description: lang.Markdown("A set of fields (references) of which to ignore changes to, e.g. `tags`"),
 			},
 		},
@@ -94,12 +101,14 @@ var provisionerBlock = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"when": {
-				ValueType: cty.DynamicPseudoType,
+				ValueType:  cty.DynamicPseudoType,
+				IsOptional: true,
 				Description: lang.Markdown("When to run the provisioner - `create` or `destroy`, defaults to `create` " +
 					"(i.e. after creation of the resource)"),
 			},
 			"on_failure": {
-				ValueType: cty.DynamicPseudoType,
+				IsOptional: true,
+				ValueType:  cty.DynamicPseudoType,
 				Description: lang.Markdown("What to do when the provisioner run fails to finish - `fail` (default), " +
 					"or `continue` (ignore the error)"),
 			},
@@ -117,6 +126,7 @@ var connectionBlock = &schema.BlockSchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"type": {
 				ValueType:   cty.String,
+				IsOptional:  true,
 				Description: lang.Markdown("Connection type to use - `ssh` (default) or `winrm`"),
 			},
 		},

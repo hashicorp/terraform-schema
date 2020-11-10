@@ -13,14 +13,15 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"required_version": {
-					ValueType:   cty.String,
-					Description: lang.Markdown("Constraint to specify which versions of Terraform can be used "+
+					ValueType:  cty.String,
+					IsOptional: true,
+					Description: lang.Markdown("Constraint to specify which versions of Terraform can be used " +
 						"with this configuration, e.g. `~> 0.12`"),
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"backend": {
-					Description: lang.Markdown("Backend configuration which defines exactly where and how "+
+					Description: lang.Markdown("Backend configuration which defines exactly where and how " +
 						"operations are performed, where state snapshots are stored, etc."),
 					Labels: []*schema.LabelSchema{
 						{
@@ -48,6 +49,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	if v.GreaterThanOrEqual(v0_12_18) {
 		bs.Body.Attributes["experiments"] = &schema.AttributeSchema{
 			ValueType:   cty.Set(cty.DynamicPseudoType),
+			IsOptional:  true,
 			Description: lang.Markdown("A set of experimental language features to enable"),
 		}
 	}
