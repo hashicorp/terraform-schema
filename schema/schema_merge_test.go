@@ -2,6 +2,7 @@ package schema
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"testing"
 
@@ -14,7 +15,29 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func TestMergeCoreWithJsonProviderSchemas_v012(t *testing.T) {
+func TestMergeWithJsonProviderSchemas_noCoreSchema(t *testing.T) {
+	sm := NewSchemaMerger(nil)
+
+	_, err := sm.MergeWithJsonProviderSchemas(nil)
+	if err == nil {
+		t.Fatal("expected error for nil core schema")
+	}
+
+	if !errors.Is(err, coreSchemaRequiredErr{}) {
+		t.Fatalf("unexpected error: %#v", err)
+	}
+}
+
+func TestMergeWithJsonProviderSchemas_noProviderSchema(t *testing.T) {
+	sm := NewSchemaMerger(testCoreSchema)
+
+	_, err := sm.MergeWithJsonProviderSchemas(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestMergeWithJsonProviderSchemas_v012(t *testing.T) {
 	b, err := ioutil.ReadFile("testdata/test-config-0.12.tf")
 	if err != nil {
 		t.Fatal(err)
@@ -34,11 +57,12 @@ func TestMergeCoreWithJsonProviderSchemas_v012(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	files := map[string]*hcl.File{
+	sm := NewSchemaMerger(testCoreSchema)
+	sm.SetParsedFiles(map[string]*hcl.File{
 		"test.tf": f,
-	}
+	})
 
-	mergedSchema, err := MergeCoreWithJsonProviderSchemas(files, testCoreSchema, ps)
+	mergedSchema, err := sm.MergeWithJsonProviderSchemas(ps)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -52,7 +76,7 @@ func TestMergeCoreWithJsonProviderSchemas_v012(t *testing.T) {
 	}
 }
 
-func TestMergeCoreWithJsonProviderSchemas_v013(t *testing.T) {
+func TestMergeWithJsonProviderSchemas_v013(t *testing.T) {
 	b, err := ioutil.ReadFile("testdata/test-config-0.13.tf")
 	if err != nil {
 		t.Fatal(err)
@@ -72,11 +96,12 @@ func TestMergeCoreWithJsonProviderSchemas_v013(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	files := map[string]*hcl.File{
+	sm := NewSchemaMerger(testCoreSchema)
+	sm.SetParsedFiles(map[string]*hcl.File{
 		"test.tf": f,
-	}
+	})
 
-	mergedSchema, err := MergeCoreWithJsonProviderSchemas(files, testCoreSchema, ps)
+	mergedSchema, err := sm.MergeWithJsonProviderSchemas(ps)
 	if err != nil {
 		t.Fatal(err)
 	}

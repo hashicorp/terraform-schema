@@ -9,12 +9,34 @@ import (
 	"github.com/hashicorp/terraform-schema/internal/refdecoder"
 )
 
-// MergeCoreWithJsonProviderSchemas provides a merged schema based on provided
-// parsed files, core schema and terraform-json formatted provider schema
-func MergeCoreWithJsonProviderSchemas(m map[string]*hcl.File, coreSchema *schema.BodySchema, ps *tfjson.ProviderSchemas) (
-	*schema.BodySchema, error) {
+type SchemaMerger struct {
+	coreSchema  *schema.BodySchema
+	parsedFiles map[string]*hcl.File
+}
 
-	mergedSchema := coreSchema
+func NewSchemaMerger(coreSchema *schema.BodySchema) *SchemaMerger {
+	return &SchemaMerger{
+		coreSchema:  coreSchema,
+		parsedFiles: make(map[string]*hcl.File, 0),
+	}
+}
+
+func (m *SchemaMerger) SetParsedFiles(files map[string]*hcl.File) {
+	m.parsedFiles = files
+}
+
+// MergeWithJsonProviderSchemas provides a merged schema based on provided
+// parsed files, core schema and terraform-json formatted provider schema
+func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) (*schema.BodySchema, error) {
+	if m.coreSchema == nil {
+		return nil, coreSchemaRequiredErr{}
+	}
+
+	if ps == nil {
+		return m.coreSchema, nil
+	}
+
+	mergedSchema := m.coreSchema
 
 	if mergedSchema.Blocks["provider"].DependentBody == nil {
 		mergedSchema.Blocks["provider"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
@@ -26,15 +48,15 @@ func MergeCoreWithJsonProviderSchemas(m map[string]*hcl.File, coreSchema *schema
 		mergedSchema.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 
-	refs, err := refdecoder.DecodeProviderReferences(m)
+	refs, err := refdecoder.DecodeProviderReferences(m.parsedFiles)
 	if err != nil {
-		return coreSchema, err
+		return m.coreSchema, err
 	}
 
 	for sourceString, provider := range ps.Schemas {
 		srcAddr, err := addrs.ParseProviderSourceString(sourceString)
 		if err != nil {
-			return coreSchema, err
+			return m.coreSchema, err
 		}
 
 		localRefs := refs.LocalNamesByAddr(srcAddr)
