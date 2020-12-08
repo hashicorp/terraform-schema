@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/hcl/v2"
-	"github.com/hashicorp/terraform-json"
+	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/hashicorp/terraform-schema/internal/addrs"
 	"github.com/hashicorp/terraform-schema/internal/refdecoder"
 )
@@ -257,8 +257,6 @@ func markupContent(value string, kind tfjson.SchemaDescriptionKind) lang.MarkupC
 	case tfjson.SchemaDescriptionKindMarkdown:
 		return lang.Markdown(value)
 	case tfjson.SchemaDescriptionKindPlain:
-		return lang.PlainText(value)
-	case "plain": // discrepancy between terraform-json & Terraform core
 		return lang.PlainText(value)
 	}
 
