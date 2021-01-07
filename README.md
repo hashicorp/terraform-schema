@@ -1,4 +1,4 @@
-# terraform-schema
+# terraform-schema [![Go Reference](https://pkg.go.dev/badge/github.com/hashicorp/terraform-schema.svg)](https://pkg.go.dev/github.com/hashicorp/terraform-schema)
 
 This library helps assembling a complete [`hcl-lang`](https://github.com/hashicorp/hcl-lang)
 schema for decoding Terraform config based on static Terraform core schema
