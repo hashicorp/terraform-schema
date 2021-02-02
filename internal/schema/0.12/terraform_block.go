@@ -13,7 +13,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"required_version": {
-					ValueType:  cty.String,
+					Expr:       schema.LiteralTypeOnly(cty.String),
 					IsOptional: true,
 					Description: lang.Markdown("Constraint to specify which versions of Terraform can be used " +
 						"with this configuration, e.g. `~> 0.12`"),
@@ -36,7 +36,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 					Description: lang.Markdown("What provider version to use within this configuration"),
 					Body: &schema.BodySchema{
 						AnyAttribute: &schema.AttributeSchema{
-							ValueType:   cty.String,
+							Expr:        schema.LiteralTypeOnly(cty.String),
 							Description: lang.Markdown("Version constraint"),
 						},
 					},
@@ -47,8 +47,20 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	}
 
 	if v.GreaterThanOrEqual(v0_12_18) {
+		experiments := schema.TupleConsExpr{
+			AnyElem: schema.ExprConstraints{},
+			Name:    "set of features",
+		}
+		if v.GreaterThanOrEqual(v0_12_20) {
+			experiments.AnyElem = append(experiments.AnyElem, schema.KeywordExpr{
+				Keyword: "variable_validation",
+				Name:    "feature",
+			})
+		}
 		bs.Body.Attributes["experiments"] = &schema.AttributeSchema{
-			ValueType:   cty.Set(cty.DynamicPseudoType),
+			Expr: schema.ExprConstraints{
+				experiments,
+			},
 			IsOptional:  true,
 			Description: lang.Markdown("A set of experimental language features to enable"),
 		}
@@ -57,11 +69,11 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	if v.GreaterThanOrEqual(v0_12_20) {
 		bs.Body.Blocks["required_providers"].Body = &schema.BodySchema{
 			AnyAttribute: &schema.AttributeSchema{
-				ValueTypes: schema.ValueTypes{
-					cty.Object(map[string]cty.Type{
+				Expr: schema.ExprConstraints{
+					schema.LiteralTypeExpr{Type: cty.Object(map[string]cty.Type{
 						"version": cty.String,
-					}),
-					cty.String,
+					})},
+					schema.LiteralTypeExpr{Type: cty.String},
 				},
 				Description: lang.Markdown("Version constraint"),
 			},

@@ -278,7 +278,7 @@ func convertAttributesFromJson(attributes map[string]*tfjson.SchemaAttribute) ma
 			IsComputed:   attr.Computed,
 			IsOptional:   attr.Optional,
 			IsRequired:   attr.Required,
-			ValueType:    attr.AttributeType,
+			Expr:         schema.LiteralTypeOnly(attr.AttributeType),
 		}
 	}
 	return cAttrs

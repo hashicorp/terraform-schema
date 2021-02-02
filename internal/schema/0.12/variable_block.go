@@ -20,17 +20,17 @@ func variableBlockSchema(v *version.Version) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"description": {
-					ValueType:   cty.String,
+					Expr:        schema.LiteralTypeOnly(cty.String),
 					IsOptional:  true,
 					Description: lang.Markdown("Description to document the purpose of the variable and what value is expected"),
 				},
 				"type": {
-					ValueType:   cty.DynamicPseudoType,
+					Expr:        schema.ExprConstraints{},
 					IsOptional:  true,
 					Description: lang.Markdown("Type constraint restricting the type of value to accept, e.g. `string` or `list(string)`"),
 				},
 				"default": {
-					ValueType:   cty.DynamicPseudoType,
+					Expr:        schema.ExprConstraints{},
 					IsOptional:  true,
 					Description: lang.Markdown("Default value to use when variable is not explicitly set"),
 				},
@@ -45,13 +45,13 @@ func variableBlockSchema(v *version.Version) *schema.BlockSchema {
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"condition": {
-						ValueType:  cty.Bool,
+						Expr:       schema.LiteralTypeOnly(cty.Bool),
 						IsRequired: true,
 						Description: lang.Markdown("Condition under which a variable value is valid, " +
 							"e.g. `length(var.example) >= 4` enforces minimum of 4 characters"),
 					},
 					"error_message": {
-						ValueType:  cty.String,
+						Expr:       schema.LiteralTypeOnly(cty.String),
 						IsRequired: true,
 						Description: lang.Markdown("Error message to present when the variable is considered invalid, " +
 							"i.e. when `condition` evaluates to `false`"),

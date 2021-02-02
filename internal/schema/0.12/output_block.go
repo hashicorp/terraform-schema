@@ -17,22 +17,26 @@ var outputBlockSchema = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"description": {
-				ValueType:   cty.String,
+				Expr:        schema.LiteralTypeOnly(cty.String),
 				IsOptional:  true,
 				Description: lang.PlainText("Human-readable description of the output (for documentation and UI)"),
 			},
 			"value": {
-				ValueType:   cty.DynamicPseudoType,
+				Expr:        schema.ExprConstraints{},
 				IsRequired:  true,
 				Description: lang.PlainText("Value, typically a reference to an attribute of a resource or a data source"),
 			},
 			"sensitive": {
-				ValueType:   cty.Bool,
+				Expr:        schema.LiteralTypeOnly(cty.Bool),
 				IsOptional:  true,
 				Description: lang.PlainText("Whether the output contains sensitive material and should be hidden in the UI"),
 			},
 			"depends_on": {
-				ValueType:   cty.Set(cty.DynamicPseudoType),
+				Expr: schema.ExprConstraints{
+					schema.TupleConsExpr{
+						Name: "set of references",
+					},
+				},
 				IsOptional:  true,
 				Description: lang.PlainText("Set of references to hidden dependencies (e.g. resources or data sources)"),
 			},

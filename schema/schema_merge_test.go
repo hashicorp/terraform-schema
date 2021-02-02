@@ -123,7 +123,7 @@ var testCoreSchema = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"alias": {ValueType: cty.String, IsOptional: true},
+					"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
 				},
 			},
 		},
@@ -134,7 +134,7 @@ var testCoreSchema = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {ValueType: cty.Number, IsOptional: true},
+					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
 				},
 			},
 		},
@@ -145,7 +145,7 @@ var testCoreSchema = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {ValueType: cty.Number, IsOptional: true},
+					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
 				},
 			},
 		},
