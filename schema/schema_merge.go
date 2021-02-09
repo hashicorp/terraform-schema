@@ -109,11 +109,14 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 		detail := m.detailForSrcAddr(srcAddr)
 
 		for _, localRef := range localRefs {
+			pSchema := convertBodySchemaFromJson(detail, providerSchema)
+			pSchema.DocsLink = m.docsLinkForProvider(srcAddr)
+
 			mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
 				Labels: []schema.LabelDependent{
 					{Index: 0, Value: localRef.LocalName},
 				},
-			})] = convertBodySchemaFromJson(detail, providerSchema)
+			})] = pSchema
 
 			for rName, rJsonSchema := range provider.ResourceSchemas {
 				rSchema := convertBodySchemaFromJson(detail, rJsonSchema.Block)
@@ -164,6 +167,38 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 	}
 
 	return mergedSchema, nil
+}
+
+func (m *SchemaMerger) docsLinkForProvider(addr addrs.Provider) *schema.DocsLink {
+	if !providerHasDocs(addr) {
+		return nil
+	}
+
+	version := "latest"
+	for pAddr, ver := range m.providerVersions {
+		if addr.Equals(pAddr) {
+			version = ver.String()
+		}
+	}
+
+	return &schema.DocsLink{
+		URL: fmt.Sprintf("https://registry.terraform.io/providers/%s/%s/%s/docs",
+			addr.Namespace, addr.Type, version),
+		Tooltip: fmt.Sprintf("%s Documentation", addr.ForDisplay()),
+	}
+}
+
+func providerHasDocs(addr addrs.Provider) bool {
+	if addr.IsBuiltIn() {
+		// Ideally this should point to versioned TF core docs
+		// but there aren't any for the built-in provider yet
+		return false
+	}
+	if addr.Hostname != "registry.terraform.io" {
+		// docs URLs outside of the official Registry aren't standardized yet
+		return false
+	}
+	return true
 }
 
 func (m *SchemaMerger) detailForSrcAddr(addr addrs.Provider) string {

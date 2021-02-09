@@ -20,6 +20,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
 				`{"labels":[{"index":0,"value":"grafana"}]}`: {
 					Detail: "grafana/grafana",
+					DocsLink: &schema.DocsLink{
+						URL:     "https://registry.terraform.io/providers/grafana/grafana/latest/docs",
+						Tooltip: "grafana/grafana Documentation",
+					},
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
 						"auth": {
@@ -41,12 +45,20 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					},
 				},
 				`{"labels":[{"index":0,"value":"null"}]}`: {
-					Detail:     "hashicorp/null",
+					Detail: "hashicorp/null",
+					DocsLink: &schema.DocsLink{
+						URL:     "https://registry.terraform.io/providers/hashicorp/null/latest/docs",
+						Tooltip: "hashicorp/null Documentation",
+					},
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 				},
 				`{"labels":[{"index":0,"value":"random"}]}`: {
-					Detail:     "hashicorp/random",
+					Detail: "hashicorp/random",
+					DocsLink: &schema.DocsLink{
+						URL:     "https://registry.terraform.io/providers/hashicorp/random/latest/docs",
+						Tooltip: "hashicorp/random Documentation",
+					},
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 				},
