@@ -22,11 +22,19 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 					Detail:     "hashicorp/null",
+					DocsLink: &schema.DocsLink{
+						URL:     "https://registry.terraform.io/providers/hashicorp/null/latest/docs",
+						Tooltip: "hashicorp/null Documentation",
+					},
 				},
 				`{"labels":[{"index":0,"value":"random"}]}`: {
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 					Detail:     "hashicorp/random",
+					DocsLink: &schema.DocsLink{
+						URL:     "https://registry.terraform.io/providers/hashicorp/random/latest/docs",
+						Tooltip: "hashicorp/random Documentation",
+					},
 				},
 				`{"labels":[{"index":0,"value":"terraform"}]}`: {
 					Blocks:     map[string]*schema.BlockSchema{},
