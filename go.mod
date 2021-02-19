@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/hcl-lang v0.0.0-20210213170001-bd00c3f68680
 	github.com/hashicorp/hcl/v2 v2.8.2
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20201102131242-0c45ba392e51
-	github.com/hashicorp/terraform-json v0.7.0
+	github.com/hashicorp/terraform-json v0.8.0
 	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734
 	github.com/mh-cbon/go-fmt-fail v0.0.0-20160815164508-67765b3fbcb5
 	github.com/zclconf/go-cty v1.7.1-0.20201110003513-1338293a79a9
