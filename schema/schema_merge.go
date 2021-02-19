@@ -81,15 +81,15 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 		mergedSchema.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 
-	refs, err := refdecoder.DecodeProviderReferences(m.parsedFiles)
-	if err != nil {
-		return m.coreSchema, err
+	refs, diags := refdecoder.DecodeProviderReferences(m.parsedFiles)
+	if diags.HasErrors() && len(refs) == 0 {
+		return m.coreSchema, nil
 	}
 
 	for sourceString, provider := range ps.Schemas {
 		srcAddr, err := addrs.ParseProviderSourceString(sourceString)
 		if err != nil {
-			return m.coreSchema, err
+			return m.coreSchema, nil
 		}
 
 		localRefs := refs.LocalNamesByAddr(srcAddr)
