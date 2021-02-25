@@ -3,7 +3,6 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
-	"github.com/zclconf/go-cty/cty"
 )
 
 var datasourceBlockSchema = &schema.BlockSchema{
@@ -24,7 +23,7 @@ var datasourceBlockSchema = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"provider": {
-				ValueType:   cty.DynamicPseudoType,
+				Expr:        schema.ExprConstraints{},
 				IsOptional:  true,
 				Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 				IsDepKey:    true,

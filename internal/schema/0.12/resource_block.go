@@ -26,18 +26,22 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
-					ValueType:   cty.DynamicPseudoType,
+					Expr:        schema.ExprConstraints{},
 					IsOptional:  true,
 					Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 					IsDepKey:    true,
 				},
 				"count": {
-					ValueType:   cty.Number,
+					Expr:        schema.LiteralTypeOnly(cty.Number),
 					IsOptional:  true,
 					Description: lang.Markdown("Number of instances of this resource, e.g. `3`"),
 				},
 				"depends_on": {
-					ValueType:   cty.Set(cty.DynamicPseudoType),
+					Expr: schema.ExprConstraints{
+						schema.TupleConsExpr{
+							Name: "set of references",
+						},
+					},
 					IsOptional:  true,
 					Description: lang.Markdown("Set of references to hidden dependencies, e.g. other resources or data sources"),
 				},
@@ -51,9 +55,9 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 
 	if v.GreaterThanOrEqual(v0_12_6) {
 		bs.Body.Attributes["for_each"] = &schema.AttributeSchema{
-			ValueTypes: schema.ValueTypes{
-				cty.Set(cty.DynamicPseudoType),
-				cty.Map(cty.DynamicPseudoType),
+			Expr: schema.ExprConstraints{
+				schema.LiteralTypeExpr{Type: cty.Set(cty.DynamicPseudoType)},
+				schema.LiteralTypeExpr{Type: cty.Map(cty.DynamicPseudoType)},
 			},
 			IsOptional:  true,
 			Description: lang.Markdown("A set or a map where each item represents an instance of this resource"),
@@ -68,19 +72,21 @@ var lifecycleBlock = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"create_before_destroy": {
-				ValueType:  cty.Bool,
+				Expr:       schema.LiteralTypeOnly(cty.Bool),
 				IsOptional: true,
 				Description: lang.Markdown("Whether to reverse the default order of operations (destroy -> create) during apply " +
 					"when the resource requires replacement (cannot be updated in-place)"),
 			},
 			"prevent_destroy": {
-				ValueType:  cty.Bool,
+				Expr:       schema.LiteralTypeOnly(cty.Bool),
 				IsOptional: true,
 				Description: lang.Markdown("Whether to prevent accidental destruction of the resource and cause Terraform " +
 					"to reject with an error any plan that would destroy the resource"),
 			},
 			"ignore_changes": {
-				ValueType:   cty.Set(cty.DynamicPseudoType),
+				Expr: schema.ExprConstraints{
+					schema.TupleConsExpr{},
+				},
 				IsOptional:  true,
 				Description: lang.Markdown("A set of fields (references) of which to ignore changes to, e.g. `tags`"),
 			},
@@ -101,14 +107,32 @@ var provisionerBlock = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"when": {
-				ValueType:  cty.DynamicPseudoType,
+				Expr: schema.ExprConstraints{
+					schema.KeywordExpr{
+						Keyword:     "create",
+						Description: lang.Markdown("Run the provisioner when the resource is created"),
+					},
+					schema.KeywordExpr{
+						Keyword:     "destroy",
+						Description: lang.Markdown("Run the provisioner when the resource is destroyed"),
+					},
+				},
 				IsOptional: true,
 				Description: lang.Markdown("When to run the provisioner - `create` or `destroy`, defaults to `create` " +
 					"(i.e. after creation of the resource)"),
 			},
 			"on_failure": {
 				IsOptional: true,
-				ValueType:  cty.DynamicPseudoType,
+				Expr: schema.ExprConstraints{
+					schema.KeywordExpr{
+						Keyword:     "fail",
+						Description: lang.Markdown("Raise an error and stop applying (the default behavior). If this is a creation provisioner, taint the resource."),
+					},
+					schema.KeywordExpr{
+						Keyword:     "continue",
+						Description: lang.Markdown("Ignore the error and continue with creation or destruction"),
+					},
+				},
 				Description: lang.Markdown("What to do when the provisioner run fails to finish - `fail` (default), " +
 					"or `continue` (ignore the error)"),
 			},
@@ -125,7 +149,16 @@ var connectionBlock = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"type": {
-				ValueType:   cty.String,
+				Expr: schema.ExprConstraints{
+					schema.LiteralValue{
+						Val:         cty.StringVal("ssh"),
+						Description: lang.Markdown("Use SSH to connect and provision the instance"),
+					},
+					schema.LiteralValue{
+						Val:         cty.StringVal("winrm"),
+						Description: lang.Markdown("Use WinRM to connect and provision the instance"),
+					},
+				},
 				IsOptional:  true,
 				Description: lang.Markdown("Connection type to use - `ssh` (default) or `winrm`"),
 			},

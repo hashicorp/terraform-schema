@@ -14,7 +14,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"alias": {ValueType: cty.String, IsOptional: true},
+					"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -32,7 +32,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 						"url": {
 							Description: lang.MarkupContent{
@@ -40,7 +40,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 					},
 				},
@@ -76,7 +76,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {ValueType: cty.Number, IsOptional: true},
+					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -84,27 +84,27 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"frequency":     {ValueType: cty.String, IsOptional: true},
-						"id":            {ValueType: cty.String, IsComputed: true, IsOptional: true},
-						"is_default":    {ValueType: cty.Bool, IsOptional: true},
-						"name":          {IsRequired: true, ValueType: cty.String},
-						"send_reminder": {ValueType: cty.Bool, IsOptional: true},
+						"frequency":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"id":            {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"is_default":    {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"name":          {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"send_reminder": {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
 						"settings": {
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
-						"type": {IsRequired: true, ValueType: cty.String},
-						"uid":  {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"type": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"uid":  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_dashboard"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"config_json": {IsRequired: true, ValueType: cty.String},
-						"folder":      {ValueType: cty.Number, IsOptional: true},
-						"id":          {ValueType: cty.String, IsOptional: true, IsComputed: true},
-						"slug":        {IsComputed: true, ValueType: cty.String},
+						"config_json": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"folder":      {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"id":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"slug":        {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.String)},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_data_source"}]}`: {
@@ -116,31 +116,31 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Body: &schema.BodySchema{
 								Blocks: map[string]*schema.BlockSchema{},
 								Attributes: map[string]*schema.AttributeSchema{
-									"assume_role_arn":           {ValueType: cty.String, IsOptional: true},
-									"auth_type":                 {ValueType: cty.String, IsOptional: true},
-									"conn_max_lifetime":         {ValueType: cty.Number, IsOptional: true},
-									"custom_metrics_namespaces": {ValueType: cty.String, IsOptional: true},
-									"default_region":            {ValueType: cty.String, IsOptional: true},
-									"encrypt":                   {ValueType: cty.String, IsOptional: true},
-									"es_version":                {ValueType: cty.Number, IsOptional: true},
-									"graphite_version":          {ValueType: cty.String, IsOptional: true},
-									"http_method":               {ValueType: cty.String, IsOptional: true},
-									"interval":                  {ValueType: cty.String, IsOptional: true},
-									"log_level_field":           {ValueType: cty.String, IsOptional: true},
-									"log_message_field":         {ValueType: cty.String, IsOptional: true},
-									"max_idle_conns":            {ValueType: cty.Number, IsOptional: true},
-									"max_open_conns":            {ValueType: cty.Number, IsOptional: true},
-									"postgres_version":          {ValueType: cty.Number, IsOptional: true},
-									"query_timeout":             {ValueType: cty.String, IsOptional: true},
-									"ssl_mode":                  {ValueType: cty.String, IsOptional: true},
-									"time_field":                {ValueType: cty.String, IsOptional: true},
-									"time_interval":             {ValueType: cty.String, IsOptional: true},
-									"timescaledb":               {ValueType: cty.Bool, IsOptional: true},
-									"tls_auth":                  {ValueType: cty.Bool, IsOptional: true},
-									"tls_auth_with_ca_cert":     {ValueType: cty.Bool, IsOptional: true},
-									"tls_skip_verify":           {ValueType: cty.Bool, IsOptional: true},
-									"tsdb_resolution":           {ValueType: cty.String, IsOptional: true},
-									"tsdb_version":              {ValueType: cty.String, IsOptional: true},
+									"assume_role_arn":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"auth_type":                 {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"conn_max_lifetime":         {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"custom_metrics_namespaces": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"default_region":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"encrypt":                   {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"es_version":                {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"graphite_version":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"http_method":               {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"interval":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"log_level_field":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"log_message_field":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"max_idle_conns":            {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"max_open_conns":            {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"postgres_version":          {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"query_timeout":             {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"ssl_mode":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"time_field":                {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"time_interval":             {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"timescaledb":               {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+									"tls_auth":                  {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+									"tls_auth_with_ca_cert":     {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+									"tls_skip_verify":           {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+									"tsdb_resolution":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"tsdb_version":              {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
 								},
 							},
 						},
@@ -150,61 +150,61 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Body: &schema.BodySchema{
 								Blocks: map[string]*schema.BlockSchema{},
 								Attributes: map[string]*schema.AttributeSchema{
-									"access_key":          {ValueType: cty.String, IsOptional: true},
-									"basic_auth_password": {ValueType: cty.String, IsOptional: true},
-									"password":            {ValueType: cty.String, IsOptional: true},
-									"private_key":         {ValueType: cty.String, IsOptional: true},
-									"secret_key":          {ValueType: cty.String, IsOptional: true},
-									"tls_ca_cert":         {ValueType: cty.String, IsOptional: true},
-									"tls_client_cert":     {ValueType: cty.String, IsOptional: true},
-									"tls_client_key":      {ValueType: cty.String, IsOptional: true},
+									"access_key":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"basic_auth_password": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"password":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"private_key":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"secret_key":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"tls_ca_cert":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"tls_client_cert":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"tls_client_key":      {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
 								},
 							},
 						},
 					},
 					Attributes: map[string]*schema.AttributeSchema{
-						"access_mode":         {ValueType: cty.String, IsOptional: true},
-						"basic_auth_enabled":  {ValueType: cty.Bool, IsOptional: true},
-						"basic_auth_password": {ValueType: cty.String, IsOptional: true},
-						"basic_auth_username": {ValueType: cty.String, IsOptional: true},
-						"database_name":       {ValueType: cty.String, IsOptional: true},
-						"id":                  {ValueType: cty.String, IsOptional: true, IsComputed: true},
-						"is_default":          {ValueType: cty.Bool, IsOptional: true},
-						"name":                {IsRequired: true, ValueType: cty.String},
-						"password":            {ValueType: cty.String, IsOptional: true},
-						"type":                {IsRequired: true, ValueType: cty.String},
-						"url":                 {ValueType: cty.String, IsOptional: true},
-						"username":            {ValueType: cty.String, IsOptional: true},
+						"access_mode":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"basic_auth_enabled":  {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"basic_auth_password": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"basic_auth_username": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"database_name":       {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"id":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"is_default":          {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"name":                {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"password":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"type":                {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"url":                 {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"username":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_folder"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id":    {ValueType: cty.String, IsComputed: true, IsOptional: true},
-						"title": {IsRequired: true, ValueType: cty.String},
-						"uid":   {IsComputed: true, ValueType: cty.String},
+						"id":    {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"title": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"uid":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.String)},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_organization"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"admin_user": {ValueType: cty.String, IsOptional: true},
+						"admin_user": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
 						"admins": {
-							ValueType:  cty.List(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
 							IsOptional: true,
 						},
-						"create_users": {ValueType: cty.Bool, IsOptional: true},
+						"create_users": {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
 						"editors": {
-							ValueType:  cty.List(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
 							IsOptional: true,
 						},
-						"id":     {ValueType: cty.String, IsOptional: true, IsComputed: true},
-						"name":   {IsRequired: true, ValueType: cty.String},
-						"org_id": {IsComputed: true, ValueType: cty.Number},
+						"id":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"name":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"org_id": {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.Number)},
 						"viewers": {
-							ValueType:  cty.List(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
 							IsOptional: true,
 						},
 					},
@@ -213,38 +213,38 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"email": {ValueType: cty.String, IsOptional: true},
-						"id":    {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"email": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"id":    {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"members": {
-							ValueType:  cty.List(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
 							IsOptional: true,
 						},
-						"name":    {IsRequired: true, ValueType: cty.String},
-						"team_id": {IsComputed: true, ValueType: cty.Number},
+						"name":    {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"team_id": {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.Number)},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_user"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"email":    {IsRequired: true, ValueType: cty.String},
-						"id":       {ValueType: cty.String, IsOptional: true, IsComputed: true},
-						"login":    {ValueType: cty.String, IsOptional: true},
-						"name":     {ValueType: cty.String, IsOptional: true},
-						"password": {IsRequired: true, ValueType: cty.String},
+						"email":    {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"id":       {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"login":    {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"name":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"password": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
 					},
 				},
 				`{"labels":[{"index":0,"value":"null_resource"}]}`: {
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String, IsComputed: true, IsOptional: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 					},
@@ -257,13 +257,13 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 					},
@@ -282,7 +282,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 						"b64_url": {
 							Description: lang.MarkupContent{
@@ -290,7 +290,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 						"byte_length": {
 							Description: lang.MarkupContent{
@@ -298,7 +298,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 						},
 						"dec": {
 							Description: lang.MarkupContent{
@@ -306,7 +306,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 						"hex": {
 							Description: lang.MarkupContent{
@@ -314,15 +314,15 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
-						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"prefix": {
@@ -330,7 +330,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Arbitrary string to prefix the output value with. This string is supplied as-is, meaning it is not guaranteed to be URL-safe or base64 encoded.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 					},
@@ -343,13 +343,13 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String, IsComputed: true, IsOptional: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"max": {
@@ -358,7 +358,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 						},
 						"min": {
 							Description: lang.MarkupContent{
@@ -366,7 +366,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 						},
 						"result": {
 							Description: lang.MarkupContent{
@@ -374,14 +374,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 						},
 						"seed": {
 							Description: lang.MarkupContent{
 								Value: "A custom seed to always produce the same value.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 					},
@@ -394,13 +394,13 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"length": {
@@ -409,14 +409,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 						},
 						"lower": {
 							Description: lang.MarkupContent{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Bool,
+							Expr:       schema.LiteralTypeOnly(cty.Bool),
 							IsOptional: true,
 						},
 						"min_lower": {
@@ -424,7 +424,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"min_numeric": {
@@ -432,7 +432,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"min_special": {
@@ -440,7 +440,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"min_upper": {
@@ -448,7 +448,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"number": {
@@ -456,7 +456,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Bool,
+							Expr:       schema.LiteralTypeOnly(cty.Bool),
 							IsOptional: true,
 						},
 						"override_special": {
@@ -464,7 +464,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 						"result": {
@@ -473,14 +473,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 						"special": {
 							Description: lang.MarkupContent{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Bool,
+							Expr:       schema.LiteralTypeOnly(cty.Bool),
 							IsOptional: true,
 						},
 						"upper": {
@@ -488,7 +488,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Bool,
+							Expr:       schema.LiteralTypeOnly(cty.Bool),
 							IsOptional: true,
 						},
 					},
@@ -501,13 +501,13 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"length": {
@@ -515,7 +515,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The length (in words) of the pet name.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"prefix": {
@@ -523,7 +523,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "A string to prefix the name with.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 						"separator": {
@@ -531,7 +531,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The character to separate words in the pet name.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 					},
@@ -544,21 +544,21 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"input": {
 							Description: lang.MarkupContent{
 								Value: "The list of strings to shuffle.",
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							ValueType:  cty.List(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
 						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"result": {
@@ -567,14 +567,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.List(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
 						},
 						"result_count": {
 							Description: lang.MarkupContent{
 								Value: "The number of results to return. Defaults to the number of items in the `input` list. If fewer items are requested, some elements will be excluded from the result. If more items are requested, items will be repeated in the result but not more frequently than the number of items in the input list.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"seed": {
@@ -582,7 +582,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Arbitrary string with which to seed the random number generator, in order to produce less-volatile permutations of the list.\n\n**Important:** Even with an identical seed, it is not guaranteed that the same permutation will be produced across different versions of Terraform. This argument causes the result to be *less volatile*, but not fixed for all time.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 					},
@@ -595,13 +595,13 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"length": {
@@ -610,14 +610,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 						},
 						"lower": {
 							Description: lang.MarkupContent{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Bool,
+							Expr:       schema.LiteralTypeOnly(cty.Bool),
 							IsOptional: true,
 						},
 						"min_lower": {
@@ -625,7 +625,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"min_numeric": {
@@ -633,7 +633,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"min_special": {
@@ -641,7 +641,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"min_upper": {
@@ -649,7 +649,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Number,
+							Expr:       schema.LiteralTypeOnly(cty.Number),
 							IsOptional: true,
 						},
 						"number": {
@@ -657,7 +657,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Bool,
+							Expr:       schema.LiteralTypeOnly(cty.Bool),
 							IsOptional: true,
 						},
 						"override_special": {
@@ -665,7 +665,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 						"result": {
@@ -674,14 +674,14 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 						"special": {
 							Description: lang.MarkupContent{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Bool,
+							Expr:       schema.LiteralTypeOnly(cty.Bool),
 							IsOptional: true,
 						},
 						"upper": {
@@ -689,7 +689,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Bool,
+							Expr:       schema.LiteralTypeOnly(cty.Bool),
 							IsOptional: true,
 						},
 					},
@@ -702,13 +702,13 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {ValueType: cty.String, IsComputed: true, IsOptional: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"result": {
@@ -717,7 +717,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 					},
 					Description: lang.MarkupContent{
@@ -734,7 +734,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {ValueType: cty.Number, IsOptional: true},
+					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -747,17 +747,17 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 							IsComputed: true,
 						},
-						"id": {ValueType: cty.String, IsComputed: true, IsOptional: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"outputs": {
@@ -766,7 +766,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 						},
 						"random": {
 							Description: lang.MarkupContent{
@@ -774,7 +774,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 					},
 					Description: lang.MarkupContent{
@@ -791,17 +791,17 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 							IsComputed: true,
 						},
-						"id": {ValueType: cty.String, IsOptional: true, IsComputed: true},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.MarkdownKind,
 							},
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 						"outputs": {
@@ -810,7 +810,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.Map(cty.String),
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 						},
 						"random": {
 							Description: lang.MarkupContent{
@@ -818,7 +818,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							ValueType:  cty.String,
+							Expr:       schema.LiteralTypeOnly(cty.String),
 						},
 					},
 					Description: lang.MarkupContent{
@@ -830,11 +830,11 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "(builtin)",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"backend":   {IsRequired: true, ValueType: cty.String},
-						"config":    {IsOptional: true, ValueType: cty.DynamicPseudoType},
-						"defaults":  {IsOptional: true, ValueType: cty.DynamicPseudoType},
-						"outputs":   {IsComputed: true, ValueType: cty.DynamicPseudoType},
-						"workspace": {IsOptional: true, ValueType: cty.String},
+						"backend":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"config":    {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
+						"defaults":  {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
+						"outputs":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
+						"workspace": {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.String)},
 					},
 				},
 			},

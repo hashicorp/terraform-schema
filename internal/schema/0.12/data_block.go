@@ -26,18 +26,24 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
-					ValueType:   cty.DynamicPseudoType,
+					Expr:        schema.ExprConstraints{},
 					IsOptional:  true,
 					Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 					IsDepKey:    true,
 				},
 				"count": {
-					ValueType:   cty.Number,
+					Expr: schema.ExprConstraints{
+						schema.LiteralTypeExpr{Type: cty.Number},
+					},
 					IsOptional:  true,
 					Description: lang.Markdown("Number of instances of this data source, e.g. `3`"),
 				},
 				"depends_on": {
-					ValueType:   cty.Set(cty.DynamicPseudoType),
+					Expr: schema.ExprConstraints{
+						schema.TupleConsExpr{
+							Name: "set of references",
+						},
+					},
 					IsOptional:  true,
 					Description: lang.Markdown("Set of references to hidden dependencies, e.g. other resources or data sources"),
 				},
@@ -47,9 +53,9 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 
 	if v.GreaterThanOrEqual(v0_12_6) {
 		bs.Body.Attributes["for_each"] = &schema.AttributeSchema{
-			ValueTypes: schema.ValueTypes{
-				cty.Set(cty.DynamicPseudoType),
-				cty.Map(cty.DynamicPseudoType),
+			Expr: schema.ExprConstraints{
+				schema.LiteralTypeExpr{Type: cty.Set(cty.DynamicPseudoType)},
+				schema.LiteralTypeExpr{Type: cty.Map(cty.DynamicPseudoType)},
 			},
 			IsOptional:  true,
 			Description: lang.Markdown("A set or a map where each item represents an instance of this data source"),
