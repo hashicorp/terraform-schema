@@ -69,7 +69,7 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 						},
 					},
 				},
-				`{"labels":[{"index":0,"value":"null_resource"}],"attrs":[{"name":"provider","expr":{"ref":"null.foobar"}}]}`: {
+				`{"labels":[{"index":0,"value":"null_resource"}],"attrs":[{"name":"provider","expr":{"addr":"null.foobar"}}]}`: {
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -562,7 +562,7 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 						},
 					},
 				},
-				`{"labels":[{"index":0,"value":"null_data_source"}],"attrs":[{"name":"provider","expr":{"ref":"null.foobar"}}]}`: {
+				`{"labels":[{"index":0,"value":"null_data_source"}],"attrs":[{"name":"provider","expr":{"addr":"null.foobar"}}]}`: {
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
