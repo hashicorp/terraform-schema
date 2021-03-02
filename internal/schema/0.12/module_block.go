@@ -3,10 +3,22 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
 
 var moduleBlockSchema = &schema.BlockSchema{
+	Address: &schema.BlockAddrSchema{
+		Steps: []schema.AddrStep{
+			schema.StaticStep{Name: "module"},
+			schema.LabelStep{Index: 0},
+		},
+		FriendlyName:        "module",
+		ScopeId:             refscope.ModuleScope,
+		AsReference:         true,
+		DependentBodyAsData: true,
+		InferDependentBody:  true,
+	},
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",
@@ -35,6 +47,9 @@ var moduleBlockSchema = &schema.BlockSchema{
 				Expr: schema.ExprConstraints{
 					schema.MapExpr{
 						Name: "map of provider references",
+						Elem: schema.ExprConstraints{
+							schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
+						},
 					},
 				},
 				IsOptional:  true,

@@ -3,6 +3,7 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -69,6 +70,14 @@ var terraformBlockSchema = &schema.BlockSchema{
 								},
 							},
 							schema.LiteralTypeExpr{Type: cty.String},
+						},
+						Address: &schema.AttributeAddrSchema{
+							Steps: []schema.AddrStep{
+								schema.AttrNameStep{},
+							},
+							AsReference:  true,
+							FriendlyName: "provider",
+							ScopeId:      refscope.ProviderScope,
 						},
 						Description: lang.Markdown("Provider source and version constraint"),
 					},

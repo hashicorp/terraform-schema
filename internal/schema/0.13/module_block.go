@@ -4,9 +4,22 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/zclconf/go-cty/cty"
+
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 )
 
 var moduleBlockSchema = &schema.BlockSchema{
+	Address: &schema.BlockAddrSchema{
+		Steps: []schema.AddrStep{
+			schema.StaticStep{Name: "module"},
+			schema.LabelStep{Index: 0},
+		},
+		FriendlyName:        "module",
+		ScopeId:             refscope.ModuleScope,
+		AsReference:         true,
+		DependentBodyAsData: true,
+		InferDependentBody:  true,
+	},
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",
@@ -35,18 +48,26 @@ var moduleBlockSchema = &schema.BlockSchema{
 				Expr: schema.ExprConstraints{
 					schema.MapExpr{
 						Name: "map of provider references",
+						Elem: schema.ExprConstraints{
+							schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
+						},
 					},
 				},
 				IsOptional:  true,
 				Description: lang.Markdown("Explicit mapping of providers which the module uses"),
 			},
 			"count": {
-				Expr:        schema.LiteralTypeOnly(cty.Number),
+				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfType: cty.Number},
+					schema.LiteralTypeExpr{Type: cty.Number},
+				},
 				IsOptional:  true,
 				Description: lang.Markdown("Number of instances of this module, e.g. `3`"),
 			},
 			"for_each": {
 				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfType: cty.Set(cty.DynamicPseudoType)},
+					schema.TraversalExpr{OfType: cty.Map(cty.DynamicPseudoType)},
 					schema.LiteralTypeExpr{Type: cty.Set(cty.DynamicPseudoType)},
 					schema.LiteralTypeExpr{Type: cty.Map(cty.DynamicPseudoType)},
 				},
@@ -57,6 +78,11 @@ var moduleBlockSchema = &schema.BlockSchema{
 				Expr: schema.ExprConstraints{
 					schema.TupleConsExpr{
 						Name: "set of references",
+						AnyElem: schema.ExprConstraints{
+							schema.TraversalExpr{OfScopeId: refscope.DataScope},
+							schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
+							schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
+						},
 					},
 				},
 				IsOptional:  true,

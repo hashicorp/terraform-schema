@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -83,6 +84,14 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
 							Description: lang.Markdown("Provider source and version constraint"),
+							Address: &schema.AttributeAddrSchema{
+								Steps: []schema.AddrStep{
+									schema.AttrNameStep{},
+								},
+								AsReference:  true,
+								FriendlyName: "provider",
+								ScopeId:      refscope.ProviderScope,
+							},
 						},
 					},
 				},

@@ -14,7 +14,12 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					"alias": {
+						Expr: schema.ExprConstraints{
+							schema.LiteralTypeExpr{Type: cty.String},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -45,7 +50,13 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					"count": {
+						Expr: schema.ExprConstraints{
+							schema.TraversalExpr{OfType: cty.Number},
+							schema.LiteralTypeExpr{Type: cty.Number},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -53,13 +64,23 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 					},
@@ -68,13 +89,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 					},
@@ -83,13 +112,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 					},
@@ -104,7 +141,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"b64_url": {
 							Description: lang.MarkupContent{
@@ -112,7 +152,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"byte_length": {
 							Description: lang.MarkupContent{
@@ -120,7 +163,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"dec": {
 							Description: lang.MarkupContent{
@@ -128,7 +174,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"hex": {
 							Description: lang.MarkupContent{
@@ -136,16 +185,27 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
 							IsOptional: true,
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 						},
 						"prefix": {
 							Description: lang.MarkupContent{
@@ -153,7 +213,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsOptional: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 				},
@@ -161,13 +224,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"max": {
@@ -176,7 +247,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"min": {
 							Description: lang.MarkupContent{
@@ -184,7 +258,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"result": {
 							Description: lang.MarkupContent{
@@ -192,14 +269,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"seed": {
 							Description: lang.MarkupContent{
 								Value: "A custom seed to always produce the same value.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -208,13 +291,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -223,14 +314,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"lower": {
 							Description: lang.MarkupContent{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"min_lower": {
@@ -238,7 +335,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_numeric": {
@@ -246,7 +346,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_special": {
@@ -254,7 +357,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_upper": {
@@ -262,7 +368,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"number": {
@@ -270,7 +379,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"override_special": {
@@ -278,7 +390,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -287,14 +402,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"special": {
 							Description: lang.MarkupContent{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"upper": {
@@ -302,7 +423,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 					},
@@ -311,13 +435,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -325,7 +457,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "The length (in words) of the pet name.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"prefix": {
@@ -333,7 +468,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "A string to prefix the name with.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"separator": {
@@ -341,7 +479,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "The character to separate words in the pet name.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -350,21 +491,32 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"input": {
 							Description: lang.MarkupContent{
 								Value: "The list of strings to shuffle.",
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -373,14 +525,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 						},
 						"result_count": {
 							Description: lang.MarkupContent{
 								Value: "The number of results to return. Defaults to the number of items in the `input` list. If fewer items are requested, some elements will be excluded from the result. If more items are requested, items will be repeated in the result but not more frequently than the number of items in the input list.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"seed": {
@@ -388,7 +546,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Arbitrary string with which to seed the random number generator, in order to produce less-volatile permutations of the list.\n\n**Important:** Even with an identical seed, it is not guaranteed that the same permutation will be produced across different versions of Terraform. This argument causes the result to be *less volatile*, but not fixed for all time.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -397,13 +558,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -412,14 +581,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"lower": {
 							Description: lang.MarkupContent{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"min_lower": {
@@ -427,7 +602,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_numeric": {
@@ -435,7 +613,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_special": {
@@ -443,7 +624,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_upper": {
@@ -451,7 +635,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"number": {
@@ -459,7 +646,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"override_special": {
@@ -467,7 +657,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -476,14 +669,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"special": {
 							Description: lang.MarkupContent{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"upper": {
@@ -491,7 +690,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 					},
@@ -500,13 +702,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -515,7 +725,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 				},
@@ -529,7 +742,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"b64_url": {
 							Description: lang.MarkupContent{
@@ -537,7 +753,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"byte_length": {
 							Description: lang.MarkupContent{
@@ -545,7 +764,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"dec": {
 							Description: lang.MarkupContent{
@@ -553,7 +775,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"hex": {
 							Description: lang.MarkupContent{
@@ -561,16 +786,27 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
 							IsOptional: true,
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 						},
 						"prefix": {
 							Description: lang.MarkupContent{
@@ -578,7 +814,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsOptional: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 				},
@@ -586,13 +825,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"max": {
@@ -601,7 +848,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"min": {
 							Description: lang.MarkupContent{
@@ -609,7 +859,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"result": {
 							Description: lang.MarkupContent{
@@ -617,14 +870,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"seed": {
 							Description: lang.MarkupContent{
 								Value: "A custom seed to always produce the same value.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -633,13 +892,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -648,14 +915,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"lower": {
 							Description: lang.MarkupContent{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"min_lower": {
@@ -663,7 +936,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_numeric": {
@@ -671,7 +947,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_special": {
@@ -679,7 +958,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_upper": {
@@ -687,7 +969,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"number": {
@@ -695,7 +980,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"override_special": {
@@ -703,7 +991,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -712,14 +1003,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"special": {
 							Description: lang.MarkupContent{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"upper": {
@@ -727,7 +1024,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 					},
@@ -736,13 +1036,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -750,7 +1058,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "The length (in words) of the pet name.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"prefix": {
@@ -758,7 +1069,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "A string to prefix the name with.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"separator": {
@@ -766,7 +1080,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "The character to separate words in the pet name.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -775,21 +1092,32 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"input": {
 							Description: lang.MarkupContent{
 								Value: "The list of strings to shuffle.",
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -798,14 +1126,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 						},
 						"result_count": {
 							Description: lang.MarkupContent{
 								Value: "The number of results to return. Defaults to the number of items in the `input` list. If fewer items are requested, some elements will be excluded from the result. If more items are requested, items will be repeated in the result but not more frequently than the number of items in the input list.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"seed": {
@@ -813,7 +1147,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Arbitrary string with which to seed the random number generator, in order to produce less-volatile permutations of the list.\n\n**Important:** Even with an identical seed, it is not guaranteed that the same permutation will be produced across different versions of Terraform. This argument causes the result to be *less volatile*, but not fixed for all time.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -822,13 +1159,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -837,14 +1182,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"lower": {
 							Description: lang.MarkupContent{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"min_lower": {
@@ -852,7 +1203,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_numeric": {
@@ -860,7 +1214,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_special": {
@@ -868,7 +1225,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_upper": {
@@ -876,7 +1236,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"number": {
@@ -884,7 +1247,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"override_special": {
@@ -892,7 +1258,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -901,14 +1270,20 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"special": {
 							Description: lang.MarkupContent{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"upper": {
@@ -916,7 +1291,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 					},
@@ -925,13 +1303,21 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -940,7 +1326,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 				},
@@ -953,7 +1342,13 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					"count": {
+						Expr: schema.ExprConstraints{
+							schema.TraversalExpr{OfType: cty.Number},
+							schema.LiteralTypeExpr{Type: cty.Number},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -966,17 +1361,28 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsComputed: true,
 							IsOptional: true,
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"outputs": {
@@ -985,7 +1391,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 						},
 						"random": {
 							Description: lang.MarkupContent{
@@ -993,7 +1402,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 				},
@@ -1006,17 +1418,28 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 							IsComputed: true,
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"outputs": {
@@ -1025,7 +1448,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 						},
 						"random": {
 							Description: lang.MarkupContent{
@@ -1033,7 +1459,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 				},
@@ -1046,17 +1475,28 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 							IsComputed: true,
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true, IsComputed: true},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.PlainTextKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"outputs": {
@@ -1065,7 +1505,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 						},
 						"random": {
 							Description: lang.MarkupContent{
@@ -1073,7 +1516,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 				},
@@ -1081,22 +1527,82 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Detail: "(builtin)",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"backend":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"config":    {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"defaults":  {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"outputs":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"workspace": {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"backend": {
+							IsRequired: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+						},
+						"config": {
+							IsOptional: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+						},
+						"defaults": {
+							IsOptional: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+						},
+						"outputs": {
+							IsComputed: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+						},
+						"workspace": {
+							IsOptional: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"provider","expr":{"addr":"terraform"}}]}`: {
 					Detail: "(builtin)",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"backend":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"config":    {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"defaults":  {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"outputs":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"workspace": {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"backend": {
+							IsRequired: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+						},
+						"config": {
+							IsOptional: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+						},
+						"defaults": {
+							IsOptional: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+						},
+						"outputs": {
+							IsComputed: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+						},
+						"workspace": {
+							IsOptional: true,
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+						},
 					},
 				},
 			},

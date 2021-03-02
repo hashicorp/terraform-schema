@@ -3,9 +3,21 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 )
 
 var resourceBlockSchema = &schema.BlockSchema{
+	Address: &schema.BlockAddrSchema{
+		Steps: []schema.AddrStep{
+			schema.LabelStep{Index: 0},
+			schema.LabelStep{Index: 1},
+		},
+		FriendlyName:        "resource",
+		ScopeId:             refscope.ResourceScope,
+		AsReference:         true,
+		DependentBodyAsData: true,
+		InferDependentBody:  true,
+	},
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "type",
@@ -23,7 +35,9 @@ var resourceBlockSchema = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"provider": {
-				Expr:        schema.ExprConstraints{},
+				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
+				},
 				IsOptional:  true,
 				Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 				IsDepKey:    true,
