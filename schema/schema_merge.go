@@ -130,7 +130,7 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 					depKeys.Attributes = append(depKeys.Attributes, schema.AttributeDependent{
 						Name: "provider",
 						Expr: schema.ExpressionValue{
-							Reference: lang.Reference{
+							Address: lang.Address{
 								lang.RootStep{Name: localRef.LocalName},
 								lang.AttrStep{Name: localRef.Alias},
 							},
@@ -153,7 +153,7 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 					depKeys.Attributes = append(depKeys.Attributes, schema.AttributeDependent{
 						Name: "provider",
 						Expr: schema.ExpressionValue{
-							Reference: lang.Reference{
+							Address: lang.Address{
 								lang.RootStep{Name: localRef.LocalName},
 								lang.AttrStep{Name: localRef.Alias},
 							},
