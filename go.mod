@@ -3,7 +3,7 @@ module github.com/hashicorp/terraform-schema
 go 1.14
 
 require (
-	github.com/google/go-cmp v0.5.4
+	github.com/google/go-cmp v0.5.5
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/hashicorp/go-version v1.2.1
 	github.com/hashicorp/hcl-lang v0.0.0-20210225075938-01f0b453dd63
