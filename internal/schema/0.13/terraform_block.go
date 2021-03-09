@@ -54,10 +54,20 @@ var terraformBlockSchema = &schema.BlockSchema{
 				Body: &schema.BodySchema{
 					AnyAttribute: &schema.AttributeSchema{
 						Expr: schema.ExprConstraints{
-							schema.LiteralTypeExpr{Type: cty.Object(map[string]cty.Type{
-								"source":  cty.String,
-								"version": cty.String,
-							})},
+							schema.ObjectExpr{
+								Attributes: schema.ObjectExprAttributes{
+									"source": schema.ObjectAttribute{
+										Expr: schema.LiteralTypeOnly(cty.String),
+										Description: lang.Markdown("The global source address for the provider " +
+											"you intend to use, such as `hashicorp/aws`"),
+									},
+									"version": schema.ObjectAttribute{
+										Expr: schema.LiteralTypeOnly(cty.String),
+										Description: lang.Markdown("Version constraint specifying which subset of " +
+											"available provider versions the module is compatible with, e.g. `~> 1.0`"),
+									},
+								},
+							},
 							schema.LiteralTypeExpr{Type: cty.String},
 						},
 						Description: lang.Markdown("Provider source and version constraint"),

@@ -86,6 +86,11 @@ var lifecycleBlock = &schema.BlockSchema{
 			"ignore_changes": {
 				Expr: schema.ExprConstraints{
 					schema.TupleConsExpr{},
+					schema.KeywordExpr{
+						Keyword: "all",
+						Description: lang.Markdown("Ignore all attributes, which means that Terraform can create" +
+							" and destroy the remote object but will never propose updates to it"),
+					},
 				},
 				IsOptional:  true,
 				Description: lang.Markdown("A set of fields (references) of which to ignore changes to, e.g. `tags`"),
