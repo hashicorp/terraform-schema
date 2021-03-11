@@ -140,6 +140,37 @@ data "mycloud_instance" "foo" {
 				},
 			},
 		},
+		{
+			"configuration aliases",
+			`
+terraform {
+  required_providers {
+    xyz = {
+      source                = "grafana/grafana"
+      version               = "1.9.0"
+      configuration_aliases = [xyz.blah]
+    }
+  }
+}
+`,
+			addrs.ProviderReferences{
+				addrs.LocalProviderConfig{
+					LocalName: "xyz",
+				}: addrs.Provider{
+					Hostname:  addrs.DefaultRegistryHost,
+					Namespace: "grafana",
+					Type:      "grafana",
+				},
+				addrs.LocalProviderConfig{
+					LocalName: "xyz",
+					Alias:     "blah",
+				}: addrs.Provider{
+					Hostname:  addrs.DefaultRegistryHost,
+					Namespace: "grafana",
+					Type:      "grafana",
+				},
+			},
+		},
 	}
 
 	for i, tc := range testCases {
