@@ -53,7 +53,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 				},
-				`{"labels":[{"index":0,"value":"random"}]}`: {
+				`{"labels":[{"index":0,"value":"rand"}]}`: {
 					Detail: "hashicorp/random",
 					DocsLink: &schema.DocsLink{
 						URL:     "https://registry.terraform.io/providers/hashicorp/random/latest/docs",
@@ -234,11 +234,184 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						"password": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
 					},
 				},
+				`{"labels":[{"index":0,"value":"grafana_alert_notification"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
+					Detail: "grafana/grafana",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"frequency":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"id":            {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"is_default":    {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"name":          {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"send_reminder": {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"settings": {
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							IsOptional: true,
+						},
+						"type": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"uid":  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+					},
+				},
+				`{"labels":[{"index":0,"value":"grafana_dashboard"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
+					Detail: "grafana/grafana",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"config_json": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"folder":      {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"id":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"slug":        {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.String)},
+					},
+				},
+				`{"labels":[{"index":0,"value":"grafana_data_source"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
+					Detail: "grafana/grafana",
+					Blocks: map[string]*schema.BlockSchema{
+						"json_data": {
+							Labels: []*schema.LabelSchema{},
+							Type:   schema.BlockTypeList,
+							Body: &schema.BodySchema{
+								Blocks: map[string]*schema.BlockSchema{},
+								Attributes: map[string]*schema.AttributeSchema{
+									"assume_role_arn":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"auth_type":                 {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"conn_max_lifetime":         {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"custom_metrics_namespaces": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"default_region":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"encrypt":                   {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"es_version":                {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"graphite_version":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"http_method":               {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"interval":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"log_level_field":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"log_message_field":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"max_idle_conns":            {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"max_open_conns":            {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"postgres_version":          {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+									"query_timeout":             {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"ssl_mode":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"time_field":                {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"time_interval":             {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"timescaledb":               {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+									"tls_auth":                  {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+									"tls_auth_with_ca_cert":     {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+									"tls_skip_verify":           {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+									"tsdb_resolution":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"tsdb_version":              {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+								},
+							},
+						},
+						"secure_json_data": {
+							Labels: []*schema.LabelSchema{},
+							Type:   schema.BlockTypeList,
+							Body: &schema.BodySchema{
+								Blocks: map[string]*schema.BlockSchema{},
+								Attributes: map[string]*schema.AttributeSchema{
+									"access_key":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"basic_auth_password": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"password":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"private_key":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"secret_key":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"tls_ca_cert":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"tls_client_cert":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"tls_client_key":      {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+								},
+							},
+						},
+					},
+					Attributes: map[string]*schema.AttributeSchema{
+						"access_mode":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"basic_auth_enabled":  {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"basic_auth_password": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"basic_auth_username": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"database_name":       {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"id":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"is_default":          {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"name":                {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"password":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"type":                {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"url":                 {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"username":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					},
+				},
+				`{"labels":[{"index":0,"value":"grafana_folder"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
+					Detail: "grafana/grafana",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"id":    {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"title": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"uid":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.String)},
+					},
+				},
+				`{"labels":[{"index":0,"value":"grafana_organization"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
+					Detail: "grafana/grafana",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"admin_user": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"admins": {
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							IsOptional: true,
+						},
+						"create_users": {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"editors": {
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							IsOptional: true,
+						},
+						"id":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"name":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"org_id": {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.Number)},
+						"viewers": {
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							IsOptional: true,
+						},
+					},
+				},
+				`{"labels":[{"index":0,"value":"grafana_team"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
+					Detail: "grafana/grafana",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"email": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"id":    {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"members": {
+							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							IsOptional: true,
+						},
+						"name":    {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"team_id": {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.Number)},
+					},
+				},
+				`{"labels":[{"index":0,"value":"grafana_user"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
+					Detail: "grafana/grafana",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"email":    {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"id":       {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"login":    {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"name":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"password": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+					},
+				},
 				`{"labels":[{"index":0,"value":"null_resource"}]}`: {
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
 						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"triggers": {
+							Description: lang.MarkupContent{
+								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
+								Kind:  lang.MarkdownKind,
+							},
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							IsOptional: true,
+						},
+					},
+					Description: lang.MarkupContent{
+						Value: "The `null_resource` resource implements the standard resource lifecycle but takes no further action.\n\nThe `triggers` argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.",
+						Kind:  lang.MarkdownKind,
+					},
+				},
+				`{"labels":[{"index":0,"value":"null_resource"}],"attrs":[{"name":"provider","expr":{"addr":"null"}}]}`: {
+					Detail: "hashicorp/null",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
@@ -272,7 +445,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						Kind:  lang.MarkdownKind,
 					},
 				},
-				`{"labels":[{"index":0,"value":"random_id"}]}`: {
+				`{"labels":[{"index":0,"value":"random_id"}],"attrs":[{"name":"provider","expr":{"addr":"rand"}}]}`: {
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -339,7 +512,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						Kind:  lang.MarkdownKind,
 					},
 				},
-				`{"labels":[{"index":0,"value":"random_integer"}]}`: {
+				`{"labels":[{"index":0,"value":"random_integer"}],"attrs":[{"name":"provider","expr":{"addr":"rand"}}]}`: {
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -390,7 +563,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						Kind:  lang.MarkdownKind,
 					},
 				},
-				`{"labels":[{"index":0,"value":"random_password"}]}`: {
+				`{"labels":[{"index":0,"value":"random_password"}],"attrs":[{"name":"provider","expr":{"addr":"rand"}}]}`: {
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -497,7 +670,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						Kind:  lang.MarkdownKind,
 					},
 				},
-				`{"labels":[{"index":0,"value":"random_pet"}]}`: {
+				`{"labels":[{"index":0,"value":"random_pet"}],"attrs":[{"name":"provider","expr":{"addr":"rand"}}]}`: {
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -540,7 +713,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						Kind:  lang.MarkdownKind,
 					},
 				},
-				`{"labels":[{"index":0,"value":"random_shuffle"}]}`: {
+				`{"labels":[{"index":0,"value":"random_shuffle"}],"attrs":[{"name":"provider","expr":{"addr":"rand"}}]}`: {
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -591,7 +764,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						Kind:  lang.MarkdownKind,
 					},
 				},
-				`{"labels":[{"index":0,"value":"random_string"}]}`: {
+				`{"labels":[{"index":0,"value":"random_string"}],"attrs":[{"name":"provider","expr":{"addr":"rand"}}]}`: {
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -698,7 +871,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						Kind:  lang.MarkdownKind,
 					},
 				},
-				`{"labels":[{"index":0,"value":"random_uuid"}]}`: {
+				`{"labels":[{"index":0,"value":"random_uuid"}],"attrs":[{"name":"provider","expr":{"addr":"rand"}}]}`: {
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -739,6 +912,50 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
 				`{"labels":[{"index":0,"value":"null_data_source"}]}`: {
+					Detail: "hashicorp/null",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"has_computed_default": {
+							Description: lang.MarkupContent{
+								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
+								Kind:  lang.MarkdownKind,
+							},
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"inputs": {
+							Description: lang.MarkupContent{
+								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
+								Kind:  lang.MarkdownKind,
+							},
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							IsOptional: true,
+						},
+						"outputs": {
+							Description: lang.MarkupContent{
+								Value: "After the data source is \"read\", a copy of the `inputs` map.",
+								Kind:  lang.MarkdownKind,
+							},
+							IsComputed: true,
+							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+						},
+						"random": {
+							Description: lang.MarkupContent{
+								Value: "A random value. This is primarily for testing and has little practical use; prefer the [random provider](https://www.terraform.io/docs/providers/random/) for more practical random number use-cases.",
+								Kind:  lang.MarkdownKind,
+							},
+							IsComputed: true,
+							Expr:       schema.LiteralTypeOnly(cty.String),
+						},
+					},
+					Description: lang.MarkupContent{
+						Value: "The `null_data_source` data source implements the standard data source lifecycle but does not interact with any external APIs.",
+						Kind:  lang.MarkdownKind,
+					},
+				},
+				`{"labels":[{"index":0,"value":"null_data_source"}],"attrs":[{"name":"provider","expr":{"addr":"null"}}]}`: {
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
@@ -827,6 +1044,17 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					},
 				},
 				`{"labels":[{"index":0,"value":"terraform_remote_state"}]}`: {
+					Detail: "(builtin)",
+					Blocks: map[string]*schema.BlockSchema{},
+					Attributes: map[string]*schema.AttributeSchema{
+						"backend":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"config":    {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
+						"defaults":  {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
+						"outputs":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
+						"workspace": {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.String)},
+					},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"provider","expr":{"addr":"terraform"}}]}`: {
 					Detail: "(builtin)",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
