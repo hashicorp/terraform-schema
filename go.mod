@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/google/go-cmp v0.5.5
-	github.com/hashicorp/go-multierror v1.1.0
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/go-version v1.2.1
 	github.com/hashicorp/hcl-lang v0.0.0-20210311200725-da0537032422
 	github.com/hashicorp/hcl/v2 v2.9.1
