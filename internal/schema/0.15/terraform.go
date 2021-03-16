@@ -39,5 +39,13 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema, v *version.Version) *sche
 			Description: lang.Markdown("Provider source, version constraint and its aliases"),
 		},
 	}
+	bs.Body.Attributes["language"] = &schema.AttributeSchema{
+		IsOptional: true,
+		Expr: schema.ExprConstraints{
+			schema.KeywordExpr{
+				Keyword: "TF2021",
+			},
+		},
+	}
 	return bs
 }
