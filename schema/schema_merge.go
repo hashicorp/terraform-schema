@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
@@ -94,13 +95,6 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 
 		localRefs := refs.LocalNamesByAddr(srcAddr)
 
-		if len(localRefs) == 0 && (srcAddr.IsBuiltIn() || srcAddr.IsLegacy() || srcAddr.IsDefault()) {
-			// Assume this provider does not have alias
-			localRefs = append(localRefs, addrs.LocalProviderConfig{
-				LocalName: srcAddr.Type,
-			})
-		}
-
 		var providerSchema *tfjson.SchemaBlock
 		if provider.ConfigSchema != nil {
 			providerSchema = provider.ConfigSchema.Block
@@ -118,6 +112,13 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 				},
 			})] = pSchema
 
+			providerAddr := lang.Address{
+				lang.RootStep{Name: localRef.LocalName},
+			}
+			if localRef.Alias != "" {
+				providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
+			}
+
 			for rName, rJsonSchema := range provider.ResourceSchemas {
 				rSchema := convertBodySchemaFromJson(detail, rJsonSchema.Block)
 
@@ -125,20 +126,28 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 					Labels: []schema.LabelDependent{
 						{Index: 0, Value: rName},
 					},
-				}
-				if localRef.Alias != "" {
-					depKeys.Attributes = append(depKeys.Attributes, schema.AttributeDependent{
-						Name: "provider",
-						Expr: schema.ExpressionValue{
-							Address: lang.Address{
-								lang.RootStep{Name: localRef.LocalName},
-								lang.AttrStep{Name: localRef.Alias},
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "provider",
+							Expr: schema.ExpressionValue{
+								Address: providerAddr,
 							},
 						},
-					})
+					},
 				}
 
 				mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
+
+				// No explicit association is required
+				// if the resource prefix matches provider name
+				if strings.HasPrefix(rName, localRef.LocalName+"_") {
+					depKeys := schema.DependencyKeys{
+						Labels: []schema.LabelDependent{
+							{Index: 0, Value: rName},
+						},
+					}
+					mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
+				}
 			}
 
 			for dsName, dsJsonSchema := range provider.DataSourceSchemas {
@@ -148,20 +157,28 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 					Labels: []schema.LabelDependent{
 						{Index: 0, Value: dsName},
 					},
-				}
-				if localRef.Alias != "" {
-					depKeys.Attributes = append(depKeys.Attributes, schema.AttributeDependent{
-						Name: "provider",
-						Expr: schema.ExpressionValue{
-							Address: lang.Address{
-								lang.RootStep{Name: localRef.LocalName},
-								lang.AttrStep{Name: localRef.Alias},
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "provider",
+							Expr: schema.ExpressionValue{
+								Address: providerAddr,
 							},
 						},
-					})
+					},
 				}
 
 				mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+
+				// No explicit association is required
+				// if the resource prefix matches provider name
+				if strings.HasPrefix(dsName, localRef.LocalName+"_") {
+					depKeys := schema.DependencyKeys{
+						Labels: []schema.LabelDependent{
+							{Index: 0, Value: dsName},
+						},
+					}
+					mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+				}
 			}
 		}
 	}

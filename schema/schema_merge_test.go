@@ -29,6 +29,42 @@ func TestMergeWithJsonProviderSchemas_noCoreSchema(t *testing.T) {
 }
 
 func TestMergeWithJsonProviderSchemas_noProviderSchema(t *testing.T) {
+	testCoreSchema := &schema.BodySchema{
+		Blocks: map[string]*schema.BlockSchema{
+			"provider": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					},
+				},
+			},
+			"resource": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+			"data": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+		},
+	}
 	sm := NewSchemaMerger(testCoreSchema)
 
 	_, err := sm.MergeWithJsonProviderSchemas(nil)
@@ -57,6 +93,42 @@ func TestMergeWithJsonProviderSchemas_v012(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	testCoreSchema := &schema.BodySchema{
+		Blocks: map[string]*schema.BlockSchema{
+			"provider": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					},
+				},
+			},
+			"resource": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+			"data": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+		},
+	}
 	sm := NewSchemaMerger(testCoreSchema)
 	sm.SetParsedFiles(map[string]*hcl.File{
 		"test.tf": f,
@@ -96,6 +168,42 @@ func TestMergeWithJsonProviderSchemas_v013(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	testCoreSchema := &schema.BodySchema{
+		Blocks: map[string]*schema.BlockSchema{
+			"provider": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					},
+				},
+			},
+			"resource": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+			"data": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+		},
+	}
 	sm := NewSchemaMerger(testCoreSchema)
 	sm.SetParsedFiles(map[string]*hcl.File{
 		"test.tf": f,
@@ -113,41 +221,4 @@ func TestMergeWithJsonProviderSchemas_v013(t *testing.T) {
 	if diff := cmp.Diff(expectedMergedSchema_v013, mergedSchema, opts); diff != "" {
 		t.Fatalf("schema differs: %s", diff)
 	}
-}
-
-var testCoreSchema = &schema.BodySchema{
-	Blocks: map[string]*schema.BlockSchema{
-		"provider": {
-			Labels: []*schema.LabelSchema{
-				{Name: "name"},
-			},
-			Body: &schema.BodySchema{
-				Attributes: map[string]*schema.AttributeSchema{
-					"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-				},
-			},
-		},
-		"resource": {
-			Labels: []*schema.LabelSchema{
-				{Name: "type"},
-				{Name: "name"},
-			},
-			Body: &schema.BodySchema{
-				Attributes: map[string]*schema.AttributeSchema{
-					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-				},
-			},
-		},
-		"data": {
-			Labels: []*schema.LabelSchema{
-				{Name: "type"},
-				{Name: "name"},
-			},
-			Body: &schema.BodySchema{
-				Attributes: map[string]*schema.AttributeSchema{
-					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-				},
-			},
-		},
-	},
 }

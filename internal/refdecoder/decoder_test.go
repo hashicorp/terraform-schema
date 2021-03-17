@@ -81,6 +81,32 @@ terraform {
 			},
 		},
 		{
+			"default namespace provider under different local name",
+			`
+terraform {
+  required_providers {
+    rand = {
+      source  = "hashicorp/random"
+      version = "3.0.0"
+    }
+  }
+}
+
+resource "random_string" "name" {
+  provider = rand
+}
+`,
+			addrs.ProviderReferences{
+				addrs.LocalProviderConfig{
+					LocalName: "rand",
+				}: addrs.Provider{
+					Hostname:  addrs.DefaultRegistryHost,
+					Namespace: "hashicorp",
+					Type:      "random",
+				},
+			},
+		},
+		{
 			"resource block",
 			`
 resource "mycloud_instance" "foo" {
