@@ -1,0 +1,161 @@
+{
+    "format_version": "0.1",
+    "provider_schemas": {
+        "registry.terraform.io/hashicorp/hashicup": {
+            "data_source_schemas": {
+                "hashicup_test": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "backend": {
+                                "type": "string",
+                                "description_kind": "plain",
+                                "required": true
+                            },
+                            "config1": {
+                                "nested_type": {
+                                    "attributes": {
+                                        "first": {
+                                            "type": "string",
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        },
+                                        "second": {
+                                            "type": "number",
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        },
+                                        "third": {
+                                            "nested_type": {
+                                                "attributes": {
+                                                    "nested": {
+                                                        "type": "string",
+                                                        "optional": true
+                                                    }
+                                                },
+                                                "nesting_mode": "single"
+                                            },
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        }
+                                    },
+                                    "nesting_mode": "single"
+                                },
+                                "description_kind": "plain",
+                                "optional": true
+                            },
+                            "config2": {
+                                "nested_type": {
+                                    "attributes": {
+                                        "first": {
+                                            "type": "string",
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        },
+                                        "second": {
+                                            "type": "number",
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        },
+                                        "third": {
+                                            "nested_type": {
+                                                "attributes": {
+                                                    "nested": {
+                                                        "type": "string",
+                                                        "optional": true
+                                                    }
+                                                },
+                                                "nesting_mode": "single"
+                                            },
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        }
+                                    },
+                                    "nesting_mode": "list",
+                                    "min_items": 2,
+                                    "max_items": 3
+                                },
+                                "description_kind": "plain",
+                                "optional": true
+                            },
+                            "config3": {
+                                "nested_type": {
+                                    "attributes": {
+                                        "first": {
+                                            "type": "string",
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        },
+                                        "second": {
+                                            "type": "number",
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        },
+                                        "third": {
+                                            "nested_type": {
+                                                "attributes": {
+                                                    "nested": {
+                                                        "type": "string",
+                                                        "optional": true
+                                                    }
+                                                },
+                                                "nesting_mode": "single"
+                                            },
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        }
+                                    },
+                                    "nesting_mode": "set",
+                                    "min_items": 1,
+                                    "max_items": 5
+                                },
+                                "description_kind": "plain",
+                                "optional": true
+                            },
+                            "config4": {
+                                "nested_type": {
+                                    "attributes": {
+                                        "first": {
+                                            "type": "string",
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        },
+                                        "second": {
+                                            "type": "number",
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        },
+                                        "third": {
+                                            "nested_type": {
+                                                "attributes": {
+                                                    "nested": {
+                                                        "type": "string",
+                                                        "optional": true
+                                                    }
+                                                },
+                                                "nesting_mode": "single"
+                                            },
+                                            "description_kind": "plain",
+                                            "optional": true
+                                        }
+                                    },
+                                    "nesting_mode": "map",
+                                    "min_items": 9,
+                                    "max_items": 10
+                                },
+                                "description_kind": "plain",
+                                "optional": true
+                            },
+                            "workspace": {
+                                "type": "string",
+                                "description_kind": "plain",
+                                "optional": true
+                            }
+                        },
+                        "description_kind": "plain"
+                    }
+                }
+            }
+        }
+    }
+}

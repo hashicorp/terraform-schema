@@ -72,7 +72,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 				Expr: schema.ExprConstraints{
 					schema.ObjectExpr{
 						Attributes: schema.ObjectExprAttributes{
-							"version": schema.ObjectAttribute{
+							"version": &schema.AttributeSchema{
 								Expr: schema.LiteralTypeOnly(cty.String),
 								Description: lang.Markdown("Version constraint specifying which subset of " +
 									"available provider versions the module is compatible with, e.g. `~> 1.0`"),
