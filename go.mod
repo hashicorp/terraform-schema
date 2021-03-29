@@ -10,9 +10,10 @@ require (
 	github.com/hashicorp/hcl/v2 v2.9.1
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20210318070130-9a80970d6b34
 	github.com/hashicorp/terraform-json v0.10.0
+	github.com/hashicorp/terraform-registry-address v0.0.0-20210412075316-9b2996cce896
 	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734
 	github.com/mh-cbon/go-fmt-fail v0.0.0-20160815164508-67765b3fbcb5
 	github.com/zclconf/go-cty v1.8.1
 	github.com/zclconf/go-cty-debug v0.0.0-20191215020915-b22d67c1ba0b
-	golang.org/x/net v0.0.0-20200301022130-244492dfa37a
+	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
 )
