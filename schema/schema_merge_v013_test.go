@@ -62,11 +62,6 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 				},
-				`{"labels":[{"index":0,"value":"terraform"}]}`: {
-					Detail:     "(builtin)",
-					Blocks:     map[string]*schema.BlockSchema{},
-					Attributes: map[string]*schema.AttributeSchema{},
-				},
 			},
 		},
 		"resource": {

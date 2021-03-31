@@ -53,6 +53,10 @@ resource "google_storage_bucket" "bucket" {
   name = "test-bucket"
 }
 
+data "blah_foobar" "test" {
+  name = "something"
+}
+
 provider "grafana" {
   url    = "http://grafana.example.com/"
   org_id = 1
@@ -62,11 +66,13 @@ provider "grafana" {
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
 					{LocalName: "aws"}:     tfaddr.NewLegacyProvider("aws"),
+					{LocalName: "blah"}:    tfaddr.NewLegacyProvider("blah"),
 					{LocalName: "google"}:  tfaddr.NewLegacyProvider("google"),
 					{LocalName: "grafana"}: tfaddr.NewLegacyProvider("grafana"),
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
 					tfaddr.NewLegacyProvider("aws"):     {},
+					tfaddr.NewLegacyProvider("blah"):    {},
 					tfaddr.NewLegacyProvider("google"):  {},
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},

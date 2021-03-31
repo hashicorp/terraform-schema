@@ -2,6 +2,13 @@
     "format_version": "0.1",
     "provider_schemas": {
         "registry.terraform.io/hashicorp/hashicup": {
+            "provider": {
+                "version": 0,
+                "block": {
+                    "attributes": {},
+                    "description_kind": "plain"
+                }
+            },
             "data_source_schemas": {
                 "hashicup_test": {
                     "version": 0,
