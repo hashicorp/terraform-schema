@@ -1,73 +1,48 @@
 package schema
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
-	"github.com/hashicorp/hcl/v2"
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/hashicorp/terraform-schema/internal/addrs"
-	"github.com/hashicorp/terraform-schema/internal/refdecoder"
+	"github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty/cty"
 )
 
 type SchemaMerger struct {
-	coreSchema  *schema.BodySchema
-	parsedFiles map[string]*hcl.File
+	coreSchema   *schema.BodySchema
+	schemaReader SchemaReader
+}
 
-	coreVersion      *version.Version
-	providerVersions map[addrs.Provider]*version.Version
+type ProviderSchema struct {
+	Provider    *schema.BodySchema
+	Resources   map[string]*schema.BodySchema
+	DataSources map[string]*schema.BodySchema
+}
+
+type SchemaReader interface {
+	ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*ProviderSchema, error)
 }
 
 func NewSchemaMerger(coreSchema *schema.BodySchema) *SchemaMerger {
 	return &SchemaMerger{
-		coreSchema:       coreSchema,
-		parsedFiles:      make(map[string]*hcl.File, 0),
-		providerVersions: make(map[addrs.Provider]*version.Version, 0),
+		coreSchema: coreSchema,
 	}
 }
 
-// SetParsedFiles sets a map of parsed files where key is a filename
-func (m *SchemaMerger) SetParsedFiles(files map[string]*hcl.File) {
-	m.parsedFiles = files
+func (m *SchemaMerger) SetSchemaReader(sr SchemaReader) {
+	m.schemaReader = sr
 }
 
-// SetCoreVersion sets version of Terraform (core) to help identify core schema
-// and schema of the builtin terraform provider
-func (m *SchemaMerger) SetCoreVersion(v *version.Version) {
-	m.coreVersion = v
-}
-
-// SetProviderVersions sets versions of providers to help identify
-// where the provider schemas came from
-func (m *SchemaMerger) SetProviderVersions(versions map[string]*version.Version) error {
-	versionMap := make(map[addrs.Provider]*version.Version, 0)
-
-	for addr, ver := range versions {
-		srcAddr, err := addrs.ParseProviderSourceString(addr)
-		if err != nil {
-			return err
-		}
-		versionMap[srcAddr] = ver
-	}
-
-	m.providerVersions = versionMap
-
-	return nil
-}
-
-// MergeWithJsonProviderSchemas provides a merged schema based on
-// terraform-json formatted provider schema and any other data
-// provided via setters
-func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) (*schema.BodySchema, error) {
+func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, error) {
 	if m.coreSchema == nil {
 		return nil, coreSchemaRequiredErr{}
 	}
 
-	if ps == nil {
+	if meta == nil || m.schemaReader == nil {
 		return m.coreSchema, nil
 	}
 
@@ -83,35 +58,23 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 		mergedSchema.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 
-	refs, diags := refdecoder.DecodeProviderReferences(m.parsedFiles)
-	if diags.HasErrors() && len(refs) == 0 {
-		return m.coreSchema, nil
-	}
+	providerRefs := ProviderReferences(meta.ProviderReferences)
 
-	for sourceString, provider := range ps.Schemas {
-		srcAddr, err := addrs.ParseProviderSourceString(sourceString)
+	for pAddr, pVersionCons := range meta.ProviderRequirements {
+		pSchema, err := m.schemaReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
 		if err != nil {
-			return m.coreSchema, nil
+			continue
 		}
 
-		localRefs := refs.LocalNamesByAddr(srcAddr)
-
-		var providerSchema *tfjson.SchemaBlock
-		if provider.ConfigSchema != nil {
-			providerSchema = provider.ConfigSchema.Block
-		}
-
-		detail := m.detailForSrcAddr(srcAddr)
-
-		for _, localRef := range localRefs {
-			pSchema := convertBodySchemaFromJson(detail, providerSchema)
-			pSchema.DocsLink = m.docsLinkForProvider(srcAddr)
-
-			mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
-				Labels: []schema.LabelDependent{
-					{Index: 0, Value: localRef.LocalName},
-				},
-			})] = pSchema
+		refs := providerRefs.ReferencesOfProvider(pAddr)
+		for _, localRef := range refs {
+			if pSchema.Provider != nil {
+				mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
+					Labels: []schema.LabelDependent{
+						{Index: 0, Value: localRef.LocalName},
+					},
+				})] = pSchema.Provider
+			}
 
 			providerAddr := lang.Address{
 				lang.RootStep{Name: localRef.LocalName},
@@ -120,9 +83,7 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 				providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
 			}
 
-			for rName, rJsonSchema := range provider.ResourceSchemas {
-				rSchema := convertBodySchemaFromJson(detail, rJsonSchema.Block)
-
+			for rName, rSchema := range pSchema.Resources {
 				depKeys := schema.DependencyKeys{
 					Labels: []schema.LabelDependent{
 						{Index: 0, Value: rName},
@@ -136,7 +97,6 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 						},
 					},
 				}
-
 				mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
 
 				// No explicit association is required
@@ -151,9 +111,7 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 				}
 			}
 
-			for dsName, dsJsonSchema := range provider.DataSourceSchemas {
-				dsSchema := convertBodySchemaFromJson(detail, dsJsonSchema.Block)
-
+			for dsName, dsSchema := range pSchema.DataSources {
 				depKeys := schema.DependencyKeys{
 					Labels: []schema.LabelDependent{
 						{Index: 0, Value: dsName},
@@ -187,55 +145,18 @@ func (m *SchemaMerger) MergeWithJsonProviderSchemas(ps *tfjson.ProviderSchemas) 
 	return mergedSchema, nil
 }
 
-func (m *SchemaMerger) docsLinkForProvider(addr addrs.Provider) *schema.DocsLink {
-	if !providerHasDocs(addr) {
-		return nil
-	}
+type ProviderReferences map[module.ProviderRef]tfaddr.Provider
 
-	version := "latest"
-	for pAddr, ver := range m.providerVersions {
-		if addr.Equals(pAddr) {
-			version = ver.String()
+func (pr ProviderReferences) ReferencesOfProvider(addr tfaddr.Provider) []module.ProviderRef {
+	refs := make([]module.ProviderRef, 0)
+
+	for ref, pAddr := range pr {
+		if pAddr.Equals(addr) {
+			refs = append(refs, ref)
 		}
 	}
 
-	return &schema.DocsLink{
-		URL: fmt.Sprintf("https://registry.terraform.io/providers/%s/%s/%s/docs",
-			addr.Namespace, addr.Type, version),
-		Tooltip: fmt.Sprintf("%s Documentation", addr.ForDisplay()),
-	}
-}
-
-func providerHasDocs(addr addrs.Provider) bool {
-	if addr.IsBuiltIn() {
-		// Ideally this should point to versioned TF core docs
-		// but there aren't any for the built-in provider yet
-		return false
-	}
-	if addr.Hostname != "registry.terraform.io" {
-		// docs URLs outside of the official Registry aren't standardized yet
-		return false
-	}
-	return true
-}
-
-func (m *SchemaMerger) detailForSrcAddr(addr addrs.Provider) string {
-	if addr.IsBuiltIn() {
-		if m.coreVersion == nil {
-			return "(builtin)"
-		}
-		return fmt.Sprintf("(builtin %s)", m.coreVersion.String())
-	}
-
-	detail := addr.ForDisplay()
-	for pAddr, ver := range m.providerVersions {
-		if addr.Equals(pAddr) {
-			detail += " " + ver.String()
-			break
-		}
-	}
-
-	return detail
+	return refs
 }
 
 func convertBodySchemaFromJson(detail string, schemaBlock *tfjson.SchemaBlock) *schema.BodySchema {
