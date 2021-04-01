@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/google/go-cmp v0.5.5
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/hashicorp/go-version v1.2.1
+	github.com/hashicorp/go-version v1.3.0
 	github.com/hashicorp/hcl-lang v0.0.0-20210317074414-9bb6847208c3
 	github.com/hashicorp/hcl/v2 v2.9.1
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20210318070130-9a80970d6b34
