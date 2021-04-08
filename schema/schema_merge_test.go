@@ -222,3 +222,78 @@ func TestMergeWithJsonProviderSchemas_v013(t *testing.T) {
 		t.Fatalf("schema differs: %s", diff)
 	}
 }
+
+func TestMergeWithJsonProviderSchemas_v015(t *testing.T) {
+	b, err := ioutil.ReadFile("testdata/test-config-0.15.tf")
+	if err != nil {
+		t.Fatal(err)
+	}
+	f, diags := hclsyntax.ParseConfig(b, "test.tf", hcl.InitialPos)
+	if len(diags) > 0 {
+		t.Fatal(diags)
+	}
+
+	ps := &tfjson.ProviderSchemas{}
+	b, err = ioutil.ReadFile("testdata/provider-schemas-0.15.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = json.Unmarshal(b, ps)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	testCoreSchema := &schema.BodySchema{
+		Blocks: map[string]*schema.BlockSchema{
+			"provider": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					},
+				},
+			},
+			"resource": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+			"data": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+		},
+	}
+	sm := NewSchemaMerger(testCoreSchema)
+	sm.SetParsedFiles(map[string]*hcl.File{
+		"test.tf": f,
+	})
+
+	mergedSchema, err := sm.MergeWithJsonProviderSchemas(ps)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	opts := cmp.Options{
+		cmpopts.IgnoreUnexported(cty.Type{}),
+	}
+
+	if diff := cmp.Diff(expectedMergedSchema_v015, mergedSchema, opts); diff != "" {
+		t.Fatalf("schema differs: %s", diff)
+	}
+}

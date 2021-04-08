@@ -11,6 +11,7 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/hashicorp/terraform-schema/internal/addrs"
 	"github.com/hashicorp/terraform-schema/internal/refdecoder"
+	"github.com/zclconf/go-cty/cty"
 )
 
 type SchemaMerger struct {
@@ -295,10 +296,73 @@ func convertAttributesFromJson(attributes map[string]*tfjson.SchemaAttribute) ma
 			IsComputed:   attr.Computed,
 			IsOptional:   attr.Optional,
 			IsRequired:   attr.Required,
-			Expr:         schema.LiteralTypeOnly(attr.AttributeType),
+			Expr:         exprConstraintsFromAttribute(attr),
 		}
 	}
 	return cAttrs
+}
+
+func exprConstraintsFromAttribute(attr *tfjson.SchemaAttribute) schema.ExprConstraints {
+	var expr schema.ExprConstraints
+	if attr.AttributeType != cty.NilType {
+		expr = schema.LiteralTypeOnly(attr.AttributeType)
+	}
+	if attr.AttributeNestedType != nil {
+		switch attr.AttributeNestedType.NestingMode {
+		case tfjson.SchemaNestingModeSingle:
+			return schema.ExprConstraints{
+				convertJsonAttributesToObjectExprAttr(attr.AttributeNestedType.Attributes),
+			}
+		case tfjson.SchemaNestingModeList:
+			return schema.ExprConstraints{
+				schema.ListExpr{
+					Elem: schema.ExprConstraints{
+						convertJsonAttributesToObjectExprAttr(attr.AttributeNestedType.Attributes),
+					},
+					MinItems: attr.AttributeNestedType.MinItems,
+					MaxItems: attr.AttributeNestedType.MaxItems,
+				},
+			}
+		case tfjson.SchemaNestingModeSet:
+			return schema.ExprConstraints{
+				schema.SetExpr{
+					Elem: schema.ExprConstraints{
+						convertJsonAttributesToObjectExprAttr(attr.AttributeNestedType.Attributes),
+					},
+					MinItems: attr.AttributeNestedType.MinItems,
+					MaxItems: attr.AttributeNestedType.MaxItems,
+				},
+			}
+		case tfjson.SchemaNestingModeMap:
+			return schema.ExprConstraints{
+				schema.MapExpr{
+					Elem: schema.ExprConstraints{
+						convertJsonAttributesToObjectExprAttr(attr.AttributeNestedType.Attributes),
+					},
+					MinItems: attr.AttributeNestedType.MinItems,
+					MaxItems: attr.AttributeNestedType.MaxItems,
+				},
+			}
+		}
+	}
+	return expr
+}
+
+func convertJsonAttributesToObjectExprAttr(attrs map[string]*tfjson.SchemaAttribute) schema.ObjectExpr {
+	attributes := make(schema.ObjectExprAttributes, len(attrs))
+	for name, attr := range attrs {
+		attributes[name] = &schema.AttributeSchema{
+			Description:  markupContent(attr.Description, attr.DescriptionKind),
+			IsDeprecated: attr.Deprecated,
+			IsComputed:   attr.Computed,
+			IsOptional:   attr.Optional,
+			IsRequired:   attr.Required,
+			Expr:         exprConstraintsFromAttribute(attr),
+		}
+	}
+	return schema.ObjectExpr{
+		Attributes: attributes,
+	}
 }
 
 func markupContent(value string, kind tfjson.SchemaDescriptionKind) lang.MarkupContent {

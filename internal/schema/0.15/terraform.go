@@ -13,17 +13,17 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema, v *version.Version) *sche
 			Expr: schema.ExprConstraints{
 				schema.ObjectExpr{
 					Attributes: schema.ObjectExprAttributes{
-						"source": schema.ObjectAttribute{
+						"source": &schema.AttributeSchema{
 							Expr: schema.LiteralTypeOnly(cty.String),
 							Description: lang.Markdown("The global source address for the provider " +
 								"you intend to use, such as `hashicorp/aws`"),
 						},
-						"version": schema.ObjectAttribute{
+						"version": &schema.AttributeSchema{
 							Expr: schema.LiteralTypeOnly(cty.String),
 							Description: lang.Markdown("Version constraint specifying which subset of " +
 								"available provider versions the module is compatible with, e.g. `~> 1.0`"),
 						},
-						"configuration_aliases": schema.ObjectAttribute{
+						"configuration_aliases": &schema.AttributeSchema{
 							Expr: schema.ExprConstraints{
 								schema.TupleConsExpr{
 									Name: "set of aliases",
