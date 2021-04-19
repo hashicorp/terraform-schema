@@ -36,11 +36,6 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 						Tooltip: "hashicorp/random Documentation",
 					},
 				},
-				`{"labels":[{"index":0,"value":"terraform"}]}`: {
-					Blocks:     map[string]*schema.BlockSchema{},
-					Attributes: map[string]*schema.AttributeSchema{},
-					Detail:     "(builtin)",
-				},
 			},
 		},
 		"resource": {

@@ -1,7 +1,6 @@
 package schema
 
 import (
-	//"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/zclconf/go-cty/cty"
 )
