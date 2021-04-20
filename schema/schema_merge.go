@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/mitchellh/copystructure"
 )
 
 type SchemaMerger struct {
@@ -44,7 +45,14 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		return m.coreSchema, nil
 	}
 
-	mergedSchema := m.coreSchema
+	schemaCopy, err := copystructure.Config{
+		Copiers: copiers,
+	}.Copy(m.coreSchema)
+	if err != nil {
+		return m.coreSchema, err
+	}
+
+	mergedSchema := schemaCopy.(*schema.BodySchema)
 
 	if mergedSchema.Blocks["provider"].DependentBody == nil {
 		mergedSchema.Blocks["provider"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)

@@ -79,6 +79,86 @@ func TestSchemaMerger_SchemaForModule_noProviderSchema(t *testing.T) {
 	}
 }
 
+func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
+	testCoreSchema := &schema.BodySchema{
+		Blocks: map[string]*schema.BlockSchema{
+			"provider": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					},
+				},
+			},
+			"resource": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+			"data": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+		},
+	}
+	sm := NewSchemaMerger(testCoreSchema)
+	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false)
+	sm.SetSchemaReader(sr)
+
+	vc, err := version.NewConstraint("0.0.0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	mergedSchema, err := sm.SchemaForModule(&module.Meta{
+		Path: "testdata",
+		ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+			{LocalName: "hashicup"}: tfaddr.NewDefaultProvider("hashicup"),
+		},
+		ProviderRequirements: map[tfaddr.Provider]version.Constraints{
+			tfaddr.NewDefaultProvider("hashicup"): vc,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if diff := cmp.Diff(expectedMergedSchema_v015, mergedSchema, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("schema differs: %s", diff)
+	}
+
+	newMergedSchema, err := sm.SchemaForModule(&module.Meta{
+		Path: "testdata",
+		ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+			{LocalName: "hcc"}: tfaddr.NewDefaultProvider("hashicup"),
+		},
+		ProviderRequirements: map[tfaddr.Provider]version.Constraints{
+			tfaddr.NewDefaultProvider("hashicup"): vc,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if diff := cmp.Diff(expectedMergedSchema_v015_aliased, newMergedSchema, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("schema differs: %s", diff)
+	}
+}
+
 func TestMergeWithJsonProviderSchemas_v012(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
 	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.12.json"), true)
