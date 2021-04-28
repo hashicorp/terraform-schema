@@ -214,6 +214,12 @@ func providerHasDocs(addr tfaddr.Provider) bool {
 		// but there aren't any for the built-in provider yet
 		return false
 	}
+	if addr.IsLegacy() {
+		// The Registry does know where legacy providers live
+		// but it doesn't provide stable (legacy) URLs
+		return false
+	}
+
 	if addr.Hostname != "registry.terraform.io" {
 		// docs URLs outside of the official Registry aren't standardized yet
 		return false
