@@ -3,10 +3,20 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
 
 var outputBlockSchema = &schema.BlockSchema{
+	Address: &schema.BlockAddrSchema{
+		Steps: []schema.AddrStep{
+			schema.StaticStep{Name: "output"},
+			schema.LabelStep{Index: 0},
+		},
+		FriendlyName: "output",
+		ScopeId:      refscope.OutputScope,
+		AsReference:  true,
+	},
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",
@@ -22,7 +32,10 @@ var outputBlockSchema = &schema.BlockSchema{
 				Description: lang.PlainText("Human-readable description of the output (for documentation and UI)"),
 			},
 			"value": {
-				Expr:        schema.ExprConstraints{},
+				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+					schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+				},
 				IsRequired:  true,
 				Description: lang.PlainText("Value, typically a reference to an attribute of a resource or a data source"),
 			},
@@ -35,6 +48,11 @@ var outputBlockSchema = &schema.BlockSchema{
 				Expr: schema.ExprConstraints{
 					schema.TupleConsExpr{
 						Name: "set of references",
+						AnyElem: schema.ExprConstraints{
+							schema.TraversalExpr{OfScopeId: refscope.DataScope},
+							schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
+							schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
+						},
 					},
 				},
 				IsOptional:  true,

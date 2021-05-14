@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -25,8 +26,15 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema, v *version.Version) *sche
 						},
 						"configuration_aliases": &schema.AttributeSchema{
 							Expr: schema.ExprConstraints{
-								schema.TupleConsExpr{
-									Name: "set of aliases",
+								schema.SetExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{
+											Address: &schema.TraversalAddrSchema{
+												ScopeId: refscope.ProviderScope,
+											},
+											Name: "provider",
+										},
+									},
 								},
 							},
 							Description: lang.Markdown("Aliases under which to make the provider available, " +
@@ -35,6 +43,14 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema, v *version.Version) *sche
 					},
 				},
 				schema.LiteralTypeExpr{Type: cty.String},
+			},
+			Address: &schema.AttributeAddrSchema{
+				Steps: []schema.AddrStep{
+					schema.AttrNameStep{},
+				},
+				FriendlyName: "provider",
+				AsReference:  true,
+				ScopeId:      refscope.ProviderScope,
 			},
 			Description: lang.Markdown("Provider source, version constraint and its aliases"),
 		},

@@ -88,7 +88,10 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"alias": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsOptional: true,
+						},
 					},
 				},
 			},
@@ -99,7 +102,13 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsOptional: true,
+						},
 					},
 				},
 			},
@@ -110,7 +119,13 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsOptional: true,
+						},
 					},
 				},
 			},
@@ -299,7 +314,13 @@ func testCoreSchema() *schema.BodySchema {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsOptional: true,
+						},
 					},
 				},
 			},
@@ -310,7 +331,13 @@ func testCoreSchema() *schema.BodySchema {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsOptional: true,
+						},
 					},
 				},
 			},

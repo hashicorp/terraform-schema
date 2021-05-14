@@ -4,9 +4,20 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/zclconf/go-cty/cty"
+
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 )
 
 var variableBlockSchema = &schema.BlockSchema{
+	Address: &schema.BlockAddrSchema{
+		Steps: []schema.AddrStep{
+			schema.StaticStep{Name: "var"},
+			schema.LabelStep{Index: 0},
+		},
+		FriendlyName: "variable",
+		ScopeId:      refscope.VariableScope,
+		AsReference:  true,
+	},
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",

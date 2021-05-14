@@ -14,7 +14,13 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					"count": {
+						Expr: schema.ExprConstraints{
+							schema.TraversalExpr{OfType: cty.Number},
+							schema.LiteralTypeExpr{Type: cty.Number},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -24,6 +30,7 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 						"backend": {
 							IsRequired: true,
 							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
 						},
@@ -35,12 +42,14 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 										"first": {
 											IsOptional: true,
 											Expr: schema.ExprConstraints{
+												schema.TraversalExpr{OfType: cty.String},
 												schema.LiteralTypeExpr{Type: cty.String},
 											},
 										},
 										"second": {
 											IsOptional: true,
 											Expr: schema.ExprConstraints{
+												schema.TraversalExpr{OfType: cty.Number},
 												schema.LiteralTypeExpr{Type: cty.Number},
 											},
 										},
@@ -52,6 +61,7 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 														"nested": {
 															IsOptional: true,
 															Expr: schema.ExprConstraints{
+																schema.TraversalExpr{OfType: cty.String},
 																schema.LiteralTypeExpr{Type: cty.String},
 															},
 														},
@@ -73,12 +83,14 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 												"first": {
 													IsOptional: true,
 													Expr: schema.ExprConstraints{
+														schema.TraversalExpr{OfType: cty.String},
 														schema.LiteralTypeExpr{Type: cty.String},
 													},
 												},
 												"second": {
 													IsOptional: true,
 													Expr: schema.ExprConstraints{
+														schema.TraversalExpr{OfType: cty.Number},
 														schema.LiteralTypeExpr{Type: cty.Number},
 													},
 												},
@@ -90,6 +102,7 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 																"nested": {
 																	IsOptional: true,
 																	Expr: schema.ExprConstraints{
+																		schema.TraversalExpr{OfType: cty.String},
 																		schema.LiteralTypeExpr{Type: cty.String},
 																	},
 																},
@@ -115,12 +128,14 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 												"first": {
 													IsOptional: true,
 													Expr: schema.ExprConstraints{
+														schema.TraversalExpr{OfType: cty.String},
 														schema.LiteralTypeExpr{Type: cty.String},
 													},
 												},
 												"second": {
 													IsOptional: true,
 													Expr: schema.ExprConstraints{
+														schema.TraversalExpr{OfType: cty.Number},
 														schema.LiteralTypeExpr{Type: cty.Number},
 													},
 												},
@@ -132,6 +147,7 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 																"nested": {
 																	IsOptional: true,
 																	Expr: schema.ExprConstraints{
+																		schema.TraversalExpr{OfType: cty.String},
 																		schema.LiteralTypeExpr{Type: cty.String},
 																	},
 																},
@@ -157,12 +173,14 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 												"first": {
 													IsOptional: true,
 													Expr: schema.ExprConstraints{
+														schema.TraversalExpr{OfType: cty.String},
 														schema.LiteralTypeExpr{Type: cty.String},
 													},
 												},
 												"second": {
 													IsOptional: true,
 													Expr: schema.ExprConstraints{
+														schema.TraversalExpr{OfType: cty.Number},
 														schema.LiteralTypeExpr{Type: cty.Number},
 													},
 												},
@@ -174,6 +192,7 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 																"nested": {
 																	IsOptional: true,
 																	Expr: schema.ExprConstraints{
+																		schema.TraversalExpr{OfType: cty.String},
 																		schema.LiteralTypeExpr{Type: cty.String},
 																	},
 																},
@@ -192,6 +211,7 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 						"workspace": {
 							IsOptional: true,
 							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
 						},
@@ -206,7 +226,12 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					"alias": {
+						Expr: schema.ExprConstraints{
+							schema.LiteralTypeExpr{Type: cty.String},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -228,7 +253,13 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					"count": {
+						Expr: schema.ExprConstraints{
+							schema.TraversalExpr{OfType: cty.Number},
+							schema.LiteralTypeExpr{Type: cty.Number},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{},

@@ -116,7 +116,10 @@ func convertAttributesFromJson(attributes map[string]*tfjson.SchemaAttribute) ma
 func exprConstraintsFromAttribute(attr *tfjson.SchemaAttribute) schema.ExprConstraints {
 	var expr schema.ExprConstraints
 	if attr.AttributeType != cty.NilType {
-		expr = schema.LiteralTypeOnly(attr.AttributeType)
+		return schema.ExprConstraints{
+			schema.TraversalExpr{OfType: attr.AttributeType},
+			schema.LiteralTypeExpr{Type: attr.AttributeType},
+		}
 	}
 	if attr.AttributeNestedType != nil {
 		switch attr.AttributeNestedType.NestingMode {

@@ -14,7 +14,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					"alias": {
+						Expr: schema.ExprConstraints{
+							schema.LiteralTypeExpr{Type: cty.String},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -32,7 +37,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"url": {
 							Description: lang.MarkupContent{
@@ -40,7 +48,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.PlainTextKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 				},
@@ -71,7 +82,13 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					"count": {
+						Expr: schema.ExprConstraints{
+							schema.TraversalExpr{OfType: cty.Number},
+							schema.LiteralTypeExpr{Type: cty.Number},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -79,27 +96,99 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"frequency":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"id":            {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
-						"is_default":    {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-						"name":          {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"send_reminder": {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-						"settings": {
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+						"frequency": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
-						"type": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"uid":  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
+						"is_default": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"send_reminder": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
+						"settings": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
+							IsOptional: true,
+						},
+						"type": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"uid": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_dashboard"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"config_json": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"folder":      {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-						"id":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"slug":        {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"config_json": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"folder": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsOptional: true,
+						},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"slug": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_data_source"}]}`: {
@@ -111,31 +200,181 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Body: &schema.BodySchema{
 								Blocks: map[string]*schema.BlockSchema{},
 								Attributes: map[string]*schema.AttributeSchema{
-									"assume_role_arn":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"auth_type":                 {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"conn_max_lifetime":         {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"custom_metrics_namespaces": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"default_region":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"encrypt":                   {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"es_version":                {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"graphite_version":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"http_method":               {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"interval":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"log_level_field":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"log_message_field":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"max_idle_conns":            {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"max_open_conns":            {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"postgres_version":          {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"query_timeout":             {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"ssl_mode":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"time_field":                {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"time_interval":             {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"timescaledb":               {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-									"tls_auth":                  {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-									"tls_auth_with_ca_cert":     {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-									"tls_skip_verify":           {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-									"tsdb_resolution":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"tsdb_version":              {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"assume_role_arn": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"auth_type": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"conn_max_lifetime": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"custom_metrics_namespaces": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"default_region": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"encrypt": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"es_version": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"graphite_version": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"http_method": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"interval": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"log_level_field": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"log_message_field": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"max_idle_conns": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"max_open_conns": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"postgres_version": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"query_timeout": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"ssl_mode": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"time_field": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"time_interval": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"timescaledb": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Bool},
+											schema.LiteralTypeExpr{Type: cty.Bool},
+										},
+										IsOptional: true,
+									},
+									"tls_auth": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Bool},
+											schema.LiteralTypeExpr{Type: cty.Bool},
+										},
+										IsOptional: true,
+									},
+									"tls_auth_with_ca_cert": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Bool},
+											schema.LiteralTypeExpr{Type: cty.Bool},
+										},
+										IsOptional: true,
+									},
+									"tls_skip_verify": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Bool},
+											schema.LiteralTypeExpr{Type: cty.Bool},
+										},
+										IsOptional: true,
+									},
+									"tsdb_resolution": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"tsdb_version": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
 								},
 							},
 						},
@@ -145,61 +384,241 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Body: &schema.BodySchema{
 								Blocks: map[string]*schema.BlockSchema{},
 								Attributes: map[string]*schema.AttributeSchema{
-									"access_key":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"basic_auth_password": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"password":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"private_key":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"secret_key":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"tls_ca_cert":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"tls_client_cert":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"tls_client_key":      {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"access_key": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"basic_auth_password": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"password": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"private_key": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"secret_key": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"tls_ca_cert": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"tls_client_cert": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"tls_client_key": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
 								},
 							},
 						},
 					},
 					Attributes: map[string]*schema.AttributeSchema{
-						"access_mode":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"basic_auth_enabled":  {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-						"basic_auth_password": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"basic_auth_username": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"database_name":       {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"id":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"is_default":          {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-						"name":                {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"password":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"type":                {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"url":                 {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"username":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"access_mode": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"basic_auth_enabled": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
+						"basic_auth_password": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"basic_auth_username": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"database_name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"is_default": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"password": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"type": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"url": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"username": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_folder"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id":    {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
-						"title": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"uid":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
+						"title": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"uid": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_organization"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"admin_user": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"admin_user": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
 						"admins": {
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 							IsOptional: true,
 						},
-						"create_users": {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"create_users": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
 						"editors": {
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 							IsOptional: true,
 						},
-						"id":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"name":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"org_id": {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.Number)},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"org_id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsComputed: true,
+						},
 						"viewers": {
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 							IsOptional: true,
 						},
 					},
@@ -208,52 +627,183 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"email": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"id":    {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"members": {
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+						"email": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
-						"name":    {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"team_id": {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.Number)},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"members": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
+							IsOptional: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"team_id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsComputed: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_user"}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"email":    {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"id":       {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"login":    {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"name":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"password": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"email": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"login": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"password": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_alert_notification"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"frequency":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"id":            {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
-						"is_default":    {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-						"name":          {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"send_reminder": {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-						"settings": {
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+						"frequency": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
-						"type": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"uid":  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
+						"is_default": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"send_reminder": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
+						"settings": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
+							IsOptional: true,
+						},
+						"type": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"uid": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_dashboard"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"config_json": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"folder":      {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-						"id":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"slug":        {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"config_json": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"folder": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsOptional: true,
+						},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"slug": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_data_source"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
@@ -265,31 +815,181 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Body: &schema.BodySchema{
 								Blocks: map[string]*schema.BlockSchema{},
 								Attributes: map[string]*schema.AttributeSchema{
-									"assume_role_arn":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"auth_type":                 {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"conn_max_lifetime":         {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"custom_metrics_namespaces": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"default_region":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"encrypt":                   {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"es_version":                {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"graphite_version":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"http_method":               {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"interval":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"log_level_field":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"log_message_field":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"max_idle_conns":            {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"max_open_conns":            {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"postgres_version":          {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
-									"query_timeout":             {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"ssl_mode":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"time_field":                {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"time_interval":             {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"timescaledb":               {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-									"tls_auth":                  {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-									"tls_auth_with_ca_cert":     {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-									"tls_skip_verify":           {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-									"tsdb_resolution":           {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"tsdb_version":              {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"assume_role_arn": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"auth_type": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"conn_max_lifetime": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"custom_metrics_namespaces": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"default_region": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"encrypt": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"es_version": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"graphite_version": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"http_method": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"interval": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"log_level_field": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"log_message_field": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"max_idle_conns": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"max_open_conns": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"postgres_version": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Number},
+											schema.LiteralTypeExpr{Type: cty.Number},
+										},
+										IsOptional: true,
+									},
+									"query_timeout": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"ssl_mode": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"time_field": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"time_interval": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"timescaledb": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Bool},
+											schema.LiteralTypeExpr{Type: cty.Bool},
+										},
+										IsOptional: true,
+									},
+									"tls_auth": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Bool},
+											schema.LiteralTypeExpr{Type: cty.Bool},
+										},
+										IsOptional: true,
+									},
+									"tls_auth_with_ca_cert": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Bool},
+											schema.LiteralTypeExpr{Type: cty.Bool},
+										},
+										IsOptional: true,
+									},
+									"tls_skip_verify": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.Bool},
+											schema.LiteralTypeExpr{Type: cty.Bool},
+										},
+										IsOptional: true,
+									},
+									"tsdb_resolution": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"tsdb_version": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
 								},
 							},
 						},
@@ -299,61 +999,241 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Body: &schema.BodySchema{
 								Blocks: map[string]*schema.BlockSchema{},
 								Attributes: map[string]*schema.AttributeSchema{
-									"access_key":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"basic_auth_password": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"password":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"private_key":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"secret_key":          {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"tls_ca_cert":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"tls_client_cert":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-									"tls_client_key":      {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+									"access_key": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"basic_auth_password": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"password": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"private_key": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"secret_key": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"tls_ca_cert": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"tls_client_cert": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
+									"tls_client_key": {
+										Expr: schema.ExprConstraints{
+											schema.TraversalExpr{OfType: cty.String},
+											schema.LiteralTypeExpr{Type: cty.String},
+										},
+										IsOptional: true,
+									},
 								},
 							},
 						},
 					},
 					Attributes: map[string]*schema.AttributeSchema{
-						"access_mode":         {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"basic_auth_enabled":  {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-						"basic_auth_password": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"basic_auth_username": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"database_name":       {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"id":                  {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"is_default":          {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
-						"name":                {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"password":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"type":                {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"url":                 {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"username":            {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"access_mode": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"basic_auth_enabled": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
+						"basic_auth_password": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"basic_auth_username": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"database_name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"is_default": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"password": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"type": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"url": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"username": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_folder"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id":    {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
-						"title": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"uid":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
+						"title": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"uid": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_organization"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"admin_user": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"admin_user": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
 						"admins": {
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 							IsOptional: true,
 						},
-						"create_users": {Expr: schema.LiteralTypeOnly(cty.Bool), IsOptional: true},
+						"create_users": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
+							IsOptional: true,
+						},
 						"editors": {
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 							IsOptional: true,
 						},
-						"id":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"name":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"org_id": {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.Number)},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"org_id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsComputed: true,
+						},
 						"viewers": {
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 							IsOptional: true,
 						},
 					},
@@ -362,38 +1242,107 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"email": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"id":    {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"members": {
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+						"email": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
-						"name":    {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"team_id": {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.Number)},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"members": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
+							IsOptional: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"team_id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
+							IsComputed: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"grafana_user"}],"attrs":[{"name":"provider","expr":{"addr":"grafana"}}]}`: {
 					Detail: "grafana/grafana",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"email":    {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"id":       {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
-						"login":    {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"name":     {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
-						"password": {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"email": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
+						"login": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"name": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
+						"password": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"null_resource"}]}`: {
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
 						"triggers": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
 							IsOptional: true,
 						},
 					},
@@ -406,13 +1355,23 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 					},
@@ -425,13 +1384,23 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/null",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"triggers": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 					},
@@ -450,7 +1419,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"b64_url": {
 							Description: lang.MarkupContent{
@@ -458,7 +1430,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"byte_length": {
 							Description: lang.MarkupContent{
@@ -466,7 +1441,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"dec": {
 							Description: lang.MarkupContent{
@@ -474,7 +1452,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"hex": {
 							Description: lang.MarkupContent{
@@ -482,15 +1463,28 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"prefix": {
@@ -498,7 +1492,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Arbitrary string to prefix the output value with. This string is supplied as-is, meaning it is not guaranteed to be URL-safe or base64 encoded.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -511,13 +1508,23 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"max": {
@@ -526,7 +1533,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"min": {
 							Description: lang.MarkupContent{
@@ -534,7 +1544,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"result": {
 							Description: lang.MarkupContent{
@@ -542,14 +1555,20 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"seed": {
 							Description: lang.MarkupContent{
 								Value: "A custom seed to always produce the same value.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -562,13 +1581,23 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -577,14 +1606,20 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"lower": {
 							Description: lang.MarkupContent{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"min_lower": {
@@ -592,7 +1627,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_numeric": {
@@ -600,7 +1638,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_special": {
@@ -608,7 +1649,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_upper": {
@@ -616,7 +1660,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"number": {
@@ -624,7 +1671,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"override_special": {
@@ -632,7 +1682,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -641,14 +1694,20 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"special": {
 							Description: lang.MarkupContent{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"upper": {
@@ -656,7 +1715,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 					},
@@ -669,13 +1731,23 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -683,7 +1755,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The length (in words) of the pet name.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"prefix": {
@@ -691,7 +1766,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "A string to prefix the name with.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"separator": {
@@ -699,7 +1777,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The character to separate words in the pet name.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -712,21 +1793,34 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"input": {
 							Description: lang.MarkupContent{
 								Value: "The list of strings to shuffle.",
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -735,14 +1829,20 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.List(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.List(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+							},
 						},
 						"result_count": {
 							Description: lang.MarkupContent{
 								Value: "The number of results to return. Defaults to the number of items in the `input` list. If fewer items are requested, some elements will be excluded from the result. If more items are requested, items will be repeated in the result but not more frequently than the number of items in the input list.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"seed": {
@@ -750,7 +1850,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Arbitrary string with which to seed the random number generator, in order to produce less-volatile permutations of the list.\n\n**Important:** Even with an identical seed, it is not guaranteed that the same permutation will be produced across different versions of Terraform. This argument causes the result to be *less volatile*, but not fixed for all time.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 					},
@@ -763,13 +1866,23 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"length": {
@@ -778,14 +1891,20 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsRequired: true,
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 						},
 						"lower": {
 							Description: lang.MarkupContent{
 								Value: "Include lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"min_lower": {
@@ -793,7 +1912,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of lowercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_numeric": {
@@ -801,7 +1923,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_special": {
@@ -809,7 +1934,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of special characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"min_upper": {
@@ -817,7 +1945,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Minimum number of uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Number),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Number},
+								schema.LiteralTypeExpr{Type: cty.Number},
+							},
 							IsOptional: true,
 						},
 						"number": {
@@ -825,7 +1956,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include numeric characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"override_special": {
@@ -833,7 +1967,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Supply your own list of special characters to use for string generation.  This overrides the default character list in the special argument.  The `special` argument must still be set to true for any overwritten characters to be used in generation.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -842,14 +1979,20 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 						"special": {
 							Description: lang.MarkupContent{
 								Value: "Include special characters in the result. These are `!@#$%&*()-_=+[]{}<>:?`",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 						"upper": {
@@ -857,7 +2000,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Include uppercase alphabet characters in the result.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Bool),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							},
 							IsOptional: true,
 						},
 					},
@@ -870,13 +2016,23 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "hashicorp/random",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
 						"keepers": {
 							Description: lang.MarkupContent{
 								Value: "Arbitrary map of values that, when changed, will trigger recreation of resource. See [the main provider documentation](../index.html) for more information.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"result": {
@@ -885,7 +2041,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 					Description: lang.MarkupContent{
@@ -902,7 +2061,13 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
-					"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					"count": {
+						Expr: schema.ExprConstraints{
+							schema.TraversalExpr{OfType: cty.Number},
+							schema.LiteralTypeExpr{Type: cty.Number},
+						},
+						IsOptional: true,
+					},
 				},
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -915,17 +2080,30 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 							IsComputed: true,
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"outputs": {
@@ -934,7 +2112,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 						},
 						"random": {
 							Description: lang.MarkupContent{
@@ -942,7 +2123,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 					Description: lang.MarkupContent{
@@ -959,17 +2143,30 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 							IsComputed: true,
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsComputed: true, IsOptional: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsComputed: true,
+							IsOptional: true,
+						},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"outputs": {
@@ -978,7 +2175,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 						},
 						"random": {
 							Description: lang.MarkupContent{
@@ -986,7 +2186,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 					Description: lang.MarkupContent{
@@ -1003,17 +2206,30 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "If set, its literal value will be stored and returned. If not, its value defaults to `\"default\"`. This argument exists primarily for testing and has little practical use.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 							IsOptional: true,
 							IsComputed: true,
 						},
-						"id": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true, IsComputed: true},
+						"id": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+							IsComputed: true,
+						},
 						"inputs": {
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that is copied into the `outputs` attribute, and accessible directly for interpolation.",
 								Kind:  lang.MarkdownKind,
 							},
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 							IsOptional: true,
 						},
 						"outputs": {
@@ -1022,7 +2238,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.Map(cty.String)),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Map(cty.String)},
+								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+							},
 						},
 						"random": {
 							Description: lang.MarkupContent{
@@ -1030,7 +2249,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							IsComputed: true,
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
 						},
 					},
 					Description: lang.MarkupContent{
@@ -1042,22 +2264,82 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Detail: "(builtin)",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"backend":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"config":    {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"defaults":  {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"outputs":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"workspace": {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"backend": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"config": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+							IsOptional: true,
+						},
+						"defaults": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+							IsOptional: true,
+						},
+						"outputs": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+							IsComputed: true,
+						},
+						"workspace": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
 					},
 				},
 				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"provider","expr":{"addr":"terraform"}}]}`: {
 					Detail: "(builtin)",
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
-						"backend":   {IsRequired: true, Expr: schema.LiteralTypeOnly(cty.String)},
-						"config":    {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"defaults":  {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"outputs":   {IsComputed: true, Expr: schema.LiteralTypeOnly(cty.DynamicPseudoType)},
-						"workspace": {IsOptional: true, Expr: schema.LiteralTypeOnly(cty.String)},
+						"backend": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsRequired: true,
+						},
+						"config": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+							IsOptional: true,
+						},
+						"defaults": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+							IsOptional: true,
+						},
+						"outputs": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
+							},
+							IsComputed: true,
+						},
+						"workspace": {
+							Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.String},
+								schema.LiteralTypeExpr{Type: cty.String},
+							},
+							IsOptional: true,
+						},
 					},
 				},
 			},
