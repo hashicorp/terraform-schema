@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/module"
-	"github.com/mitchellh/copystructure"
 )
 
 type SchemaMerger struct {
@@ -20,6 +19,32 @@ type ProviderSchema struct {
 	Provider    *schema.BodySchema
 	Resources   map[string]*schema.BodySchema
 	DataSources map[string]*schema.BodySchema
+}
+
+func (ps *ProviderSchema) Copy() *ProviderSchema {
+	if ps == nil {
+		return nil
+	}
+
+	newPs := &ProviderSchema{
+		Provider: ps.Provider.Copy(),
+	}
+
+	if ps.Resources != nil {
+		newPs.Resources = make(map[string]*schema.BodySchema, len(ps.Resources))
+		for name, rSchema := range ps.Resources {
+			newPs.Resources[name] = rSchema.Copy()
+		}
+	}
+
+	if ps.DataSources != nil {
+		newPs.DataSources = make(map[string]*schema.BodySchema, len(ps.DataSources))
+		for name, rSchema := range ps.DataSources {
+			newPs.DataSources[name] = rSchema.Copy()
+		}
+	}
+
+	return newPs
 }
 
 type SchemaReader interface {
@@ -45,14 +70,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		return m.coreSchema, nil
 	}
 
-	schemaCopy, err := copystructure.Config{
-		Copiers: copiers,
-	}.Copy(m.coreSchema)
-	if err != nil {
-		return m.coreSchema, err
-	}
-
-	mergedSchema := schemaCopy.(*schema.BodySchema)
+	mergedSchema := m.coreSchema.Copy()
 
 	if mergedSchema.Blocks["provider"].DependentBody == nil {
 		mergedSchema.Blocks["provider"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
