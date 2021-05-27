@@ -115,6 +115,46 @@ provider "grafana" {
 			},
 		},
 		{
+			"version-only 0.12 provider requirements",
+			`
+terraform {
+  required_providers {
+    aws = {
+    	version = "1.2.0"
+    }
+    google = {
+    	version = ">= 3.0.0"
+    }
+  }
+}
+provider "aws" {
+  region = "eu-west-2"
+}
+
+resource "google_storage_bucket" "bucket" {
+  name = "test-bucket"
+}
+
+provider "grafana" {
+  url    = "http://grafana.example.com/"
+  org_id = 1
+}
+`,
+			&module.Meta{
+				Path: path,
+				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+					{LocalName: "aws"}:     tfaddr.NewLegacyProvider("aws"),
+					{LocalName: "google"}:  tfaddr.NewLegacyProvider("google"),
+					{LocalName: "grafana"}: tfaddr.NewLegacyProvider("grafana"),
+				},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
+					tfaddr.NewLegacyProvider("aws"):     mustConstraints(t, "1.2.0"),
+					tfaddr.NewLegacyProvider("google"):  mustConstraints(t, ">= 3.0.0"),
+					tfaddr.NewLegacyProvider("grafana"): {},
+				},
+			},
+		},
+		{
 			"0.13+ provider requirements",
 			`
 terraform {
@@ -181,6 +221,127 @@ provider "grafana" {
 						Namespace: "grafana",
 						Type:      "grafana",
 					}: mustConstraints(t, "2.1.0"),
+				},
+			},
+		},
+		{
+			"multiple valid version requirements",
+			`
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 1.0.0"
+    }
+    google = {
+      source  = "hashicorp/google"
+      version = "2.0.0"
+    }
+  }
+}
+
+terraform {
+  required_providers {
+    aws = {
+      version = "1.1.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+}
+
+resource "google_storage_bucket" "bucket" {
+  name = "test-bucket"
+}
+`,
+			&module.Meta{
+				Path: path,
+				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+					{LocalName: "aws"}: {
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "aws",
+					},
+					{LocalName: "google"}: {
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "google",
+					},
+				},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
+					{
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "aws",
+					}: mustConstraints(t, ">= 1.0.0,1.1.0"),
+					{
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "google",
+					}: mustConstraints(t, "2.0.0"),
+				},
+			},
+		},
+		{
+			"multiple invalid version requirements",
+			`
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 1.0.0"
+    }
+    google = {
+      source  = "hashicorp/google"
+      version = "2.0.0"
+    }
+  }
+}
+
+terraform {
+  required_providers {
+    aws = {
+    	source = "hashicorp/aws"
+      version = "1.1.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+}
+
+resource "google_storage_bucket" "bucket" {
+  name = "test-bucket"
+}
+`,
+			&module.Meta{
+				Path: path,
+				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+					{LocalName: "aws"}: {
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "aws",
+					},
+					{LocalName: "google"}: {
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "google",
+					},
+				},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
+					{
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "aws",
+					}: mustConstraints(t, ">= 1.0.0,1.1.0"),
+					{
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "google",
+					}: mustConstraints(t, "2.0.0"),
 				},
 			},
 		},
@@ -292,6 +453,40 @@ provider "aws" {
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
+					}: mustConstraints(t, "2.0.0"),
+				},
+			},
+		},
+		{
+			"explicit provider association",
+			`
+terraform {
+  required_providers {
+    goo = {
+      source  = "hashicorp/google-beta"
+      version = "2.0.0"
+    }
+  }
+}
+
+resource "google_something" "test" {
+	provider = goo
+}
+`,
+			&module.Meta{
+				Path: path,
+				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+					{LocalName: "goo"}: {
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "google-beta",
+					},
+				},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
+					{
+						Hostname:  tfaddr.DefaultRegistryHost,
+						Namespace: "hashicorp",
+						Type:      "google-beta",
 					}: mustConstraints(t, "2.0.0"),
 				},
 			},
