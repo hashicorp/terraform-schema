@@ -5,7 +5,6 @@ import (
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
-	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 	"github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/module"
 )
@@ -13,9 +12,9 @@ import (
 func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diagnostics) {
 	var diags hcl.Diagnostics
 
-	mod := tfconfig.NewModule(path)
+	mod := newDecodedModule()
 	for _, f := range files {
-		fDiags := tfconfig.LoadModuleFromFile(f, mod)
+		fDiags := loadModuleFromFile(f, mod)
 		diags = append(diags, fDiags...)
 	}
 
@@ -38,7 +37,7 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		refs                 = make(map[module.ProviderRef]tfaddr.Provider, 0)
 	)
 
-	for name, req := range mod.RequiredProviders {
+	for name, req := range mod.ProviderRequirements {
 		var src tfaddr.Provider
 
 		if req.Source == "" {
@@ -81,7 +80,7 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 
 		for _, alias := range req.ConfigurationAliases {
 			refs[module.ProviderRef{
-				LocalName: alias.Name,
+				LocalName: alias.LocalName,
 				Alias:     alias.Alias,
 			}] = src
 		}
@@ -99,8 +98,8 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		}
 	}
 
-	for _, resource := range mod.ManagedResources {
-		providerName := resource.Provider.Name
+	for _, resource := range mod.Resources {
+		providerName := resource.Provider.LocalName
 		localRef := module.ProviderRef{
 			LocalName: providerName,
 		}
@@ -114,8 +113,8 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		}
 	}
 
-	for _, dataSource := range mod.DataResources {
-		providerName := dataSource.Provider.Name
+	for _, dataSource := range mod.DataSources {
+		providerName := dataSource.Provider.LocalName
 		localRef := module.ProviderRef{
 			LocalName: providerName,
 		}
