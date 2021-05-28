@@ -8,18 +8,22 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
-	"github.com/hashicorp/terraform-registry-address"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/zclconf/go-cty-debug/ctydebug"
+	"github.com/zclconf/go-cty/cty"
 )
+
+type testCase struct {
+	name         string
+	cfg          string
+	expectedMeta *module.Meta
+}
 
 func TestLoadModule(t *testing.T) {
 	path := t.TempDir()
 
-	testCases := []struct {
-		name         string
-		cfg          string
-		expectedMeta *module.Meta
-	}{
+	testCases := []testCase{
 		{
 			"empty config",
 			``,
@@ -27,6 +31,7 @@ func TestLoadModule(t *testing.T) {
 				Path:                 path,
 				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
 			},
 		},
 		{
@@ -40,6 +45,7 @@ terraform {
 				CoreRequirements:     mustConstraints(t, "~> 0.12"),
 				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
 			},
 		},
 		{
@@ -76,6 +82,7 @@ provider "grafana" {
 					tfaddr.NewLegacyProvider("google"):  {},
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 		{
@@ -112,6 +119,7 @@ provider "grafana" {
 					tfaddr.NewLegacyProvider("google"):  mustConstraints(t, ">= 3.0.0"),
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 		{
@@ -152,6 +160,7 @@ provider "grafana" {
 					tfaddr.NewLegacyProvider("google"):  mustConstraints(t, ">= 3.0.0"),
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 		{
@@ -222,6 +231,7 @@ provider "grafana" {
 						Type:      "grafana",
 					}: mustConstraints(t, "2.1.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 		{
@@ -282,6 +292,7 @@ resource "google_storage_bucket" "bucket" {
 						Type:      "google",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 		{
@@ -343,6 +354,7 @@ resource "google_storage_bucket" "bucket" {
 						Type:      "google",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 		{
@@ -396,6 +408,7 @@ provider "aws" {
 						Type:      "google",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 		{
@@ -455,6 +468,7 @@ provider "aws" {
 						Type:      "google",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 		{
@@ -489,11 +503,114 @@ resource "google_something" "test" {
 						Type:      "google-beta",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
 		},
 	}
 
-	opts := cmp.Comparer(compareVersionConstraint)
+	executeTestCases(testCases, t, path)
+}
+
+func TestLoadModule_Variables(t *testing.T) {
+	path := t.TempDir()
+
+	testCases := []testCase{
+		{
+			"empty variables",
+			`
+variable "name" {
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type: cty.DynamicPseudoType,
+					},
+				},
+			},
+		},
+		{
+			"variables with type",
+			`
+variable "name" {
+	type = string
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type: cty.String,
+					},
+				},
+			},
+		},
+		{
+			"variables with description",
+			`
+variable "name" {
+	description = "description"
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type:        cty.DynamicPseudoType,
+						Description: "description",
+					},
+				},
+			},
+		},
+		{
+			"variables with sensitive",
+			`
+variable "name" {
+	sensitive = true
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type:        cty.DynamicPseudoType,
+						IsSensitive: true,
+					},
+				},
+			},
+		},
+		{
+			"variables with type and description and sensitive",
+			`
+variable "name" {
+	type = string
+	description = "description"
+	sensitive = true
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type:        cty.String,
+						Description: "description",
+						IsSensitive: true,
+					},
+				},
+			},
+		},
+	}
+	executeTestCases(testCases, t, path)
+
+}
+func executeTestCases(testCases []testCase, t *testing.T, path string) {
+	opts := getCustomComparers()
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d-%s", i, tc.name), func(t *testing.T) {
@@ -510,7 +627,7 @@ resource "google_something" "test" {
 				t.Fatal(diags)
 			}
 
-			if diff := cmp.Diff(tc.expectedMeta, meta, opts); diff != "" {
+			if diff := cmp.Diff(tc.expectedMeta, meta, opts...); diff != "" {
 				t.Fatalf("module meta doesn't match: %s", diff)
 			}
 		})
@@ -527,4 +644,11 @@ func mustConstraints(t *testing.T, vc string) version.Constraints {
 
 func compareVersionConstraint(x, y version.Constraint) bool {
 	return x.String() == y.String()
+}
+
+func getCustomComparers() []cmp.Option {
+	return []cmp.Option{
+		cmp.Comparer(compareVersionConstraint),
+		ctydebug.CmpOptions,
+	}
 }

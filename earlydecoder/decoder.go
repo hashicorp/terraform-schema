@@ -5,7 +5,7 @@ import (
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
-	"github.com/hashicorp/terraform-registry-address"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/module"
 )
 
@@ -127,10 +127,15 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		}
 	}
 
+	variables := make(map[string]module.Variable)
+	for key, variable := range mod.Variables {
+		variables[key] = *variable
+	}
 	return &module.Meta{
 		Path:                 path,
 		ProviderReferences:   refs,
 		ProviderRequirements: providerRequirements,
 		CoreRequirements:     coreRequirements,
+		Variables:            variables,
 	}, diags
 }
