@@ -6,7 +6,9 @@ import (
 )
 
 var (
+	v0_12_2  = version.Must(version.NewVersion("0.12.2"))
 	v0_12_6  = version.Must(version.NewVersion("0.12.6"))
+	v0_12_7  = version.Must(version.NewVersion("0.12.7"))
 	v0_12_18 = version.Must(version.NewVersion("0.12.18"))
 	v0_12_20 = version.Must(version.NewVersion("0.12.20"))
 )

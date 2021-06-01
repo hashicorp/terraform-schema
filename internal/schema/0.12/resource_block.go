@@ -69,8 +69,9 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
-				"lifecycle":  lifecycleBlock,
-				"connection": connectionBlock,
+				"lifecycle":   lifecycleBlock,
+				"connection":  connectionBlock(v),
+				"provisioner": provisionerBlock(v),
 			},
 		},
 	}
@@ -118,78 +119,6 @@ var lifecycleBlock = &schema.BlockSchema{
 				},
 				IsOptional:  true,
 				Description: lang.Markdown("A set of fields (references) of which to ignore changes to, e.g. `tags`"),
-			},
-		},
-	},
-}
-
-var provisionerBlock = &schema.BlockSchema{
-	Description: lang.Markdown("Provisioner to model specific actions on the local machine or on a remote machine " +
-		"in order to prepare servers or other infrastructure objects for service"),
-	Labels: []*schema.LabelSchema{
-		{
-			Name:        "type",
-			Description: lang.PlainText("Type of provisioner to use, e.g. `remote-exec` or `file`"),
-			IsDepKey:    true,
-		},
-	},
-	Body: &schema.BodySchema{
-		Attributes: map[string]*schema.AttributeSchema{
-			"when": {
-				Expr: schema.ExprConstraints{
-					schema.KeywordExpr{
-						Keyword:     "create",
-						Description: lang.Markdown("Run the provisioner when the resource is created"),
-					},
-					schema.KeywordExpr{
-						Keyword:     "destroy",
-						Description: lang.Markdown("Run the provisioner when the resource is destroyed"),
-					},
-				},
-				IsOptional: true,
-				Description: lang.Markdown("When to run the provisioner - `create` or `destroy`, defaults to `create` " +
-					"(i.e. after creation of the resource)"),
-			},
-			"on_failure": {
-				IsOptional: true,
-				Expr: schema.ExprConstraints{
-					schema.KeywordExpr{
-						Keyword:     "fail",
-						Description: lang.Markdown("Raise an error and stop applying (the default behavior). If this is a creation provisioner, taint the resource."),
-					},
-					schema.KeywordExpr{
-						Keyword:     "continue",
-						Description: lang.Markdown("Ignore the error and continue with creation or destruction"),
-					},
-				},
-				Description: lang.Markdown("What to do when the provisioner run fails to finish - `fail` (default), " +
-					"or `continue` (ignore the error)"),
-			},
-		},
-		Blocks: map[string]*schema.BlockSchema{
-			"connection": connectionBlock,
-		},
-	},
-}
-
-var connectionBlock = &schema.BlockSchema{
-	Description: lang.Markdown("Connection block describing how the provisioner connects to the given instance"),
-	MaxItems:    1,
-	Body: &schema.BodySchema{
-		Attributes: map[string]*schema.AttributeSchema{
-			"type": {
-				Expr: schema.ExprConstraints{
-					schema.LiteralValue{
-						Val:         cty.StringVal("ssh"),
-						Description: lang.Markdown("Use SSH to connect and provision the instance"),
-					},
-					schema.LiteralValue{
-						Val:         cty.StringVal("winrm"),
-						Description: lang.Markdown("Use WinRM to connect and provision the instance"),
-					},
-				},
-				IsOptional:  true,
-				Description: lang.Markdown("Connection type to use - `ssh` (default) or `winrm`"),
 			},
 		},
 	},
