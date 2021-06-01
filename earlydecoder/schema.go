@@ -21,6 +21,10 @@ var rootSchema = &hcl.BodySchema{
 			Type:       "data",
 			LabelNames: []string{"type", "name"},
 		},
+		{
+			Type:       "variable",
+			LabelNames: []string{"name"},
+		},
 	},
 }
 
@@ -52,6 +56,20 @@ var resourceSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
 		{
 			Name: "provider",
+		},
+	},
+}
+
+var variableSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "description",
+		},
+		{
+			Name: "type",
+		},
+		{
+			Name: "sensitive",
 		},
 	},
 }

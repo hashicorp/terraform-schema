@@ -6,7 +6,9 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
+	"github.com/hashicorp/terraform-schema/internal/typeexpr"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/zclconf/go-cty/cty"
 )
 
 // decodedModule is the type representing a decoded Terraform module.
@@ -16,15 +18,17 @@ type decodedModule struct {
 	ProviderConfigs      map[string]*providerConfig
 	Resources            map[string]*resource
 	DataSources          map[string]*dataSource
+	Variables            map[string]*module.Variable
 }
 
 func newDecodedModule() *decodedModule {
 	return &decodedModule{
 		RequiredCore:         make([]string, 0),
-		ProviderRequirements: make(map[string]*providerRequirement, 0),
-		ProviderConfigs:      make(map[string]*providerConfig, 0),
-		Resources:            make(map[string]*resource, 0),
-		DataSources:          make(map[string]*dataSource, 0),
+		ProviderRequirements: make(map[string]*providerRequirement),
+		ProviderConfigs:      make(map[string]*providerConfig),
+		Resources:            make(map[string]*resource),
+		DataSources:          make(map[string]*dataSource),
+		Variables:            make(map[string]*module.Variable),
 	}
 }
 
@@ -166,7 +170,38 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 					LocalName: inferProviderNameFromType(r.Type),
 				}
 			}
+
+		case "variable":
+			content, _, contentDiags := block.Body.PartialContent(variableSchema)
+			diags = append(diags, contentDiags...)
+			if len(block.Labels) != 1 || block.Labels[0] == "" {
+				continue
+			}
+			name := block.Labels[0]
+			description := ""
+			isSensitive := false
+			var valDiags hcl.Diagnostics
+			if attr, defined := content.Attributes["description"]; defined {
+				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &description)
+				diags = append(diags, valDiags...)
+			}
+			varType := cty.DynamicPseudoType
+			if attr, defined := content.Attributes["type"]; defined {
+				varType, valDiags = typeexpr.TypeConstraint(attr.Expr)
+				diags = append(diags, valDiags...)
+			}
+			if attr, defined := content.Attributes["sensitive"]; defined {
+				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &isSensitive)
+				diags = append(diags, valDiags...)
+			}
+			mod.Variables[name] = &module.Variable{
+				Type:        varType,
+				Description: description,
+				IsSensitive: isSensitive,
+			}
+
 		}
+
 	}
 
 	return diags

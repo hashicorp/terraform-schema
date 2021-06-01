@@ -8,18 +8,28 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
-	"github.com/hashicorp/terraform-registry-address"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/zclconf/go-cty-debug/ctydebug"
+	"github.com/zclconf/go-cty/cty"
 )
+
+type testCase struct {
+	name          string
+	cfg           string
+	expectedMeta  *module.Meta
+	expectedError hcl.Diagnostics
+}
+
+var customComparer = []cmp.Option{
+	cmp.Comparer(compareVersionConstraint),
+	ctydebug.CmpOptions,
+}
 
 func TestLoadModule(t *testing.T) {
 	path := t.TempDir()
 
-	testCases := []struct {
-		name         string
-		cfg          string
-		expectedMeta *module.Meta
-	}{
+	testCases := []testCase{
 		{
 			"empty config",
 			``,
@@ -27,7 +37,9 @@ func TestLoadModule(t *testing.T) {
 				Path:                 path,
 				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"core requirements only",
@@ -40,7 +52,9 @@ terraform {
 				CoreRequirements:     mustConstraints(t, "~> 0.12"),
 				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"legacy inferred provider requirements",
@@ -76,7 +90,9 @@ provider "grafana" {
 					tfaddr.NewLegacyProvider("google"):  {},
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"simplified 0.12 provider requirements",
@@ -112,7 +128,9 @@ provider "grafana" {
 					tfaddr.NewLegacyProvider("google"):  mustConstraints(t, ">= 3.0.0"),
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"version-only 0.12 provider requirements",
@@ -152,7 +170,9 @@ provider "grafana" {
 					tfaddr.NewLegacyProvider("google"):  mustConstraints(t, ">= 3.0.0"),
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"0.13+ provider requirements",
@@ -222,7 +242,9 @@ provider "grafana" {
 						Type:      "grafana",
 					}: mustConstraints(t, "2.1.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"multiple valid version requirements",
@@ -282,7 +304,9 @@ resource "google_storage_bucket" "bucket" {
 						Type:      "google",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"multiple invalid version requirements",
@@ -343,7 +367,9 @@ resource "google_storage_bucket" "bucket" {
 						Type:      "google",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"0.13+ provider aliases",
@@ -396,7 +422,9 @@ provider "aws" {
 						Type:      "google",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"0.15+ provider aliases",
@@ -455,7 +483,9 @@ provider "aws" {
 						Type:      "google",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"explicit provider association",
@@ -489,11 +519,222 @@ resource "google_something" "test" {
 						Type:      "google-beta",
 					}: mustConstraints(t, "2.0.0"),
 				},
+				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 	}
 
-	opts := cmp.Comparer(compareVersionConstraint)
+	executeTestCases(testCases, t, path)
+}
+
+func TestLoadModule_Variables(t *testing.T) {
+	path := t.TempDir()
+
+	testCases := []testCase{
+		{
+			"no name variables",
+			`
+variable "" {
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+			},
+			nil,
+		},
+		{
+			"no name variables",
+			`
+variable {
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+			},
+			hcl.Diagnostics{
+				&hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Missing name for variable",
+					Detail:   "All variable blocks must have 1 labels (name).",
+					Subject: &hcl.Range{
+						Filename: "test.tf",
+						Start: hcl.Pos{
+							Line:   2,
+							Column: 10,
+							Byte:   10,
+						},
+						End: hcl.Pos{
+							Line:   2,
+							Column: 11,
+							Byte:   11,
+						},
+					},
+					Context: &hcl.Range{
+						Filename: "test.tf",
+						Start: hcl.Pos{
+							Line:   2,
+							Column: 1,
+							Byte:   1,
+						},
+						End: hcl.Pos{
+							Line:   2,
+							Column: 11,
+							Byte:   11,
+						},
+					},
+				},
+			},
+		},
+		{
+			"double label variables",
+			`
+variable "one" "two" {
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+			},
+			hcl.Diagnostics{
+				&hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Extraneous label for variable",
+					Detail:   "Only 1 labels (name) are expected for variable blocks.",
+					Subject: &hcl.Range{
+						Filename: "test.tf",
+						Start: hcl.Pos{
+							Line:   2,
+							Column: 16,
+							Byte:   16,
+						},
+						End: hcl.Pos{
+							Line:   2,
+							Column: 21,
+							Byte:   21,
+						},
+					},
+					Context: &hcl.Range{
+						Filename: "test.tf",
+						Start: hcl.Pos{
+							Line:   2,
+							Column: 1,
+							Byte:   1,
+						},
+						End: hcl.Pos{
+							Line:   2,
+							Column: 23,
+							Byte:   23,
+						},
+					},
+				},
+			},
+		},
+		{
+			"empty variables",
+			`
+variable "name" {
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type: cty.DynamicPseudoType,
+					},
+				},
+			},
+			nil,
+		},
+		{
+			"variables with type",
+			`
+variable "name" {
+	type = string
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type: cty.String,
+					},
+				},
+			},
+			nil,
+		},
+		{
+			"variables with description",
+			`
+variable "name" {
+	description = "description"
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type:        cty.DynamicPseudoType,
+						Description: "description",
+					},
+				},
+			},
+			nil,
+		},
+		{
+			"variables with sensitive",
+			`
+variable "name" {
+	sensitive = true
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type:        cty.DynamicPseudoType,
+						IsSensitive: true,
+					},
+				},
+			},
+			nil,
+		},
+		{
+			"variables with type and description and sensitive",
+			`
+variable "name" {
+	type = string
+	description = "description"
+	sensitive = true
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type:        cty.String,
+						Description: "description",
+						IsSensitive: true,
+					},
+				},
+			},
+			nil,
+		},
+	}
+	executeTestCases(testCases, t, path)
+
+}
+func executeTestCases(testCases []testCase, t *testing.T, path string) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d-%s", i, tc.name), func(t *testing.T) {
@@ -506,11 +747,12 @@ resource "google_something" "test" {
 			}
 
 			meta, diags := LoadModule(path, files)
-			if len(diags) > 0 {
-				t.Fatal(diags)
+
+			if diff := cmp.Diff(tc.expectedError, diags, customComparer...); diff != "" {
+				t.Fatalf("expected errors doesn't match: %s", diff)
 			}
 
-			if diff := cmp.Diff(tc.expectedMeta, meta, opts); diff != "" {
+			if diff := cmp.Diff(tc.expectedMeta, meta, customComparer...); diff != "" {
 				t.Fatalf("module meta doesn't match: %s", diff)
 			}
 		})

@@ -2,7 +2,7 @@ package module
 
 import (
 	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/terraform-registry-address"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 )
 
 type Meta struct {
@@ -11,6 +11,7 @@ type Meta struct {
 	ProviderReferences   map[ProviderRef]tfaddr.Provider
 	ProviderRequirements map[tfaddr.Provider]version.Constraints
 	CoreRequirements     version.Constraints
+	Variables            map[string]Variable
 }
 
 type ProviderRef struct {
