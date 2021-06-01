@@ -15,9 +15,10 @@ import (
 )
 
 type testCase struct {
-	name         string
-	cfg          string
-	expectedMeta *module.Meta
+	name          string
+	cfg           string
+	expectedMeta  *module.Meta
+	expectedError hcl.Diagnostics
 }
 
 var customComparer = []cmp.Option{
@@ -38,6 +39,7 @@ func TestLoadModule(t *testing.T) {
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
 				Variables:            map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"core requirements only",
@@ -52,6 +54,7 @@ terraform {
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
 				Variables:            map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"legacy inferred provider requirements",
@@ -89,6 +92,7 @@ provider "grafana" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"simplified 0.12 provider requirements",
@@ -126,6 +130,7 @@ provider "grafana" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"version-only 0.12 provider requirements",
@@ -167,6 +172,7 @@ provider "grafana" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"0.13+ provider requirements",
@@ -238,6 +244,7 @@ provider "grafana" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"multiple valid version requirements",
@@ -299,6 +306,7 @@ resource "google_storage_bucket" "bucket" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"multiple invalid version requirements",
@@ -361,6 +369,7 @@ resource "google_storage_bucket" "bucket" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"0.13+ provider aliases",
@@ -415,6 +424,7 @@ provider "aws" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"0.15+ provider aliases",
@@ -475,6 +485,7 @@ provider "aws" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 		{
 			"explicit provider association",
@@ -510,6 +521,7 @@ resource "google_something" "test" {
 				},
 				Variables: map[string]module.Variable{},
 			},
+			nil,
 		},
 	}
 
@@ -520,6 +532,109 @@ func TestLoadModule_Variables(t *testing.T) {
 	path := t.TempDir()
 
 	testCases := []testCase{
+		{
+			"no name variables",
+			`
+variable "" {
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+			},
+			nil,
+		},
+		{
+			"no name variables",
+			`
+variable {
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+			},
+			hcl.Diagnostics{
+				&hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Missing name for variable",
+					Detail:   "All variable blocks must have 1 labels (name).",
+					Subject: &hcl.Range{
+						Filename: "test.tf",
+						Start: hcl.Pos{
+							Line:   2,
+							Column: 10,
+							Byte:   10,
+						},
+						End: hcl.Pos{
+							Line:   2,
+							Column: 11,
+							Byte:   11,
+						},
+					},
+					Context: &hcl.Range{
+						Filename: "test.tf",
+						Start: hcl.Pos{
+							Line:   2,
+							Column: 1,
+							Byte:   1,
+						},
+						End: hcl.Pos{
+							Line:   2,
+							Column: 11,
+							Byte:   11,
+						},
+					},
+				},
+			},
+		},
+		{
+			"double label variables",
+			`
+variable "one" "two" {
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+			},
+			hcl.Diagnostics{
+				&hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Extraneous label for variable",
+					Detail:   "Only 1 labels (name) are expected for variable blocks.",
+					Subject: &hcl.Range{
+						Filename: "test.tf",
+						Start: hcl.Pos{
+							Line:   2,
+							Column: 16,
+							Byte:   16,
+						},
+						End: hcl.Pos{
+							Line:   2,
+							Column: 21,
+							Byte:   21,
+						},
+					},
+					Context: &hcl.Range{
+						Filename: "test.tf",
+						Start: hcl.Pos{
+							Line:   2,
+							Column: 1,
+							Byte:   1,
+						},
+						End: hcl.Pos{
+							Line:   2,
+							Column: 23,
+							Byte:   23,
+						},
+					},
+				},
+			},
+		},
 		{
 			"empty variables",
 			`
@@ -535,6 +650,7 @@ variable "name" {
 					},
 				},
 			},
+			nil,
 		},
 		{
 			"variables with type",
@@ -552,6 +668,7 @@ variable "name" {
 					},
 				},
 			},
+			nil,
 		},
 		{
 			"variables with description",
@@ -570,6 +687,7 @@ variable "name" {
 					},
 				},
 			},
+			nil,
 		},
 		{
 			"variables with sensitive",
@@ -588,6 +706,7 @@ variable "name" {
 					},
 				},
 			},
+			nil,
 		},
 		{
 			"variables with type and description and sensitive",
@@ -609,6 +728,7 @@ variable "name" {
 					},
 				},
 			},
+			nil,
 		},
 	}
 	executeTestCases(testCases, t, path)
@@ -627,8 +747,9 @@ func executeTestCases(testCases []testCase, t *testing.T, path string) {
 			}
 
 			meta, diags := LoadModule(path, files)
-			if len(diags) > 0 {
-				t.Fatal(diags)
+
+			if diff := cmp.Diff(tc.expectedError, diags, customComparer...); diff != "" {
+				t.Fatalf("expected errors doesn't match: %s", diff)
 			}
 
 			if diff := cmp.Diff(tc.expectedMeta, meta, customComparer...); diff != "" {
