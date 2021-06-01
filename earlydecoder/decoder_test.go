@@ -20,6 +20,11 @@ type testCase struct {
 	expectedMeta *module.Meta
 }
 
+var customComparer = []cmp.Option{
+	cmp.Comparer(compareVersionConstraint),
+	ctydebug.CmpOptions,
+}
+
 func TestLoadModule(t *testing.T) {
 	path := t.TempDir()
 
@@ -610,7 +615,6 @@ variable "name" {
 
 }
 func executeTestCases(testCases []testCase, t *testing.T, path string) {
-	opts := getCustomComparers()
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d-%s", i, tc.name), func(t *testing.T) {
@@ -627,7 +631,7 @@ func executeTestCases(testCases []testCase, t *testing.T, path string) {
 				t.Fatal(diags)
 			}
 
-			if diff := cmp.Diff(tc.expectedMeta, meta, opts...); diff != "" {
+			if diff := cmp.Diff(tc.expectedMeta, meta, customComparer...); diff != "" {
 				t.Fatalf("module meta doesn't match: %s", diff)
 			}
 		})
@@ -644,11 +648,4 @@ func mustConstraints(t *testing.T, vc string) version.Constraints {
 
 func compareVersionConstraint(x, y version.Constraint) bool {
 	return x.String() == y.String()
-}
-
-func getCustomComparers() []cmp.Option {
-	return []cmp.Option{
-		cmp.Comparer(compareVersionConstraint),
-		ctydebug.CmpOptions,
-	}
 }

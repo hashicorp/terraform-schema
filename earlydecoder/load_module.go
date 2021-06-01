@@ -174,6 +174,9 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 		case "variable":
 			content, _, contentDiags := block.Body.PartialContent(variableSchema)
 			diags = append(diags, contentDiags...)
+			if len(block.Labels) != 1 || block.Labels[0] == "" {
+				continue
+			}
 			name := block.Labels[0]
 			description := ""
 			isSensitive := false

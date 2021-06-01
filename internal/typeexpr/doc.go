@@ -1,5 +1,7 @@
 // Package typeexpr is a fork of github.com/hashicorp/hcl/v2/ext/typeexpr
 // which has additional experimental support for optional attributes.
+// Link to the teraform pr correspondent to this
+// https://github.com/hashicorp/terraform/pull/26540
 //
 // This is here as part of the module_variable_optional_attrs experiment.
 // If that experiment is successful, the changes here may be upstreamed into
