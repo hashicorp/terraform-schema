@@ -24,7 +24,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{
 				`{"labels":[{"index":0,"value":"grafana"}]}`: {
-					Detail: "grafana/grafana",
+					Detail:   "grafana/grafana",
+					HoverURL: "https://registry.terraform.io/providers/grafana/grafana/latest/docs",
 					DocsLink: &schema.DocsLink{
 						URL:     "https://registry.terraform.io/providers/grafana/grafana/latest/docs",
 						Tooltip: "grafana/grafana Documentation",
@@ -56,7 +57,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					},
 				},
 				`{"labels":[{"index":0,"value":"null"}]}`: {
-					Detail: "hashicorp/null",
+					Detail:   "hashicorp/null",
+					HoverURL: "https://registry.terraform.io/providers/hashicorp/null/latest/docs",
 					DocsLink: &schema.DocsLink{
 						URL:     "https://registry.terraform.io/providers/hashicorp/null/latest/docs",
 						Tooltip: "hashicorp/null Documentation",
@@ -65,7 +67,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{},
 				},
 				`{"labels":[{"index":0,"value":"rand"}]}`: {
-					Detail: "hashicorp/random",
+					Detail:   "hashicorp/random",
+					HoverURL: "https://registry.terraform.io/providers/hashicorp/random/latest/docs",
 					DocsLink: &schema.DocsLink{
 						URL:     "https://registry.terraform.io/providers/hashicorp/random/latest/docs",
 						Tooltip: "hashicorp/random Documentation",

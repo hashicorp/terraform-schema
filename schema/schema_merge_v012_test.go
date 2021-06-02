@@ -27,6 +27,7 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 					Detail:     "hashicorp/null",
+					HoverURL:   "https://registry.terraform.io/providers/hashicorp/null/latest/docs",
 					DocsLink: &schema.DocsLink{
 						URL:     "https://registry.terraform.io/providers/hashicorp/null/latest/docs",
 						Tooltip: "hashicorp/null Documentation",
@@ -36,6 +37,7 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 					Detail:     "hashicorp/random",
+					HoverURL:   "https://registry.terraform.io/providers/hashicorp/random/latest/docs",
 					DocsLink: &schema.DocsLink{
 						URL:     "https://registry.terraform.io/providers/hashicorp/random/latest/docs",
 						Tooltip: "hashicorp/random Documentation",
