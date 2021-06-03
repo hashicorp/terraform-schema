@@ -7,12 +7,14 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/hashicorp/terraform-schema/module"
 )
 
 type SchemaMerger struct {
-	coreSchema   *schema.BodySchema
-	schemaReader SchemaReader
+	coreSchema       *schema.BodySchema
+	schemaReader     SchemaReader
+	terraformVersion *version.Version
 }
 
 type ProviderSchema struct {
@@ -59,6 +61,10 @@ func NewSchemaMerger(coreSchema *schema.BodySchema) *SchemaMerger {
 
 func (m *SchemaMerger) SetSchemaReader(sr SchemaReader) {
 	m.schemaReader = sr
+}
+
+func (m *SchemaMerger) SetTerraformVersion(v *version.Version) {
+	m.terraformVersion = v
 }
 
 func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, error) {
@@ -148,6 +154,18 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 							},
 						},
 					},
+				}
+
+				// Add backend-related core bits of schema
+				if isRemoteStateDataSource(pAddr, dsName) {
+					dsSchema.Attributes["backend"].IsDepKey = true
+					dsSchema.Attributes["backend"].Expr = backends.BackendTypesAsExprConstraints(m.terraformVersion)
+
+					delete(dsSchema.Attributes, "config")
+					depBodies := m.dependentBodyForRemoteStateDataSource(providerAddr, localRef)
+					for key, depBody := range depBodies {
+						mergedSchema.Blocks["data"].DependentBody[key] = depBody
+					}
 				}
 
 				mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
