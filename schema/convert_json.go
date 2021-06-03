@@ -20,6 +20,7 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 	if jsonSchema.ConfigSchema != nil {
 		ps.Provider = bodySchemaFromJson(jsonSchema.ConfigSchema.Block)
 		ps.Provider.Detail = detailForSrcAddr(pAddr, nil)
+		ps.Provider.HoverURL = urlForProvider(pAddr, nil)
 		ps.Provider.DocsLink = docsLinkForProvider(pAddr, nil)
 	}
 
@@ -39,6 +40,7 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 func (ps *ProviderSchema) SetProviderVersion(pAddr tfaddr.Provider, v *version.Version) {
 	if ps.Provider != nil {
 		ps.Provider.Detail = detailForSrcAddr(pAddr, v)
+		ps.Provider.HoverURL = urlForProvider(pAddr, v)
 		ps.Provider.DocsLink = docsLinkForProvider(pAddr, v)
 	}
 	for _, rSchema := range ps.Resources {
@@ -199,16 +201,24 @@ func docsLinkForProvider(addr tfaddr.Provider, v *version.Version) *schema.DocsL
 		return nil
 	}
 
+	return &schema.DocsLink{
+		URL:     urlForProvider(addr, v),
+		Tooltip: fmt.Sprintf("%s Documentation", addr.ForDisplay()),
+	}
+}
+
+func urlForProvider(addr tfaddr.Provider, v *version.Version) string {
+	if !providerHasDocs(addr) {
+		return ""
+	}
+
 	ver := "latest"
 	if v != nil {
 		ver = v.String()
 	}
 
-	return &schema.DocsLink{
-		URL: fmt.Sprintf("https://registry.terraform.io/providers/%s/%s/%s/docs",
-			addr.Namespace, addr.Type, ver),
-		Tooltip: fmt.Sprintf("%s Documentation", addr.ForDisplay()),
-	}
+	return fmt.Sprintf("https://registry.terraform.io/providers/%s/%s/%s/docs",
+		addr.Namespace, addr.Type, ver)
 }
 
 func providerHasDocs(addr tfaddr.Provider) bool {

@@ -239,6 +239,7 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 					Blocks:     map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{},
 					Detail:     "hashicorp/hashicup",
+					HoverURL:   "https://registry.terraform.io/providers/hashicorp/hashicup/latest/docs",
 					DocsLink: &schema.DocsLink{
 						URL:     "https://registry.terraform.io/providers/hashicorp/hashicup/latest/docs",
 						Tooltip: "hashicorp/hashicup Documentation",
