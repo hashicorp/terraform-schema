@@ -38,11 +38,6 @@ var variableBlockSchema = &schema.BlockSchema{
 				IsOptional:  true,
 				Description: lang.Markdown("Type constraint restricting the type of value to accept, e.g. `string` or `list(string)`"),
 			},
-			"default": {
-				Expr:        schema.ExprConstraints{},
-				IsOptional:  true,
-				Description: lang.Markdown("Default value to use when variable is not explicitly set"),
-			},
 			"sensitive": {
 				Expr:        schema.LiteralTypeOnly(cty.Bool),
 				IsOptional:  true,
