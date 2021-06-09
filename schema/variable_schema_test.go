@@ -51,6 +51,7 @@ func TestSchemaForVariables(t *testing.T) {
 				"id": module.Variable{
 					Description: "id of the module",
 					Type:        cty.Number,
+					IsSensitive: true,
 				},
 			},
 			&schema.BodySchema{Attributes: map[string]*schema.AttributeSchema{
@@ -66,7 +67,8 @@ func TestSchemaForVariables(t *testing.T) {
 						Value: "id of the module",
 						Kind:  lang.PlainTextKind,
 					},
-					Expr: schema.ExprConstraints{schema.LiteralTypeExpr{cty.Number}},
+					Expr:        schema.ExprConstraints{schema.LiteralTypeExpr{cty.Number}},
+					IsSensitive: true,
 				},
 			}},
 		},

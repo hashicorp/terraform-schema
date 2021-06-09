@@ -37,7 +37,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "Credentials for accessing the Grafana API.",
 								Kind:  lang.PlainTextKind,
 							},
-							IsRequired: true,
+							IsRequired:  true,
+							IsSensitive: true,
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
@@ -140,7 +141,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
 							},
-							IsOptional: true,
+							IsOptional:  true,
+							IsSensitive: true,
 						},
 						"type": {
 							Expr: schema.ExprConstraints{
@@ -392,56 +394,64 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"basic_auth_password": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"password": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"private_key": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"secret_key": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"tls_ca_cert": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"tls_client_cert": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"tls_client_key": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 								},
 							},
@@ -467,7 +477,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
-							IsOptional: true,
+							IsOptional:  true,
+							IsSensitive: true,
 						},
 						"basic_auth_username": {
 							Expr: schema.ExprConstraints{
@@ -510,7 +521,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
-							IsOptional: true,
+							IsOptional:  true,
+							IsSensitive: true,
 						},
 						"type": {
 							Expr: schema.ExprConstraints{
@@ -706,7 +718,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
-							IsRequired: true,
+							IsRequired:  true,
+							IsSensitive: true,
 						},
 					},
 				},
@@ -755,7 +768,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
 							},
-							IsOptional: true,
+							IsOptional:  true,
+							IsSensitive: true,
 						},
 						"type": {
 							Expr: schema.ExprConstraints{
@@ -1007,56 +1021,64 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"basic_auth_password": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"password": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"private_key": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"secret_key": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"tls_ca_cert": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"tls_client_cert": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 									"tls_client_key": {
 										Expr: schema.ExprConstraints{
 											schema.TraversalExpr{OfType: cty.String},
 											schema.LiteralTypeExpr{Type: cty.String},
 										},
-										IsOptional: true,
+										IsOptional:  true,
+										IsSensitive: true,
 									},
 								},
 							},
@@ -1082,7 +1104,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
-							IsOptional: true,
+							IsOptional:  true,
+							IsSensitive: true,
 						},
 						"basic_auth_username": {
 							Expr: schema.ExprConstraints{
@@ -1125,7 +1148,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
-							IsOptional: true,
+							IsOptional:  true,
+							IsSensitive: true,
 						},
 						"type": {
 							Expr: schema.ExprConstraints{
@@ -1321,7 +1345,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
 							},
-							IsRequired: true,
+							IsRequired:  true,
+							IsSensitive: true,
 						},
 					},
 				},
@@ -1696,7 +1721,8 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Value: "The generated random string.",
 								Kind:  lang.MarkdownKind,
 							},
-							IsComputed: true,
+							IsComputed:  true,
+							IsSensitive: true,
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
