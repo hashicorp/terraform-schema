@@ -403,7 +403,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "The generated random string.",
 								Kind:  lang.PlainTextKind,
 							},
-							IsComputed: true,
+							IsComputed:  true,
+							IsSensitive: true,
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
@@ -1004,7 +1005,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 								Value: "The generated random string.",
 								Kind:  lang.PlainTextKind,
 							},
-							IsComputed: true,
+							IsComputed:  true,
+							IsSensitive: true,
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.String},
 								schema.LiteralTypeExpr{Type: cty.String},
