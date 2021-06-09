@@ -180,6 +180,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			name := block.Labels[0]
 			description := ""
 			isSensitive := false
+			isRequired := true
 			var valDiags hcl.Diagnostics
 			if attr, defined := content.Attributes["description"]; defined {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &description)
@@ -194,10 +195,14 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &isSensitive)
 				diags = append(diags, valDiags...)
 			}
+			if _, defined := content.Attributes["default"]; defined {
+				isRequired = false
+			}
 			mod.Variables[name] = &module.Variable{
 				Type:        varType,
 				Description: description,
 				IsSensitive: isSensitive,
+				IsRequired:  isRequired,
 			}
 
 		}

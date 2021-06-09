@@ -71,5 +71,8 @@ var variableSchema = &hcl.BodySchema{
 		{
 			Name: "sensitive",
 		},
+		{
+			Name: "default",
+		},
 	},
 }
