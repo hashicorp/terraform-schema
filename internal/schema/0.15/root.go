@@ -10,5 +10,8 @@ import (
 func ModuleSchema(v *version.Version) *schema.BodySchema {
 	bs := v014_mod.ModuleSchema(v)
 	bs.Blocks["terraform"] = patchTerraformBlockSchema(bs.Blocks["terraform"], v)
+	bs.Blocks["resource"].Body.Blocks["provisioner"].DependentBody = ProvisionerDependentBodies(v)
+	bs.Blocks["resource"].Body.Blocks["connection"].DependentBody = ConnectionDependentBodies(v)
+
 	return bs
 }
