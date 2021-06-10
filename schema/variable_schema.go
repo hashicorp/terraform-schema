@@ -17,6 +17,7 @@ func SchemaForVariables(vars map[string]module.Variable) (*schema.BodySchema, er
 			},
 			Expr:        schema.ExprConstraints{schema.LiteralTypeExpr{Type: v.Type}},
 			IsSensitive: v.IsSensitive,
+			IsRequired:  v.IsRequired,
 		}
 	}
 
