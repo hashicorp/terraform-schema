@@ -21,6 +21,12 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
+var (
+	v0_12_0 = version.Must(version.NewVersion("0.12.0"))
+	v0_13_0 = version.Must(version.NewVersion("0.13.0"))
+	v0_15_0 = version.Must(version.NewVersion("0.15.0"))
+)
+
 func TestSchemaMerger_SchemaForModule_noCoreSchema(t *testing.T) {
 	sm := NewSchemaMerger(nil)
 
@@ -178,6 +184,7 @@ func TestMergeWithJsonProviderSchemas_v012(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
 	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.12.json"), true)
 	sm.SetSchemaReader(sr)
+	sm.SetTerraformVersion(v0_12_0)
 	meta := testModuleMeta(t, "testdata/test-config-0.12.tf")
 	mergedSchema, err := sm.SchemaForModule(meta)
 	if err != nil {
@@ -193,6 +200,7 @@ func TestMergeWithJsonProviderSchemas_v013(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
 	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.13.json"), false)
 	sm.SetSchemaReader(sr)
+	sm.SetTerraformVersion(v0_13_0)
 	meta := testModuleMeta(t, "testdata/test-config-0.13.tf")
 	mergedSchema, err := sm.SchemaForModule(meta)
 	if err != nil {
@@ -208,6 +216,7 @@ func TestMergeWithJsonProviderSchemas_v015(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
 	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false)
 	sm.SetSchemaReader(sr)
+	sm.SetTerraformVersion(v0_15_0)
 	meta := testModuleMeta(t, "testdata/test-config-0.15.tf")
 	mergedSchema, err := sm.SchemaForModule(meta)
 	if err != nil {

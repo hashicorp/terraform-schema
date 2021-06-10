@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -26,12 +27,13 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 						"operations are performed, where state snapshots are stored, etc."),
 					Labels: []*schema.LabelSchema{
 						{
-							Name:        "type",
-							Description: lang.Markdown("Backend Type"),
+							Name:        "backend type",
+							Description: lang.Markdown("Backend type"),
 							IsDepKey:    true,
 						},
 					},
-					MaxItems: 1,
+					MaxItems:      1,
+					DependentBody: backends.ConfigsAsDependentBodies(v),
 				},
 				"required_providers": {
 					Description: lang.Markdown("What provider version to use within this configuration"),

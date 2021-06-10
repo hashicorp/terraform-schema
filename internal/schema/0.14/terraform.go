@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -50,6 +51,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 							IsDepKey:    true,
 						},
 					},
+					DependentBody: backends.ConfigsAsDependentBodies(v),
 				},
 				"provider_meta": {
 					Description: lang.Markdown("Metadata to pass into a provider which supports this"),

@@ -12,7 +12,7 @@ func ModuleSchema(v *version.Version) *schema.BodySchema {
 
 	bs.Blocks["module"] = moduleBlockSchema
 	bs.Blocks["provider"] = providerBlockSchema
-	bs.Blocks["terraform"] = terraformBlockSchema
+	bs.Blocks["terraform"] = terraformBlockSchema(v)
 
 	return bs
 }

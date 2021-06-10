@@ -3,6 +3,7 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -1533,17 +1534,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"backend": {
 							IsRequired: true,
-							Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.String},
-								schema.LiteralTypeExpr{Type: cty.String},
-							},
-						},
-						"config": {
-							IsOptional: true,
-							Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
-								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
-							},
+							IsDepKey:   true,
+							Expr:       backends.BackendTypesAsExprConstraints(v0_12_0),
 						},
 						"defaults": {
 							IsOptional: true,
@@ -1574,17 +1566,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"backend": {
 							IsRequired: true,
-							Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.String},
-								schema.LiteralTypeExpr{Type: cty.String},
-							},
-						},
-						"config": {
-							IsOptional: true,
-							Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.DynamicPseudoType},
-								schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
-							},
+							IsDepKey:   true,
+							Expr:       backends.BackendTypesAsExprConstraints(v0_12_0),
 						},
 						"defaults": {
 							IsOptional: true,
@@ -1608,6 +1591,96 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							},
 						},
 					},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"artifactory"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["artifactory"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"artifactory"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["artifactory"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"atlas"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["atlas"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"atlas"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["atlas"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"azure"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["azure"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"azure"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["azure"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"azurerm"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["azurerm"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"azurerm"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["azurerm"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"consul"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["consul"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"consul"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["consul"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"etcd"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["etcd"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"etcd"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["etcd"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"etcdv3"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["etcdv3"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"etcdv3"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["etcdv3"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"gcs"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["gcs"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"gcs"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["gcs"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"http"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["http"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"http"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["http"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"local"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["local"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"local"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["local"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"manta"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["manta"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"manta"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["manta"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"pg"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["pg"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"pg"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["pg"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"remote"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["remote"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"remote"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["remote"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"s3"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["s3"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"s3"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["s3"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"swift"}},{"name":"provider","expr":{"addr":"terraform"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["swift"]}},
+				},
+				`{"labels":[{"index":0,"value":"terraform_remote_state"}],"attrs":[{"name":"backend","expr":{"static":"swift"}}]}`: {
+					Attributes: map[string]*schema.AttributeSchema{"config": {IsOptional: true, Expr: backends.ConfigsAsExprConstraints(v0_12_0)["swift"]}},
 				},
 			},
 		},
