@@ -9,18 +9,25 @@ import (
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/zclconf/go-cty/cty"
 )
 
 type SchemaMerger struct {
 	coreSchema       *schema.BodySchema
 	schemaReader     SchemaReader
 	terraformVersion *version.Version
+	moduleReader     ModuleReader
 }
 
 type ProviderSchema struct {
 	Provider    *schema.BodySchema
 	Resources   map[string]*schema.BodySchema
 	DataSources map[string]*schema.BodySchema
+}
+
+type ModuleReader interface {
+	ModuleCalls(modPath string) ([]module.ModuleCall, error)
+	ModuleMeta(modPath string) (*module.Meta, error)
 }
 
 func (ps *ProviderSchema) Copy() *ProviderSchema {
@@ -63,6 +70,10 @@ func (m *SchemaMerger) SetSchemaReader(sr SchemaReader) {
 	m.schemaReader = sr
 }
 
+func (m *SchemaMerger) SetModuleReader(mr ModuleReader) {
+	m.moduleReader = mr
+}
+
 func (m *SchemaMerger) SetTerraformVersion(v *version.Version) {
 	m.terraformVersion = v
 }
@@ -86,6 +97,9 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 	}
 	if mergedSchema.Blocks["data"].DependentBody == nil {
 		mergedSchema.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
+	}
+	if mergedSchema.Blocks["module"].DependentBody == nil {
+		mergedSchema.Blocks["module"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 
 	providerRefs := ProviderReferences(meta.ProviderReferences)
@@ -193,6 +207,32 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 			},
 		}
 		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
+	}
+
+	modules, err := m.moduleReader.ModuleCalls(meta.Path)
+	if err == nil {
+		for _, module := range modules {
+			modMeta, err := m.moduleReader.ModuleMeta(module.SourceAddr)
+			if err == nil {
+				depKeys := schema.DependencyKeys{
+					// Fetching based only on the source can cause conflicts for multiple versions of the same module
+					// specially if they have different versions or the source of those modules have been modified
+					// inside the .terraform folder. THis is a compromise that we made in this moment since it would impact only auto completion
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "source",
+							Expr: schema.ExpressionValue{
+								Static: cty.StringVal(module.SourceAddr),
+							},
+						},
+					},
+				}
+				modVarSchema, err := SchemaForVariables(modMeta.Variables)
+				if err == nil {
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = modVarSchema
+				}
+			}
+		}
 	}
 	return mergedSchema, nil
 }
