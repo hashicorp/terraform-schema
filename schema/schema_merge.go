@@ -16,13 +16,14 @@ type SchemaMerger struct {
 	coreSchema       *schema.BodySchema
 	schemaReader     SchemaReader
 	terraformVersion *version.Version
-	moduleReader     ModuleReader
+	moduleReader     *ModuleReader
 }
 
 type ProviderSchema struct {
 	Provider    *schema.BodySchema
 	Resources   map[string]*schema.BodySchema
 	DataSources map[string]*schema.BodySchema
+	Module      *schema.BodySchema
 }
 
 type ModuleReader interface {
@@ -70,7 +71,7 @@ func (m *SchemaMerger) SetSchemaReader(sr SchemaReader) {
 	m.schemaReader = sr
 }
 
-func (m *SchemaMerger) SetModuleReader(mr ModuleReader) {
+func (m *SchemaMerger) SetModuleReader(mr *ModuleReader) {
 	m.moduleReader = mr
 }
 
@@ -98,7 +99,8 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 	if mergedSchema.Blocks["data"].DependentBody == nil {
 		mergedSchema.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
-	if mergedSchema.Blocks["module"].DependentBody == nil {
+
+	if mergedSchema.Blocks["module"] != nil && mergedSchema.Blocks["module"].DependentBody == nil {
 		mergedSchema.Blocks["module"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 
@@ -208,28 +210,30 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		}
 		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
 	}
-
-	modules, err := m.moduleReader.ModuleCalls(meta.Path)
-	if err == nil {
-		for _, module := range modules {
-			modMeta, err := m.moduleReader.ModuleMeta(module.SourceAddr)
-			if err == nil {
-				depKeys := schema.DependencyKeys{
-					// Fetching based only on the source can cause conflicts for multiple versions of the same module
-					// specially if they have different versions or the source of those modules have been modified
-					// inside the .terraform folder. THis is a compromise that we made in this moment since it would impact only auto completion
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "source",
-							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(module.SourceAddr),
+	if m.moduleReader != nil {
+		reader := *m.moduleReader
+		modules, err := reader.ModuleCalls(meta.Path)
+		if err == nil {
+			for _, module := range modules {
+				modMeta, err := reader.ModuleMeta(module.SourceAddr)
+				if err == nil {
+					depKeys := schema.DependencyKeys{
+						// Fetching based only on the source can cause conflicts for multiple versions of the same module
+						// specially if they have different versions or the source of those modules have been modified
+						// inside the .terraform folder. THis is a compromise that we made in this moment since it would impact only auto completion
+						Attributes: []schema.AttributeDependent{
+							{
+								Name: "source",
+								Expr: schema.ExpressionValue{
+									Static: cty.StringVal(module.SourceAddr),
+								},
 							},
 						},
-					},
-				}
-				modVarSchema, err := SchemaForVariables(modMeta.Variables)
-				if err == nil {
-					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = modVarSchema
+					}
+					modVarSchema, err := SchemaForVariables(modMeta.Variables)
+					if err == nil {
+						mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = modVarSchema
+					}
 				}
 			}
 		}
