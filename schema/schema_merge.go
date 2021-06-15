@@ -16,7 +16,7 @@ type SchemaMerger struct {
 	coreSchema       *schema.BodySchema
 	schemaReader     SchemaReader
 	terraformVersion *version.Version
-	moduleReader     *ModuleReader
+	moduleReader     ModuleReader
 }
 
 type ProviderSchema struct {
@@ -71,7 +71,7 @@ func (m *SchemaMerger) SetSchemaReader(sr SchemaReader) {
 	m.schemaReader = sr
 }
 
-func (m *SchemaMerger) SetModuleReader(mr *ModuleReader) {
+func (m *SchemaMerger) SetModuleReader(mr ModuleReader) {
 	m.moduleReader = mr
 }
 
@@ -211,30 +211,32 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
 	}
 	if m.moduleReader != nil {
-		reader := *m.moduleReader
+		reader := m.moduleReader
 		modules, err := reader.ModuleCalls(meta.Path)
-		if err == nil {
-			for _, module := range modules {
-				modMeta, err := reader.ModuleMeta(module.SourceAddr)
-				if err == nil {
-					depKeys := schema.DependencyKeys{
-						// Fetching based only on the source can cause conflicts for multiple versions of the same module
-						// specially if they have different versions or the source of those modules have been modified
-						// inside the .terraform folder. THis is a compromise that we made in this moment since it would impact only auto completion
-						Attributes: []schema.AttributeDependent{
-							{
-								Name: "source",
-								Expr: schema.ExpressionValue{
-									Static: cty.StringVal(module.SourceAddr),
-								},
-							},
+		if err != nil {
+			return mergedSchema, nil
+		}
+		for _, module := range modules {
+			modMeta, err := reader.ModuleMeta(module.SourceAddr)
+			if err != nil {
+				continue
+			}
+			depKeys := schema.DependencyKeys{
+				// Fetching based only on the source can cause conflicts for multiple versions of the same module
+				// specially if they have different versions or the source of those modules have been modified
+				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+				Attributes: []schema.AttributeDependent{
+					{
+						Name: "source",
+						Expr: schema.ExpressionValue{
+							Static: cty.StringVal(module.SourceAddr),
 						},
-					}
-					modVarSchema, err := SchemaForVariables(modMeta.Variables)
-					if err == nil {
-						mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = modVarSchema
-					}
-				}
+					},
+				},
+			}
+			modVarSchema, err := SchemaForVariables(modMeta.Variables)
+			if err == nil {
+				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = modVarSchema
 			}
 		}
 	}

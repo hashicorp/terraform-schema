@@ -264,6 +264,23 @@ func TestMergeWithJsonProviderSchemas_v015(t *testing.T) {
 	}
 }
 
+func TestMergeWithJsonProviderSchemasAndModuleVariables_v015(t *testing.T) {
+	sm := NewSchemaMerger(testCoreSchema())
+	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false)
+	sm.SetSchemaReader(sr)
+	sm.SetModuleReader(testModuleReader())
+	sm.SetTerraformVersion(v0_15_0)
+	meta := testModuleMeta(t, "testdata/test-config-0.15.tf")
+	mergedSchema, err := sm.SchemaForModule(meta)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if diff := cmp.Diff(expectedMergedSchemaWithModule_v015, mergedSchema, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("schema differs: %s", diff)
+	}
+}
+
 func testModuleMeta(t *testing.T, path string) *module.Meta {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -319,6 +336,36 @@ type testJsonSchemaReader struct {
 	ps          *tfjson.ProviderSchemas
 	useTypeOnly bool
 	migrations  map[tfaddr.Provider]tfaddr.Provider
+}
+
+func testModuleReader() ModuleReader {
+	return &testModuleReaderStruct{}
+}
+
+type testModuleReaderStruct struct {
+}
+
+func (m *testModuleReaderStruct) ModuleCalls(modPath string) ([]module.ModuleCall, error) {
+	return []module.ModuleCall{
+		{
+			SourceAddr: "source",
+			Path:       "path",
+		},
+	}, nil
+}
+
+func (m *testModuleReaderStruct) ModuleMeta(modPath string) (*module.Meta, error) {
+	if modPath == "source" {
+		return &module.Meta{
+			Variables: map[string]module.Variable{
+				"test": {
+					Type:        cty.String,
+					Description: "test var",
+				},
+			},
+		}, nil
+	}
+	return nil, fmt.Errorf("invalid source")
 }
 
 func (r *testJsonSchemaReader) ProviderSchema(_ string, pAddr tfaddr.Provider, _ version.Constraints) (*ProviderSchema, error) {
