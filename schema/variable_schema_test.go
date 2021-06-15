@@ -26,51 +26,86 @@ func TestSchemaForVariables(t *testing.T) {
 		{
 			"one attribute schema",
 			map[string]module.Variable{
-				"name": module.Variable{
+				"name": {
 					Description: "name of the module",
 					Type:        cty.String,
 				},
 			},
 			&schema.BodySchema{Attributes: map[string]*schema.AttributeSchema{
-				"name": &schema.AttributeSchema{
+				"name": {
 					Description: lang.MarkupContent{
 						Value: "name of the module",
 						Kind:  lang.PlainTextKind,
 					},
-					Expr: schema.ExprConstraints{schema.LiteralTypeExpr{cty.String}},
+					IsRequired: true,
+					Expr:       schema.LiteralTypeOnly(cty.String),
 				},
 			}},
 		},
 		{
 			"two attribute schema",
 			map[string]module.Variable{
-				"name": module.Variable{
-					Description: "name of the module",
-					Type:        cty.String,
+				"name": {
+					Description:  "name of the module",
+					Type:         cty.String,
+					DefaultValue: cty.StringVal("default"),
 				},
-				"id": module.Variable{
+				"id": {
 					Description: "id of the module",
 					Type:        cty.Number,
 					IsSensitive: true,
-					IsRequired:  true,
 				},
 			},
 			&schema.BodySchema{Attributes: map[string]*schema.AttributeSchema{
-				"name": &schema.AttributeSchema{
+				"name": {
 					Description: lang.MarkupContent{
 						Value: "name of the module",
 						Kind:  lang.PlainTextKind,
 					},
-					Expr: schema.ExprConstraints{schema.LiteralTypeExpr{cty.String}},
+					IsOptional: true,
+					Expr:       schema.LiteralTypeOnly(cty.String),
 				},
-				"id": &schema.AttributeSchema{
+				"id": {
 					Description: lang.MarkupContent{
 						Value: "id of the module",
 						Kind:  lang.PlainTextKind,
 					},
-					Expr:        schema.ExprConstraints{schema.LiteralTypeExpr{cty.Number}},
+					Expr:        schema.LiteralTypeOnly(cty.Number),
 					IsSensitive: true,
 					IsRequired:  true,
+				},
+			}},
+		},
+		{
+			"attribute with type from default value",
+			map[string]module.Variable{
+				"name": {
+					Description:  "name of the module",
+					Type:         cty.DynamicPseudoType,
+					DefaultValue: cty.StringVal("default"),
+				},
+				"id": {
+					Description:  "id of the module",
+					Type:         cty.NilType,
+					DefaultValue: cty.NumberIntVal(42),
+				},
+			},
+			&schema.BodySchema{Attributes: map[string]*schema.AttributeSchema{
+				"name": {
+					Description: lang.MarkupContent{
+						Value: "name of the module",
+						Kind:  lang.PlainTextKind,
+					},
+					IsOptional: true,
+					Expr:       schema.LiteralTypeOnly(cty.String),
+				},
+				"id": {
+					Description: lang.MarkupContent{
+						Value: "id of the module",
+						Kind:  lang.PlainTextKind,
+					},
+					Expr:       schema.LiteralTypeOnly(cty.Number),
+					IsOptional: true,
 				},
 			}},
 		},
