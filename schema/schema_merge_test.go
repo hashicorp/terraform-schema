@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/hashicorp/terraform-registry-address"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/earlydecoder"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty-debug/ctydebug"
@@ -75,6 +75,24 @@ func TestSchemaMerger_SchemaForModule_noProviderSchema(t *testing.T) {
 					},
 				},
 			},
+			"module": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"source": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsRequired: true,
+							IsDepKey:   true,
+						},
+						"version": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsOptional: true,
+						},
+					},
+				},
+			},
 		},
 	}
 	sm := NewSchemaMerger(testCoreSchema)
@@ -130,6 +148,24 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 								schema.TraversalExpr{OfType: cty.Number},
 								schema.LiteralTypeExpr{Type: cty.Number},
 							},
+							IsOptional: true,
+						},
+					},
+				},
+			},
+			"module": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"source": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsRequired: true,
+							IsDepKey:   true,
+						},
+						"version": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 					},
@@ -345,6 +381,24 @@ func testCoreSchema() *schema.BodySchema {
 								schema.TraversalExpr{OfType: cty.Number},
 								schema.LiteralTypeExpr{Type: cty.Number},
 							},
+							IsOptional: true,
+						},
+					},
+				},
+			},
+			"module": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"source": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsRequired: true,
+							IsDepKey:   true,
+						},
+						"version": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
 							IsOptional: true,
 						},
 					},
