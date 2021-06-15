@@ -18,6 +18,10 @@ func variableBlockSchema(v *version.Version) *schema.BlockSchema {
 			FriendlyName: "variable",
 			ScopeId:      refscope.VariableScope,
 			AsReference:  true,
+			AsTypeOf: &schema.BlockAsTypeOf{
+				AttributeExpr:  "type",
+				AttributeValue: "default",
+			},
 		},
 		Labels: []*schema.LabelSchema{
 			{
