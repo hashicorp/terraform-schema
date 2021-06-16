@@ -24,6 +24,7 @@ func providerBlockSchema(v *version.Version) *schema.BlockSchema {
 				Name:        "name",
 				Description: lang.PlainText("Provider Name"),
 				IsDepKey:    true,
+				Completable: true,
 			},
 		},
 		Description: lang.PlainText("A provider block is used to specify a provider configuration"),

@@ -27,6 +27,7 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 				Name:        "type",
 				Description: lang.PlainText("Data Source Type"),
 				IsDepKey:    true,
+				Completable: true,
 			},
 			{
 				Name:        "name",

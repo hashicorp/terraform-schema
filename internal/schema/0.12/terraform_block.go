@@ -30,6 +30,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 							Name:        "backend type",
 							Description: lang.Markdown("Backend type"),
 							IsDepKey:    true,
+							Completable: true,
 						},
 					},
 					MaxItems:      1,

@@ -24,6 +24,7 @@ var datasourceBlockSchema = &schema.BlockSchema{
 			Name:        "type",
 			Description: lang.PlainText("Data Source Type"),
 			IsDepKey:    true,
+			Completable: true,
 		},
 		{
 			Name:        "name",

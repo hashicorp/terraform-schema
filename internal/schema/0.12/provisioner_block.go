@@ -15,6 +15,7 @@ func provisionerBlock(v *version.Version) *schema.BlockSchema {
 				Name:        "type",
 				Description: lang.PlainText("Type of provisioner to use, e.g. `remote-exec` or `file`"),
 				IsDepKey:    true,
+				Completable: true,
 			},
 		},
 		Body: &schema.BodySchema{

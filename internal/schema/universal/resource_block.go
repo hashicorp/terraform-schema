@@ -23,6 +23,7 @@ var resourceBlockSchema = &schema.BlockSchema{
 			Name:        "type",
 			Description: lang.PlainText("Resource Type"),
 			IsDepKey:    true,
+			Completable: true,
 		},
 		{
 			Name:        "name",
