@@ -49,6 +49,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 							Name:        "type",
 							Description: lang.Markdown("Backend Type"),
 							IsDepKey:    true,
+							Completable: true,
 						},
 					},
 					DependentBody: backends.ConfigsAsDependentBodies(v),
