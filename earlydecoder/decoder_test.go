@@ -646,8 +646,7 @@ variable "name" {
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
 				Variables: map[string]module.Variable{
 					"name": {
-						Type:       cty.DynamicPseudoType,
-						IsRequired: true,
+						Type: cty.DynamicPseudoType,
 					},
 				},
 			},
@@ -665,8 +664,7 @@ variable "name" {
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
 				Variables: map[string]module.Variable{
 					"name": {
-						Type:       cty.String,
-						IsRequired: true,
+						Type: cty.String,
 					},
 				},
 			},
@@ -686,7 +684,6 @@ variable "name" {
 					"name": {
 						Type:        cty.DynamicPseudoType,
 						Description: "description",
-						IsRequired:  true,
 					},
 				},
 			},
@@ -706,7 +703,6 @@ variable "name" {
 					"name": {
 						Type:        cty.DynamicPseudoType,
 						IsSensitive: true,
-						IsRequired:  true,
 					},
 				},
 			},
@@ -729,7 +725,6 @@ variable "name" {
 						Type:        cty.String,
 						Description: "description",
 						IsSensitive: true,
-						IsRequired:  true,
 					},
 				},
 			},
@@ -747,8 +742,8 @@ variable "name" {
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
 				Variables: map[string]module.Variable{
 					"name": {
-						Type:       cty.DynamicPseudoType,
-						IsRequired: false,
+						Type:         cty.DynamicPseudoType,
+						DefaultValue: cty.EmptyObjectVal,
 					},
 				},
 			},

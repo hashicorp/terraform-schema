@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-schema/internal/typeexpr"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/convert"
 )
 
 // decodedModule is the type representing a decoded Terraform module.
@@ -180,7 +181,6 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			name := block.Labels[0]
 			description := ""
 			isSensitive := false
-			isRequired := true
 			var valDiags hcl.Diagnostics
 			if attr, defined := content.Attributes["description"]; defined {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &description)
@@ -195,16 +195,32 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &isSensitive)
 				diags = append(diags, valDiags...)
 			}
-			if _, defined := content.Attributes["default"]; defined {
-				isRequired = false
+			defaultValue := cty.NilVal
+			if attr, defined := content.Attributes["default"]; defined {
+				val, diags := attr.Expr.Value(nil)
+				if !diags.HasErrors() {
+					if varType != cty.NilType {
+						var err error
+						val, err = convert.Convert(val, varType)
+						if err != nil {
+							diags = append(diags, &hcl.Diagnostic{
+								Severity: hcl.DiagError,
+								Summary:  "Invalid default value for variable",
+								Detail:   fmt.Sprintf("This default value is not compatible with the variable's type constraint: %s.", err),
+								Subject:  attr.Expr.Range().Ptr(),
+							})
+							val = cty.DynamicVal
+						}
+					}
+					defaultValue = val
+				}
 			}
 			mod.Variables[name] = &module.Variable{
-				Type:        varType,
-				Description: description,
-				IsSensitive: isSensitive,
-				IsRequired:  isRequired,
+				Type:         varType,
+				Description:  description,
+				IsSensitive:  isSensitive,
+				DefaultValue: defaultValue,
 			}
-
 		}
 
 	}
