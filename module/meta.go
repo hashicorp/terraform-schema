@@ -21,3 +21,8 @@ type ProviderRef struct {
 	// configuration this address refers to.
 	Alias string
 }
+
+type ModuleCall struct {
+	SourceAddr string
+	Path       string
+}

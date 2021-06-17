@@ -265,5 +265,24 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 			},
 			DependentBody: map[schema.SchemaKey]*schema.BodySchema{},
 		},
+		"module": {
+			Labels: []*schema.LabelSchema{
+				{Name: "name"},
+			},
+			Body: &schema.BodySchema{
+				Attributes: map[string]*schema.AttributeSchema{
+					"source": {
+						Expr:       schema.LiteralTypeOnly(cty.String),
+						IsRequired: true,
+						IsDepKey:   true,
+					},
+					"version": {
+						Expr:       schema.LiteralTypeOnly(cty.String),
+						IsOptional: true,
+					},
+				},
+			},
+			DependentBody: map[schema.SchemaKey]*schema.BodySchema{},
+		},
 	},
 }
