@@ -9,5 +9,6 @@ var Module = &schema.BodySchema{
 		"provider": providerBlockSchema,
 		"resource": resourceBlockSchema,
 		"data":     datasourceBlockSchema,
+		"module":   moduleBlockSchema,
 	},
 }
