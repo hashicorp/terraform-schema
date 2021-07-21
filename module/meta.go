@@ -12,6 +12,7 @@ type Meta struct {
 	ProviderRequirements map[tfaddr.Provider]version.Constraints
 	CoreRequirements     version.Constraints
 	Variables            map[string]Variable
+	Outputs              map[string]Output
 }
 
 type ProviderRef struct {
