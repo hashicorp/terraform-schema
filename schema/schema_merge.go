@@ -9,11 +9,13 @@ import (
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/zclconf/go-cty/cty"
 )
 
 type SchemaMerger struct {
 	coreSchema       *schema.BodySchema
 	schemaReader     SchemaReader
+	moduleReader     ModuleReader
 	terraformVersion *version.Version
 }
 
@@ -53,10 +55,19 @@ type SchemaReader interface {
 	ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*ProviderSchema, error)
 }
 
+type ModuleReader interface {
+	ModuleCalls(modPath string) ([]module.ModuleCall, error)
+	ModuleMeta(modPath string) (*module.Meta, error)
+}
+
 func NewSchemaMerger(coreSchema *schema.BodySchema) *SchemaMerger {
 	return &SchemaMerger{
 		coreSchema: coreSchema,
 	}
+}
+
+func (m *SchemaMerger) SetModuleReader(mr ModuleReader) {
+	m.moduleReader = mr
 }
 
 func (m *SchemaMerger) SetSchemaReader(sr SchemaReader) {
@@ -194,6 +205,44 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		}
 		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
 	}
+
+	if _, ok := mergedSchema.Blocks["module"]; ok {
+		if m.moduleReader == nil {
+			return mergedSchema, nil
+		}
+
+		moduleCalls, err := m.moduleReader.ModuleCalls(meta.Path)
+		if err != nil {
+			return mergedSchema, err
+		}
+
+		moduleSchemas := make(map[schema.SchemaKey]*schema.BodySchema)
+		for _, moduleCall := range moduleCalls {
+			schemaKey := schema.NewSchemaKey(schema.DependencyKeys{
+				Attributes: []schema.AttributeDependent{
+					{
+						Name: "source",
+						Expr: schema.ExpressionValue{
+							Static: cty.StringVal(moduleCall.SourceAddr),
+						},
+					},
+				},
+			})
+
+			modModule, err := m.moduleReader.ModuleMeta(moduleCall.Path)
+			if err != nil {
+				continue
+			}
+
+			modModuleVariableSchema, err := SchemaForVariables(modModule.Variables)
+			if err != nil {
+				continue
+			}
+			moduleSchemas[schemaKey] = modModuleVariableSchema
+		}
+		mergedSchema.Blocks["module"].DependentBody = moduleSchemas
+	}
+
 	return mergedSchema, nil
 }
 
