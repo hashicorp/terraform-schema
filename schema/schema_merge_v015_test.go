@@ -510,6 +510,7 @@ var moduleWithDependency = schema.BlockSchema{
 				"test": {
 					Description: lang.PlainText("test var"),
 					Expr:        schema.LiteralTypeOnly(cty.String),
+					IsRequired:  true,
 				},
 			},
 		},
