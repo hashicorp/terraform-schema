@@ -12,5 +12,6 @@ var Module = &schema.BodySchema{
 		"locals":   localsBlockSchema,
 		"output":   outputBlockSchema,
 		"variable": variableBlockSchema,
+		"module":   moduleBlockSchema,
 	},
 }
