@@ -217,7 +217,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 			return mergedSchema, nil
 		}
 		for _, module := range modules {
-			modMeta, err := reader.ModuleMeta(module.SourceAddr)
+			modMeta, err := reader.ModuleMeta(module.Path)
 			if err != nil {
 				continue
 			}
