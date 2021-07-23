@@ -24,6 +24,7 @@ type ProviderRef struct {
 }
 
 type ModuleCall struct {
+	LocalName  string
 	SourceAddr string
 	Path       string
 }

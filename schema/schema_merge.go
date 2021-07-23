@@ -99,8 +99,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 	if mergedSchema.Blocks["data"].DependentBody == nil {
 		mergedSchema.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
-
-	if mergedSchema.Blocks["module"] != nil && mergedSchema.Blocks["module"].DependentBody == nil {
+	if mergedSchema.Blocks["module"].DependentBody == nil {
 		mergedSchema.Blocks["module"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 
@@ -234,9 +233,10 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 					},
 				},
 			}
-			modVarSchema, err := SchemaForVariables(modMeta.Variables)
+
+			depSchema, err := SchemaForDependentModuleBlock(module.LocalName, modMeta)
 			if err == nil {
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = modVarSchema
+				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 			}
 		}
 	}

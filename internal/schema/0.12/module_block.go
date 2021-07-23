@@ -13,11 +13,9 @@ var moduleBlockSchema = &schema.BlockSchema{
 			schema.StaticStep{Name: "module"},
 			schema.LabelStep{Index: 0},
 		},
-		FriendlyName:        "module",
-		ScopeId:             refscope.ModuleScope,
-		AsReference:         true,
-		DependentBodyAsData: true,
-		InferDependentBody:  true,
+		FriendlyName: "module",
+		ScopeId:      refscope.ModuleScope,
+		AsReference:  true,
 	},
 	Labels: []*schema.LabelSchema{
 		{

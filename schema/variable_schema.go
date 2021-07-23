@@ -8,6 +8,12 @@ import (
 )
 
 func SchemaForVariables(vars map[string]module.Variable) (*schema.BodySchema, error) {
+	return &schema.BodySchema{
+		Attributes: variablesToAttrSchemas(vars),
+	}, nil
+}
+
+func variablesToAttrSchemas(vars map[string]module.Variable) map[string]*schema.AttributeSchema {
 	varSchemas := make(map[string]*schema.AttributeSchema)
 
 	for name, v := range vars {
@@ -19,14 +25,15 @@ func SchemaForVariables(vars map[string]module.Variable) (*schema.BodySchema, er
 			varType = v.DefaultValue.Type()
 		}
 
-		varSchemas[name] = &schema.AttributeSchema{
-			Description: lang.MarkupContent{
-				Value: v.Description,
-				Kind:  lang.PlainTextKind,
-			},
-			Expr:        schema.ExprConstraints{schema.LiteralTypeExpr{Type: varType}},
+		aSchema := &schema.AttributeSchema{
+			Expr:        schema.LiteralTypeOnly(varType),
 			IsSensitive: v.IsSensitive,
 		}
+		if v.Description != "" {
+			aSchema.Description = lang.PlainText(v.Description)
+		}
+
+		varSchemas[name] = aSchema
 
 		if v.DefaultValue == cty.NilVal {
 			varSchemas[name].IsRequired = true
@@ -35,7 +42,5 @@ func SchemaForVariables(vars map[string]module.Variable) (*schema.BodySchema, er
 		}
 	}
 
-	return &schema.BodySchema{
-		Attributes: varSchemas,
-	}, nil
+	return varSchemas
 }
