@@ -348,6 +348,7 @@ type testModuleReaderStruct struct {
 func (m *testModuleReaderStruct) ModuleCalls(modPath string) ([]module.ModuleCall, error) {
 	return []module.ModuleCall{
 		{
+			LocalName:  "example",
 			SourceAddr: "source",
 			Path:       "path",
 		},

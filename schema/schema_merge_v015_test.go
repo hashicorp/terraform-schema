@@ -3,6 +3,7 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -506,6 +507,17 @@ var moduleWithDependency = schema.BlockSchema{
 	},
 	DependentBody: map[schema.SchemaKey]*schema.BodySchema{
 		schema.NewSchemaKey(depKeysModule): {
+			TargetableAs: []*schema.Targetable{
+				{
+					Address: lang.Address{
+						lang.RootStep{Name: "module"},
+						lang.AttrStep{Name: "example"},
+					},
+					ScopeId:           refscope.ModuleScope,
+					AsType:            cty.Object(map[string]cty.Type{}),
+					NestedTargetables: []*schema.Targetable{},
+				},
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),

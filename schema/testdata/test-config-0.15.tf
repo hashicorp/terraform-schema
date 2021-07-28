@@ -5,7 +5,8 @@ terraform {
       version = "0.0.0"
     }
   }
-  module "test" {
-    source = "source"    
-  }
+}
+
+module "test" {
+  source = "source"
 }

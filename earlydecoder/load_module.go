@@ -20,6 +20,7 @@ type decodedModule struct {
 	Resources            map[string]*resource
 	DataSources          map[string]*dataSource
 	Variables            map[string]*module.Variable
+	Outputs              map[string]*module.Output
 }
 
 func newDecodedModule() *decodedModule {
@@ -30,6 +31,7 @@ func newDecodedModule() *decodedModule {
 		Resources:            make(map[string]*resource),
 		DataSources:          make(map[string]*dataSource),
 		Variables:            make(map[string]*module.Variable),
+		Outputs:              make(map[string]*module.Output),
 	}
 }
 
@@ -220,6 +222,37 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				Description:  description,
 				IsSensitive:  isSensitive,
 				DefaultValue: defaultValue,
+			}
+		case "output":
+			content, _, contentDiags := block.Body.PartialContent(outputSchema)
+			diags = append(diags, contentDiags...)
+			if len(block.Labels) != 1 || block.Labels[0] == "" {
+				continue
+			}
+			name := block.Labels[0]
+			description := ""
+			isSensitive := false
+			var valDiags hcl.Diagnostics
+			if attr, defined := content.Attributes["description"]; defined {
+				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &description)
+				diags = append(diags, valDiags...)
+			}
+			if attr, defined := content.Attributes["sensitive"]; defined {
+				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &isSensitive)
+				diags = append(diags, valDiags...)
+			}
+			value := cty.NilVal
+			if attr, defined := content.Attributes["value"]; defined {
+				// TODO: Provide context w/ funcs and variables
+				val, diags := attr.Expr.Value(nil)
+				if !diags.HasErrors() {
+					value = val
+				}
+			}
+			mod.Outputs[name] = &module.Output{
+				Description: description,
+				IsSensitive: isSensitive,
+				Value:       value,
 			}
 		}
 
