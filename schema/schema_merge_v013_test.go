@@ -141,6 +141,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional:  true,
 							IsSensitive: true,
@@ -591,6 +597,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -605,6 +617,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -634,6 +652,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -662,6 +686,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -768,6 +798,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional:  true,
 							IsSensitive: true,
@@ -1218,6 +1254,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1232,6 +1274,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1261,6 +1309,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1289,6 +1343,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1367,6 +1427,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							Description: lang.MarkupContent{
 								Value: "A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.",
@@ -1400,6 +1466,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1429,6 +1501,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1513,6 +1591,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1553,6 +1637,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1626,6 +1716,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1777,6 +1873,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1840,6 +1942,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 						},
 						"keepers": {
@@ -1850,6 +1958,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -1862,6 +1976,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.List(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.List(cty.String)},
+								schema.ListExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 						},
 						"result_count": {
@@ -1912,6 +2032,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -2062,6 +2188,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -2133,6 +2265,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -2145,6 +2283,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 						},
 						"random": {
@@ -2196,6 +2340,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -2208,6 +2358,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 						},
 						"random": {
@@ -2259,6 +2415,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 							IsOptional: true,
 						},
@@ -2271,6 +2433,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							Expr: schema.ExprConstraints{
 								schema.TraversalExpr{OfType: cty.Map(cty.String)},
 								schema.LiteralTypeExpr{Type: cty.Map(cty.String)},
+								schema.MapExpr{
+									Elem: schema.ExprConstraints{
+										schema.TraversalExpr{OfType: cty.String},
+										schema.LiteralTypeExpr{Type: cty.String},
+									},
+								},
 							},
 						},
 						"random": {

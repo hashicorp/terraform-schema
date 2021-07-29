@@ -119,10 +119,7 @@ func convertAttributesFromJson(attributes map[string]*tfjson.SchemaAttribute) ma
 func exprConstraintsFromAttribute(attr *tfjson.SchemaAttribute) schema.ExprConstraints {
 	var expr schema.ExprConstraints
 	if attr.AttributeType != cty.NilType {
-		return schema.ExprConstraints{
-			schema.TraversalExpr{OfType: attr.AttributeType},
-			schema.LiteralTypeExpr{Type: attr.AttributeType},
-		}
+		return convertAttributeTypeToExprConstraints(attr.AttributeType)
 	}
 	if attr.AttributeNestedType != nil {
 		switch attr.AttributeNestedType.NestingMode {
@@ -163,6 +160,62 @@ func exprConstraintsFromAttribute(attr *tfjson.SchemaAttribute) schema.ExprConst
 		}
 	}
 	return expr
+}
+
+func convertAttributeTypeToExprConstraints(attrType cty.Type) schema.ExprConstraints {
+	ec := schema.ExprConstraints{
+		schema.TraversalExpr{OfType: attrType},
+		schema.LiteralTypeExpr{Type: attrType},
+	}
+
+	if attrType.IsListType() {
+		ec = append(ec, schema.ListExpr{
+			Elem: convertAttributeTypeToExprConstraints(attrType.ElementType()),
+		})
+	}
+	if attrType.IsSetType() {
+		ec = append(ec, schema.SetExpr{
+			Elem: convertAttributeTypeToExprConstraints(attrType.ElementType()),
+		})
+	}
+	if attrType.IsTupleType() {
+		te := schema.TupleExpr{Elems: make([]schema.ExprConstraints, 0)}
+		for _, elemType := range attrType.TupleElementTypes() {
+			te.Elems = append(te.Elems, convertAttributeTypeToExprConstraints(elemType))
+		}
+		ec = append(ec, te)
+	}
+	if attrType.IsMapType() {
+		ec = append(ec, schema.MapExpr{
+			Elem: convertAttributeTypeToExprConstraints(attrType.ElementType()),
+		})
+	}
+	if attrType.IsObjectType() {
+		ec = append(ec, convertCtyObjectToObjectExprAttr(attrType))
+	}
+
+	return ec
+}
+
+func convertCtyObjectToObjectExprAttr(obj cty.Type) schema.ObjectExpr {
+	attrTypes := obj.AttributeTypes()
+	attributes := make(schema.ObjectExprAttributes, len(attrTypes))
+	for name, attrType := range attrTypes {
+		aSchema := &schema.AttributeSchema{
+			Expr: convertAttributeTypeToExprConstraints(attrType),
+		}
+
+		if obj.AttributeOptional(name) {
+			aSchema.IsOptional = true
+		} else {
+			aSchema.IsRequired = true
+		}
+
+		attributes[name] = aSchema
+	}
+	return schema.ObjectExpr{
+		Attributes: attributes,
+	}
 }
 
 func convertJsonAttributesToObjectExprAttr(attrs map[string]*tfjson.SchemaAttribute) schema.ObjectExpr {
