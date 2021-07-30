@@ -27,8 +27,8 @@ github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9
 github.com/hashicorp/go-version v1.2.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
 github.com/hashicorp/go-version v1.3.0 h1:McDWVJIU/y+u1BRV06dPaLfLCaT7fUTJLp5r04x7iNw=
 github.com/hashicorp/go-version v1.3.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
-github.com/hashicorp/hcl-lang v0.0.0-20210730142649-a3ac695ce545 h1:SJ2AobqMscmwaMjrzI4kkax9mumDshixTRA4LuUQURw=
-github.com/hashicorp/hcl-lang v0.0.0-20210730142649-a3ac695ce545/go.mod h1:xzXU6Fn+TWVaZUFxV8CyAsObi2oMgSEFAmLvCx2ArzM=
+github.com/hashicorp/hcl-lang v0.0.0-20210730145509-f403a86a1605 h1:558O3NRU7baTVlQNgui1NeHDORRFEgTsICpHmI+ubA0=
+github.com/hashicorp/hcl-lang v0.0.0-20210730145509-f403a86a1605/go.mod h1:xzXU6Fn+TWVaZUFxV8CyAsObi2oMgSEFAmLvCx2ArzM=
 github.com/hashicorp/hcl/v2 v2.10.1 h1:h4Xx4fsrRE26ohAk/1iGF/JBqRQbyUqu5Lvj60U54ys=
 github.com/hashicorp/hcl/v2 v2.10.1/go.mod h1:FwWsfWEjyV/CMj8s/gqAuiviY72rJ1/oayI9WftqcKg=
 github.com/hashicorp/terraform-json v0.12.0 h1:8czPgEEWWPROStjkWPUnTQDXmpmZPlkQAwYYLETaTvw=
