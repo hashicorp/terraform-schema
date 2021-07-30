@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"sort"
+
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
@@ -20,7 +22,7 @@ func SchemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 
 	modOutputTypes := make(map[string]cty.Type, 0)
 	modOutputVals := make(map[string]cty.Value, 0)
-	targetableOutputs := make([]*schema.Targetable, 0)
+	targetableOutputs := make(schema.Targetables, 0)
 
 	for name, output := range modMeta.Outputs {
 		addr := lang.Address{
@@ -50,6 +52,8 @@ func SchemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 		modOutputTypes[name] = typ
 		modOutputVals[name] = output.Value
 	}
+
+	sort.Sort(targetableOutputs)
 
 	addr := lang.Address{
 		lang.RootStep{Name: "module"},
