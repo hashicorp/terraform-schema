@@ -19,42 +19,9 @@ type SchemaMerger struct {
 	moduleReader     ModuleReader
 }
 
-type ProviderSchema struct {
-	Provider    *schema.BodySchema
-	Resources   map[string]*schema.BodySchema
-	DataSources map[string]*schema.BodySchema
-	Module      *schema.BodySchema
-}
-
 type ModuleReader interface {
 	ModuleCalls(modPath string) ([]module.ModuleCall, error)
 	ModuleMeta(modPath string) (*module.Meta, error)
-}
-
-func (ps *ProviderSchema) Copy() *ProviderSchema {
-	if ps == nil {
-		return nil
-	}
-
-	newPs := &ProviderSchema{
-		Provider: ps.Provider.Copy(),
-	}
-
-	if ps.Resources != nil {
-		newPs.Resources = make(map[string]*schema.BodySchema, len(ps.Resources))
-		for name, rSchema := range ps.Resources {
-			newPs.Resources[name] = rSchema.Copy()
-		}
-	}
-
-	if ps.DataSources != nil {
-		newPs.DataSources = make(map[string]*schema.BodySchema, len(ps.DataSources))
-		for name, rSchema := range ps.DataSources {
-			newPs.DataSources[name] = rSchema.Copy()
-		}
-	}
-
-	return newPs
 }
 
 type SchemaReader interface {
