@@ -37,29 +37,25 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 	return ps
 }
 
-func (ps *ProviderSchema) SetProviderVersion(pAddr tfaddr.Provider, v *version.Version) {
-	if ps.Provider != nil {
-		ps.Provider.Detail = detailForSrcAddr(pAddr, v)
-		ps.Provider.HoverURL = urlForProvider(pAddr, v)
-		ps.Provider.DocsLink = docsLinkForProvider(pAddr, v)
-	}
-	for _, rSchema := range ps.Resources {
-		rSchema.Detail = detailForSrcAddr(pAddr, v)
-	}
-	for _, dsSchema := range ps.DataSources {
-		dsSchema.Detail = detailForSrcAddr(pAddr, v)
-	}
-}
-
 func bodySchemaFromJson(schemaBlock *tfjson.SchemaBlock) *schema.BodySchema {
 	if schemaBlock == nil {
 		s := schema.NewBodySchema()
 		return s
 	}
 
+	attributes := convertAttributesFromJson(schemaBlock.Attributes)
+
+	// Attributes and block types of the same name should never occur
+	// in providers which use the official plugin SDK but we give chance
+	// for real blocks to override the "converted" ones just in case
+	blocks := convertibleAttributesToBlocks(schemaBlock.Attributes)
+	for name, block := range convertBlocksFromJson(schemaBlock.NestedBlocks) {
+		blocks[name] = block
+	}
+
 	return &schema.BodySchema{
-		Attributes:   convertAttributesFromJson(schemaBlock.Attributes),
-		Blocks:       convertBlocksFromJson(schemaBlock.NestedBlocks),
+		Attributes:   attributes,
+		Blocks:       blocks,
 		IsDeprecated: schemaBlock.Deprecated,
 		Description:  markupContent(schemaBlock.Description, schemaBlock.DescriptionKind),
 	}
@@ -114,6 +110,81 @@ func convertAttributesFromJson(attributes map[string]*tfjson.SchemaAttribute) ma
 		}
 	}
 	return cAttrs
+}
+
+// convertibleAttributesToBlocks is responsible for mimicking
+// Terraform's builtin backwards-compatible logic where
+// list(object) or set(object) attributes are also accessible
+// as blocks.
+// See https://github.com/hashicorp/terraform/blob/v1.0.3/internal/lang/blocktoattr/schema.go
+func convertibleAttributesToBlocks(attributes map[string]*tfjson.SchemaAttribute) map[string]*schema.BlockSchema {
+	blocks := make(map[string]*schema.BlockSchema, 0)
+
+	for name, attr := range attributes {
+		if typeCanBeBlocks(attr.AttributeType) {
+			blockSchema, ok := blockSchemaForAttribute(attr)
+			if !ok {
+				continue
+			}
+			blocks[name] = blockSchema
+		}
+	}
+
+	return blocks
+}
+
+// typeCanBeBlocks returns true if the given type is a list-of-object or
+// set-of-object type, and would thus be subject to the blocktoattr fixup
+// if used as an attribute type.
+func typeCanBeBlocks(ty cty.Type) bool {
+	return (ty.IsListType() || ty.IsSetType()) && ty.ElementType().IsObjectType()
+}
+
+func blockSchemaForAttribute(attr *tfjson.SchemaAttribute) (*schema.BlockSchema, bool) {
+	if attr.AttributeType == cty.NilType {
+		return nil, false
+	}
+
+	blockType := schema.BlockTypeNil
+	switch {
+	case attr.AttributeType.IsListType():
+		blockType = schema.BlockTypeList
+	case attr.AttributeType.IsSetType():
+		blockType = schema.BlockTypeSet
+	default:
+		return nil, false
+	}
+
+	minItems := uint64(0)
+	if attr.Required {
+		minItems = 1
+	}
+
+	return &schema.BlockSchema{
+		Description:  markupContent(attr.Description, attr.DescriptionKind),
+		Type:         blockType,
+		IsDeprecated: attr.Deprecated,
+		MinItems:     minItems,
+		Body:         bodySchemaForCtyObjectType(attr.AttributeType.ElementType()),
+	}, true
+}
+
+func bodySchemaForCtyObjectType(typ cty.Type) *schema.BodySchema {
+	if !typ.IsObjectType() {
+		return nil
+	}
+
+	attrTypes := typ.AttributeTypes()
+	ret := &schema.BodySchema{
+		Attributes: make(map[string]*schema.AttributeSchema, len(attrTypes)),
+	}
+	for name, attrType := range attrTypes {
+		ret.Attributes[name] = &schema.AttributeSchema{
+			Expr:       convertAttributeTypeToExprConstraints(attrType),
+			IsOptional: true,
+		}
+	}
+	return ret
 }
 
 func exprConstraintsFromAttribute(attr *tfjson.SchemaAttribute) schema.ExprConstraints {
