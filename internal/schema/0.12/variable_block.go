@@ -67,7 +67,6 @@ func variableBlockSchema(v *version.Version) *schema.BlockSchema {
 					},
 				},
 			},
-			MaxItems: 1,
 		}
 	}
 

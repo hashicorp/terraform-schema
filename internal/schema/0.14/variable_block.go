@@ -67,7 +67,6 @@ var variableBlockSchema = &schema.BlockSchema{
 						},
 					},
 				},
-				MaxItems: 1,
 			},
 		},
 	},
