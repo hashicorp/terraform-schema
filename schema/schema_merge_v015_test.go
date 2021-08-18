@@ -521,8 +521,11 @@ var moduleWithDependency = schema.BlockSchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),
-					Expr:        schema.LiteralTypeOnly(cty.String),
-					IsRequired:  true,
+					Expr: schema.ExprConstraints{
+						schema.TraversalExpr{OfType: cty.String},
+						schema.LiteralTypeExpr{Type: cty.String},
+					},
+					IsRequired: true,
 				},
 			},
 		},

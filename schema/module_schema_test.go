@@ -68,13 +68,19 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 	expectedDepSchema := &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"example_var": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfType: cty.String},
+					schema.LiteralTypeExpr{Type: cty.String},
+				},
 				Description: lang.PlainText("Test var"),
 				IsRequired:  true,
 				IsSensitive: true,
 			},
 			"another_var": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
+				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfType: cty.String},
+					schema.LiteralTypeExpr{Type: cty.String},
+				},
 				IsOptional: true,
 			},
 		},

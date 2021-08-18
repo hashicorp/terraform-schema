@@ -9,11 +9,13 @@ import (
 
 func SchemaForVariables(vars map[string]module.Variable) (*schema.BodySchema, error) {
 	return &schema.BodySchema{
-		Attributes: variablesToAttrSchemas(vars),
+		Attributes: variablesToAttrSchemas(vars, schema.LiteralTypeOnly),
 	}, nil
 }
 
-func variablesToAttrSchemas(vars map[string]module.Variable) map[string]*schema.AttributeSchema {
+type exprFunc func(cty.Type) schema.ExprConstraints
+
+func variablesToAttrSchemas(vars map[string]module.Variable, exprFunc exprFunc) map[string]*schema.AttributeSchema {
 	varSchemas := make(map[string]*schema.AttributeSchema)
 
 	for name, v := range vars {
@@ -26,7 +28,7 @@ func variablesToAttrSchemas(vars map[string]module.Variable) map[string]*schema.
 		}
 
 		aSchema := &schema.AttributeSchema{
-			Expr:        schema.LiteralTypeOnly(varType),
+			Expr:        exprFunc(varType),
 			IsSensitive: v.IsSensitive,
 		}
 		if v.Description != "" {
