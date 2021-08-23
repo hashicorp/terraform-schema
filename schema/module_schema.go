@@ -12,7 +12,7 @@ import (
 
 func SchemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*schema.BodySchema, error) {
 	bodySchema := &schema.BodySchema{
-		Attributes: variablesToAttrSchemas(modMeta.Variables),
+		Attributes: variablesToAttrSchemas(modMeta.Variables, convertAttributeTypeToExprConstraints),
 	}
 
 	if localName == "" {
