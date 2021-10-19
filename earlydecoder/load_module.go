@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
+	"github.com/hashicorp/terraform-schema/backend"
 	"github.com/hashicorp/terraform-schema/internal/typeexpr"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty/cty"
@@ -15,6 +16,7 @@ import (
 // decodedModule is the type representing a decoded Terraform module.
 type decodedModule struct {
 	RequiredCore         []string
+	Backends             map[string]backend.BackendData
 	ProviderRequirements map[string]*providerRequirement
 	ProviderConfigs      map[string]*providerConfig
 	Resources            map[string]*resource
@@ -26,6 +28,7 @@ type decodedModule struct {
 func newDecodedModule() *decodedModule {
 	return &decodedModule{
 		RequiredCore:         make([]string, 0),
+		Backends:             make(map[string]backend.BackendData),
 		ProviderRequirements: make(map[string]*providerRequirement),
 		ProviderConfigs:      make(map[string]*providerConfig),
 		Resources:            make(map[string]*resource),
@@ -68,6 +71,24 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 
 			for _, innerBlock := range content.Blocks {
 				switch innerBlock.Type {
+				case "backend":
+					bType := innerBlock.Labels[0]
+
+					data, bDiags := decodeBackendsBlock(innerBlock)
+					diags = append(diags, bDiags...)
+
+					if _, exists := mod.Backends[bType]; exists {
+						diags = append(diags, &hcl.Diagnostic{
+							Severity: hcl.DiagError,
+							Summary:  "Multiple backend definitions",
+							Detail:   fmt.Sprintf("Found multiple backend definitions for %q. Only one is allowed.", bType),
+							Subject:  &innerBlock.DefRange,
+						})
+						continue
+					}
+
+					mod.Backends[bType] = data
+
 				case "required_providers":
 					reqs, reqsDiags := decodeRequiredProvidersBlock(innerBlock)
 					diags = append(diags, reqsDiags...)
