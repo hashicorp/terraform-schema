@@ -32,6 +32,27 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		coreRequirements = append(coreRequirements, c...)
 	}
 
+	var backend *module.Backend
+	if len(mod.Backends) == 1 {
+		for bType, data := range mod.Backends {
+			backend = &module.Backend{
+				Type: bType,
+				Data: data,
+			}
+		}
+	} else if len(mod.Backends) > 1 {
+		backendTypes := make([]string, len(mod.Backends))
+		for bType := range mod.Backends {
+			backendTypes = append(backendTypes, bType)
+		}
+
+		diags = append(diags, &hcl.Diagnostic{
+			Severity: hcl.DiagError,
+			Summary:  "Unable to parse backend configuration",
+			Detail:   fmt.Sprintf("Multiple backend definitions: %q", backendTypes),
+		})
+	}
+
 	var (
 		providerRequirements = make(map[tfaddr.Provider]version.Constraints, 0)
 		refs                 = make(map[module.ProviderRef]tfaddr.Provider, 0)
@@ -139,6 +160,7 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 
 	return &module.Meta{
 		Path:                 path,
+		Backend:              backend,
 		ProviderReferences:   refs,
 		ProviderRequirements: providerRequirements,
 		CoreRequirements:     coreRequirements,

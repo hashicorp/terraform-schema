@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/backend"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
@@ -536,7 +537,7 @@ resource "google_something" "test" {
 		},
 	}
 
-	executeTestCases(testCases, t, path)
+	runTestCases(testCases, t, path)
 }
 
 func TestLoadModule_Variables(t *testing.T) {
@@ -787,11 +788,123 @@ output "name" {
 			nil,
 		},
 	}
-	executeTestCases(testCases, t, path)
 
+	runTestCases(testCases, t, path)
 }
-func executeTestCases(testCases []testCase, t *testing.T, path string) {
 
+func TestLoadModule_backend(t *testing.T) {
+	path := t.TempDir()
+
+	testCases := []testCase{
+		{
+			"no backend",
+			`
+terraform {
+
+}`,
+			&module.Meta{
+				Path:                 path,
+				Backend:              nil,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+			},
+			nil,
+		},
+		{
+			"s3 backend",
+			`
+terraform {
+  backend "s3" {
+  	blah = "test"
+  }
+}`,
+			&module.Meta{
+				Path: path,
+				Backend: &module.Backend{
+					Type: "s3",
+					Data: &backend.UnknownBackendData{},
+				},
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+			},
+			nil,
+		},
+		{
+			"empty remote backend",
+			`
+terraform {
+  backend "remote" {}
+}`,
+			&module.Meta{
+				Path: path,
+				Backend: &module.Backend{
+					Type: "remote",
+					Data: &backend.Remote{},
+				},
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+			},
+			nil,
+		},
+		{
+			"remote backend with hostname",
+			`
+terraform {
+  backend "remote" {
+  	hostname = "app.terraform.io"
+  }
+}`,
+			&module.Meta{
+				Path: path,
+				Backend: &module.Backend{
+					Type: "remote",
+					Data: &backend.Remote{Hostname: "app.terraform.io"},
+				},
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+			},
+			nil,
+		},
+		{
+			"remote backend with hostname and more attributes",
+			`
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "test"
+
+    workspaces {
+      name = "test"
+    }
+  }
+}`,
+			&module.Meta{
+				Path: path,
+				Backend: &module.Backend{
+					Type: "remote",
+					Data: &backend.Remote{Hostname: "app.terraform.io"},
+				},
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+			},
+			nil,
+		},
+	}
+
+	runTestCases(testCases, t, path)
+}
+
+func runTestCases(testCases []testCase, t *testing.T, path string) {
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d-%s", i, tc.name), func(t *testing.T) {
 			f, diags := hclsyntax.ParseConfig([]byte(tc.cfg), "test.tf", hcl.InitialPos)
