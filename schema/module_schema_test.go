@@ -14,7 +14,7 @@ import (
 
 func TestSchemaForDependentModuleBlock_emptyMeta(t *testing.T) {
 	meta := &module.Meta{}
-	depSchema, err := SchemaForDependentModuleBlock("refname", meta)
+	depSchema, err := schemaForDependentModuleBlock("refname", meta)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 			},
 		},
 	}
-	depSchema, err := SchemaForDependentModuleBlock("refname", meta)
+	depSchema, err := schemaForDependentModuleBlock("refname", meta)
 	if err != nil {
 		t.Fatal(err)
 	}

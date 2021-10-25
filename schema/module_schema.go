@@ -10,7 +10,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func SchemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*schema.BodySchema, error) {
+func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*schema.BodySchema, error) {
 	bodySchema := &schema.BodySchema{
 		Attributes: variablesToAttrSchemas(modMeta.Variables, convertAttributeTypeToExprConstraints),
 	}
