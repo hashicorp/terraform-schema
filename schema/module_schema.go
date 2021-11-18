@@ -11,8 +11,32 @@ import (
 )
 
 func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*schema.BodySchema, error) {
+	attributes := make(map[string]*schema.AttributeSchema, 0)
+
+	for name, modVar := range modMeta.Variables {
+		aSchema := moduleVarToAttribute(modVar)
+		varType := typeOfModuleVar(modVar)
+		aSchema.Expr = convertAttributeTypeToExprConstraints(varType)
+		aSchema.OriginForTarget = &schema.PathTarget{
+			Address: schema.Address{
+				schema.StaticStep{Name: "var"},
+				schema.AttrNameStep{},
+			},
+			Path: lang.Path{
+				Path:       modMeta.Path,
+				LanguageID: ModuleLanguageID,
+			},
+			Constraints: schema.Constraints{
+				ScopeId: refscope.VariableScope,
+				Type:    varType,
+			},
+		}
+
+		attributes[name] = aSchema
+	}
+
 	bodySchema := &schema.BodySchema{
-		Attributes: variablesToAttrSchemas(modMeta.Variables, convertAttributeTypeToExprConstraints),
+		Attributes: attributes,
 	}
 
 	if localName == "" {

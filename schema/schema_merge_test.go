@@ -358,6 +358,7 @@ func (m *testModuleReaderStruct) ModuleCalls(modPath string) ([]module.ModuleCal
 func (m *testModuleReaderStruct) ModuleMeta(modPath string) (*module.Meta, error) {
 	if modPath == "path" {
 		return &module.Meta{
+			Path: "path",
 			Variables: map[string]module.Variable{
 				"test": {
 					Type:        cty.String,

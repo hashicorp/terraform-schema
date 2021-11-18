@@ -526,6 +526,20 @@ var moduleWithDependency = schema.BlockSchema{
 						schema.LiteralTypeExpr{Type: cty.String},
 					},
 					IsRequired: true,
+					OriginForTarget: &schema.PathTarget{
+						Address: schema.Address{
+							schema.StaticStep{Name: "var"},
+							schema.AttrNameStep{},
+						},
+						Path: lang.Path{
+							Path:       "path",
+							LanguageID: "terraform",
+						},
+						Constraints: schema.Constraints{
+							ScopeId: "variable",
+							Type:    cty.String,
+						},
+					},
 				},
 			},
 		},

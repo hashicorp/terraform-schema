@@ -39,6 +39,7 @@ func TestSchemaForDependentModuleBlock_emptyMeta(t *testing.T) {
 
 func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 	meta := &module.Meta{
+		Path: "./local",
 		Variables: map[string]module.Variable{
 			"example_var": {
 				Description: "Test var",
@@ -75,6 +76,20 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 				Description: lang.PlainText("Test var"),
 				IsRequired:  true,
 				IsSensitive: true,
+				OriginForTarget: &schema.PathTarget{
+					Address: schema.Address{
+						schema.StaticStep{Name: "var"},
+						schema.AttrNameStep{},
+					},
+					Path: lang.Path{
+						Path:       "./local",
+						LanguageID: "terraform",
+					},
+					Constraints: schema.Constraints{
+						ScopeId: "variable",
+						Type:    cty.String,
+					},
+				},
 			},
 			"another_var": {
 				Expr: schema.ExprConstraints{
@@ -82,6 +97,20 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 					schema.LiteralTypeExpr{Type: cty.String},
 				},
 				IsOptional: true,
+				OriginForTarget: &schema.PathTarget{
+					Address: schema.Address{
+						schema.StaticStep{Name: "var"},
+						schema.AttrNameStep{},
+					},
+					Path: lang.Path{
+						Path:       "./local",
+						LanguageID: "terraform",
+					},
+					Constraints: schema.Constraints{
+						ScopeId: "variable",
+						Type:    cty.String,
+					},
+				},
 			},
 		},
 		TargetableAs: []*schema.Targetable{
