@@ -39,6 +39,11 @@ func TestSchemaForVariables(t *testing.T) {
 					},
 					IsRequired: true,
 					Expr:       schema.LiteralTypeOnly(cty.String),
+					OriginForTarget: &schema.PathTarget{
+						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
+						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
+						Constraints: schema.Constraints{ScopeId: "variable", Type: cty.String},
+					},
 				},
 			}},
 		},
@@ -64,6 +69,11 @@ func TestSchemaForVariables(t *testing.T) {
 					},
 					IsOptional: true,
 					Expr:       schema.LiteralTypeOnly(cty.String),
+					OriginForTarget: &schema.PathTarget{
+						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
+						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
+						Constraints: schema.Constraints{ScopeId: "variable", Type: cty.String},
+					},
 				},
 				"id": {
 					Description: lang.MarkupContent{
@@ -73,6 +83,11 @@ func TestSchemaForVariables(t *testing.T) {
 					Expr:        schema.LiteralTypeOnly(cty.Number),
 					IsSensitive: true,
 					IsRequired:  true,
+					OriginForTarget: &schema.PathTarget{
+						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
+						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
+						Constraints: schema.Constraints{ScopeId: "variable", Type: cty.Number},
+					},
 				},
 			}},
 		},
@@ -98,6 +113,11 @@ func TestSchemaForVariables(t *testing.T) {
 					},
 					IsOptional: true,
 					Expr:       schema.LiteralTypeOnly(cty.String),
+					OriginForTarget: &schema.PathTarget{
+						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
+						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
+						Constraints: schema.Constraints{ScopeId: "variable", Type: cty.String},
+					},
 				},
 				"id": {
 					Description: lang.MarkupContent{
@@ -106,14 +126,20 @@ func TestSchemaForVariables(t *testing.T) {
 					},
 					Expr:       schema.LiteralTypeOnly(cty.Number),
 					IsOptional: true,
+					OriginForTarget: &schema.PathTarget{
+						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
+						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
+						Constraints: schema.Constraints{ScopeId: "variable", Type: cty.Number},
+					},
 				},
 			}},
 		},
 	}
 
+	path := "./local"
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d-%s", i, tc.name), func(t *testing.T) {
-			actualSchema, err := SchemaForVariables(tc.variables)
+			actualSchema, err := SchemaForVariables(tc.variables, path)
 
 			if err != nil {
 				t.Fatal(err)
