@@ -136,10 +136,10 @@ func TestSchemaForVariables(t *testing.T) {
 		},
 	}
 
-	path := "./local"
+	modPath := "./local"
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d-%s", i, tc.name), func(t *testing.T) {
-			actualSchema, err := SchemaForVariables(tc.variables, path)
+			actualSchema, err := SchemaForVariables(tc.variables, modPath)
 
 			if err != nil {
 				t.Fatal(err)

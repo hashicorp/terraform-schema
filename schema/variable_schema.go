@@ -8,7 +8,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func SchemaForVariables(vars map[string]module.Variable, path string) (*schema.BodySchema, error) {
+func SchemaForVariables(vars map[string]module.Variable, modPath string) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema)
 
 	for name, modVar := range vars {
@@ -21,7 +21,7 @@ func SchemaForVariables(vars map[string]module.Variable, path string) (*schema.B
 				schema.AttrNameStep{},
 			},
 			Path: lang.Path{
-				Path:       path,
+				Path:       modPath,
 				LanguageID: ModuleLanguageID,
 			},
 			Constraints: schema.Constraints{
