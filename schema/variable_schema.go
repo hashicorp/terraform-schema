@@ -3,16 +3,33 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty/cty"
 )
 
-func SchemaForVariables(vars map[string]module.Variable) (*schema.BodySchema, error) {
+func SchemaForVariables(vars map[string]module.Variable, modPath string) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema)
 
 	for name, modVar := range vars {
 		aSchema := moduleVarToAttribute(modVar)
-		aSchema.Expr = schema.LiteralTypeOnly(typeOfModuleVar(modVar))
+		varType := typeOfModuleVar(modVar)
+		aSchema.Expr = schema.LiteralTypeOnly(varType)
+		aSchema.OriginForTarget = &schema.PathTarget{
+			Address: schema.Address{
+				schema.StaticStep{Name: "var"},
+				schema.AttrNameStep{},
+			},
+			Path: lang.Path{
+				Path:       modPath,
+				LanguageID: ModuleLanguageID,
+			},
+			Constraints: schema.Constraints{
+				ScopeId: refscope.VariableScope,
+				Type:    varType,
+			},
+		}
+
 		attributes[name] = aSchema
 	}
 
