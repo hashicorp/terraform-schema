@@ -177,10 +177,8 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false)
 	sm.SetSchemaReader(sr)
 
-	vc, err := version.NewConstraint("0.0.0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	vc := version.MustConstraints(version.NewConstraint("0.0.0"))
+
 	mergedSchema, err := sm.SchemaForModule(&module.Meta{
 		Path: "testdata",
 		ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
