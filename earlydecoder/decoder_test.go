@@ -51,7 +51,7 @@ terraform {
 }`,
 			&module.Meta{
 				Path:                 path,
-				CoreRequirements:     mustConstraints(t, "~> 0.12"),
+				CoreRequirements:     version.MustConstraints(version.NewConstraint("~> 0.12")),
 				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
 				Variables:            map[string]module.Variable{},
@@ -128,8 +128,8 @@ provider "grafana" {
 					{LocalName: "grafana"}: tfaddr.NewLegacyProvider("grafana"),
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
-					tfaddr.NewLegacyProvider("aws"):     mustConstraints(t, "1.2.0"),
-					tfaddr.NewLegacyProvider("google"):  mustConstraints(t, ">= 3.0.0"),
+					tfaddr.NewLegacyProvider("aws"):     version.MustConstraints(version.NewConstraint("1.2.0")),
+					tfaddr.NewLegacyProvider("google"):  version.MustConstraints(version.NewConstraint(">= 3.0.0")),
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},
 				Variables: map[string]module.Variable{},
@@ -171,8 +171,8 @@ provider "grafana" {
 					{LocalName: "grafana"}: tfaddr.NewLegacyProvider("grafana"),
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
-					tfaddr.NewLegacyProvider("aws"):     mustConstraints(t, "1.2.0"),
-					tfaddr.NewLegacyProvider("google"):  mustConstraints(t, ">= 3.0.0"),
+					tfaddr.NewLegacyProvider("aws"):     version.MustConstraints(version.NewConstraint("1.2.0")),
+					tfaddr.NewLegacyProvider("google"):  version.MustConstraints(version.NewConstraint(">= 3.0.0")),
 					tfaddr.NewLegacyProvider("grafana"): {},
 				},
 				Variables: map[string]module.Variable{},
@@ -236,17 +236,17 @@ provider "grafana" {
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
-					}: mustConstraints(t, "1.0.0"),
+					}: version.MustConstraints(version.NewConstraint("1.0.0")),
 					{
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
-					}: mustConstraints(t, "2.0.0"),
+					}: version.MustConstraints(version.NewConstraint("2.0.0")),
 					{
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "grafana",
 						Type:      "grafana",
-					}: mustConstraints(t, "2.1.0"),
+					}: version.MustConstraints(version.NewConstraint("2.1.0")),
 				},
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
@@ -304,12 +304,12 @@ resource "google_storage_bucket" "bucket" {
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
-					}: mustConstraints(t, ">= 1.0.0,1.1.0"),
+					}: version.MustConstraints(version.NewConstraint(">= 1.0.0,1.1.0")),
 					{
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
-					}: mustConstraints(t, "2.0.0"),
+					}: version.MustConstraints(version.NewConstraint("2.0.0")),
 				},
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
@@ -368,12 +368,12 @@ resource "google_storage_bucket" "bucket" {
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
-					}: mustConstraints(t, ">= 1.0.0,1.1.0"),
+					}: version.MustConstraints(version.NewConstraint(">= 1.0.0,1.1.0")),
 					{
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
-					}: mustConstraints(t, "2.0.0"),
+					}: version.MustConstraints(version.NewConstraint("2.0.0")),
 				},
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
@@ -424,12 +424,12 @@ provider "aws" {
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
-					}: mustConstraints(t, "1.0.0"),
+					}: version.MustConstraints(version.NewConstraint("1.0.0")),
 					{
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
-					}: mustConstraints(t, "2.0.0"),
+					}: version.MustConstraints(version.NewConstraint("2.0.0")),
 				},
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
@@ -486,12 +486,12 @@ provider "aws" {
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
-					}: mustConstraints(t, "1.0.0"),
+					}: version.MustConstraints(version.NewConstraint("1.0.0")),
 					{
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
-					}: mustConstraints(t, "2.0.0"),
+					}: version.MustConstraints(version.NewConstraint("2.0.0")),
 				},
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
@@ -528,7 +528,7 @@ resource "google_something" "test" {
 						Hostname:  tfaddr.DefaultRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google-beta",
-					}: mustConstraints(t, "2.0.0"),
+					}: version.MustConstraints(version.NewConstraint("2.0.0")),
 				},
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
@@ -928,14 +928,6 @@ func runTestCases(testCases []testCase, t *testing.T, path string) {
 	}
 }
 
-func mustConstraints(t *testing.T, vc string) version.Constraints {
-	c, err := version.NewConstraint(vc)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return c
-}
-
-func compareVersionConstraint(x, y version.Constraint) bool {
-	return x.String() == y.String()
+func compareVersionConstraint(x, y *version.Constraint) bool {
+	return x.Equals(y)
 }
