@@ -22,6 +22,22 @@ type Backend struct {
 	Data backend.BackendData
 }
 
+func (be *Backend) Equals(b *Backend) bool {
+	if be == nil && b == nil {
+		return true
+	}
+
+	if be == nil || b == nil {
+		return false
+	}
+
+	if be.Type != b.Type {
+		return false
+	}
+
+	return be.Data.Equals(b.Data)
+}
+
 type ProviderRef struct {
 	LocalName string
 
