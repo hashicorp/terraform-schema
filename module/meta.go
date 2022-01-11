@@ -11,15 +11,51 @@ type Meta struct {
 
 	Backend              *Backend
 	ProviderReferences   map[ProviderRef]tfaddr.Provider
-	ProviderRequirements map[tfaddr.Provider]version.Constraints
+	ProviderRequirements ProviderRequirements
 	CoreRequirements     version.Constraints
 	Variables            map[string]Variable
 	Outputs              map[string]Output
 }
 
+type ProviderRequirements map[tfaddr.Provider]version.Constraints
+
+func (pr ProviderRequirements) Equals(reqs ProviderRequirements) bool {
+	if len(pr) != len(reqs) {
+		return false
+	}
+
+	for pAddr, vCons := range pr {
+		c, ok := reqs[pAddr]
+		if !ok {
+			return false
+		}
+		if !vCons.Equals(c) {
+			return false
+		}
+	}
+
+	return true
+}
+
 type Backend struct {
 	Type string
 	Data backend.BackendData
+}
+
+func (be *Backend) Equals(b *Backend) bool {
+	if be == nil && b == nil {
+		return true
+	}
+
+	if be == nil || b == nil {
+		return false
+	}
+
+	if be.Type != b.Type {
+		return false
+	}
+
+	return be.Data.Equals(b.Data)
 }
 
 type ProviderRef struct {
