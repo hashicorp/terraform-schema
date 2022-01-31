@@ -5,6 +5,7 @@ import (
 )
 
 var (
+	BuiltinScope  = lang.ScopeId("builtin")
 	DataScope     = lang.ScopeId("data")
 	LocalScope    = lang.ScopeId("local")
 	ModuleScope   = lang.ScopeId("module")
