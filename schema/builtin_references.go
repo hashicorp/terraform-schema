@@ -7,6 +7,8 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
+// BuiltinReferences returns known "built-in" reference targets
+// (range-less references available within any module)
 func BuiltinReferences(modPath string) reference.Targets {
 	return reference.Targets{
 		{
