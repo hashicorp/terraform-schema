@@ -279,6 +279,24 @@ func TestMergeWithJsonProviderSchemasAndModuleVariables_v015(t *testing.T) {
 	}
 }
 
+func TestMergeWithJsonProviderSchemasAndModuleVariables_registryModule(t *testing.T) {
+	sm := NewSchemaMerger(testCoreSchema())
+	sm.SetModuleReader(testRegistryModuleReader())
+	sm.SetTerraformVersion(v0_15_0)
+	meta := testModuleMeta(t, "testdata/test-config-remote-module.tf")
+	t.Logf("meta: %#v", meta)
+	mergedSchema, err := sm.SchemaForModule(meta)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	moduleSchema := mergedSchema.Blocks["module"]
+
+	if diff := cmp.Diff(expectedRemoteModuleSchema, moduleSchema, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("schema differs: %s", diff)
+	}
+}
+
 func testModuleMeta(t *testing.T, path string) *module.Meta {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -357,6 +375,38 @@ func (m *testModuleReaderStruct) ModuleMeta(modPath string) (*module.Meta, error
 	if modPath == "path" {
 		return &module.Meta{
 			Path: "path",
+			Variables: map[string]module.Variable{
+				"test": {
+					Type:        cty.String,
+					Description: "test var",
+				},
+			},
+		}, nil
+	}
+	return nil, fmt.Errorf("invalid source")
+}
+
+func testRegistryModuleReader() ModuleReader {
+	return &testRegistryModuleReaderStruct{}
+}
+
+type testRegistryModuleReaderStruct struct {
+}
+
+func (m *testRegistryModuleReaderStruct) ModuleCalls(modPath string) ([]module.ModuleCall, error) {
+	return []module.ModuleCall{
+		{
+			LocalName:  "remote-example",
+			SourceAddr: "registry.terraform.io/namespace/foobar",
+			Path:       ".terraform/modules/remote-example",
+		},
+	}, nil
+}
+
+func (m *testRegistryModuleReaderStruct) ModuleMeta(modPath string) (*module.Meta, error) {
+	if modPath == ".terraform/modules/remote-example" {
+		return &module.Meta{
+			Path: ".terraform/modules/remote-example",
 			Variables: map[string]module.Variable{
 				"test": {
 					Type:        cty.String,
