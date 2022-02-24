@@ -563,3 +563,114 @@ var expectedMergedSchemaWithModule_v015 = &schema.BodySchema{
 		"module":   &moduleWithDependency,
 	},
 }
+
+var expectedRemoteModuleSchema = &schema.BlockSchema{
+	Labels: []*schema.LabelSchema{
+		{Name: "name"},
+	},
+	Body: &schema.BodySchema{
+		Attributes: map[string]*schema.AttributeSchema{
+			"source": {
+				Expr:       schema.LiteralTypeOnly(cty.String),
+				IsRequired: true,
+				IsDepKey:   true,
+			},
+			"version": {
+				Expr:       schema.LiteralTypeOnly(cty.String),
+				IsOptional: true,
+			},
+		},
+	},
+	DependentBody: map[schema.SchemaKey]*schema.BodySchema{
+		schema.NewSchemaKey(schema.DependencyKeys{
+			Attributes: []schema.AttributeDependent{
+				{
+					Name: "source",
+					Expr: schema.ExpressionValue{
+						Static: cty.StringVal("namespace/foobar"),
+					},
+				},
+			}}): {
+			TargetableAs: []*schema.Targetable{
+				{
+					Address: lang.Address{
+						lang.RootStep{Name: "module"},
+						lang.AttrStep{Name: "remote-example"},
+					},
+					ScopeId:           refscope.ModuleScope,
+					AsType:            cty.Object(map[string]cty.Type{}),
+					NestedTargetables: []*schema.Targetable{},
+				},
+			},
+			Attributes: map[string]*schema.AttributeSchema{
+				"test": {
+					Description: lang.PlainText("test var"),
+					Expr: schema.ExprConstraints{
+						schema.TraversalExpr{OfType: cty.String},
+						schema.LiteralTypeExpr{Type: cty.String},
+					},
+					IsRequired: true,
+					OriginForTarget: &schema.PathTarget{
+						Address: schema.Address{
+							schema.StaticStep{Name: "var"},
+							schema.AttrNameStep{},
+						},
+						Path: lang.Path{
+							Path:       ".terraform/modules/remote-example",
+							LanguageID: "terraform",
+						},
+						Constraints: schema.Constraints{
+							ScopeId: "variable",
+							Type:    cty.String,
+						},
+					},
+				},
+			},
+		},
+		schema.NewSchemaKey(schema.DependencyKeys{
+			Attributes: []schema.AttributeDependent{
+				{
+					Name: "source",
+					Expr: schema.ExpressionValue{
+						Static: cty.StringVal("registry.terraform.io/namespace/foobar"),
+					},
+				},
+			}}): {
+			TargetableAs: []*schema.Targetable{
+				{
+					Address: lang.Address{
+						lang.RootStep{Name: "module"},
+						lang.AttrStep{Name: "remote-example"},
+					},
+					ScopeId:           refscope.ModuleScope,
+					AsType:            cty.Object(map[string]cty.Type{}),
+					NestedTargetables: []*schema.Targetable{},
+				},
+			},
+			Attributes: map[string]*schema.AttributeSchema{
+				"test": {
+					Description: lang.PlainText("test var"),
+					Expr: schema.ExprConstraints{
+						schema.TraversalExpr{OfType: cty.String},
+						schema.LiteralTypeExpr{Type: cty.String},
+					},
+					IsRequired: true,
+					OriginForTarget: &schema.PathTarget{
+						Address: schema.Address{
+							schema.StaticStep{Name: "var"},
+							schema.AttrNameStep{},
+						},
+						Path: lang.Path{
+							Path:       ".terraform/modules/remote-example",
+							LanguageID: "terraform",
+						},
+						Constraints: schema.Constraints{
+							ScopeId: "variable",
+							Type:    cty.String,
+						},
+					},
+				},
+			},
+		},
+	},
+}

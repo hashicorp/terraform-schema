@@ -51,7 +51,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		return nil, coreSchemaRequiredErr{}
 	}
 
-	if meta == nil || m.schemaReader == nil {
+	if meta == nil {
 		return m.coreSchema, nil
 	}
 
@@ -72,95 +72,97 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 
 	providerRefs := ProviderReferences(meta.ProviderReferences)
 
-	for pAddr, pVersionCons := range meta.ProviderRequirements {
-		pSchema, err := m.schemaReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
-		if err != nil {
-			continue
-		}
-
-		refs := providerRefs.ReferencesOfProvider(pAddr)
-		for _, localRef := range refs {
-			if pSchema.Provider != nil {
-				mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
-					Labels: []schema.LabelDependent{
-						{Index: 0, Value: localRef.LocalName},
-					},
-				})] = pSchema.Provider
+	if m.schemaReader != nil {
+		for pAddr, pVersionCons := range meta.ProviderRequirements {
+			pSchema, err := m.schemaReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
+			if err != nil {
+				continue
 			}
 
-			providerAddr := lang.Address{
-				lang.RootStep{Name: localRef.LocalName},
-			}
-			if localRef.Alias != "" {
-				providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
-			}
-
-			for rName, rSchema := range pSchema.Resources {
-				depKeys := schema.DependencyKeys{
-					Labels: []schema.LabelDependent{
-						{Index: 0, Value: rName},
-					},
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "provider",
-							Expr: schema.ExpressionValue{
-								Address: providerAddr,
-							},
+			refs := providerRefs.ReferencesOfProvider(pAddr)
+			for _, localRef := range refs {
+				if pSchema.Provider != nil {
+					mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
+						Labels: []schema.LabelDependent{
+							{Index: 0, Value: localRef.LocalName},
 						},
-					},
+					})] = pSchema.Provider
 				}
-				mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
 
-				// No explicit association is required
-				// if the resource prefix matches provider name
-				if strings.HasPrefix(rName, localRef.LocalName+"_") {
+				providerAddr := lang.Address{
+					lang.RootStep{Name: localRef.LocalName},
+				}
+				if localRef.Alias != "" {
+					providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
+				}
+
+				for rName, rSchema := range pSchema.Resources {
 					depKeys := schema.DependencyKeys{
 						Labels: []schema.LabelDependent{
 							{Index: 0, Value: rName},
 						},
-					}
-					mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
-				}
-			}
-
-			for dsName, dsSchema := range pSchema.DataSources {
-				depKeys := schema.DependencyKeys{
-					Labels: []schema.LabelDependent{
-						{Index: 0, Value: dsName},
-					},
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "provider",
-							Expr: schema.ExpressionValue{
-								Address: providerAddr,
+						Attributes: []schema.AttributeDependent{
+							{
+								Name: "provider",
+								Expr: schema.ExpressionValue{
+									Address: providerAddr,
+								},
 							},
 						},
-					},
-				}
+					}
+					mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
 
-				// Add backend-related core bits of schema
-				if isRemoteStateDataSource(pAddr, dsName) {
-					dsSchema.Attributes["backend"].IsDepKey = true
-					dsSchema.Attributes["backend"].Expr = backends.BackendTypesAsExprConstraints(m.terraformVersion)
-
-					delete(dsSchema.Attributes, "config")
-					depBodies := m.dependentBodyForRemoteStateDataSource(providerAddr, localRef)
-					for key, depBody := range depBodies {
-						mergedSchema.Blocks["data"].DependentBody[key] = depBody
+					// No explicit association is required
+					// if the resource prefix matches provider name
+					if strings.HasPrefix(rName, localRef.LocalName+"_") {
+						depKeys := schema.DependencyKeys{
+							Labels: []schema.LabelDependent{
+								{Index: 0, Value: rName},
+							},
+						}
+						mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
 					}
 				}
 
-				mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
-
-				// No explicit association is required
-				// if the resource prefix matches provider name
-				if strings.HasPrefix(dsName, localRef.LocalName+"_") {
+				for dsName, dsSchema := range pSchema.DataSources {
 					depKeys := schema.DependencyKeys{
 						Labels: []schema.LabelDependent{
 							{Index: 0, Value: dsName},
 						},
+						Attributes: []schema.AttributeDependent{
+							{
+								Name: "provider",
+								Expr: schema.ExpressionValue{
+									Address: providerAddr,
+								},
+							},
+						},
 					}
+
+					// Add backend-related core bits of schema
+					if isRemoteStateDataSource(pAddr, dsName) {
+						dsSchema.Attributes["backend"].IsDepKey = true
+						dsSchema.Attributes["backend"].Expr = backends.BackendTypesAsExprConstraints(m.terraformVersion)
+
+						delete(dsSchema.Attributes, "config")
+						depBodies := m.dependentBodyForRemoteStateDataSource(providerAddr, localRef)
+						for key, depBody := range depBodies {
+							mergedSchema.Blocks["data"].DependentBody[key] = depBody
+						}
+					}
+
 					mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+
+					// No explicit association is required
+					// if the resource prefix matches provider name
+					if strings.HasPrefix(dsName, localRef.LocalName+"_") {
+						depKeys := schema.DependencyKeys{
+							Labels: []schema.LabelDependent{
+								{Index: 0, Value: dsName},
+							},
+						}
+						mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+					}
 				}
 			}
 		}
@@ -176,17 +178,20 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		}
 		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
 	}
+
 	if m.moduleReader != nil {
 		reader := m.moduleReader
 		modules, err := reader.ModuleCalls(meta.Path)
 		if err != nil {
 			return mergedSchema, nil
 		}
+
 		for _, module := range modules {
 			modMeta, err := reader.ModuleMeta(module.Path)
 			if err != nil {
 				continue
 			}
+
 			depKeys := schema.DependencyKeys{
 				// Fetching based only on the source can cause conflicts for multiple versions of the same module
 				// specially if they have different versions or the source of those modules have been modified
@@ -204,6 +209,31 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 			depSchema, err := schemaForDependentModuleBlock(module.LocalName, modMeta)
 			if err == nil {
 				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+			}
+
+			// There's likely more edge cases with how source address can be represented in config
+			// vs in module manifest, but for now we at least account for the common case of TF Registry
+			if strings.HasPrefix(module.SourceAddr, "registry.terraform.io/") {
+				shortName := strings.TrimPrefix(module.SourceAddr, "registry.terraform.io/")
+
+				depKeys := schema.DependencyKeys{
+					// Fetching based only on the source can cause conflicts for multiple versions of the same module
+					// specially if they have different versions or the source of those modules have been modified
+					// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "source",
+							Expr: schema.ExpressionValue{
+								Static: cty.StringVal(shortName),
+							},
+						},
+					},
+				}
+
+				depSchema, err := schemaForDependentModuleBlock(module.LocalName, modMeta)
+				if err == nil {
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				}
 			}
 		}
 	}
