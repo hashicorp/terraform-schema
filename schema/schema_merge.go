@@ -213,7 +213,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 
 			// There's likely more edge cases with how source address can be represented in config
 			// vs in module manifest, but for now we at least account for the common case of TF Registry
-			if strings.HasPrefix(module.SourceAddr, "registry.terraform.io/") {
+			if err == nil && strings.HasPrefix(module.SourceAddr, "registry.terraform.io/") {
 				shortName := strings.TrimPrefix(module.SourceAddr, "registry.terraform.io/")
 
 				depKeys := schema.DependencyKeys{
@@ -230,10 +230,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 					},
 				}
 
-				depSchema, err := schemaForDependentModuleBlock(module.LocalName, modMeta)
-				if err == nil {
-					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-				}
+				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 			}
 		}
 	}
