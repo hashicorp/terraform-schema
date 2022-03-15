@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -19,6 +20,7 @@ var moduleBlockSchema = &schema.BlockSchema{
 		DependentBodyAsData: true,
 		InferDependentBody:  true,
 	},
+	SemanticTokenModifier: tokmod.Module,
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",

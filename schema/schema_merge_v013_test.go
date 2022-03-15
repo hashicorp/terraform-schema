@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/backends"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -11,8 +12,9 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 	Blocks: map[string]*schema.BlockSchema{
 		"provider": {
 			Labels: []*schema.LabelSchema{
-				{Name: "name"},
+				{Name: "name", SemanticTokenModifier: tokmod.Name},
 			},
+			SemanticTokenModifier: tokmod.Provider,
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"alias": {
@@ -82,9 +84,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 		},
 		"resource": {
 			Labels: []*schema.LabelSchema{
-				{Name: "type"},
-				{Name: "name"},
+				{Name: "type", SemanticTokenModifier: tokmod.Type},
+				{Name: "name", SemanticTokenModifier: tokmod.Name},
 			},
+			SemanticTokenModifier: tokmod.Resource,
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"count": {
@@ -2218,9 +2221,10 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 		},
 		"data": {
 			Labels: []*schema.LabelSchema{
-				{Name: "type"},
-				{Name: "name"},
+				{Name: "type", SemanticTokenModifier: tokmod.Type},
+				{Name: "name", SemanticTokenModifier: tokmod.Name},
 			},
+			SemanticTokenModifier: tokmod.Data,
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"count": {
@@ -2634,8 +2638,9 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 		},
 		"module": {
 			Labels: []*schema.LabelSchema{
-				{Name: "name"},
+				{Name: "name", SemanticTokenModifier: tokmod.Name},
 			},
+			SemanticTokenModifier: tokmod.Module,
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"source": {

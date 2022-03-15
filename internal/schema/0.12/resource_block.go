@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -21,16 +22,19 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			DependentBodyAsData: true,
 			InferDependentBody:  true,
 		},
+		SemanticTokenModifier: tokmod.Resource,
 		Labels: []*schema.LabelSchema{
 			{
-				Name:        "type",
-				Description: lang.PlainText("Resource Type"),
-				IsDepKey:    true,
-				Completable: true,
+				Name:                  "type",
+				SemanticTokenModifier: tokmod.Type,
+				Description:           lang.PlainText("Resource Type"),
+				IsDepKey:              true,
+				Completable:           true,
 			},
 			{
-				Name:        "name",
-				Description: lang.PlainText("Reference Name"),
+				Name:                  "name",
+				SemanticTokenModifier: tokmod.Name,
+				Description:           lang.PlainText("Reference Name"),
 			},
 		},
 		Description: lang.PlainText("A resource block declares a resource of a given type with a given local name. The name is " +

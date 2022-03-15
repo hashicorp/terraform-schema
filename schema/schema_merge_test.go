@@ -16,6 +16,7 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/earlydecoder"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
@@ -108,8 +109,9 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 		Blocks: map[string]*schema.BlockSchema{
 			"provider": {
 				Labels: []*schema.LabelSchema{
-					{Name: "name"},
+					{Name: "name", SemanticTokenModifier: tokmod.Name},
 				},
+				SemanticTokenModifier: tokmod.Provider,
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"alias": {
@@ -121,9 +123,10 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 			},
 			"resource": {
 				Labels: []*schema.LabelSchema{
-					{Name: "type"},
-					{Name: "name"},
+					{Name: "type", SemanticTokenModifier: tokmod.Type},
+					{Name: "name", SemanticTokenModifier: tokmod.Name},
 				},
+				SemanticTokenModifier: tokmod.Resource,
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"count": {
@@ -138,9 +141,10 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 			},
 			"data": {
 				Labels: []*schema.LabelSchema{
-					{Name: "type"},
-					{Name: "name"},
+					{Name: "type", SemanticTokenModifier: tokmod.Type},
+					{Name: "name", SemanticTokenModifier: tokmod.Name},
 				},
+				SemanticTokenModifier: tokmod.Data,
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"count": {
@@ -155,8 +159,9 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 			},
 			"module": {
 				Labels: []*schema.LabelSchema{
-					{Name: "name"},
+					{Name: "name", SemanticTokenModifier: tokmod.Name},
 				},
+				SemanticTokenModifier: tokmod.Module,
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {
@@ -441,8 +446,12 @@ func testCoreSchema() *schema.BodySchema {
 		Blocks: map[string]*schema.BlockSchema{
 			"provider": {
 				Labels: []*schema.LabelSchema{
-					{Name: "name"},
+					{
+						Name:                  "name",
+						SemanticTokenModifier: tokmod.Name,
+					},
 				},
+				SemanticTokenModifier: tokmod.Provider,
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
@@ -451,9 +460,16 @@ func testCoreSchema() *schema.BodySchema {
 			},
 			"resource": {
 				Labels: []*schema.LabelSchema{
-					{Name: "type"},
-					{Name: "name"},
+					{
+						Name:                  "type",
+						SemanticTokenModifier: tokmod.Type,
+					},
+					{
+						Name:                  "name",
+						SemanticTokenModifier: tokmod.Name,
+					},
 				},
+				SemanticTokenModifier: tokmod.Resource,
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"count": {
@@ -468,9 +484,16 @@ func testCoreSchema() *schema.BodySchema {
 			},
 			"data": {
 				Labels: []*schema.LabelSchema{
-					{Name: "type"},
-					{Name: "name"},
+					{
+						Name:                  "type",
+						SemanticTokenModifier: tokmod.Type,
+					},
+					{
+						Name:                  "name",
+						SemanticTokenModifier: tokmod.Name,
+					},
 				},
+				SemanticTokenModifier: tokmod.Data,
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"count": {
@@ -485,8 +508,12 @@ func testCoreSchema() *schema.BodySchema {
 			},
 			"module": {
 				Labels: []*schema.LabelSchema{
-					{Name: "name"},
+					{
+						Name:                  "name",
+						SemanticTokenModifier: tokmod.Name,
+					},
 				},
+				SemanticTokenModifier: tokmod.Module,
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {

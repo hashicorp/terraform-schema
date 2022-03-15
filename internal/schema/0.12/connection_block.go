@@ -4,13 +4,15 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
 func connectionBlock(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
-		Description: lang.Markdown("Connection block describing how the provisioner connects to the given instance"),
-		MaxItems:    1,
+		Description:           lang.Markdown("Connection block describing how the provisioner connects to the given instance"),
+		MaxItems:              1,
+		SemanticTokenModifier: tokmod.Connection,
 		Body: &schema.BodySchema{
 			HoverURL: "https://www.terraform.io/docs/language/resources/provisioners/connection.html",
 			Attributes: map[string]*schema.AttributeSchema{

@@ -6,6 +6,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 )
 
 var moduleBlockSchema = &schema.BlockSchema{
@@ -18,10 +19,12 @@ var moduleBlockSchema = &schema.BlockSchema{
 		ScopeId:      refscope.ModuleScope,
 		AsReference:  true,
 	},
+	SemanticTokenModifier: tokmod.Module,
 	Labels: []*schema.LabelSchema{
 		{
-			Name:        "name",
-			Description: lang.PlainText("Reference Name"),
+			Name:                  "name",
+			SemanticTokenModifier: tokmod.Name,
+			Description:           lang.PlainText("Reference Name"),
 		},
 	},
 	Description: lang.PlainText("Module block to call a locally or remotely stored module"),

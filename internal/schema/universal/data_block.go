@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 )
 
 var datasourceBlockSchema = &schema.BlockSchema{
@@ -19,16 +20,19 @@ var datasourceBlockSchema = &schema.BlockSchema{
 		DependentBodyAsData: true,
 		InferDependentBody:  true,
 	},
+	SemanticTokenModifier: tokmod.Data,
 	Labels: []*schema.LabelSchema{
 		{
-			Name:        "type",
-			Description: lang.PlainText("Data Source Type"),
-			IsDepKey:    true,
-			Completable: true,
+			Name:                  "type",
+			SemanticTokenModifier: tokmod.Type,
+			Description:           lang.PlainText("Data Source Type"),
+			IsDepKey:              true,
+			Completable:           true,
 		},
 		{
-			Name:        "name",
-			Description: lang.PlainText("Reference Name"),
+			Name:                  "name",
+			SemanticTokenModifier: tokmod.Name,
+			Description:           lang.PlainText("Reference Name"),
 		},
 	},
 	Description: lang.PlainText("A data block requests that Terraform read from a given data source and export the result " +

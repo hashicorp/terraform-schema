@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -22,16 +23,19 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			DependentBodyAsData: true,
 			InferDependentBody:  true,
 		},
+		SemanticTokenModifier: tokmod.Data,
 		Labels: []*schema.LabelSchema{
 			{
-				Name:        "type",
-				Description: lang.PlainText("Data Source Type"),
-				IsDepKey:    true,
-				Completable: true,
+				Name:                  "type",
+				Description:           lang.PlainText("Data Source Type"),
+				SemanticTokenModifier: lang.SemanticTokenModifier("type"),
+				IsDepKey:              true,
+				Completable:           true,
 			},
 			{
-				Name:        "name",
-				Description: lang.PlainText("Reference Name"),
+				Name:                  "name",
+				Description:           lang.PlainText("Reference Name"),
+				SemanticTokenModifier: lang.SemanticTokenModifier("name"),
 			},
 		},
 		Description: lang.PlainText("A data block requests that Terraform read from a given data source and export the result " +

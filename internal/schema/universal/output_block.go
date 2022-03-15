@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -17,6 +18,7 @@ var outputBlockSchema = &schema.BlockSchema{
 		ScopeId:      refscope.OutputScope,
 		AsReference:  true,
 	},
+	SemanticTokenModifier: tokmod.Output,
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",

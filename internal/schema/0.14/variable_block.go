@@ -6,6 +6,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 )
 
 var variableBlockSchema = &schema.BlockSchema{
@@ -22,10 +23,12 @@ var variableBlockSchema = &schema.BlockSchema{
 			AttributeValue: "default",
 		},
 	},
+	SemanticTokenModifier: tokmod.Variable,
 	Labels: []*schema.LabelSchema{
 		{
-			Name:        "name",
-			Description: lang.PlainText("Variable Name"),
+			Name:                  "name",
+			SemanticTokenModifier: tokmod.Name,
+			Description:           lang.PlainText("Variable Name"),
 		},
 	},
 	Description: lang.Markdown("Input variable allowing users to customizate aspects of the configuration when used directly " +
