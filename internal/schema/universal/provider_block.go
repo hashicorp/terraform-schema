@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -17,12 +18,14 @@ var providerBlockSchema = &schema.BlockSchema{
 		ScopeId:      refscope.ProviderScope,
 		AsReference:  true,
 	},
+	SemanticTokenModifier: tokmod.Provider,
 	Labels: []*schema.LabelSchema{
 		{
-			Name:        "name",
-			Description: lang.PlainText("Provider Name"),
-			IsDepKey:    true,
-			Completable: true,
+			Name:                  "name",
+			SemanticTokenModifier: tokmod.Name,
+			Description:           lang.PlainText("Provider Name"),
+			IsDepKey:              true,
+			Completable:           true,
 		},
 	},
 	Description: lang.PlainText("A provider block is used to specify a provider configuration"),

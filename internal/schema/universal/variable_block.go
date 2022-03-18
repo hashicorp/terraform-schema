@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -21,10 +22,12 @@ var variableBlockSchema = &schema.BlockSchema{
 			AttributeValue: "default",
 		},
 	},
+	SemanticTokenModifier: tokmod.Variable,
 	Labels: []*schema.LabelSchema{
 		{
-			Name:        "name",
-			Description: lang.PlainText("Variable Name"),
+			Name:                  "name",
+			SemanticTokenModifier: tokmod.Name,
+			Description:           lang.PlainText("Variable Name"),
 		},
 	},
 	Description: lang.Markdown("Input variable allowing users to customizate aspects of the configuration when used directly " +

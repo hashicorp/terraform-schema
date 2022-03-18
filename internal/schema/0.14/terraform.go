@@ -6,12 +6,14 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
 func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
-		Description: lang.Markdown("Terraform block used to configure some high-level behaviors of Terraform"),
+		SemanticTokenModifier: tokmod.Terraform,
+		Description:           lang.Markdown("Terraform block used to configure some high-level behaviors of Terraform"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"required_version": {
@@ -42,6 +44,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"backend": {
+					SemanticTokenModifier: tokmod.Backend,
 					Description: lang.Markdown("Backend configuration which defines exactly where and how " +
 						"operations are performed, where state snapshots are stored, etc."),
 					Labels: []*schema.LabelSchema{
@@ -65,6 +68,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 					},
 				},
 				"required_providers": {
+					SemanticTokenModifier: tokmod.RequiredProviders,
 					Description: lang.Markdown("What provider version to use within this configuration " +
 						"and where to source it from"),
 					Body: &schema.BodySchema{

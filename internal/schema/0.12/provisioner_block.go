@@ -4,18 +4,21 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 )
 
 func provisionerBlock(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
+		SemanticTokenModifier: tokmod.Provisioner,
 		Description: lang.Markdown("Provisioner to model specific actions on the local machine or on a remote machine " +
 			"in order to prepare servers or other infrastructure objects for service"),
 		Labels: []*schema.LabelSchema{
 			{
-				Name:        "type",
-				Description: lang.PlainText("Type of provisioner to use, e.g. `remote-exec` or `file`"),
-				IsDepKey:    true,
-				Completable: true,
+				Name:                  "type",
+				SemanticTokenModifier: tokmod.Type,
+				Description:           lang.PlainText("Type of provisioner to use, e.g. `remote-exec` or `file`"),
+				IsDepKey:              true,
+				Completable:           true,
 			},
 		},
 		Body: &schema.BodySchema{
