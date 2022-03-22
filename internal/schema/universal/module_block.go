@@ -36,8 +36,9 @@ var moduleBlockSchema = &schema.BlockSchema{
 					"a local directory (e.g. `./module`) or a remote address - e.g. " +
 					"`hashicorp/consul/aws` (Terraform Registry address) or " +
 					"`github.com/hashicorp/example` (GitHub)"),
-				IsRequired: true,
-				IsDepKey:   true,
+				IsRequired:             true,
+				IsDepKey:               true,
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 			"version": {
 				Expr:       schema.LiteralTypeOnly(cty.String),

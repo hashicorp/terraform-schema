@@ -15,7 +15,7 @@ func provisionerBlock(v *version.Version) *schema.BlockSchema {
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "type",
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Type of provisioner to use, e.g. `remote-exec` or `file`"),
 				IsDepKey:               true,
 				Completable:            true,

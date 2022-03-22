@@ -38,9 +38,10 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 						"operations are performed, where state snapshots are stored, etc."),
 					Labels: []*schema.LabelSchema{
 						{
-							Name:        "type",
-							Description: lang.Markdown("Backend Type"),
-							IsDepKey:    true,
+							Name:                   "type",
+							Description:            lang.Markdown("Backend Type"),
+							IsDepKey:               true,
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 						},
 					},
 					DependentBody: backends.ConfigsAsDependentBodies(v),

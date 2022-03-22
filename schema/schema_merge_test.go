@@ -110,7 +110,13 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 		Blocks: map[string]*schema.BlockSchema{
 			"provider": {
 				Labels: []*schema.LabelSchema{
-					{Name: "name", SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name}},
+					{
+						Name: "name",
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{
+							tokmod.Name,
+							lang.TokenModifierDependent,
+						},
+					},
 				},
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 				Body: &schema.BodySchema{
@@ -124,8 +130,17 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 			},
 			"resource": {
 				Labels: []*schema.LabelSchema{
-					{Name: "type", SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type}},
-					{Name: "name", SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name}},
+					{
+						Name: "type",
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{
+							tokmod.Type,
+							lang.TokenModifierDependent,
+						},
+					},
+					{
+						Name:                   "name",
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+					},
 				},
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 				Body: &schema.BodySchema{
@@ -142,8 +157,17 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 			},
 			"data": {
 				Labels: []*schema.LabelSchema{
-					{Name: "type", SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type}},
-					{Name: "name", SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name}},
+					{
+						Name: "type",
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{
+							tokmod.Type,
+							lang.TokenModifierDependent,
+						},
+					},
+					{
+						Name:                   "name",
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+					},
 				},
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 				Body: &schema.BodySchema{
@@ -166,9 +190,10 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
-							IsRequired: true,
-							IsDepKey:   true,
+							Expr:                   schema.LiteralTypeOnly(cty.String),
+							IsRequired:             true,
+							IsDepKey:               true,
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 						},
 						"version": {
 							Expr:       schema.LiteralTypeOnly(cty.String),
@@ -449,7 +474,7 @@ func testCoreSchema() *schema.BodySchema {
 				Labels: []*schema.LabelSchema{
 					{
 						Name:                   "name",
-						SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name, lang.TokenModifierDependent},
 					},
 				},
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
@@ -463,7 +488,7 @@ func testCoreSchema() *schema.BodySchema {
 				Labels: []*schema.LabelSchema{
 					{
 						Name:                   "type",
-						SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 					},
 					{
 						Name:                   "name",
@@ -487,7 +512,7 @@ func testCoreSchema() *schema.BodySchema {
 				Labels: []*schema.LabelSchema{
 					{
 						Name:                   "type",
-						SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 					},
 					{
 						Name:                   "name",
@@ -518,9 +543,10 @@ func testCoreSchema() *schema.BodySchema {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
-							IsRequired: true,
-							IsDepKey:   true,
+							Expr:                   schema.LiteralTypeOnly(cty.String),
+							IsRequired:             true,
+							IsDepKey:               true,
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 						},
 						"version": {
 							Expr:       schema.LiteralTypeOnly(cty.String),

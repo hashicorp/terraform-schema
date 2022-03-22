@@ -24,7 +24,7 @@ var datasourceBlockSchema = &schema.BlockSchema{
 	Labels: []*schema.LabelSchema{
 		{
 			Name:                   "type",
-			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 			Description:            lang.PlainText("Data Source Type"),
 			IsDepKey:               true,
 			Completable:            true,
@@ -44,9 +44,10 @@ var datasourceBlockSchema = &schema.BlockSchema{
 				Expr: schema.ExprConstraints{
 					schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
 				},
-				IsOptional:  true,
-				Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
-				IsDepKey:    true,
+				IsOptional:             true,
+				Description:            lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
+				IsDepKey:               true,
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 		},
 	},

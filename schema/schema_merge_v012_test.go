@@ -14,7 +14,7 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 			Labels: []*schema.LabelSchema{
 				{
 					Name:                   "name",
-					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name, lang.TokenModifierDependent},
 				},
 			},
 			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
@@ -55,7 +55,7 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 			Labels: []*schema.LabelSchema{
 				{
 					Name:                   "type",
-					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				},
 				{
 					Name:                   "name",
@@ -1482,7 +1482,7 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 			Labels: []*schema.LabelSchema{
 				{
 					Name:                   "type",
-					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				},
 				{
 					Name:                   "name",
@@ -1714,9 +1714,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
 						"backend": {
-							IsRequired: true,
-							IsDepKey:   true,
-							Expr:       backends.BackendTypesAsExprConstraints(v0_12_0),
+							IsRequired:             true,
+							IsDepKey:               true,
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
+							Expr:                   backends.BackendTypesAsExprConstraints(v0_12_0),
 						},
 						"defaults": {
 							IsOptional: true,
@@ -1746,9 +1747,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 					Blocks: map[string]*schema.BlockSchema{},
 					Attributes: map[string]*schema.AttributeSchema{
 						"backend": {
-							IsRequired: true,
-							IsDepKey:   true,
-							Expr:       backends.BackendTypesAsExprConstraints(v0_12_0),
+							IsRequired:             true,
+							IsDepKey:               true,
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
+							Expr:                   backends.BackendTypesAsExprConstraints(v0_12_0),
 						},
 						"defaults": {
 							IsOptional: true,
@@ -1876,9 +1878,10 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"source": {
-						Expr:       schema.LiteralTypeOnly(cty.String),
-						IsRequired: true,
-						IsDepKey:   true,
+						Expr:                   schema.LiteralTypeOnly(cty.String),
+						IsRequired:             true,
+						IsDepKey:               true,
+						SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 					},
 					"version": {
 						Expr:       schema.LiteralTypeOnly(cty.String),

@@ -28,14 +28,14 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			{
 				Name:                   "type",
 				Description:            lang.PlainText("Data Source Type"),
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{"type"},
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				IsDepKey:               true,
 				Completable:            true,
 			},
 			{
 				Name:                   "name",
 				Description:            lang.PlainText("Reference Name"),
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{"name"},
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
 			},
 		},
 		Description: lang.PlainText("A data block requests that Terraform read from a given data source and export the result " +
@@ -47,9 +47,10 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 					Expr: schema.ExprConstraints{
 						schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
 					},
-					IsOptional:  true,
-					Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
-					IsDepKey:    true,
+					IsOptional:             true,
+					Description:            lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
+					IsDepKey:               true,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 				},
 				"count": {
 					Expr: schema.ExprConstraints{

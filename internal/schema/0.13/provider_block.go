@@ -23,7 +23,7 @@ var providerBlockSchema = &schema.BlockSchema{
 	Labels: []*schema.LabelSchema{
 		{
 			Name:                   "name",
-			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name, lang.TokenModifierDependent},
 			Description:            lang.PlainText("Provider Name"),
 			IsDepKey:               true,
 			Completable:            true,

@@ -31,7 +31,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 					Labels: []*schema.LabelSchema{
 						{
 							Name:                   "backend type",
-							SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 							Description:            lang.Markdown("Backend type"),
 							IsDepKey:               true,
 							Completable:            true,

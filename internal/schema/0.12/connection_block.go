@@ -27,9 +27,10 @@ func connectionBlock(v *version.Version) *schema.BlockSchema {
 							Description: lang.Markdown("Use WinRM to connect and provision the instance"),
 						},
 					},
-					IsOptional:  true,
-					IsDepKey:    true,
-					Description: lang.Markdown("Connection type to use - `ssh` (default) or `winrm`"),
+					IsOptional:             true,
+					IsDepKey:               true,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
+					Description:            lang.Markdown("Connection type to use - `ssh` (default) or `winrm`"),
 				},
 				"user": {
 					Expr: schema.ExprConstraints{
