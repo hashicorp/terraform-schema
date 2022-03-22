@@ -10,9 +10,9 @@ import (
 
 func connectionBlock(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
-		Description:           lang.Markdown("Connection block describing how the provisioner connects to the given instance"),
-		MaxItems:              1,
-		SemanticTokenModifier: tokmod.Connection,
+		Description:            lang.Markdown("Connection block describing how the provisioner connects to the given instance"),
+		MaxItems:               1,
+		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Connection},
 		Body: &schema.BodySchema{
 			HoverURL: "https://www.terraform.io/docs/language/resources/provisioners/connection.html",
 			Attributes: map[string]*schema.AttributeSchema{

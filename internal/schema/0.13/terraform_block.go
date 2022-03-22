@@ -33,7 +33,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"backend": {
-					SemanticTokenModifier: tokmod.Backend,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Backend},
 					Description: lang.Markdown("Backend configuration which defines exactly where and how " +
 						"operations are performed, where state snapshots are stored, etc."),
 					Labels: []*schema.LabelSchema{
@@ -56,7 +56,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 					},
 				},
 				"required_providers": {
-					SemanticTokenModifier: tokmod.RequiredProviders,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.RequiredProviders},
 					Description: lang.Markdown("What provider version to use within this configuration " +
 						"and where to source it from"),
 					Body: &schema.BodySchema{

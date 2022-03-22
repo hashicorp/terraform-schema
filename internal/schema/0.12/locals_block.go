@@ -9,7 +9,7 @@ import (
 )
 
 var localsBlockSchema = &schema.BlockSchema{
-	SemanticTokenModifier: tokmod.Locals,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Locals},
 	Description: lang.Markdown("Local values assigning names to expressions, so you can use these multiple times without repetition\n" +
 		"e.g. `service_name = \"forum\"`"),
 	Body: &schema.BodySchema{

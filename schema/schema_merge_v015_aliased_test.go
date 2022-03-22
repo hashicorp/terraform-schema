@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
@@ -10,10 +11,16 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 	Blocks: map[string]*schema.BlockSchema{
 		"data": {
 			Labels: []*schema.LabelSchema{
-				{Name: "type", SemanticTokenModifier: tokmod.Type},
-				{Name: "name", SemanticTokenModifier: tokmod.Name},
+				{
+					Name:                   "type",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+				},
+				{
+					Name:                   "name",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				},
 			},
-			SemanticTokenModifier: tokmod.Data,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"count": {
@@ -224,9 +231,12 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 		},
 		"provider": {
 			Labels: []*schema.LabelSchema{
-				{Name: "name", SemanticTokenModifier: tokmod.Name},
+				{
+					Name:                   "name",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				},
 			},
-			SemanticTokenModifier: tokmod.Provider,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"alias": {
@@ -252,10 +262,16 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 		},
 		"resource": {
 			Labels: []*schema.LabelSchema{
-				{Name: "type", SemanticTokenModifier: tokmod.Type},
-				{Name: "name", SemanticTokenModifier: tokmod.Name},
+				{
+					Name:                   "type",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+				},
+				{
+					Name:                   "name",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				},
 			},
-			SemanticTokenModifier: tokmod.Resource,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"count": {
@@ -271,9 +287,12 @@ var expectedMergedSchema_v015_aliased = &schema.BodySchema{
 		},
 		"module": {
 			Labels: []*schema.LabelSchema{
-				{Name: "name", SemanticTokenModifier: tokmod.Name},
+				{
+					Name:                   "name",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				},
 			},
-			SemanticTokenModifier: tokmod.Module,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"source": {

@@ -20,7 +20,7 @@ var moduleBlockSchema = &schema.BlockSchema{
 		DependentBodyAsData: true,
 		InferDependentBody:  true,
 	},
-	SemanticTokenModifier: tokmod.Module,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",

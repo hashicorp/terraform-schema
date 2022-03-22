@@ -19,19 +19,19 @@ var resourceBlockSchema = &schema.BlockSchema{
 		DependentBodyAsData: true,
 		InferDependentBody:  true,
 	},
-	SemanticTokenModifier: tokmod.Resource,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 	Labels: []*schema.LabelSchema{
 		{
-			Name:                  "type",
-			SemanticTokenModifier: tokmod.Type,
-			Description:           lang.PlainText("Resource Type"),
-			IsDepKey:              true,
-			Completable:           true,
+			Name:                   "type",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+			Description:            lang.PlainText("Resource Type"),
+			IsDepKey:               true,
+			Completable:            true,
 		},
 		{
-			Name:                  "name",
-			SemanticTokenModifier: tokmod.Name,
-			Description:           lang.PlainText("Reference Name"),
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+			Description:            lang.PlainText("Reference Name"),
 		},
 	},
 	Description: lang.PlainText("A resource block declares a resource of a given type with a given local name. The name is " +

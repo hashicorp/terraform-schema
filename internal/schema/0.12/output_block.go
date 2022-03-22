@@ -18,12 +18,12 @@ var outputBlockSchema = &schema.BlockSchema{
 		ScopeId:      refscope.OutputScope,
 		AsReference:  true,
 	},
-	SemanticTokenModifier: tokmod.Output,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Output},
 	Labels: []*schema.LabelSchema{
 		{
-			Name:                  "name",
-			SemanticTokenModifier: tokmod.Name,
-			Description:           lang.PlainText("Output Name"),
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+			Description:            lang.PlainText("Output Name"),
 		},
 	},
 	Description: lang.PlainText("Output value for consumption by another module or a human interacting via the UI"),

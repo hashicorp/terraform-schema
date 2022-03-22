@@ -20,19 +20,19 @@ var datasourceBlockSchema = &schema.BlockSchema{
 		DependentBodyAsData: true,
 		InferDependentBody:  true,
 	},
-	SemanticTokenModifier: tokmod.Data,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 	Labels: []*schema.LabelSchema{
 		{
-			Name:                  "type",
-			SemanticTokenModifier: tokmod.Type,
-			Description:           lang.PlainText("Data Source Type"),
-			IsDepKey:              true,
-			Completable:           true,
+			Name:                   "type",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+			Description:            lang.PlainText("Data Source Type"),
+			IsDepKey:               true,
+			Completable:            true,
 		},
 		{
-			Name:                  "name",
-			SemanticTokenModifier: tokmod.Name,
-			Description:           lang.PlainText("Reference Name"),
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+			Description:            lang.PlainText("Reference Name"),
 		},
 	},
 	Description: lang.PlainText("A data block requests that Terraform read from a given data source and export the result " +

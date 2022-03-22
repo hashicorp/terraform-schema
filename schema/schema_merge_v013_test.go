@@ -12,9 +12,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 	Blocks: map[string]*schema.BlockSchema{
 		"provider": {
 			Labels: []*schema.LabelSchema{
-				{Name: "name", SemanticTokenModifier: tokmod.Name},
+				{
+					Name:                   "name",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				},
 			},
-			SemanticTokenModifier: tokmod.Provider,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"alias": {
@@ -84,10 +87,16 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 		},
 		"resource": {
 			Labels: []*schema.LabelSchema{
-				{Name: "type", SemanticTokenModifier: tokmod.Type},
-				{Name: "name", SemanticTokenModifier: tokmod.Name},
+				{
+					Name:                   "type",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+				},
+				{
+					Name:                   "name",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				},
 			},
-			SemanticTokenModifier: tokmod.Resource,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"count": {
@@ -2221,10 +2230,16 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 		},
 		"data": {
 			Labels: []*schema.LabelSchema{
-				{Name: "type", SemanticTokenModifier: tokmod.Type},
-				{Name: "name", SemanticTokenModifier: tokmod.Name},
+				{
+					Name:                   "type",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type},
+				},
+				{
+					Name:                   "name",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				},
 			},
-			SemanticTokenModifier: tokmod.Data,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"count": {
@@ -2638,9 +2653,12 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 		},
 		"module": {
 			Labels: []*schema.LabelSchema{
-				{Name: "name", SemanticTokenModifier: tokmod.Name},
+				{
+					Name:                   "name",
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				},
 			},
-			SemanticTokenModifier: tokmod.Module,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 			Body: &schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{
 					"source": {
