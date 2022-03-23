@@ -12,8 +12,8 @@ import (
 
 func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	bs := &schema.BlockSchema{
-		SemanticTokenModifier: tokmod.Terraform,
-		Description:           lang.Markdown("Terraform block used to configure some high-level behaviors of Terraform"),
+		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Terraform},
+		Description:            lang.Markdown("Terraform block used to configure some high-level behaviors of Terraform"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"required_version": {
@@ -25,24 +25,24 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"backend": {
-					SemanticTokenModifier: tokmod.Backend,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Backend},
 					Description: lang.Markdown("Backend configuration which defines exactly where and how " +
 						"operations are performed, where state snapshots are stored, etc."),
 					Labels: []*schema.LabelSchema{
 						{
-							Name:                  "backend type",
-							SemanticTokenModifier: tokmod.Type,
-							Description:           lang.Markdown("Backend type"),
-							IsDepKey:              true,
-							Completable:           true,
+							Name:                   "backend type",
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
+							Description:            lang.Markdown("Backend type"),
+							IsDepKey:               true,
+							Completable:            true,
 						},
 					},
 					MaxItems:      1,
 					DependentBody: backends.ConfigsAsDependentBodies(v),
 				},
 				"required_providers": {
-					SemanticTokenModifier: tokmod.RequiredProviders,
-					Description:           lang.Markdown("What provider version to use within this configuration"),
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.RequiredProviders},
+					Description:            lang.Markdown("What provider version to use within this configuration"),
 					Body: &schema.BodySchema{
 						AnyAttribute: &schema.AttributeSchema{
 							Expr:        schema.LiteralTypeOnly(cty.String),

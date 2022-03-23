@@ -22,19 +22,19 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			DependentBodyAsData: true,
 			InferDependentBody:  true,
 		},
-		SemanticTokenModifier: tokmod.Resource,
+		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                  "type",
-				SemanticTokenModifier: tokmod.Type,
-				Description:           lang.PlainText("Resource Type"),
-				IsDepKey:              true,
-				Completable:           true,
+				Name:                   "type",
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
+				Description:            lang.PlainText("Resource Type"),
+				IsDepKey:               true,
+				Completable:            true,
 			},
 			{
-				Name:                  "name",
-				SemanticTokenModifier: tokmod.Name,
-				Description:           lang.PlainText("Reference Name"),
+				Name:                   "name",
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				Description:            lang.PlainText("Reference Name"),
 			},
 		},
 		Description: lang.PlainText("A resource block declares a resource of a given type with a given local name. The name is " +
@@ -46,9 +46,10 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 					Expr: schema.ExprConstraints{
 						schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
 					},
-					IsOptional:  true,
-					Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
-					IsDepKey:    true,
+					IsOptional:             true,
+					Description:            lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
+					IsDepKey:               true,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 				},
 				"count": {
 					Expr: schema.ExprConstraints{

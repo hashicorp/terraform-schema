@@ -10,9 +10,9 @@ import (
 
 func connectionBlock(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
-		Description:           lang.Markdown("Connection block describing how the provisioner connects to the given instance"),
-		MaxItems:              1,
-		SemanticTokenModifier: tokmod.Connection,
+		Description:            lang.Markdown("Connection block describing how the provisioner connects to the given instance"),
+		MaxItems:               1,
+		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Connection},
 		Body: &schema.BodySchema{
 			HoverURL: "https://www.terraform.io/docs/language/resources/provisioners/connection.html",
 			Attributes: map[string]*schema.AttributeSchema{
@@ -27,9 +27,10 @@ func connectionBlock(v *version.Version) *schema.BlockSchema {
 							Description: lang.Markdown("Use WinRM to connect and provision the instance"),
 						},
 					},
-					IsOptional:  true,
-					IsDepKey:    true,
-					Description: lang.Markdown("Connection type to use - `ssh` (default) or `winrm`"),
+					IsOptional:             true,
+					IsDepKey:               true,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
+					Description:            lang.Markdown("Connection type to use - `ssh` (default) or `winrm`"),
 				},
 				"user": {
 					Expr: schema.ExprConstraints{

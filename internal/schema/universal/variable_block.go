@@ -22,12 +22,12 @@ var variableBlockSchema = &schema.BlockSchema{
 			AttributeValue: "default",
 		},
 	},
-	SemanticTokenModifier: tokmod.Variable,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Variable},
 	Labels: []*schema.LabelSchema{
 		{
-			Name:                  "name",
-			SemanticTokenModifier: tokmod.Name,
-			Description:           lang.PlainText("Variable Name"),
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+			Description:            lang.PlainText("Variable Name"),
 		},
 	},
 	Description: lang.Markdown("Input variable allowing users to customizate aspects of the configuration when used directly " +

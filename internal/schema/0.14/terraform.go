@@ -12,8 +12,8 @@ import (
 
 func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
-		SemanticTokenModifier: tokmod.Terraform,
-		Description:           lang.Markdown("Terraform block used to configure some high-level behaviors of Terraform"),
+		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Terraform},
+		Description:            lang.Markdown("Terraform block used to configure some high-level behaviors of Terraform"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"required_version": {
@@ -44,15 +44,16 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"backend": {
-					SemanticTokenModifier: tokmod.Backend,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Backend},
 					Description: lang.Markdown("Backend configuration which defines exactly where and how " +
 						"operations are performed, where state snapshots are stored, etc."),
 					Labels: []*schema.LabelSchema{
 						{
-							Name:        "type",
-							Description: lang.Markdown("Backend Type"),
-							IsDepKey:    true,
-							Completable: true,
+							Name:                   "type",
+							Description:            lang.Markdown("Backend Type"),
+							IsDepKey:               true,
+							Completable:            true,
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 						},
 					},
 					DependentBody: backends.ConfigsAsDependentBodies(v),
@@ -61,14 +62,15 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 					Description: lang.Markdown("Metadata to pass into a provider which supports this"),
 					Labels: []*schema.LabelSchema{
 						{
-							Name:        "name",
-							Description: lang.Markdown("Provider Name"),
-							IsDepKey:    true,
+							Name:                   "name",
+							Description:            lang.Markdown("Provider Name"),
+							IsDepKey:               true,
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 						},
 					},
 				},
 				"required_providers": {
-					SemanticTokenModifier: tokmod.RequiredProviders,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.RequiredProviders},
 					Description: lang.Markdown("What provider version to use within this configuration " +
 						"and where to source it from"),
 					Body: &schema.BodySchema{

@@ -18,7 +18,7 @@ var outputBlockSchema = &schema.BlockSchema{
 		ScopeId:      refscope.OutputScope,
 		AsReference:  true,
 	},
-	SemanticTokenModifier: tokmod.Output,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Output},
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",

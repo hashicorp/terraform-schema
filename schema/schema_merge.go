@@ -142,6 +142,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 					// Add backend-related core bits of schema
 					if isRemoteStateDataSource(pAddr, dsName) {
 						dsSchema.Attributes["backend"].IsDepKey = true
+						dsSchema.Attributes["backend"].SemanticTokenModifiers = lang.SemanticTokenModifiers{lang.TokenModifierDependent}
 						dsSchema.Attributes["backend"].Expr = backends.BackendTypesAsExprConstraints(m.terraformVersion)
 
 						delete(dsSchema.Attributes, "config")

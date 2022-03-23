@@ -21,10 +21,16 @@ var depKeysModule = schema.DependencyKeys{
 
 var data = schema.BlockSchema{
 	Labels: []*schema.LabelSchema{
-		{Name: "type", SemanticTokenModifier: tokmod.Type},
-		{Name: "name", SemanticTokenModifier: tokmod.Name},
+		{
+			Name:                   "type",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
+		},
+		{
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+		},
 	},
-	SemanticTokenModifier: tokmod.Data,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"count": {
@@ -430,9 +436,12 @@ var data = schema.BlockSchema{
 
 var provider = schema.BlockSchema{
 	Labels: []*schema.LabelSchema{
-		{Name: "name", SemanticTokenModifier: tokmod.Name},
+		{
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name, lang.TokenModifierDependent},
+		},
 	},
-	SemanticTokenModifier: tokmod.Provider,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
@@ -454,10 +463,16 @@ var provider = schema.BlockSchema{
 
 var resource = schema.BlockSchema{
 	Labels: []*schema.LabelSchema{
-		{Name: "type", SemanticTokenModifier: tokmod.Type},
-		{Name: "name", SemanticTokenModifier: tokmod.Name},
+		{
+			Name:                   "type",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
+		},
+		{
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+		},
 	},
-	SemanticTokenModifier: tokmod.Resource,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"count": {
@@ -474,15 +489,19 @@ var resource = schema.BlockSchema{
 
 var moduleWithoutDependency = schema.BlockSchema{
 	Labels: []*schema.LabelSchema{
-		{Name: "name", SemanticTokenModifier: tokmod.Name},
+		{
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+		},
 	},
-	SemanticTokenModifier: tokmod.Module,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"source": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
-				IsRequired: true,
-				IsDepKey:   true,
+				Expr:                   schema.LiteralTypeOnly(cty.String),
+				IsRequired:             true,
+				IsDepKey:               true,
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 			"version": {
 				Expr:       schema.LiteralTypeOnly(cty.String),
@@ -495,15 +514,19 @@ var moduleWithoutDependency = schema.BlockSchema{
 
 var moduleWithDependency = schema.BlockSchema{
 	Labels: []*schema.LabelSchema{
-		{Name: "name", SemanticTokenModifier: tokmod.Name},
+		{
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+		},
 	},
-	SemanticTokenModifier: tokmod.Module,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"source": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
-				IsRequired: true,
-				IsDepKey:   true,
+				Expr:                   schema.LiteralTypeOnly(cty.String),
+				IsRequired:             true,
+				IsDepKey:               true,
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 			"version": {
 				Expr:       schema.LiteralTypeOnly(cty.String),
@@ -572,15 +595,19 @@ var expectedMergedSchemaWithModule_v015 = &schema.BodySchema{
 
 var expectedRemoteModuleSchema = &schema.BlockSchema{
 	Labels: []*schema.LabelSchema{
-		{Name: "name", SemanticTokenModifier: tokmod.Name},
+		{
+			Name:                   "name",
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+		},
 	},
-	SemanticTokenModifier: tokmod.Module,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"source": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
-				IsRequired: true,
-				IsDepKey:   true,
+				Expr:                   schema.LiteralTypeOnly(cty.String),
+				IsRequired:             true,
+				IsDepKey:               true,
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 			"version": {
 				Expr:       schema.LiteralTypeOnly(cty.String),

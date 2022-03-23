@@ -9,16 +9,16 @@ import (
 
 func provisionerBlock(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
-		SemanticTokenModifier: tokmod.Provisioner,
+		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provisioner},
 		Description: lang.Markdown("Provisioner to model specific actions on the local machine or on a remote machine " +
 			"in order to prepare servers or other infrastructure objects for service"),
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                  "type",
-				SemanticTokenModifier: tokmod.Type,
-				Description:           lang.PlainText("Type of provisioner to use, e.g. `remote-exec` or `file`"),
-				IsDepKey:              true,
-				Completable:           true,
+				Name:                   "type",
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
+				Description:            lang.PlainText("Type of provisioner to use, e.g. `remote-exec` or `file`"),
+				IsDepKey:               true,
+				Completable:            true,
 			},
 		},
 		Body: &schema.BodySchema{

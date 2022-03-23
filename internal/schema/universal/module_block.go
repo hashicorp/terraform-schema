@@ -20,7 +20,7 @@ var moduleBlockSchema = &schema.BlockSchema{
 		DependentBodyAsData: true,
 		InferDependentBody:  true,
 	},
-	SemanticTokenModifier: tokmod.Module,
+	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 	Labels: []*schema.LabelSchema{
 		{
 			Name:        "name",
@@ -36,8 +36,9 @@ var moduleBlockSchema = &schema.BlockSchema{
 					"a local directory (e.g. `./module`) or a remote address - e.g. " +
 					"`hashicorp/consul/aws` (Terraform Registry address) or " +
 					"`github.com/hashicorp/example` (GitHub)"),
-				IsRequired: true,
-				IsDepKey:   true,
+				IsRequired:             true,
+				IsDepKey:               true,
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 			"version": {
 				Expr:       schema.LiteralTypeOnly(cty.String),
