@@ -43,9 +43,10 @@ var resourceBlockSchema = &schema.BlockSchema{
 				Expr: schema.ExprConstraints{
 					schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
 				},
-				IsOptional:  true,
-				Description: lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
-				IsDepKey:    true,
+				IsOptional:             true,
+				Description:            lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
+				IsDepKey:               true,
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 		},
 	},

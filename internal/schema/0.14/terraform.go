@@ -62,9 +62,10 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 					Description: lang.Markdown("Metadata to pass into a provider which supports this"),
 					Labels: []*schema.LabelSchema{
 						{
-							Name:        "name",
-							Description: lang.Markdown("Provider Name"),
-							IsDepKey:    true,
+							Name:                   "name",
+							Description:            lang.Markdown("Provider Name"),
+							IsDepKey:               true,
+							SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 						},
 					},
 				},
