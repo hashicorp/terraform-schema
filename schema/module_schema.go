@@ -94,6 +94,10 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 	if len(modMeta.Files) > 0 {
 		filename := modMeta.Files[0]
 
+		if sliceContains(modMeta.Files, "main.tf") {
+			filename = "main.tf"
+		}
+
 		bodySchema.Targets = &schema.Target{
 			Path: lang.Path{
 				Path:       modMeta.Path,
@@ -108,4 +112,13 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 	}
 
 	return bodySchema, nil
+}
+
+func sliceContains(slice []string, value string) bool {
+	for _, val := range slice {
+		if val == value {
+			return true
+		}
+	}
+	return false
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty-debug/ctydebug"
@@ -164,5 +165,112 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 	}
 	if diff := cmp.Diff(expectedDepSchema, depSchema, ctydebug.CmpOptions); diff != "" {
 		t.Fatalf("schema mismatch: %s", diff)
+	}
+}
+
+func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
+	type testCase struct {
+		name           string
+		meta           *module.Meta
+		expectedSchema *schema.BodySchema
+	}
+
+	testCases := []testCase{
+		{
+			"no target",
+			&module.Meta{
+				Path:      "./local",
+				Variables: map[string]module.Variable{},
+				Outputs:   map[string]module.Output{},
+				Files:     nil,
+			},
+			&schema.BodySchema{
+				Attributes: map[string]*schema.AttributeSchema{},
+				TargetableAs: []*schema.Targetable{
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "refname"},
+						},
+						ScopeId:           refscope.ModuleScope,
+						AsType:            cty.Object(map[string]cty.Type{}),
+						NestedTargetables: []*schema.Targetable{},
+					},
+				},
+				Targets: nil,
+			},
+		},
+		{
+			"without main.tf",
+			&module.Meta{
+				Path:      "./local",
+				Variables: map[string]module.Variable{},
+				Outputs:   map[string]module.Output{},
+				Files:     []string{"a_file.tf", "b_file.tf"},
+			},
+			&schema.BodySchema{
+				Attributes: map[string]*schema.AttributeSchema{},
+				TargetableAs: []*schema.Targetable{
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "refname"},
+						},
+						ScopeId:           refscope.ModuleScope,
+						AsType:            cty.Object(map[string]cty.Type{}),
+						NestedTargetables: []*schema.Targetable{},
+					},
+				},
+				Targets: &schema.Target{
+					Path: lang.Path{Path: "./local", LanguageID: "terraform"},
+					Range: hcl.Range{
+						Filename: "a_file.tf",
+						Start:    hcl.InitialPos,
+						End:      hcl.InitialPos,
+					},
+				},
+			},
+		},
+		{
+			"with main.tf",
+			&module.Meta{
+				Path:      "./local",
+				Variables: map[string]module.Variable{},
+				Outputs:   map[string]module.Output{},
+				Files:     []string{"a_file.tf", "main.tf"},
+			},
+			&schema.BodySchema{
+				Attributes: map[string]*schema.AttributeSchema{},
+				TargetableAs: []*schema.Targetable{
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "refname"},
+						},
+						ScopeId:           refscope.ModuleScope,
+						AsType:            cty.Object(map[string]cty.Type{}),
+						NestedTargetables: []*schema.Targetable{},
+					},
+				},
+				Targets: &schema.Target{
+					Path: lang.Path{Path: "./local", LanguageID: "terraform"},
+					Range: hcl.Range{
+						Filename: "main.tf",
+						Start:    hcl.InitialPos,
+						End:      hcl.InitialPos,
+					},
+				},
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		depSchema, err := schemaForDependentModuleBlock("refname", tc.meta)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if diff := cmp.Diff(tc.expectedSchema, depSchema, ctydebug.CmpOptions); diff != "" {
+			t.Fatalf("schema mismatch: %s", diff)
+		}
 	}
 }
