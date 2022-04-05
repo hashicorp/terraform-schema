@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty/cty"
@@ -89,6 +90,22 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 		AsType:            cty.Object(modOutputTypes),
 		NestedTargetables: targetableOutputs,
 	})
+
+	if len(modMeta.Files) > 0 {
+		filename := modMeta.Files[0]
+
+		bodySchema.Targets = &schema.Target{
+			Path: lang.Path{
+				Path:       modMeta.Path,
+				LanguageID: "terraform",
+			},
+			Range: hcl.Range{
+				Filename: filename,
+				Start:    hcl.InitialPos,
+				End:      hcl.InitialPos,
+			},
+		}
+	}
 
 	return bodySchema, nil
 }
