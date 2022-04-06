@@ -7,8 +7,8 @@ import (
 )
 
 type Meta struct {
-	Path  string
-	Files []string
+	Path      string
+	Filenames []string
 
 	Backend              *Backend
 	ProviderReferences   map[ProviderRef]tfaddr.Provider

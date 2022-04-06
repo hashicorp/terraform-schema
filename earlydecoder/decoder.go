@@ -171,6 +171,6 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		CoreRequirements:     coreRequirements,
 		Variables:            variables,
 		Outputs:              outputs,
-		Files:                filenames,
+		Filenames:            filenames,
 	}, diags
 }

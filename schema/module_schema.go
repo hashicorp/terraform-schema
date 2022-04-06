@@ -91,10 +91,10 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 		NestedTargetables: targetableOutputs,
 	})
 
-	if len(modMeta.Files) > 0 {
-		filename := modMeta.Files[0]
+	if len(modMeta.Filenames) > 0 {
+		filename := modMeta.Filenames[0]
 
-		if sliceContains(modMeta.Files, "main.tf") {
+		if sliceContains(modMeta.Filenames, "main.tf") {
 			filename = "main.tf"
 		}
 

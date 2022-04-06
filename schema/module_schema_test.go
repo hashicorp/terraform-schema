@@ -182,7 +182,7 @@ func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
 				Path:      "./local",
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
-				Files:     nil,
+				Filenames: nil,
 			},
 			&schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{},
@@ -206,7 +206,7 @@ func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
 				Path:      "./local",
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
-				Files:     []string{"a_file.tf", "b_file.tf"},
+				Filenames: []string{"a_file.tf", "b_file.tf"},
 			},
 			&schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{},
@@ -237,7 +237,7 @@ func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
 				Path:      "./local",
 				Variables: map[string]module.Variable{},
 				Outputs:   map[string]module.Output{},
-				Files:     []string{"a_file.tf", "main.tf"},
+				Filenames: []string{"a_file.tf", "main.tf"},
 			},
 			&schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{},
