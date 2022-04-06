@@ -29,10 +29,8 @@ github.com/hashicorp/go-version v1.2.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09
 github.com/hashicorp/go-version v1.3.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
 github.com/hashicorp/go-version v1.4.0 h1:aAQzgqIrRKRa7w75CKpbBxYsmUoPjzVm1W59ca1L0J4=
 github.com/hashicorp/go-version v1.4.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
-github.com/hashicorp/hcl-lang v0.0.0-20220322093838-7d146ea70bc9 h1:KOUGusoj5MubxgHn5VqDvZfTBHZKV7h0b216xyfqeuo=
-github.com/hashicorp/hcl-lang v0.0.0-20220322093838-7d146ea70bc9/go.mod h1:oQgcOV8OizFyZfZh3FbQSsQtvtTv8hD23MLAxfn3E+E=
-github.com/hashicorp/hcl-lang v0.0.0-20220322100058-bdead81fb0c9 h1:Oj1j/Fl1pFz+4+Th5/y2iUbKfF+UguMkqlF9NMD/s+Q=
-github.com/hashicorp/hcl-lang v0.0.0-20220322100058-bdead81fb0c9/go.mod h1:oQgcOV8OizFyZfZh3FbQSsQtvtTv8hD23MLAxfn3E+E=
+github.com/hashicorp/hcl-lang v0.0.0-20220406121211-c20527a75592 h1:pSTtkCAbU+SLxw6J59ihqFDX5lJ9xR/fhqaOng1kQXY=
+github.com/hashicorp/hcl-lang v0.0.0-20220406121211-c20527a75592/go.mod h1:oQgcOV8OizFyZfZh3FbQSsQtvtTv8hD23MLAxfn3E+E=
 github.com/hashicorp/hcl/v2 v2.11.1 h1:yTyWcXcm9XB0TEkyU/JCRU6rYy4K+mgLtzn2wlrJbcc=
 github.com/hashicorp/hcl/v2 v2.11.1/go.mod h1:FwWsfWEjyV/CMj8s/gqAuiviY72rJ1/oayI9WftqcKg=
 github.com/hashicorp/terraform-json v0.13.0 h1:Li9L+lKD1FO5RVFRM1mMMIBDoUHslOniyEi5CM+FWGY=

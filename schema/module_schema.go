@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty/cty"
@@ -90,5 +91,36 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 		NestedTargetables: targetableOutputs,
 	})
 
+	if len(modMeta.Filenames) > 0 {
+		filename := modMeta.Filenames[0]
+
+		// Prioritize main.tf based on best practices as documented at
+		// https://learn.hashicorp.com/tutorials/terraform/module-create
+		if sliceContains(modMeta.Filenames, "main.tf") {
+			filename = "main.tf"
+		}
+
+		bodySchema.Targets = &schema.Target{
+			Path: lang.Path{
+				Path:       modMeta.Path,
+				LanguageID: "terraform",
+			},
+			Range: hcl.Range{
+				Filename: filename,
+				Start:    hcl.InitialPos,
+				End:      hcl.InitialPos,
+			},
+		}
+	}
+
 	return bodySchema, nil
+}
+
+func sliceContains(slice []string, value string) bool {
+	for _, val := range slice {
+		if val == value {
+			return true
+		}
+	}
+	return false
 }

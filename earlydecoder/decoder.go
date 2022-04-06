@@ -2,6 +2,7 @@ package earlydecoder
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
@@ -11,12 +12,16 @@ import (
 
 func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diagnostics) {
 	var diags hcl.Diagnostics
+	filenames := make([]string, 0)
 
 	mod := newDecodedModule()
-	for _, f := range files {
+	for filename, f := range files {
+		filenames = append(filenames, filename)
 		fDiags := loadModuleFromFile(f, mod)
 		diags = append(diags, fDiags...)
 	}
+
+	sort.Strings(filenames)
 
 	var coreRequirements version.Constraints
 	for _, rc := range mod.RequiredCore {
@@ -166,5 +171,6 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		CoreRequirements:     coreRequirements,
 		Variables:            variables,
 		Outputs:              outputs,
+		Filenames:            filenames,
 	}, diags
 }
