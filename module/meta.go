@@ -70,5 +70,6 @@ type ProviderRef struct {
 type ModuleCall struct {
 	LocalName  string
 	SourceAddr string
+	Version    string
 	Path       string
 }
