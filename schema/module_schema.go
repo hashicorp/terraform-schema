@@ -1,17 +1,19 @@
 package schema
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/hcl/v2"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty/cty"
 )
 
-func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*schema.BodySchema, error) {
+func schemaForDependentModuleBlock(module module.ModuleCall, modMeta *module.Meta) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
 	for name, modVar := range modMeta.Variables {
@@ -40,7 +42,7 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 		Attributes: attributes,
 	}
 
-	if localName == "" {
+	if module.LocalName == "" {
 		// avoid creating output refs if we don't have reference name
 		return bodySchema, nil
 	}
@@ -52,7 +54,7 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 	for name, output := range modMeta.Outputs {
 		addr := lang.Address{
 			lang.RootStep{Name: "module"},
-			lang.AttrStep{Name: localName},
+			lang.AttrStep{Name: module.LocalName},
 			lang.AttrStep{Name: name},
 		}
 
@@ -82,7 +84,7 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 
 	addr := lang.Address{
 		lang.RootStep{Name: "module"},
-		lang.AttrStep{Name: localName},
+		lang.AttrStep{Name: module.LocalName},
 	}
 	bodySchema.TargetableAs = append(bodySchema.TargetableAs, &schema.Targetable{
 		Address:           addr,
@@ -110,6 +112,22 @@ func schemaForDependentModuleBlock(localName string, modMeta *module.Meta) (*sch
 				Start:    hcl.InitialPos,
 				End:      hcl.InitialPos,
 			},
+		}
+	}
+
+	moduleSourceRegistry, err := tfaddr.ParseRawModuleSourceRegistry(module.SourceAddr)
+	if err == nil {
+		version := module.Version
+		if version == "" {
+			version = "latest"
+		}
+		bodySchema.DocsLink = &schema.DocsLink{
+			URL: fmt.Sprintf(
+				`https://%s/modules/%s/%s`,
+				moduleSourceRegistry.PackageAddr.Host.ForDisplay(),
+				moduleSourceRegistry.PackageAddr.ForRegistryProtocol(),
+				version,
+			),
 		}
 	}
 

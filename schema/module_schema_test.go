@@ -15,7 +15,10 @@ import (
 
 func TestSchemaForDependentModuleBlock_emptyMeta(t *testing.T) {
 	meta := &module.Meta{}
-	depSchema, err := schemaForDependentModuleBlock("refname", meta)
+	module := module.ModuleCall{
+		LocalName: "refname",
+	}
+	depSchema, err := schemaForDependentModuleBlock(module, meta)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -63,7 +66,10 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 			},
 		},
 	}
-	depSchema, err := schemaForDependentModuleBlock("refname", meta)
+	module := module.ModuleCall{
+		LocalName: "refname",
+	}
+	depSchema, err := schemaForDependentModuleBlock(module, meta)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -263,9 +269,123 @@ func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
 			},
 		},
 	}
+	module := module.ModuleCall{
+		LocalName: "refname",
+	}
 
 	for _, tc := range testCases {
-		depSchema, err := schemaForDependentModuleBlock("refname", tc.meta)
+		depSchema, err := schemaForDependentModuleBlock(module, tc.meta)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if diff := cmp.Diff(tc.expectedSchema, depSchema, ctydebug.CmpOptions); diff != "" {
+			t.Fatalf("schema mismatch: %s", diff)
+		}
+	}
+}
+
+func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
+	type testCase struct {
+		name           string
+		meta           *module.Meta
+		module         module.ModuleCall
+		expectedSchema *schema.BodySchema
+	}
+
+	testCases := []testCase{
+		{
+			"local module",
+			&module.Meta{
+				Path:      "./local",
+				Variables: map[string]module.Variable{},
+				Outputs:   map[string]module.Output{},
+				Filenames: nil,
+			},
+			module.ModuleCall{
+				LocalName:  "refname",
+				SourceAddr: "./local",
+			},
+			&schema.BodySchema{
+				Attributes: map[string]*schema.AttributeSchema{},
+				TargetableAs: []*schema.Targetable{
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "refname"},
+						},
+						ScopeId:           refscope.ModuleScope,
+						AsType:            cty.Object(map[string]cty.Type{}),
+						NestedTargetables: []*schema.Targetable{},
+					},
+				},
+				Targets: nil,
+			},
+		},
+		{
+			"remote module",
+			&module.Meta{
+				Path:      "registry.terraform.io/terraform-aws-modules/vpc/aws",
+				Variables: map[string]module.Variable{},
+				Outputs:   map[string]module.Output{},
+				Filenames: nil,
+			},
+			module.ModuleCall{
+				LocalName:  "vpc",
+				SourceAddr: "registry.terraform.io/terraform-aws-modules/vpc/aws",
+			},
+			&schema.BodySchema{
+				Attributes: map[string]*schema.AttributeSchema{},
+				TargetableAs: []*schema.Targetable{
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "vpc"},
+						},
+						ScopeId:           refscope.ModuleScope,
+						AsType:            cty.Object(map[string]cty.Type{}),
+						NestedTargetables: []*schema.Targetable{},
+					},
+				},
+				DocsLink: &schema.DocsLink{
+					URL: "https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest",
+				},
+			},
+		},
+		{
+			"remote module with version",
+			&module.Meta{
+				Path:      "registry.terraform.io/terraform-aws-modules/vpc/aws",
+				Variables: map[string]module.Variable{},
+				Outputs:   map[string]module.Output{},
+				Filenames: nil,
+			},
+			module.ModuleCall{
+				LocalName:  "vpc",
+				SourceAddr: "registry.terraform.io/terraform-aws-modules/vpc/aws",
+				Version:    "1.33.7",
+			},
+			&schema.BodySchema{
+				Attributes: map[string]*schema.AttributeSchema{},
+				TargetableAs: []*schema.Targetable{
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "vpc"},
+						},
+						ScopeId:           refscope.ModuleScope,
+						AsType:            cty.Object(map[string]cty.Type{}),
+						NestedTargetables: []*schema.Targetable{},
+					},
+				},
+				DocsLink: &schema.DocsLink{
+					URL: "https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/1.33.7",
+				},
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		depSchema, err := schemaForDependentModuleBlock(tc.module, tc.meta)
 		if err != nil {
 			t.Fatal(err)
 		}
