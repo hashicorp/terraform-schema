@@ -207,7 +207,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 				},
 			}
 
-			depSchema, err := schemaForDependentModuleBlock(module.LocalName, modMeta)
+			depSchema, err := schemaForDependentModuleBlock(module, modMeta)
 			if err == nil {
 				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 			}
