@@ -382,6 +382,34 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 				},
 			},
 		},
+		{
+			"remote module on unknown registry",
+			&module.Meta{
+				Path:      "example.com/terraform-aws-modules/vpc/aws",
+				Variables: map[string]module.Variable{},
+				Outputs:   map[string]module.Output{},
+				Filenames: nil,
+			},
+			module.ModuleCall{
+				LocalName:  "vpc",
+				SourceAddr: "example.com/terraform-aws-modules/vpc/aws",
+				Version:    "1.33.7",
+			},
+			&schema.BodySchema{
+				Attributes: map[string]*schema.AttributeSchema{},
+				TargetableAs: []*schema.Targetable{
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "vpc"},
+						},
+						ScopeId:           refscope.ModuleScope,
+						AsType:            cty.Object(map[string]cty.Type{}),
+						NestedTargetables: []*schema.Targetable{},
+					},
+				},
+			},
+		},
 	}
 
 	for _, tc := range testCases {

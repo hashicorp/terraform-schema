@@ -116,15 +116,14 @@ func schemaForDependentModuleBlock(module module.ModuleCall, modMeta *module.Met
 	}
 
 	moduleSourceRegistry, err := tfaddr.ParseRawModuleSourceRegistry(module.SourceAddr)
-	if err == nil {
+	if err == nil && moduleSourceRegistry.PackageAddr.Host == "registry.terraform.io" {
 		version := module.Version
 		if version == "" {
 			version = "latest"
 		}
 		bodySchema.DocsLink = &schema.DocsLink{
 			URL: fmt.Sprintf(
-				`https://%s/modules/%s/%s`,
-				moduleSourceRegistry.PackageAddr.Host.ForDisplay(),
+				`https://registry.terraform.io/modules/%s/%s`,
 				moduleSourceRegistry.PackageAddr.ForRegistryProtocol(),
 				version,
 			),
