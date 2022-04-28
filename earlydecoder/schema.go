@@ -29,6 +29,10 @@ var rootSchema = &hcl.BodySchema{
 			Type:       "output",
 			LabelNames: []string{"name"},
 		},
+		{
+			Type:       "module",
+			LabelNames: []string{"name"},
+		},
 	},
 }
 
@@ -95,6 +99,17 @@ var outputSchema = &hcl.BodySchema{
 		},
 		{
 			Name: "value",
+		},
+	},
+}
+
+var moduleSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "source",
+		},
+		{
+			Name: "version",
 		},
 	},
 }
