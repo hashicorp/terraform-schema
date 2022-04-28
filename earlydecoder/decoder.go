@@ -163,6 +163,11 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		outputs[key] = *output
 	}
 
+	modulesCalls := make(map[string]module.ModuleCall)
+	for key, moduleCall := range mod.ModuleCalls {
+		modulesCalls[key] = *moduleCall
+	}
+
 	return &module.Meta{
 		Path:                 path,
 		Backend:              backend,
@@ -172,5 +177,6 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		Variables:            variables,
 		Outputs:              outputs,
 		Filenames:            filenames,
+		ModuleCalls:          modulesCalls,
 	}, diags
 }
