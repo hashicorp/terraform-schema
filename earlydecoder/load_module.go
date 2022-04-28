@@ -23,6 +23,7 @@ type decodedModule struct {
 	DataSources          map[string]*dataSource
 	Variables            map[string]*module.Variable
 	Outputs              map[string]*module.Output
+	ModuleCalls          map[string]*module.ModuleCall
 }
 
 func newDecodedModule() *decodedModule {
@@ -35,6 +36,7 @@ func newDecodedModule() *decodedModule {
 		DataSources:          make(map[string]*dataSource),
 		Variables:            make(map[string]*module.Variable),
 		Outputs:              make(map[string]*module.Output),
+		ModuleCalls:          make(map[string]*module.ModuleCall),
 	}
 }
 
@@ -274,6 +276,31 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				Description: description,
 				IsSensitive: isSensitive,
 				Value:       value,
+			}
+		case "module":
+			content, _, contentDiags := block.Body.PartialContent(moduleSchema)
+			diags = append(diags, contentDiags...)
+			if len(block.Labels) != 1 || block.Labels[0] == "" {
+				continue
+			}
+			name := block.Labels[0]
+			source := ""
+			version := ""
+
+			var valDiags hcl.Diagnostics
+			if attr, defined := content.Attributes["source"]; defined {
+				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &source)
+				diags = append(diags, valDiags...)
+			}
+			if attr, defined := content.Attributes["version"]; defined {
+				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &version)
+				diags = append(diags, valDiags...)
+			}
+
+			mod.ModuleCalls[name] = &module.ModuleCall{
+				LocalName:  name,
+				SourceAddr: source,
+				Version:    version,
 			}
 		}
 
