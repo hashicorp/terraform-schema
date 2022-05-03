@@ -16,6 +16,7 @@ type Meta struct {
 	CoreRequirements     version.Constraints
 	Variables            map[string]Variable
 	Outputs              map[string]Output
+	ModuleCalls          map[string]ModuleCall
 }
 
 type ProviderRequirements map[tfaddr.Provider]version.Constraints
