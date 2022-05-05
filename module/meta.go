@@ -16,7 +16,7 @@ type Meta struct {
 	CoreRequirements     version.Constraints
 	Variables            map[string]Variable
 	Outputs              map[string]Output
-	ModuleCalls          map[string]ModuleCall
+	ModuleCalls          map[string]DeclaredModuleCall
 }
 
 type ProviderRequirements map[tfaddr.Provider]version.Constraints
@@ -66,11 +66,4 @@ type ProviderRef struct {
 	// If not empty, Alias identifies which non-default (aliased) provider
 	// configuration this address refers to.
 	Alias string
-}
-
-type ModuleCall struct {
-	LocalName  string
-	SourceAddr string
-	Version    string
-	Path       string
 }

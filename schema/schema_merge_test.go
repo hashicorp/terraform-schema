@@ -392,12 +392,14 @@ func testModuleReader() ModuleReader {
 type testModuleReaderStruct struct {
 }
 
-func (m *testModuleReaderStruct) ModuleCalls(modPath string) ([]module.ModuleCall, error) {
-	return []module.ModuleCall{
-		{
-			LocalName:  "example",
-			SourceAddr: "source",
-			Path:       "path",
+func (m *testModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {
+	return module.ModuleCalls{
+		Installed: map[string]module.InstalledModuleCall{
+			"example": {
+				LocalName:  "example",
+				SourceAddr: "source",
+				Path:       "path",
+			},
 		},
 	}, nil
 }
@@ -424,12 +426,14 @@ func testRegistryModuleReader() ModuleReader {
 type testRegistryModuleReaderStruct struct {
 }
 
-func (m *testRegistryModuleReaderStruct) ModuleCalls(modPath string) ([]module.ModuleCall, error) {
-	return []module.ModuleCall{
-		{
-			LocalName:  "remote-example",
-			SourceAddr: "registry.terraform.io/namespace/foobar",
-			Path:       ".terraform/modules/remote-example",
+func (m *testRegistryModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {
+	return module.ModuleCalls{
+		Installed: map[string]module.InstalledModuleCall{
+			"remote-example": {
+				LocalName:  "remote-example",
+				SourceAddr: "registry.terraform.io/namespace/foobar",
+				Path:       ".terraform/modules/remote-example",
+			},
 		},
 	}, nil
 }

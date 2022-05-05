@@ -20,7 +20,7 @@ type SchemaMerger struct {
 }
 
 type ModuleReader interface {
-	ModuleCalls(modPath string) ([]module.ModuleCall, error)
+	ModuleCalls(modPath string) (module.ModuleCalls, error)
 	ModuleMeta(modPath string) (*module.Meta, error)
 }
 
@@ -182,12 +182,13 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 
 	if m.moduleReader != nil {
 		reader := m.moduleReader
-		modules, err := reader.ModuleCalls(meta.Path)
+		mc, err := reader.ModuleCalls(meta.Path)
 		if err != nil {
 			return mergedSchema, nil
 		}
 
-		for _, module := range modules {
+		// TODO: mc.Declared
+		for _, module := range mc.Installed {
 			modMeta, err := reader.ModuleMeta(module.Path)
 			if err != nil {
 				continue

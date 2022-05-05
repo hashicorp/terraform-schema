@@ -13,7 +13,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func schemaForDependentModuleBlock(module module.ModuleCall, modMeta *module.Meta) (*schema.BodySchema, error) {
+func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *module.Meta) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
 	for name, modVar := range modMeta.Variables {
@@ -117,15 +117,18 @@ func schemaForDependentModuleBlock(module module.ModuleCall, modMeta *module.Met
 
 	moduleSourceRegistry, err := tfaddr.ParseRawModuleSourceRegistry(module.SourceAddr)
 	if err == nil && moduleSourceRegistry.PackageAddr.Host == "registry.terraform.io" {
-		version := module.Version
-		if version == "" {
-			version = "latest"
+		versionStr := ""
+		if module.Version == nil {
+			versionStr = "latest"
+		} else {
+			versionStr = module.Version.String()
 		}
+
 		bodySchema.DocsLink = &schema.DocsLink{
 			URL: fmt.Sprintf(
 				`https://registry.terraform.io/modules/%s/%s`,
 				moduleSourceRegistry.PackageAddr.ForRegistryProtocol(),
-				version,
+				versionStr,
 			),
 		}
 	}
