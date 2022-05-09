@@ -3,6 +3,7 @@ package earlydecoder
 import (
 	"fmt"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
@@ -23,7 +24,7 @@ type decodedModule struct {
 	DataSources          map[string]*dataSource
 	Variables            map[string]*module.Variable
 	Outputs              map[string]*module.Output
-	ModuleCalls          map[string]*module.ModuleCall
+	ModuleCalls          map[string]*module.DeclaredModuleCall
 }
 
 func newDecodedModule() *decodedModule {
@@ -36,7 +37,7 @@ func newDecodedModule() *decodedModule {
 		DataSources:          make(map[string]*dataSource),
 		Variables:            make(map[string]*module.Variable),
 		Outputs:              make(map[string]*module.Output),
-		ModuleCalls:          make(map[string]*module.ModuleCall),
+		ModuleCalls:          make(map[string]*module.DeclaredModuleCall),
 	}
 }
 
@@ -285,7 +286,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			}
 			name := block.Labels[0]
 			source := ""
-			version := ""
+			var versionCons version.Constraints
 
 			var valDiags hcl.Diagnostics
 			if attr, defined := content.Attributes["source"]; defined {
@@ -293,14 +294,21 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				diags = append(diags, valDiags...)
 			}
 			if attr, defined := content.Attributes["version"]; defined {
-				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &version)
+				var versionStr string
+				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &versionStr)
 				diags = append(diags, valDiags...)
+				if versionStr != "" {
+					vc, err := version.NewConstraint(versionStr)
+					if err == nil {
+						versionCons = vc
+					}
+				}
 			}
 
-			mod.ModuleCalls[name] = &module.ModuleCall{
+			mod.ModuleCalls[name] = &module.DeclaredModuleCall{
 				LocalName:  name,
 				SourceAddr: source,
-				Version:    version,
+				Version:    versionCons,
 			}
 		}
 
