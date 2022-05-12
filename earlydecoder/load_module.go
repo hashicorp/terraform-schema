@@ -307,7 +307,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			}
 
 			var sourceAddr module.ModuleSourceAddr
-			registryAddr, err := tfaddr.ParseRawModuleSourceRegistry(source)
+			registryAddr, err := tfaddr.ParseModuleSource(source)
 			if err == nil {
 				sourceAddr = registryAddr
 			}

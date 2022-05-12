@@ -69,7 +69,7 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 	}
 
 	pAddr := tfaddr.Provider{
-		Hostname:  tfaddr.DefaultRegistryHost,
+		Hostname:  tfaddr.DefaultProviderRegistryHost,
 		Namespace: "hashicorp",
 		Type:      "aws",
 	}

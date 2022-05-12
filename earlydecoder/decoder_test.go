@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/backend"
+	"github.com/hashicorp/terraform-schema/internal/addr"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
@@ -86,16 +87,16 @@ provider "grafana" {
 			&module.Meta{
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
-					{LocalName: "aws"}:     tfaddr.NewLegacyProvider("aws"),
-					{LocalName: "blah"}:    tfaddr.NewLegacyProvider("blah"),
-					{LocalName: "google"}:  tfaddr.NewLegacyProvider("google"),
-					{LocalName: "grafana"}: tfaddr.NewLegacyProvider("grafana"),
+					{LocalName: "aws"}:     addr.NewLegacyProvider("aws"),
+					{LocalName: "blah"}:    addr.NewLegacyProvider("blah"),
+					{LocalName: "google"}:  addr.NewLegacyProvider("google"),
+					{LocalName: "grafana"}: addr.NewLegacyProvider("grafana"),
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
-					tfaddr.NewLegacyProvider("aws"):     {},
-					tfaddr.NewLegacyProvider("blah"):    {},
-					tfaddr.NewLegacyProvider("google"):  {},
-					tfaddr.NewLegacyProvider("grafana"): {},
+					addr.NewLegacyProvider("aws"):     {},
+					addr.NewLegacyProvider("blah"):    {},
+					addr.NewLegacyProvider("google"):  {},
+					addr.NewLegacyProvider("grafana"): {},
 				},
 				Variables:   map[string]module.Variable{},
 				Outputs:     map[string]module.Output{},
@@ -129,14 +130,14 @@ provider "grafana" {
 			&module.Meta{
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
-					{LocalName: "aws"}:     tfaddr.NewLegacyProvider("aws"),
-					{LocalName: "google"}:  tfaddr.NewLegacyProvider("google"),
-					{LocalName: "grafana"}: tfaddr.NewLegacyProvider("grafana"),
+					{LocalName: "aws"}:     addr.NewLegacyProvider("aws"),
+					{LocalName: "google"}:  addr.NewLegacyProvider("google"),
+					{LocalName: "grafana"}: addr.NewLegacyProvider("grafana"),
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
-					tfaddr.NewLegacyProvider("aws"):     version.MustConstraints(version.NewConstraint("1.2.0")),
-					tfaddr.NewLegacyProvider("google"):  version.MustConstraints(version.NewConstraint(">= 3.0.0")),
-					tfaddr.NewLegacyProvider("grafana"): {},
+					addr.NewLegacyProvider("aws"):     version.MustConstraints(version.NewConstraint("1.2.0")),
+					addr.NewLegacyProvider("google"):  version.MustConstraints(version.NewConstraint(">= 3.0.0")),
+					addr.NewLegacyProvider("grafana"): {},
 				},
 				Variables:   map[string]module.Variable{},
 				Outputs:     map[string]module.Output{},
@@ -174,14 +175,14 @@ provider "grafana" {
 			&module.Meta{
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
-					{LocalName: "aws"}:     tfaddr.NewLegacyProvider("aws"),
-					{LocalName: "google"}:  tfaddr.NewLegacyProvider("google"),
-					{LocalName: "grafana"}: tfaddr.NewLegacyProvider("grafana"),
+					{LocalName: "aws"}:     addr.NewLegacyProvider("aws"),
+					{LocalName: "google"}:  addr.NewLegacyProvider("google"),
+					{LocalName: "grafana"}: addr.NewLegacyProvider("grafana"),
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
-					tfaddr.NewLegacyProvider("aws"):     version.MustConstraints(version.NewConstraint("1.2.0")),
-					tfaddr.NewLegacyProvider("google"):  version.MustConstraints(version.NewConstraint(">= 3.0.0")),
-					tfaddr.NewLegacyProvider("grafana"): {},
+					addr.NewLegacyProvider("aws"):     version.MustConstraints(version.NewConstraint("1.2.0")),
+					addr.NewLegacyProvider("google"):  version.MustConstraints(version.NewConstraint(">= 3.0.0")),
+					addr.NewLegacyProvider("grafana"): {},
 				},
 				Variables:   map[string]module.Variable{},
 				Outputs:     map[string]module.Output{},
@@ -226,34 +227,34 @@ provider "grafana" {
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
 					{LocalName: "aws"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					},
 					{LocalName: "google"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					},
 					{LocalName: "grafana"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "grafana",
 						Type:      "grafana",
 					},
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					}: version.MustConstraints(version.NewConstraint("1.0.0")),
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					}: version.MustConstraints(version.NewConstraint("2.0.0")),
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "grafana",
 						Type:      "grafana",
 					}: version.MustConstraints(version.NewConstraint("2.1.0")),
@@ -301,24 +302,24 @@ resource "google_storage_bucket" "bucket" {
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
 					{LocalName: "aws"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					},
 					{LocalName: "google"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					},
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					}: version.MustConstraints(version.NewConstraint(">= 1.0.0,1.1.0")),
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					}: version.MustConstraints(version.NewConstraint("2.0.0")),
@@ -367,24 +368,24 @@ resource "google_storage_bucket" "bucket" {
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
 					{LocalName: "aws"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					},
 					{LocalName: "google"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					},
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					}: version.MustConstraints(version.NewConstraint(">= 1.0.0,1.1.0")),
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					}: version.MustConstraints(version.NewConstraint("2.0.0")),
@@ -420,29 +421,29 @@ provider "aws" {
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
 					{LocalName: "aws"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					},
 					{LocalName: "aws", Alias: "euwest"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					},
 					{LocalName: "google"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					},
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					}: version.MustConstraints(version.NewConstraint("1.0.0")),
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					}: version.MustConstraints(version.NewConstraint("2.0.0")),
@@ -479,34 +480,34 @@ provider "aws" {
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
 					{LocalName: "aws"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					},
 					{LocalName: "aws", Alias: "east"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					},
 					{LocalName: "aws", Alias: "west"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					},
 					{LocalName: "google"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					},
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "aws",
 					}: version.MustConstraints(version.NewConstraint("1.0.0")),
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google",
 					}: version.MustConstraints(version.NewConstraint("2.0.0")),
@@ -538,14 +539,14 @@ resource "google_something" "test" {
 				Path: path,
 				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
 					{LocalName: "goo"}: {
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google-beta",
 					},
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
 					{
-						Hostname:  tfaddr.DefaultRegistryHost,
+						Hostname:  tfaddr.DefaultProviderRegistryHost,
 						Namespace: "hashicorp",
 						Type:      "google-beta",
 					}: version.MustConstraints(version.NewConstraint("2.0.0")),
@@ -1108,7 +1109,7 @@ module "name" {
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
 						LocalName:  "name",
-						SourceAddr: MustParseRawModuleSourceRegistry("registry.terraform.io/terraform-aws-modules/vpc/aws"),
+						SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
 					},
 				},
 			},
@@ -1153,7 +1154,7 @@ module "name" {
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
 						LocalName:  "name",
-						SourceAddr: MustParseRawModuleSourceRegistry("terraform-aws-modules/vpc/aws"),
+						SourceAddr: tfaddr.MustParseModuleSource("terraform-aws-modules/vpc/aws"),
 						Version:    version.MustConstraints(version.NewConstraint("1.0.0")),
 					},
 				},
@@ -1191,12 +1192,4 @@ func runTestCases(testCases []testCase, t *testing.T, path string) {
 
 func compareVersionConstraint(x, y *version.Constraint) bool {
 	return x.Equals(y)
-}
-
-func MustParseRawModuleSourceRegistry(source string) tfaddr.ModuleSourceRegistry {
-	m, err := tfaddr.ParseRawModuleSourceRegistry(source)
-	if err != nil {
-		panic(err)
-	}
-	return m
 }
