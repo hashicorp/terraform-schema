@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/backend"
 	"github.com/hashicorp/terraform-schema/internal/typeexpr"
 	"github.com/hashicorp/terraform-schema/module"
@@ -305,9 +306,11 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				}
 			}
 
+			moduleSource, _ := tfaddr.ParseRawModuleSourceRegistry(source)
+
 			mod.ModuleCalls[name] = &module.DeclaredModuleCall{
 				LocalName:  name,
-				SourceAddr: source,
+				SourceAddr: moduleSource,
 				Version:    versionCons,
 			}
 		}

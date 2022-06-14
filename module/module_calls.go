@@ -1,6 +1,9 @@
 package module
 
-import "github.com/hashicorp/go-version"
+import (
+	"github.com/hashicorp/go-version"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
+)
 
 type ModuleCalls struct {
 	Installed map[string]InstalledModuleCall
@@ -16,6 +19,6 @@ type InstalledModuleCall struct {
 
 type DeclaredModuleCall struct {
 	LocalName  string
-	SourceAddr string
+	SourceAddr tfaddr.ModuleSourceRegistry
 	Version    version.Constraints
 }

@@ -392,6 +392,10 @@ func testModuleReader() ModuleReader {
 type testModuleReaderStruct struct {
 }
 
+func (m *testModuleReaderStruct) DeclaredModuleMeta(modPath module.DeclaredModuleCall) (*module.RegistryModuleMetadataSchema, error) {
+	return nil, nil
+}
+
 func (m *testModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {
 	return module.ModuleCalls{
 		Installed: map[string]module.InstalledModuleCall{
@@ -424,6 +428,10 @@ func testRegistryModuleReader() ModuleReader {
 }
 
 type testRegistryModuleReaderStruct struct {
+}
+
+func (m *testRegistryModuleReaderStruct) DeclaredModuleMeta(modPath module.DeclaredModuleCall) (*module.RegistryModuleMetadataSchema, error) {
+	return nil, nil
 }
 
 func (m *testRegistryModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {

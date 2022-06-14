@@ -22,6 +22,7 @@ type SchemaMerger struct {
 type ModuleReader interface {
 	ModuleCalls(modPath string) (module.ModuleCalls, error)
 	ModuleMeta(modPath string) (*module.Meta, error)
+	DeclaredModuleMeta(modPath module.DeclaredModuleCall) (*module.RegistryModuleMetadataSchema, error)
 }
 
 type SchemaReader interface {
@@ -188,6 +189,54 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		}
 
 		// TODO: mc.Declared
+		for _, module := range mc.Declared {
+			modMeta, err := reader.DeclaredModuleMeta(module)
+			if err != nil {
+				continue
+			}
+
+			depKeys := schema.DependencyKeys{
+				// Fetching based only on the source can cause conflicts for multiple versions of the same module
+				// specially if they have different versions or the source of those modules have been modified
+				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+				Attributes: []schema.AttributeDependent{
+					{
+						Name: "source",
+						Expr: schema.ExpressionValue{
+							Static: cty.StringVal(module.SourceAddr.String()),
+						},
+					},
+				},
+			}
+
+			depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
+			if err == nil {
+				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+			}
+
+			// There's likely more edge cases with how source address can be represented in config
+			// vs in module manifest, but for now we at least account for the common case of TF Registry
+			if err == nil && strings.HasPrefix(module.SourceAddr.String(), "registry.terraform.io/") {
+				shortName := strings.TrimPrefix(module.SourceAddr.String(), "registry.terraform.io/")
+
+				depKeys := schema.DependencyKeys{
+					// Fetching based only on the source can cause conflicts for multiple versions of the same module
+					// specially if they have different versions or the source of those modules have been modified
+					// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "source",
+							Expr: schema.ExpressionValue{
+								Static: cty.StringVal(shortName),
+							},
+						},
+					},
+				}
+
+				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+			}
+		}
+
 		for _, module := range mc.Installed {
 			modMeta, err := reader.ModuleMeta(module.Path)
 			if err != nil {

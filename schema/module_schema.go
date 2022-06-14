@@ -13,6 +13,42 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
+func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, modMeta *module.RegistryModuleMetadataSchema) (*schema.BodySchema, error) {
+	attributes := make(map[string]*schema.AttributeSchema, 0)
+	bodySchema := &schema.BodySchema{
+		Attributes: attributes,
+	}
+
+	if module.LocalName == "" {
+		// avoid creating output refs if we don't have reference name
+		return bodySchema, nil
+	}
+
+	targetableOutputs := make(schema.Targetables, 0)
+
+	for _, output := range modMeta.Outputs {
+		addr := lang.Address{
+			lang.RootStep{Name: "module"},
+			lang.AttrStep{Name: module.LocalName},
+			lang.AttrStep{Name: output.Name},
+		}
+
+
+		targetable := &schema.Targetable{
+			Address:           addr,
+			ScopeId:           refscope.ModuleScope,
+			NestedTargetables: schema.NestedTargetablesForValue(addr, refscope.ModuleScope, output.Value),
+		}
+		if output.Description != "" {
+			targetable.Description = lang.PlainText(output.Description)
+		}
+
+		targetableOutputs = append(targetableOutputs, targetable)
+	}
+
+	return nil, nil
+}
+
 func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *module.Meta) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
