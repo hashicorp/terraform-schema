@@ -15,6 +15,9 @@ import (
 
 func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, modMeta *module.RegistryModuleMetadataSchema) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
+
+	// TODO: attributes
+
 	bodySchema := &schema.BodySchema{
 		Attributes: attributes,
 	}
@@ -33,11 +36,11 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 			lang.AttrStep{Name: output.Name},
 		}
 
-
 		targetable := &schema.Targetable{
-			Address:           addr,
-			ScopeId:           refscope.ModuleScope,
-			NestedTargetables: schema.NestedTargetablesForValue(addr, refscope.ModuleScope, output.Value),
+			Address: addr,
+			ScopeId: refscope.ModuleScope,
+			// The Registry API doesn't tell us anything more about output type structure
+			// so we cannot target nested fields within objects, maps or lists
 		}
 		if output.Description != "" {
 			targetable.Description = lang.PlainText(output.Description)
@@ -46,7 +49,9 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 		targetableOutputs = append(targetableOutputs, targetable)
 	}
 
-	return nil, nil
+	// TODO: docs link
+
+	return bodySchema, nil
 }
 
 func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *module.Meta) (*schema.BodySchema, error) {

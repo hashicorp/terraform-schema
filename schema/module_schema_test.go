@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/hcl/v2"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty-debug/ctydebug"
@@ -422,4 +423,106 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 			t.Fatalf("schema mismatch: %s", diff)
 		}
 	}
+}
+
+func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
+	meta := &module.RegistryModuleMetadataSchema{
+		Version: version.Must(version.NewVersion("1.0.0")),
+		Inputs: []module.RegistryInput{
+			{
+				Name:        "example_var",
+				Type:        "string",
+				Description: "Test var",
+			},
+			{
+				Name: "another_var",
+			},
+		},
+		Outputs: []module.RegistryOutput{
+			{
+				Name:        "first",
+				Description: "first output",
+			},
+			{
+				Name:        "second",
+				Description: "second output",
+			},
+		},
+	}
+	module := module.DeclaredModuleCall{
+		LocalName:  "refname",
+		SourceAddr: MustParseModuleSource("terraform-aws-modules/eks/aws"),
+	}
+	depSchema, err := schemaForDeclaredDependentModuleBlock(module, meta)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expectedDepSchema := &schema.BodySchema{
+		Attributes: map[string]*schema.AttributeSchema{
+			"example_var": {
+				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfType: cty.String},
+					schema.LiteralTypeExpr{Type: cty.String},
+				},
+				Description: lang.PlainText("Test var"),
+				IsRequired:  true,
+			},
+			"another_var": {
+				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfType: cty.String},
+					schema.LiteralTypeExpr{Type: cty.String},
+				},
+				IsOptional: true,
+			},
+		},
+		TargetableAs: []*schema.Targetable{
+			{
+				Address: lang.Address{
+					lang.RootStep{Name: "module"},
+					lang.AttrStep{Name: "refname"},
+				},
+				ScopeId: refscope.ModuleScope,
+				AsType: cty.Object(map[string]cty.Type{
+					"first":  cty.DynamicPseudoType,
+					"second": cty.DynamicPseudoType,
+				}),
+				NestedTargetables: []*schema.Targetable{
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "refname"},
+							lang.AttrStep{Name: "first"},
+						},
+						ScopeId:     refscope.ModuleScope,
+						AsType:      cty.DynamicPseudoType,
+						Description: lang.PlainText("first output"),
+					},
+					{
+						Address: lang.Address{
+							lang.RootStep{Name: "module"},
+							lang.AttrStep{Name: "refname"},
+							lang.AttrStep{Name: "second"},
+						},
+						ScopeId:     refscope.ModuleScope,
+						AsType:      cty.DynamicPseudoType,
+						Description: lang.PlainText("second output"),
+					},
+				},
+			},
+		},
+		DocsLink: &schema.DocsLink{
+			URL: "https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/1.0.0",
+		},
+	}
+	if diff := cmp.Diff(expectedDepSchema, depSchema, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("schema mismatch: %s", diff)
+	}
+}
+
+func MustParseModuleSource(raw string) tfaddr.ModuleSourceRegistry {
+	addr, err := tfaddr.ParseRawModuleSourceRegistry(raw)
+	if err != nil {
+		panic(err)
+	}
+	return addr
 }

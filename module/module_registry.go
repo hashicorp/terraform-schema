@@ -2,11 +2,9 @@ package module
 
 import (
 	"github.com/hashicorp/go-version"
-	tfaddr "github.com/hashicorp/terraform-registry-address"
 )
 
 type RegistryModuleMetadataSchema struct {
-	Source  tfaddr.ModuleSourceRegistry
 	Version *version.Version
 	Inputs  []RegistryInput
 	Outputs []RegistryOutput
