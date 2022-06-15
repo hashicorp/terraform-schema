@@ -433,9 +433,11 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 				Name:        "example_var",
 				Type:        cty.String,
 				Description: "Test var",
+				Required:    true,
 			},
 			{
 				Name: "another_var",
+				Type: cty.DynamicPseudoType,
 			},
 		},
 		Outputs: []module.RegistryOutput{
@@ -469,8 +471,8 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 			},
 			"another_var": {
 				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.String},
-					schema.LiteralTypeExpr{Type: cty.String},
+					schema.TraversalExpr{OfType: cty.DynamicPseudoType},
+					schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
 				},
 				IsOptional: true,
 			},

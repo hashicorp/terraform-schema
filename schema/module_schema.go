@@ -16,7 +16,21 @@ import (
 func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, modMeta *module.RegistryModuleMetadataSchema) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
-	// TODO: attributes
+	for _, input := range modMeta.Inputs {
+		aSchema := &schema.AttributeSchema{}
+		if input.Description != "" {
+			aSchema.Description = lang.PlainText(input.Description)
+		}
+		if input.Required {
+			aSchema.IsRequired = true
+		} else {
+			aSchema.IsOptional = true
+		}
+
+		aSchema.Expr = convertAttributeTypeToExprConstraints(input.Type)
+
+		attributes[input.Name] = aSchema
+	}
 
 	bodySchema := &schema.BodySchema{
 		Attributes: attributes,
@@ -27,6 +41,7 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 		return bodySchema, nil
 	}
 
+	modOutputTypes := make(map[string]cty.Type, 0)
 	targetableOutputs := make(schema.Targetables, 0)
 
 	for _, output := range modMeta.Outputs {
@@ -38,6 +53,7 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 
 		targetable := &schema.Targetable{
 			Address: addr,
+			AsType:  cty.DynamicPseudoType,
 			ScopeId: refscope.ModuleScope,
 			// The Registry API doesn't tell us anything more about output type structure
 			// so we cannot target nested fields within objects, maps or lists
@@ -46,10 +62,39 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 			targetable.Description = lang.PlainText(output.Description)
 		}
 
+		modOutputTypes[output.Name] = cty.DynamicPseudoType
 		targetableOutputs = append(targetableOutputs, targetable)
 	}
 
-	// TODO: docs link
+	sort.Sort(targetableOutputs)
+
+	addr := lang.Address{
+		lang.RootStep{Name: "module"},
+		lang.AttrStep{Name: module.LocalName},
+	}
+	bodySchema.TargetableAs = append(bodySchema.TargetableAs, &schema.Targetable{
+		Address:           addr,
+		ScopeId:           refscope.ModuleScope,
+		AsType:            cty.Object(modOutputTypes),
+		NestedTargetables: targetableOutputs,
+	})
+
+	if module.SourceAddr.PackageAddr.Host == "registry.terraform.io" {
+		versionStr := ""
+		if modMeta.Version == nil {
+			versionStr = "latest"
+		} else {
+			versionStr = modMeta.Version.String()
+		}
+
+		bodySchema.DocsLink = &schema.DocsLink{
+			URL: fmt.Sprintf(
+				`https://registry.terraform.io/modules/%s/%s`,
+				module.SourceAddr.PackageAddr.ForRegistryProtocol(),
+				versionStr,
+			),
+		}
+	}
 
 	return bodySchema, nil
 }
