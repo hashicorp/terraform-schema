@@ -431,7 +431,7 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 		Inputs: []module.RegistryInput{
 			{
 				Name:        "example_var",
-				Type:        "string",
+				Type:        cty.String,
 				Description: "Test var",
 			},
 			{

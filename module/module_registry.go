@@ -2,6 +2,7 @@ package module
 
 import (
 	"github.com/hashicorp/go-version"
+	"github.com/zclconf/go-cty/cty"
 )
 
 type RegistryModuleMetadataSchema struct {
@@ -11,11 +12,11 @@ type RegistryModuleMetadataSchema struct {
 }
 
 type RegistryInput struct {
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Description string `json:"description"`
-	Default     string `json:"default"`
-	Required    bool   `json:"required"`
+	Name        string    `json:"name"`
+	Type        cty.Type  `json:"type"`
+	Description string    `json:"description"`
+	Default     cty.Value `json:"default"`
+	Required    bool      `json:"required"`
 }
 
 type RegistryOutput struct {
