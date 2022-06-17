@@ -1108,7 +1108,7 @@ module "name" {
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
 						LocalName:  "name",
-						SourceAddr: "registry.terraform.io/terraform-aws-modules/vpc/aws",
+						SourceAddr: MustParseRawModuleSourceRegistry("registry.terraform.io/terraform-aws-modules/vpc/aws"),
 					},
 				},
 			},
@@ -1153,7 +1153,7 @@ module "name" {
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
 						LocalName:  "name",
-						SourceAddr: "terraform-aws-modules/vpc/aws",
+						SourceAddr: MustParseRawModuleSourceRegistry("terraform-aws-modules/vpc/aws"),
 						Version:    version.MustConstraints(version.NewConstraint("1.0.0")),
 					},
 				},
@@ -1191,4 +1191,12 @@ func runTestCases(testCases []testCase, t *testing.T, path string) {
 
 func compareVersionConstraint(x, y *version.Constraint) bool {
 	return x.Equals(y)
+}
+
+func MustParseRawModuleSourceRegistry(source string) tfaddr.ModuleSourceRegistry {
+	m, err := tfaddr.ParseRawModuleSourceRegistry(source)
+	if err != nil {
+		panic(err)
+	}
+	return m
 }

@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-schema/earlydecoder"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/hashicorp/terraform-schema/registry"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -392,6 +393,10 @@ func testModuleReader() ModuleReader {
 type testModuleReaderStruct struct {
 }
 
+func (m *testModuleReaderStruct) RegistryModuleMeta(addr tfaddr.ModuleSourceRegistry, cons version.Constraints) (*registry.ModuleData, error) {
+	return nil, nil
+}
+
 func (m *testModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {
 	return module.ModuleCalls{
 		Installed: map[string]module.InstalledModuleCall{
@@ -404,7 +409,7 @@ func (m *testModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls
 	}, nil
 }
 
-func (m *testModuleReaderStruct) ModuleMeta(modPath string) (*module.Meta, error) {
+func (m *testModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, error) {
 	if modPath == "path" {
 		return &module.Meta{
 			Path: "path",
@@ -426,6 +431,10 @@ func testRegistryModuleReader() ModuleReader {
 type testRegistryModuleReaderStruct struct {
 }
 
+func (m *testRegistryModuleReaderStruct) RegistryModuleMeta(addr tfaddr.ModuleSourceRegistry, cons version.Constraints) (*registry.ModuleData, error) {
+	return nil, nil
+}
+
 func (m *testRegistryModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {
 	return module.ModuleCalls{
 		Installed: map[string]module.InstalledModuleCall{
@@ -438,7 +447,7 @@ func (m *testRegistryModuleReaderStruct) ModuleCalls(modPath string) (module.Mod
 	}, nil
 }
 
-func (m *testRegistryModuleReaderStruct) ModuleMeta(modPath string) (*module.Meta, error) {
+func (m *testRegistryModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, error) {
 	if modPath == ".terraform/modules/remote-example" {
 		return &module.Meta{
 			Path: ".terraform/modules/remote-example",

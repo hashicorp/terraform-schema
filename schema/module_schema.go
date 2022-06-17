@@ -10,8 +10,99 @@ import (
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/hashicorp/terraform-schema/registry"
 	"github.com/zclconf/go-cty/cty"
 )
+
+func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, modMeta *registry.ModuleData) (*schema.BodySchema, error) {
+	attributes := make(map[string]*schema.AttributeSchema, 0)
+
+	for _, input := range modMeta.Inputs {
+		aSchema := &schema.AttributeSchema{
+			Description: input.Description,
+		}
+		if input.Required {
+			aSchema.IsRequired = true
+		} else {
+			aSchema.IsOptional = true
+		}
+
+		typ := input.Type
+		defaultType := input.Default.Type()
+		if typ == cty.DynamicPseudoType && (defaultType != cty.DynamicPseudoType && defaultType != cty.NilType) {
+			typ = defaultType
+		}
+
+		aSchema.Expr = convertAttributeTypeToExprConstraints(typ)
+
+		attributes[input.Name] = aSchema
+	}
+
+	bodySchema := &schema.BodySchema{
+		Attributes: attributes,
+	}
+
+	if module.LocalName == "" {
+		// avoid creating output refs if we don't have reference name
+		return bodySchema, nil
+	}
+
+	modOutputTypes := make(map[string]cty.Type, 0)
+	targetableOutputs := make(schema.Targetables, 0)
+
+	for _, output := range modMeta.Outputs {
+		addr := lang.Address{
+			lang.RootStep{Name: "module"},
+			lang.AttrStep{Name: module.LocalName},
+			lang.AttrStep{Name: output.Name},
+		}
+
+		targetable := &schema.Targetable{
+			Address:     addr,
+			AsType:      cty.DynamicPseudoType,
+			ScopeId:     refscope.ModuleScope,
+			Description: output.Description,
+			// The Registry API doesn't tell us anything more about output type structure
+			// so we cannot target nested fields within objects, maps or lists
+		}
+
+		modOutputTypes[output.Name] = cty.DynamicPseudoType
+		targetableOutputs = append(targetableOutputs, targetable)
+	}
+
+	sort.Sort(targetableOutputs)
+
+	addr := lang.Address{
+		lang.RootStep{Name: "module"},
+		lang.AttrStep{Name: module.LocalName},
+	}
+	bodySchema.TargetableAs = append(bodySchema.TargetableAs, &schema.Targetable{
+		Address:           addr,
+		ScopeId:           refscope.ModuleScope,
+		AsType:            cty.Object(modOutputTypes),
+		NestedTargetables: targetableOutputs,
+	})
+
+	sourceAddr, ok := module.SourceAddr.(tfaddr.ModuleSourceRegistry)
+	if ok && sourceAddr.PackageAddr.Host == "registry.terraform.io" {
+		versionStr := ""
+		if modMeta.Version == nil {
+			versionStr = "latest"
+		} else {
+			versionStr = modMeta.Version.String()
+		}
+
+		bodySchema.DocsLink = &schema.DocsLink{
+			URL: fmt.Sprintf(
+				`https://registry.terraform.io/modules/%s/%s`,
+				sourceAddr.PackageAddr.ForRegistryProtocol(),
+				versionStr,
+			),
+		}
+	}
+
+	return bodySchema, nil
+}
 
 func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *module.Meta) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)

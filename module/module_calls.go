@@ -1,6 +1,8 @@
 package module
 
-import "github.com/hashicorp/go-version"
+import (
+	"github.com/hashicorp/go-version"
+)
 
 type ModuleCalls struct {
 	Installed map[string]InstalledModuleCall
@@ -16,6 +18,13 @@ type InstalledModuleCall struct {
 
 type DeclaredModuleCall struct {
 	LocalName  string
-	SourceAddr string
+	SourceAddr ModuleSourceAddr
 	Version    version.Constraints
 }
+
+type ModuleSourceAddr interface {
+	ForDisplay() string
+	String() string
+}
+
+// TODO: type LocalSourceAddr
