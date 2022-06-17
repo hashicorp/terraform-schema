@@ -18,9 +18,8 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
 	for _, input := range modMeta.Inputs {
-		aSchema := &schema.AttributeSchema{}
-		if input.Description != "" {
-			aSchema.Description = lang.PlainText(input.Description)
+		aSchema := &schema.AttributeSchema{
+			Description: input.Description,
 		}
 		if input.Required {
 			aSchema.IsRequired = true
@@ -59,14 +58,12 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 		}
 
 		targetable := &schema.Targetable{
-			Address: addr,
-			AsType:  cty.DynamicPseudoType,
-			ScopeId: refscope.ModuleScope,
+			Address:     addr,
+			AsType:      cty.DynamicPseudoType,
+			ScopeId:     refscope.ModuleScope,
+			Description: output.Description,
 			// The Registry API doesn't tell us anything more about output type structure
 			// so we cannot target nested fields within objects, maps or lists
-		}
-		if output.Description != "" {
-			targetable.Description = lang.PlainText(output.Description)
 		}
 
 		modOutputTypes[output.Name] = cty.DynamicPseudoType

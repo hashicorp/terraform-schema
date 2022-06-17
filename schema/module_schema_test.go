@@ -433,7 +433,7 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 			{
 				Name:        "example_var",
 				Type:        cty.String,
-				Description: "Test var",
+				Description: lang.PlainText("Test var"),
 				Required:    true,
 			},
 			{
@@ -449,11 +449,11 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 		Outputs: []registry.Output{
 			{
 				Name:        "first",
-				Description: "first output",
+				Description: lang.PlainText("first output"),
 			},
 			{
 				Name:        "second",
-				Description: "second output",
+				Description: lang.PlainText("second output"),
 			},
 		},
 	}

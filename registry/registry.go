@@ -2,6 +2,7 @@ package registry
 
 import (
 	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -14,12 +15,12 @@ type ModuleData struct {
 type Input struct {
 	Name        string
 	Type        cty.Type
-	Description string
+	Description lang.MarkupContent
 	Default     cty.Value
 	Required    bool
 }
 
 type Output struct {
 	Name        string
-	Description string
+	Description lang.MarkupContent
 }
