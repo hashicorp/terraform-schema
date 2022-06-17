@@ -28,7 +28,13 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 			aSchema.IsOptional = true
 		}
 
-		aSchema.Expr = convertAttributeTypeToExprConstraints(input.Type)
+		typ := input.Type
+		defaultType := input.Default.Type()
+		if typ == cty.DynamicPseudoType && (defaultType != cty.DynamicPseudoType && defaultType != cty.NilType) {
+			typ = defaultType
+		}
+
+		aSchema.Expr = convertAttributeTypeToExprConstraints(typ)
 
 		attributes[input.Name] = aSchema
 	}

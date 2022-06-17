@@ -437,6 +437,11 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 				Required:    true,
 			},
 			{
+				Name:    "foo_var",
+				Type:    cty.DynamicPseudoType,
+				Default: cty.NumberIntVal(42),
+			},
+			{
 				Name: "another_var",
 				Type: cty.DynamicPseudoType,
 			},
@@ -469,6 +474,13 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 				},
 				Description: lang.PlainText("Test var"),
 				IsRequired:  true,
+			},
+			"foo_var": {
+				Expr: schema.ExprConstraints{
+					schema.TraversalExpr{OfType: cty.Number},
+					schema.LiteralTypeExpr{Type: cty.Number},
+				},
+				IsOptional: true,
 			},
 			"another_var": {
 				Expr: schema.ExprConstraints{
