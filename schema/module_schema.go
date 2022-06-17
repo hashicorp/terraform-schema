@@ -10,10 +10,11 @@ import (
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/hashicorp/terraform-schema/registry"
 	"github.com/zclconf/go-cty/cty"
 )
 
-func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, modMeta *module.RegistryModuleMetadataSchema) (*schema.BodySchema, error) {
+func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, modMeta *registry.ModuleData) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
 	for _, input := range modMeta.Inputs {
@@ -79,7 +80,8 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 		NestedTargetables: targetableOutputs,
 	})
 
-	if module.SourceAddr.PackageAddr.Host == "registry.terraform.io" {
+	sourceAddr, ok := module.SourceAddr.(tfaddr.ModuleSourceRegistry)
+	if ok && sourceAddr.PackageAddr.Host == "registry.terraform.io" {
 		versionStr := ""
 		if modMeta.Version == nil {
 			versionStr = "latest"
@@ -90,7 +92,7 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 		bodySchema.DocsLink = &schema.DocsLink{
 			URL: fmt.Sprintf(
 				`https://registry.terraform.io/modules/%s/%s`,
-				module.SourceAddr.PackageAddr.ForRegistryProtocol(),
+				sourceAddr.PackageAddr.ForRegistryProtocol(),
 				versionStr,
 			),
 		}

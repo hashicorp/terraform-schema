@@ -9,6 +9,7 @@ import (
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/hashicorp/terraform-schema/registry"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -21,8 +22,8 @@ type SchemaMerger struct {
 
 type ModuleReader interface {
 	ModuleCalls(modPath string) (module.ModuleCalls, error)
-	ModuleMeta(modPath string) (*module.Meta, error)
-	DeclaredModuleMeta(modPath module.DeclaredModuleCall) (*module.RegistryModuleMetadataSchema, error)
+	LocalModuleMeta(modPath string) (*module.Meta, error)
+	RegistryModuleMeta(addr tfaddr.ModuleSourceRegistry, cons version.Constraints) (*registry.ModuleData, error)
 }
 
 type SchemaReader interface {
@@ -188,9 +189,14 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 			return mergedSchema, nil
 		}
 
-		// TODO: mc.Declared
 		for _, module := range mc.Declared {
-			modMeta, err := reader.DeclaredModuleMeta(module)
+			sourceAddr, ok := module.SourceAddr.(tfaddr.ModuleSourceRegistry)
+			if !ok {
+				// TODO: local sources (See https://github.com/hashicorp/terraform-ls/issues/598)
+				continue
+			}
+
+			modMeta, err := reader.RegistryModuleMeta(sourceAddr, module.Version)
 			if err != nil {
 				continue
 			}
@@ -203,7 +209,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 					{
 						Name: "source",
 						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(module.SourceAddr.String()),
+							Static: cty.StringVal(sourceAddr.String()),
 						},
 					},
 				},
@@ -216,8 +222,8 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 
 			// There's likely more edge cases with how source address can be represented in config
 			// vs in module manifest, but for now we at least account for the common case of TF Registry
-			if err == nil && strings.HasPrefix(module.SourceAddr.String(), "registry.terraform.io/") {
-				shortName := strings.TrimPrefix(module.SourceAddr.String(), "registry.terraform.io/")
+			if err == nil && strings.HasPrefix(sourceAddr.String(), "registry.terraform.io/") {
+				shortName := strings.TrimPrefix(sourceAddr.String(), "registry.terraform.io/")
 
 				depKeys := schema.DependencyKeys{
 					// Fetching based only on the source can cause conflicts for multiple versions of the same module
@@ -238,7 +244,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		}
 
 		for _, module := range mc.Installed {
-			modMeta, err := reader.ModuleMeta(module.Path)
+			modMeta, err := reader.LocalModuleMeta(module.Path)
 			if err != nil {
 				continue
 			}

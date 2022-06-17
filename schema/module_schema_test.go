@@ -11,6 +11,7 @@ import (
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/module"
+	"github.com/hashicorp/terraform-schema/registry"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -426,9 +427,9 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 }
 
 func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
-	meta := &module.RegistryModuleMetadataSchema{
+	meta := &registry.ModuleData{
 		Version: version.Must(version.NewVersion("1.0.0")),
-		Inputs: []module.RegistryInput{
+		Inputs: []registry.Input{
 			{
 				Name:        "example_var",
 				Type:        cty.String,
@@ -440,7 +441,7 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 				Type: cty.DynamicPseudoType,
 			},
 		},
-		Outputs: []module.RegistryOutput{
+		Outputs: []registry.Output{
 			{
 				Name:        "first",
 				Description: "first output",

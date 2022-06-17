@@ -306,11 +306,16 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				}
 			}
 
-			moduleSource, _ := tfaddr.ParseRawModuleSourceRegistry(source)
+			var sourceAddr module.ModuleSourceAddr
+			registryAddr, err := tfaddr.ParseRawModuleSourceRegistry(source)
+			if err == nil {
+				sourceAddr = registryAddr
+			}
+			// TODO: module.LocalSourceAddr
 
 			mod.ModuleCalls[name] = &module.DeclaredModuleCall{
 				LocalName:  name,
-				SourceAddr: moduleSource,
+				SourceAddr: sourceAddr,
 				Version:    versionCons,
 			}
 		}

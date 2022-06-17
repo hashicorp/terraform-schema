@@ -2,7 +2,6 @@ package module
 
 import (
 	"github.com/hashicorp/go-version"
-	tfaddr "github.com/hashicorp/terraform-registry-address"
 )
 
 type ModuleCalls struct {
@@ -19,6 +18,13 @@ type InstalledModuleCall struct {
 
 type DeclaredModuleCall struct {
 	LocalName  string
-	SourceAddr tfaddr.ModuleSourceRegistry
+	SourceAddr ModuleSourceAddr
 	Version    version.Constraints
 }
+
+type ModuleSourceAddr interface {
+	ForDisplay() string
+	String() string
+}
+
+// TODO: type LocalSourceAddr
