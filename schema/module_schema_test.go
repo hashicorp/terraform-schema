@@ -459,7 +459,7 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 	}
 	module := module.DeclaredModuleCall{
 		LocalName:  "refname",
-		SourceAddr: MustParseModuleSource("terraform-aws-modules/eks/aws"),
+		SourceAddr: tfaddr.MustParseModuleSource("terraform-aws-modules/eks/aws"),
 	}
 	depSchema, err := schemaForDeclaredDependentModuleBlock(module, meta)
 	if err != nil {
@@ -532,12 +532,4 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 	if diff := cmp.Diff(expectedDepSchema, depSchema, ctydebug.CmpOptions); diff != "" {
 		t.Fatalf("schema mismatch: %s", diff)
 	}
-}
-
-func MustParseModuleSource(raw string) tfaddr.ModuleSourceRegistry {
-	addr, err := tfaddr.ParseRawModuleSourceRegistry(raw)
-	if err != nil {
-		panic(err)
-	}
-	return addr
 }

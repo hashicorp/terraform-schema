@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/internal/addr"
 	"github.com/hashicorp/terraform-schema/internal/schema/backends"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/zclconf/go-cty/cty"
@@ -14,9 +15,9 @@ import (
 const remoteStateDsName = "terraform_remote_state"
 
 func isRemoteStateDataSource(pAddr tfaddr.Provider, dsName string) bool {
-	return (pAddr.Equals(tfaddr.NewBuiltInProvider("terraform")) ||
-		pAddr.Equals(tfaddr.NewDefaultProvider("terraform")) ||
-		pAddr.Equals(tfaddr.NewLegacyProvider("terraform"))) &&
+	return (pAddr.Equals(addr.NewBuiltInProvider("terraform")) ||
+		pAddr.Equals(addr.NewDefaultProvider("terraform")) ||
+		pAddr.Equals(addr.NewLegacyProvider("terraform"))) &&
 		dsName == remoteStateDsName
 }
 

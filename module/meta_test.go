@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-version"
-	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/backend"
+	"github.com/hashicorp/terraform-schema/internal/addr"
 )
 
 func TestBackend_Equals(t *testing.T) {
@@ -109,48 +109,48 @@ func TestProviderRequirements(t *testing.T) {
 		},
 		{
 			ProviderRequirements{
-				tfaddr.NewBuiltInProvider("terraform"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewBuiltInProvider("terraform"): version.MustConstraints(version.NewConstraint("1.0")),
 			},
 			ProviderRequirements{
-				tfaddr.NewBuiltInProvider("terraform"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewBuiltInProvider("terraform"): version.MustConstraints(version.NewConstraint("1.0")),
 			},
 			true,
 		},
 		{
 			ProviderRequirements{
-				tfaddr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
 			},
 			ProviderRequirements{
-				tfaddr.NewDefaultProvider("bar"): version.MustConstraints(version.NewConstraint("1.0")),
-			},
-			false,
-		},
-		{
-			ProviderRequirements{
-				tfaddr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
-			},
-			ProviderRequirements{
-				tfaddr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.1")),
+				addr.NewDefaultProvider("bar"): version.MustConstraints(version.NewConstraint("1.0")),
 			},
 			false,
 		},
 		{
 			ProviderRequirements{
-				tfaddr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
-				tfaddr.NewDefaultProvider("bar"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
 			},
 			ProviderRequirements{
-				tfaddr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.1")),
 			},
 			false,
 		},
 		{
 			ProviderRequirements{
-				tfaddr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewDefaultProvider("bar"): version.MustConstraints(version.NewConstraint("1.0")),
 			},
 			ProviderRequirements{
-				tfaddr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
-				tfaddr.NewDefaultProvider("bar"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
+			},
+			false,
+		},
+		{
+			ProviderRequirements{
+				addr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
+			},
+			ProviderRequirements{
+				addr.NewDefaultProvider("foo"): version.MustConstraints(version.NewConstraint("1.0")),
+				addr.NewDefaultProvider("bar"): version.MustConstraints(version.NewConstraint("1.0")),
 			},
 			false,
 		},

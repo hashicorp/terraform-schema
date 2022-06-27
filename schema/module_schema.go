@@ -83,8 +83,8 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 		NestedTargetables: targetableOutputs,
 	})
 
-	sourceAddr, ok := module.SourceAddr.(tfaddr.ModuleSourceRegistry)
-	if ok && sourceAddr.PackageAddr.Host == "registry.terraform.io" {
+	sourceAddr, ok := module.SourceAddr.(tfaddr.Module)
+	if ok && sourceAddr.Package.Host == "registry.terraform.io" {
 		versionStr := ""
 		if modMeta.Version == nil {
 			versionStr = "latest"
@@ -95,7 +95,7 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 		bodySchema.DocsLink = &schema.DocsLink{
 			URL: fmt.Sprintf(
 				`https://registry.terraform.io/modules/%s/%s`,
-				sourceAddr.PackageAddr.ForRegistryProtocol(),
+				sourceAddr.Package.ForRegistryProtocol(),
 				versionStr,
 			),
 		}
@@ -206,8 +206,8 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 		}
 	}
 
-	moduleSourceRegistry, err := tfaddr.ParseRawModuleSourceRegistry(module.SourceAddr)
-	if err == nil && moduleSourceRegistry.PackageAddr.Host == "registry.terraform.io" {
+	moduleSourceRegistry, err := tfaddr.ParseModuleSource(module.SourceAddr)
+	if err == nil && moduleSourceRegistry.Package.Host == "registry.terraform.io" {
 		versionStr := ""
 		if module.Version == nil {
 			versionStr = "latest"
@@ -218,7 +218,7 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 		bodySchema.DocsLink = &schema.DocsLink{
 			URL: fmt.Sprintf(
 				`https://registry.terraform.io/modules/%s/%s`,
-				moduleSourceRegistry.PackageAddr.ForRegistryProtocol(),
+				moduleSourceRegistry.Package.ForRegistryProtocol(),
 				versionStr,
 			),
 		}

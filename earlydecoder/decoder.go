@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/internal/addr"
 	"github.com/hashicorp/terraform-schema/module"
 )
 
@@ -70,10 +71,10 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 			if name == "" {
 				continue
 			}
-			src = tfaddr.NewLegacyProvider(name)
+			src = addr.NewLegacyProvider(name)
 		} else {
 			var err error
-			src, err = tfaddr.ParseRawProviderSourceString(req.Source)
+			src, err = tfaddr.ParseProviderSource(req.Source)
 			if err != nil {
 				diags = append(diags, &hcl.Diagnostic{
 					Severity: hcl.DiagError,
@@ -130,7 +131,7 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 			LocalName: providerName,
 		}
 		if _, exists := refs[localRef]; !exists && providerName != "" {
-			src := tfaddr.NewLegacyProvider(providerName)
+			src := addr.NewLegacyProvider(providerName)
 			if _, exists := providerRequirements[src]; !exists {
 				providerRequirements[src] = version.Constraints{}
 			}
@@ -145,7 +146,7 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 			LocalName: providerName,
 		}
 		if _, exists := refs[localRef]; !exists && providerName != "" {
-			src := tfaddr.NewLegacyProvider(providerName)
+			src := addr.NewLegacyProvider(providerName)
 			if _, exists := providerRequirements[src]; !exists {
 				providerRequirements[src] = version.Constraints{}
 			}

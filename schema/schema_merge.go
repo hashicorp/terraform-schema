@@ -23,7 +23,7 @@ type SchemaMerger struct {
 type ModuleReader interface {
 	ModuleCalls(modPath string) (module.ModuleCalls, error)
 	LocalModuleMeta(modPath string) (*module.Meta, error)
-	RegistryModuleMeta(addr tfaddr.ModuleSourceRegistry, cons version.Constraints) (*registry.ModuleData, error)
+	RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error)
 }
 
 type SchemaReader interface {
@@ -190,7 +190,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		}
 
 		for _, module := range mc.Declared {
-			sourceAddr, ok := module.SourceAddr.(tfaddr.ModuleSourceRegistry)
+			sourceAddr, ok := module.SourceAddr.(tfaddr.Module)
 			if !ok {
 				// TODO: local sources (See https://github.com/hashicorp/terraform-ls/issues/598)
 				continue

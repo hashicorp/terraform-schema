@@ -7,14 +7,14 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfjson "github.com/hashicorp/terraform-json"
-	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/internal/addr"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
 )
 
 func TestProviderSchemaFromJson_empty(t *testing.T) {
 	jsonSchema := &tfjson.ProviderSchema{}
-	providerAddr := tfaddr.NewDefaultProvider("aws")
+	providerAddr := addr.NewDefaultProvider("aws")
 
 	ps := ProviderSchemaFromJson(jsonSchema, providerAddr)
 	expectedPs := &ProviderSchema{
@@ -97,7 +97,7 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	providerAddr := tfaddr.NewDefaultProvider("aws")
+	providerAddr := addr.NewDefaultProvider("aws")
 
 	ps := ProviderSchemaFromJson(jsonSchema, providerAddr)
 	expectedPs := &ProviderSchema{

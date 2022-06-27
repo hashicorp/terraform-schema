@@ -17,6 +17,7 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/earlydecoder"
+	"github.com/hashicorp/terraform-schema/internal/addr"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/hashicorp/terraform-schema/registry"
@@ -214,10 +215,10 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 	mergedSchema, err := sm.SchemaForModule(&module.Meta{
 		Path: "testdata",
 		ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
-			{LocalName: "hashicup"}: tfaddr.NewDefaultProvider("hashicup"),
+			{LocalName: "hashicup"}: addr.NewDefaultProvider("hashicup"),
 		},
 		ProviderRequirements: map[tfaddr.Provider]version.Constraints{
-			tfaddr.NewDefaultProvider("hashicup"): vc,
+			addr.NewDefaultProvider("hashicup"): vc,
 		},
 	})
 	if err != nil {
@@ -231,10 +232,10 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 	newMergedSchema, err := sm.SchemaForModule(&module.Meta{
 		Path: "testdata",
 		ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
-			{LocalName: "hcc"}: tfaddr.NewDefaultProvider("hashicup"),
+			{LocalName: "hcc"}: addr.NewDefaultProvider("hashicup"),
 		},
 		ProviderRequirements: map[tfaddr.Provider]version.Constraints{
-			tfaddr.NewDefaultProvider("hashicup"): vc,
+			addr.NewDefaultProvider("hashicup"): vc,
 		},
 	})
 	if err != nil {
@@ -365,9 +366,9 @@ func testSchemaReader(t *testing.T, jsonPath string, legacyStyle bool) SchemaRea
 			ps:          ps,
 			useTypeOnly: true,
 			migrations: map[tfaddr.Provider]tfaddr.Provider{
-				tfaddr.NewLegacyProvider("null"):      tfaddr.NewDefaultProvider("null"),
-				tfaddr.NewLegacyProvider("random"):    tfaddr.NewDefaultProvider("random"),
-				tfaddr.NewLegacyProvider("terraform"): tfaddr.NewBuiltInProvider("terraform"),
+				addr.NewLegacyProvider("null"):      addr.NewDefaultProvider("null"),
+				addr.NewLegacyProvider("random"):    addr.NewDefaultProvider("random"),
+				addr.NewLegacyProvider("terraform"): addr.NewBuiltInProvider("terraform"),
 			},
 		}
 	}
@@ -375,7 +376,7 @@ func testSchemaReader(t *testing.T, jsonPath string, legacyStyle bool) SchemaRea
 		ps: ps,
 		migrations: map[tfaddr.Provider]tfaddr.Provider{
 			// the builtin provider doesn't have entry in required_providers
-			tfaddr.NewLegacyProvider("terraform"): tfaddr.NewBuiltInProvider("terraform"),
+			addr.NewLegacyProvider("terraform"): addr.NewBuiltInProvider("terraform"),
 		},
 	}
 }
@@ -393,7 +394,7 @@ func testModuleReader() ModuleReader {
 type testModuleReaderStruct struct {
 }
 
-func (m *testModuleReaderStruct) RegistryModuleMeta(addr tfaddr.ModuleSourceRegistry, cons version.Constraints) (*registry.ModuleData, error) {
+func (m *testModuleReaderStruct) RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error) {
 	return nil, nil
 }
 
@@ -431,7 +432,7 @@ func testRegistryModuleReader() ModuleReader {
 type testRegistryModuleReaderStruct struct {
 }
 
-func (m *testRegistryModuleReaderStruct) RegistryModuleMeta(addr tfaddr.ModuleSourceRegistry, cons version.Constraints) (*registry.ModuleData, error) {
+func (m *testRegistryModuleReaderStruct) RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error) {
 	return nil, nil
 }
 
