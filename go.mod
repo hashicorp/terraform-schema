@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/google/go-cmp v0.5.8
-	github.com/hashicorp/go-version v1.5.0
+	github.com/hashicorp/go-version v1.6.0
 	github.com/hashicorp/hcl-lang v0.0.0-20220421093840-480fdfd2ecb5
 	github.com/hashicorp/hcl/v2 v2.13.0
 	github.com/hashicorp/terraform-json v0.14.0
