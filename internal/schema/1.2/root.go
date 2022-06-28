@@ -6,13 +6,13 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/zclconf/go-cty/cty"
 
-	v015_mod "github.com/hashicorp/terraform-schema/internal/schema/0.15"
+	v1_1_mod "github.com/hashicorp/terraform-schema/internal/schema/1.1"
 )
 
 var v1_2 = version.Must(version.NewVersion("1.2.0"))
 
 func ModuleSchema(v *version.Version) *schema.BodySchema {
-	bs := v015_mod.ModuleSchema(v)
+	bs := v1_1_mod.ModuleSchema(v)
 	if v.GreaterThanOrEqual(v1_2) {
 		bs.Blocks["data"].Body.Blocks = map[string]*schema.BlockSchema{
 			"lifecycle": datasourceLifecycleBlock,
