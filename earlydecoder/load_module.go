@@ -2,6 +2,7 @@ package earlydecoder
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
@@ -310,8 +311,9 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			registryAddr, err := tfaddr.ParseModuleSource(source)
 			if err == nil {
 				sourceAddr = registryAddr
+			} else if isModuleSourceLocal(source) {
+				sourceAddr = module.LocalSourceAddr(source)
 			}
-			// TODO: module.LocalSourceAddr
 
 			mod.ModuleCalls[name] = &module.DeclaredModuleCall{
 				LocalName:  name,
@@ -371,4 +373,13 @@ func decodeProviderAttribute(attr *hcl.Attribute) (module.ProviderRef, hcl.Diagn
 			Subject:  attr.Expr.Range().Ptr(),
 		},
 	}
+}
+
+func isModuleSourceLocal(raw string) bool {
+	for _, prefix := range module.ModuleSourceLocalPrefixes {
+		if strings.HasPrefix(raw, prefix) {
+			return true
+		}
+	}
+	return false
 }
