@@ -4,6 +4,13 @@ import (
 	"github.com/hashicorp/go-version"
 )
 
+var ModuleSourceLocalPrefixes = []string{
+	"./",
+	"../",
+	".\\",
+	"..\\",
+}
+
 type ModuleCalls struct {
 	Installed map[string]InstalledModuleCall
 	Declared  map[string]DeclaredModuleCall
@@ -27,4 +34,11 @@ type ModuleSourceAddr interface {
 	String() string
 }
 
-// TODO: type LocalSourceAddr
+type LocalSourceAddr string
+
+func (lsa LocalSourceAddr) ForDisplay() string {
+	return string(lsa)
+}
+func (lsa LocalSourceAddr) String() string {
+	return string(lsa)
+}
