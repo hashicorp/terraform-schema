@@ -1161,6 +1161,28 @@ module "name" {
 			},
 			nil,
 		},
+		{
+			"modules with local source",
+			`
+module "name" {
+	source = "./local"
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+				Filenames:            []string{"test.tf"},
+				ModuleCalls: map[string]module.DeclaredModuleCall{
+					"name": {
+						LocalName:  "name",
+						SourceAddr: module.LocalSourceAddr("./local"),
+					},
+				},
+			},
+			nil,
+		},
 	}
 
 	runTestCases(testCases, t, path)
