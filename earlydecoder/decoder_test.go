@@ -1087,7 +1087,8 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName: "name",
+						LocalName:  "name",
+						SourceAddr: module.UnknownSourceAddr(""),
 					},
 				},
 			},
@@ -1130,8 +1131,9 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName: "name",
-						Version:   version.MustConstraints(version.NewConstraint("> 3.0.0, < 4.0.0")),
+						LocalName:  "name",
+						SourceAddr: module.UnknownSourceAddr(""),
+						Version:    version.MustConstraints(version.NewConstraint("> 3.0.0, < 4.0.0")),
 					},
 				},
 			},
@@ -1178,6 +1180,28 @@ module "name" {
 					"name": {
 						LocalName:  "name",
 						SourceAddr: module.LocalSourceAddr("./local"),
+					},
+				},
+			},
+			nil,
+		},
+		{
+			"modules with unknown source",
+			`
+module "name" {
+	source = "github.com/terraform-aws-modules/terraform-aws-security-group"
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+				Filenames:            []string{"test.tf"},
+				ModuleCalls: map[string]module.DeclaredModuleCall{
+					"name": {
+						LocalName:  "name",
+						SourceAddr: module.UnknownSourceAddr("github.com/terraform-aws-modules/terraform-aws-security-group"),
 					},
 				},
 			},
