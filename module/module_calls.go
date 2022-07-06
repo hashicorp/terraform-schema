@@ -42,3 +42,12 @@ func (lsa LocalSourceAddr) ForDisplay() string {
 func (lsa LocalSourceAddr) String() string {
 	return string(lsa)
 }
+
+type UnknownSourceAddr string
+
+func (usa UnknownSourceAddr) ForDisplay() string {
+	return string(usa)
+}
+func (usa UnknownSourceAddr) String() string {
+	return string(usa)
+}
