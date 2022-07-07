@@ -7,20 +7,19 @@ import (
 	"github.com/zclconf/go-cty/cty"
 
 	v1_1_mod "github.com/hashicorp/terraform-schema/internal/schema/1.1"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 )
 
 var v1_2 = version.Must(version.NewVersion("1.2.0"))
 
 func ModuleSchema(v *version.Version) *schema.BodySchema {
 	bs := v1_1_mod.ModuleSchema(v)
-	if v.GreaterThanOrEqual(v1_2) {
-		bs.Blocks["data"].Body.Blocks = map[string]*schema.BlockSchema{
-			"lifecycle": datasourceLifecycleBlock,
-		}
-		bs.Blocks["resource"].Body.Blocks["lifecycle"] = resourceLifecycleBlock
-		bs.Blocks["output"].Body.Blocks = map[string]*schema.BlockSchema{
-			"lifecycle": outputLifecycleBlock,
-		}
+	bs.Blocks["data"].Body.Blocks = map[string]*schema.BlockSchema{
+		"lifecycle": datasourceLifecycleBlock,
+	}
+	bs.Blocks["resource"].Body.Blocks["lifecycle"] = resourceLifecycleBlock
+	bs.Blocks["output"].Body.Blocks = map[string]*schema.BlockSchema{
+		"lifecycle": outputLifecycleBlock,
 	}
 
 	return bs
@@ -78,6 +77,19 @@ var resourceLifecycleBlock = &schema.BlockSchema{
 				},
 				IsOptional:  true,
 				Description: lang.Markdown("A set of fields (references) of which to ignore changes to, e.g. `tags`"),
+			},
+			"replace_triggered_by": {
+				Expr: schema.ExprConstraints{
+					schema.TupleConsExpr{
+						Name: "set of references",
+						AnyElem: schema.ExprConstraints{
+							schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
+						},
+					},
+				},
+				IsOptional: true,
+				Description: lang.Markdown("Set of references to any other resources which when changed cause " +
+					"this resource to be proposed for replacement"),
 			},
 		},
 		Blocks: map[string]*schema.BlockSchema{
