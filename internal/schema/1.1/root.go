@@ -9,6 +9,7 @@ import (
 
 func ModuleSchema(v *version.Version) *schema.BodySchema {
 	bs := v015_mod.ModuleSchema(v)
+	bs.Blocks["moved"] = movedBlockSchema
 	bs.Blocks["terraform"] = patchTerraformBlockSchema(bs.Blocks["terraform"], v)
 	return bs
 }
