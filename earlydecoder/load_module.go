@@ -2,13 +2,11 @@ package earlydecoder
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
-	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/backend"
 	"github.com/hashicorp/terraform-schema/internal/typeexpr"
 	"github.com/hashicorp/terraform-schema/module"
@@ -307,19 +305,9 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				}
 			}
 
-			var sourceAddr module.ModuleSourceAddr
-			registryAddr, err := tfaddr.ParseModuleSource(source)
-			if err == nil {
-				sourceAddr = registryAddr
-			} else if isModuleSourceLocal(source) {
-				sourceAddr = module.LocalSourceAddr(source)
-			} else if source != "" {
-				sourceAddr = module.UnknownSourceAddr(source)
-			}
-
 			mod.ModuleCalls[name] = &module.DeclaredModuleCall{
 				LocalName:  name,
-				SourceAddr: sourceAddr,
+				SourceAddr: module.ParseModuleSourceAddr(source),
 				Version:    versionCons,
 			}
 		}
@@ -375,13 +363,4 @@ func decodeProviderAttribute(attr *hcl.Attribute) (module.ProviderRef, hcl.Diagn
 			Subject:  attr.Expr.Range().Ptr(),
 		},
 	}
-}
-
-func isModuleSourceLocal(raw string) bool {
-	for _, prefix := range module.ModuleSourceLocalPrefixes {
-		if strings.HasPrefix(raw, prefix) {
-			return true
-		}
-	}
-	return false
 }
