@@ -1087,8 +1087,7 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName:  "name",
-						SourceAddr: module.UnknownSourceAddr(""),
+						LocalName: "name",
 					},
 				},
 			},
@@ -1131,9 +1130,8 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName:  "name",
-						SourceAddr: module.UnknownSourceAddr(""),
-						Version:    version.MustConstraints(version.NewConstraint("> 3.0.0, < 4.0.0")),
+						LocalName: "name",
+						Version:   version.MustConstraints(version.NewConstraint("> 3.0.0, < 4.0.0")),
 					},
 				},
 			},

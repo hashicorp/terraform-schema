@@ -313,7 +313,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				sourceAddr = registryAddr
 			} else if isModuleSourceLocal(source) {
 				sourceAddr = module.LocalSourceAddr(source)
-			} else {
+			} else if source != "" {
 				sourceAddr = module.UnknownSourceAddr(source)
 			}
 
