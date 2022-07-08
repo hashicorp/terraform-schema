@@ -206,8 +206,8 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 		}
 	}
 
-	moduleSourceRegistry, err := tfaddr.ParseModuleSource(module.SourceAddr)
-	if err == nil && moduleSourceRegistry.Package.Host == "registry.terraform.io" {
+	registryAddr, ok := module.SourceAddr.(tfaddr.Module)
+	if ok && registryAddr.Package.Host == "registry.terraform.io" {
 		versionStr := ""
 		if module.Version == nil {
 			versionStr = "latest"
@@ -218,7 +218,7 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 		bodySchema.DocsLink = &schema.DocsLink{
 			URL: fmt.Sprintf(
 				`https://registry.terraform.io/modules/%s/%s`,
-				moduleSourceRegistry.Package.ForRegistryProtocol(),
+				registryAddr.Package.ForRegistryProtocol(),
 				versionStr,
 			),
 		}

@@ -403,7 +403,7 @@ func (m *testModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls
 		Installed: map[string]module.InstalledModuleCall{
 			"example": {
 				LocalName:  "example",
-				SourceAddr: "source",
+				SourceAddr: module.LocalSourceAddr("./source"),
 				Path:       "path",
 			},
 		},
@@ -441,7 +441,7 @@ func (m *testRegistryModuleReaderStruct) ModuleCalls(modPath string) (module.Mod
 		Installed: map[string]module.InstalledModuleCall{
 			"remote-example": {
 				LocalName:  "remote-example",
-				SourceAddr: "registry.terraform.io/namespace/foobar",
+				SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/namespace/foo/bar"),
 				Path:       ".terraform/modules/remote-example",
 			},
 		},

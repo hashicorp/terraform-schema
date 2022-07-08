@@ -21,7 +21,7 @@ type ModuleCalls struct {
 
 type InstalledModuleCall struct {
 	LocalName  string
-	SourceAddr string
+	SourceAddr ModuleSourceAddr
 	Version    *version.Version
 	Path       string
 }

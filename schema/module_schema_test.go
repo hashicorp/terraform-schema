@@ -306,7 +306,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 			},
 			module.InstalledModuleCall{
 				LocalName:  "refname",
-				SourceAddr: "./local",
+				SourceAddr: module.LocalSourceAddr("./local"),
 			},
 			&schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{},
@@ -334,7 +334,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 			},
 			module.InstalledModuleCall{
 				LocalName:  "vpc",
-				SourceAddr: "registry.terraform.io/terraform-aws-modules/vpc/aws",
+				SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
 			},
 			&schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{},
@@ -364,7 +364,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 			},
 			module.InstalledModuleCall{
 				LocalName:  "vpc",
-				SourceAddr: "registry.terraform.io/terraform-aws-modules/vpc/aws",
+				SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
 				Version:    version.Must(version.NewVersion("1.33.7")),
 			},
 			&schema.BodySchema{
@@ -395,7 +395,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 			},
 			module.InstalledModuleCall{
 				LocalName:  "vpc",
-				SourceAddr: "example.com/terraform-aws-modules/vpc/aws",
+				SourceAddr: tfaddr.MustParseModuleSource("example.com/terraform-aws-modules/vpc/aws"),
 				Version:    version.Must(version.NewVersion("1.33.7")),
 			},
 			&schema.BodySchema{

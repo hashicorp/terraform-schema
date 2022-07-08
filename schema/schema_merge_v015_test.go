@@ -13,7 +13,7 @@ var depKeysModule = schema.DependencyKeys{
 		{
 			Name: "source",
 			Expr: schema.ExpressionValue{
-				Static: cty.StringVal("source"),
+				Static: cty.StringVal("./source"),
 			},
 		},
 	},
@@ -621,7 +621,7 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 				{
 					Name: "source",
 					Expr: schema.ExpressionValue{
-						Static: cty.StringVal("namespace/foobar"),
+						Static: cty.StringVal("namespace/foo/bar"),
 					},
 				},
 			}}): {
@@ -636,6 +636,7 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 					NestedTargetables: []*schema.Targetable{},
 				},
 			},
+			DocsLink: &schema.DocsLink{URL: "https://registry.terraform.io/modules/namespace/foo/bar/latest"},
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),
@@ -666,7 +667,7 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 				{
 					Name: "source",
 					Expr: schema.ExpressionValue{
-						Static: cty.StringVal("registry.terraform.io/namespace/foobar"),
+						Static: cty.StringVal("registry.terraform.io/namespace/foo/bar"),
 					},
 				},
 			}}): {
@@ -681,6 +682,7 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 					NestedTargetables: []*schema.Targetable{},
 				},
 			},
+			DocsLink: &schema.DocsLink{URL: "https://registry.terraform.io/modules/namespace/foo/bar/latest"},
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),

@@ -201,10 +201,10 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 				continue
 			}
 
+			// Fetching based only on the source can cause conflicts for multiple versions of the same module
+			// specially if they have different versions or the source of those modules have been modified
+			// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
 			depKeys := schema.DependencyKeys{
-				// Fetching based only on the source can cause conflicts for multiple versions of the same module
-				// specially if they have different versions or the source of those modules have been modified
-				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
 				Attributes: []schema.AttributeDependent{
 					{
 						Name: "source",
@@ -214,36 +214,32 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 					},
 				},
 			}
+			// There's likely more edge cases with how source address can be represented in config
+			// vs in module manifest, but for now we at least account for the common case of external registries
+			depKeysAddr := schema.DependencyKeys{
+				Attributes: []schema.AttributeDependent{
+					{
+						Name: "source",
+						Expr: schema.ExpressionValue{
+							Static: cty.StringVal(sourceAddr.Package.ForRegistryProtocol()),
+						},
+					},
+				},
+			}
 
 			depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
 			if err == nil {
 				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-			}
-
-			// There's likely more edge cases with how source address can be represented in config
-			// vs in module manifest, but for now we at least account for the common case of TF Registry
-			if err == nil && strings.HasPrefix(sourceAddr.String(), "registry.terraform.io/") {
-				shortName := strings.TrimPrefix(sourceAddr.String(), "registry.terraform.io/")
-
-				depKeys := schema.DependencyKeys{
-					// Fetching based only on the source can cause conflicts for multiple versions of the same module
-					// specially if they have different versions or the source of those modules have been modified
-					// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "source",
-							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(shortName),
-							},
-						},
-					},
-				}
-
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeysAddr)] = depSchema
 			}
 		}
 
 		for _, module := range mc.Installed {
+			if module.SourceAddr == nil {
+				// This should never happen for installed modules, but to
+				// be safe we skip all modules with an empty source address
+				continue
+			}
 			modMeta, err := reader.LocalModuleMeta(module.Path)
 			if err != nil {
 				continue
@@ -257,7 +253,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 					{
 						Name: "source",
 						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(module.SourceAddr),
+							Static: cty.StringVal(module.SourceAddr.String()),
 						},
 					},
 				},
@@ -269,10 +265,9 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 			}
 
 			// There's likely more edge cases with how source address can be represented in config
-			// vs in module manifest, but for now we at least account for the common case of TF Registry
-			if err == nil && strings.HasPrefix(module.SourceAddr, "registry.terraform.io/") {
-				shortName := strings.TrimPrefix(module.SourceAddr, "registry.terraform.io/")
-
+			// vs in module manifest, but for now we at least account for the common case of external registries
+			registryAddr, ok := module.SourceAddr.(tfaddr.Module)
+			if err == nil && ok {
 				depKeys := schema.DependencyKeys{
 					// Fetching based only on the source can cause conflicts for multiple versions of the same module
 					// specially if they have different versions or the source of those modules have been modified
@@ -281,7 +276,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 						{
 							Name: "source",
 							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(shortName),
+								Static: cty.StringVal(registryAddr.Package.ForRegistryProtocol()),
 							},
 						},
 					},
