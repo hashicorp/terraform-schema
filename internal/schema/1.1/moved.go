@@ -13,7 +13,6 @@ var movedBlockSchema = &schema.BlockSchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"from": {
 				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfScopeId: refscope.DataScope},
 					schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
 					schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
 				},
@@ -22,7 +21,6 @@ var movedBlockSchema = &schema.BlockSchema{
 			},
 			"to": {
 				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfScopeId: refscope.DataScope},
 					schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
 					schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
 				},
