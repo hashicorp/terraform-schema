@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"path/filepath"
 	"strings"
 
 	"github.com/hashicorp/go-version"
@@ -190,47 +191,77 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 		}
 
 		for _, module := range mc.Declared {
-			sourceAddr, ok := module.SourceAddr.(tfaddr.Module)
-			if !ok {
-				// TODO: local sources (See https://github.com/hashicorp/terraform-ls/issues/598)
-				continue
-			}
+			registryAddr, ok := module.SourceAddr.(tfaddr.Module)
+			if ok {
+				modMeta, err := reader.RegistryModuleMeta(registryAddr, module.Version)
+				if err != nil {
+					continue
+				}
 
-			modMeta, err := reader.RegistryModuleMeta(sourceAddr, module.Version)
-			if err != nil {
-				continue
-			}
-
-			// Fetching based only on the source can cause conflicts for multiple versions of the same module
-			// specially if they have different versions or the source of those modules have been modified
-			// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-			depKeys := schema.DependencyKeys{
-				Attributes: []schema.AttributeDependent{
-					{
-						Name: "source",
-						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(sourceAddr.String()),
+				// Fetching based only on the source can cause conflicts for multiple versions of the same module
+				// specially if they have different versions or the source of those modules have been modified
+				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+				depKeys := schema.DependencyKeys{
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "source",
+							Expr: schema.ExpressionValue{
+								Static: cty.StringVal(registryAddr.String()),
+							},
 						},
 					},
-				},
-			}
-			// There's likely more edge cases with how source address can be represented in config
-			// vs in module manifest, but for now we at least account for the common case of external registries
-			depKeysAddr := schema.DependencyKeys{
-				Attributes: []schema.AttributeDependent{
-					{
-						Name: "source",
-						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(sourceAddr.Package.ForRegistryProtocol()),
+				}
+				// There's likely more edge cases with how source address can be represented in config
+				// vs in module manifest, but for now we at least account for the common case of external registries
+				depKeysAddr := schema.DependencyKeys{
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "source",
+							Expr: schema.ExpressionValue{
+								Static: cty.StringVal(registryAddr.Package.ForRegistryProtocol()),
+							},
 						},
 					},
-				},
-			}
+				}
 
-			depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
-			if err == nil {
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeysAddr)] = depSchema
+				depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
+				if err == nil {
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeysAddr)] = depSchema
+				}
+			}
+			localAddr, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
+			if ok {
+				path := filepath.Join(meta.Path, localAddr.String())
+				modMeta, err := reader.LocalModuleMeta(path)
+				if err != nil {
+					continue
+				}
+
+				depKeys := schema.DependencyKeys{
+					// Fetching based only on the source can cause conflicts for multiple versions of the same module
+					// specially if they have different versions or the source of those modules have been modified
+					// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "source",
+							Expr: schema.ExpressionValue{
+								Static: cty.StringVal(localAddr.String()),
+							},
+						},
+					},
+				}
+
+				// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
+				// TODO revisit and refactor this
+				fakeMod := tfmod.InstalledModuleCall{
+					LocalName:  module.LocalName,
+					SourceAddr: module.SourceAddr,
+				}
+				depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+				if err == nil {
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				}
 			}
 		}
 
