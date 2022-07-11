@@ -317,7 +317,6 @@ func TestMergeWithJsonProviderSchemasAndModuleVariables_registryModule(t *testin
 	sm.SetModuleReader(testRegistryModuleReader())
 	sm.SetTerraformVersion(v0_15_0)
 	meta := testModuleMeta(t, "testdata/test-config-remote-module.tf")
-	t.Logf("meta: %#v", meta)
 	mergedSchema, err := sm.SchemaForModule(meta)
 	if err != nil {
 		t.Fatal(err)
@@ -400,18 +399,17 @@ func (m *testModuleReaderStruct) RegistryModuleMeta(addr tfaddr.Module, cons ver
 
 func (m *testModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {
 	return module.ModuleCalls{
-		Installed: map[string]module.InstalledModuleCall{
+		Declared: map[string]module.DeclaredModuleCall{
 			"example": {
 				LocalName:  "example",
 				SourceAddr: module.LocalSourceAddr("./source"),
-				Path:       "path",
 			},
 		},
 	}, nil
 }
 
 func (m *testModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, error) {
-	if modPath == "path" {
+	if modPath == filepath.Join("testdata", "source") {
 		return &module.Meta{
 			Path: "path",
 			Variables: map[string]module.Variable{
