@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/backends"
-	"github.com/hashicorp/terraform-schema/module"
+	tfmod "github.com/hashicorp/terraform-schema/module"
 	"github.com/hashicorp/terraform-schema/registry"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -21,8 +21,8 @@ type SchemaMerger struct {
 }
 
 type ModuleReader interface {
-	ModuleCalls(modPath string) (module.ModuleCalls, error)
-	LocalModuleMeta(modPath string) (*module.Meta, error)
+	ModuleCalls(modPath string) (tfmod.ModuleCalls, error)
+	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
 	RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error)
 }
 
@@ -48,7 +48,7 @@ func (m *SchemaMerger) SetTerraformVersion(v *version.Version) {
 	m.terraformVersion = v
 }
 
-func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, error) {
+func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, error) {
 	if m.coreSchema == nil {
 		return nil, coreSchemaRequiredErr{}
 	}
@@ -240,6 +240,11 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 				// be safe we skip all modules with an empty source address
 				continue
 			}
+			_, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
+			if ok {
+				// Skip local installed module here, the declared one is more up to date
+				continue
+			}
 			modMeta, err := reader.LocalModuleMeta(module.Path)
 			if err != nil {
 				continue
@@ -289,7 +294,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 	return mergedSchema, nil
 }
 
-func variableDependentBody(vars map[string]module.Variable) map[schema.SchemaKey]*schema.BodySchema {
+func variableDependentBody(vars map[string]tfmod.Variable) map[schema.SchemaKey]*schema.BodySchema {
 	depBodies := make(map[schema.SchemaKey]*schema.BodySchema)
 
 	for name, mVar := range vars {
@@ -312,10 +317,10 @@ func variableDependentBody(vars map[string]module.Variable) map[schema.SchemaKey
 	return depBodies
 }
 
-type ProviderReferences map[module.ProviderRef]tfaddr.Provider
+type ProviderReferences map[tfmod.ProviderRef]tfaddr.Provider
 
-func (pr ProviderReferences) ReferencesOfProvider(addr tfaddr.Provider) []module.ProviderRef {
-	refs := make([]module.ProviderRef, 0)
+func (pr ProviderReferences) ReferencesOfProvider(addr tfaddr.Provider) []tfmod.ProviderRef {
+	refs := make([]tfmod.ProviderRef, 0)
 
 	for ref, pAddr := range pr {
 		if pAddr.Equals(addr) {
