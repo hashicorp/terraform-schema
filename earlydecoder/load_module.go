@@ -2,6 +2,7 @@ package earlydecoder
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
@@ -279,7 +280,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				Value:       value,
 			}
 		case "module":
-			content, _, contentDiags := block.Body.PartialContent(moduleSchema)
+			content, remainingBody, contentDiags := block.Body.PartialContent(moduleSchema)
 			diags = append(diags, contentDiags...)
 			if len(block.Labels) != 1 || block.Labels[0] == "" {
 				continue
@@ -305,10 +306,21 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				}
 			}
 
+			inputNames := make([]string, 0)
+			remainingAttributes, diags := remainingBody.JustAttributes()
+			if !diags.HasErrors() {
+				for name := range remainingAttributes {
+					inputNames = append(inputNames, name)
+				}
+			}
+
+			sort.Strings(inputNames)
+
 			mod.ModuleCalls[name] = &module.DeclaredModuleCall{
 				LocalName:  name,
 				SourceAddr: module.ParseModuleSourceAddr(source),
 				Version:    versionCons,
+				InputNames: inputNames,
 			}
 		}
 

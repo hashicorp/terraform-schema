@@ -206,7 +206,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 						{
 							Name: "source",
 							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(registryAddr.String()),
+								Static: cty.StringVal(module.SourceAddr.String()),
 							},
 						},
 					},
@@ -233,10 +233,6 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 			localAddr, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
 			if ok {
 				path := filepath.Join(meta.Path, localAddr.String())
-				modMeta, err := reader.LocalModuleMeta(path)
-				if err != nil {
-					continue
-				}
 
 				depKeys := schema.DependencyKeys{
 					// Fetching based only on the source can cause conflicts for multiple versions of the same module
@@ -252,14 +248,22 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 					},
 				}
 
-				// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
-				// TODO revisit and refactor this
-				fakeMod := tfmod.InstalledModuleCall{
-					LocalName:  module.LocalName,
-					SourceAddr: module.SourceAddr,
-				}
-				depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+				modMeta, err := reader.LocalModuleMeta(path)
 				if err == nil {
+					// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
+					// TODO revisit and refactor this
+					fakeMod := tfmod.InstalledModuleCall{
+						LocalName:  module.LocalName,
+						SourceAddr: module.SourceAddr,
+					}
+					depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+					if err == nil {
+						mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+					}
+				} else {
+					// if module data is not available, we use inferred schema
+					// to enable early reference origin collection
+					depSchema := inferredSchemaForDeclaredDependentModuleBlock(meta.Path, localAddr, module)
 					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
 			}

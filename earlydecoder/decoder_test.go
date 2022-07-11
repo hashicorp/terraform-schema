@@ -1087,7 +1087,8 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName: "name",
+						LocalName:  "name",
+						InputNames: []string{},
 					},
 				},
 			},
@@ -1110,6 +1111,7 @@ module "name" {
 					"name": {
 						LocalName:  "name",
 						SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
+						InputNames: []string{},
 					},
 				},
 			},
@@ -1130,8 +1132,9 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName: "name",
-						Version:   version.MustConstraints(version.NewConstraint("> 3.0.0, < 4.0.0")),
+						LocalName:  "name",
+						Version:    version.MustConstraints(version.NewConstraint("> 3.0.0, < 4.0.0")),
+						InputNames: []string{},
 					},
 				},
 			},
@@ -1156,6 +1159,7 @@ module "name" {
 						LocalName:  "name",
 						SourceAddr: tfaddr.MustParseModuleSource("terraform-aws-modules/vpc/aws"),
 						Version:    version.MustConstraints(version.NewConstraint("1.0.0")),
+						InputNames: []string{},
 					},
 				},
 			},
@@ -1178,6 +1182,34 @@ module "name" {
 					"name": {
 						LocalName:  "name",
 						SourceAddr: module.LocalSourceAddr("./local"),
+						InputNames: []string{},
+					},
+				},
+			},
+			nil,
+		},
+		{
+			"modules with local source and inputs",
+			`
+module "name" {
+	source = "./local"
+	one = "one"
+	two = 42
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+				Filenames:            []string{"test.tf"},
+				ModuleCalls: map[string]module.DeclaredModuleCall{
+					"name": {
+						LocalName:  "name",
+						SourceAddr: module.LocalSourceAddr("./local"),
+						InputNames: []string{
+							"one", "two",
+						},
 					},
 				},
 			},
@@ -1200,6 +1232,7 @@ module "name" {
 					"name": {
 						LocalName:  "name",
 						SourceAddr: module.UnknownSourceAddr("github.com/terraform-aws-modules/terraform-aws-security-group"),
+						InputNames: []string{},
 					},
 				},
 			},
