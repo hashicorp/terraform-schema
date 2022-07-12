@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"path/filepath"
 	"strings"
 
 	"github.com/hashicorp/go-version"
@@ -8,7 +9,7 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/schema/backends"
-	"github.com/hashicorp/terraform-schema/module"
+	tfmod "github.com/hashicorp/terraform-schema/module"
 	"github.com/hashicorp/terraform-schema/registry"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -21,8 +22,8 @@ type SchemaMerger struct {
 }
 
 type ModuleReader interface {
-	ModuleCalls(modPath string) (module.ModuleCalls, error)
-	LocalModuleMeta(modPath string) (*module.Meta, error)
+	ModuleCalls(modPath string) (tfmod.ModuleCalls, error)
+	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
 	RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error)
 }
 
@@ -48,7 +49,7 @@ func (m *SchemaMerger) SetTerraformVersion(v *version.Version) {
 	m.terraformVersion = v
 }
 
-func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, error) {
+func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, error) {
 	if m.coreSchema == nil {
 		return nil, coreSchemaRequiredErr{}
 	}
@@ -190,40 +191,52 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 		}
 
 		for _, module := range mc.Declared {
-			sourceAddr, ok := module.SourceAddr.(tfaddr.Module)
-			if !ok {
-				// TODO: local sources (See https://github.com/hashicorp/terraform-ls/issues/598)
-				continue
-			}
+			registryAddr, ok := module.SourceAddr.(tfaddr.Module)
+			if ok {
+				modMeta, err := reader.RegistryModuleMeta(registryAddr, module.Version)
+				if err != nil {
+					continue
+				}
 
-			modMeta, err := reader.RegistryModuleMeta(sourceAddr, module.Version)
-			if err != nil {
-				continue
-			}
-
-			depKeys := schema.DependencyKeys{
 				// Fetching based only on the source can cause conflicts for multiple versions of the same module
 				// specially if they have different versions or the source of those modules have been modified
 				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-				Attributes: []schema.AttributeDependent{
-					{
-						Name: "source",
-						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(sourceAddr.String()),
+				depKeys := schema.DependencyKeys{
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "source",
+							Expr: schema.ExpressionValue{
+								Static: cty.StringVal(registryAddr.String()),
+							},
 						},
 					},
-				},
-			}
+				}
+				// There's likely more edge cases with how source address can be represented in config
+				// vs in module manifest, but for now we at least account for the common case of external registries
+				depKeysAddr := schema.DependencyKeys{
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "source",
+							Expr: schema.ExpressionValue{
+								Static: cty.StringVal(registryAddr.Package.ForRegistryProtocol()),
+							},
+						},
+					},
+				}
 
-			depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
-			if err == nil {
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
+				if err == nil {
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeysAddr)] = depSchema
+				}
 			}
-
-			// There's likely more edge cases with how source address can be represented in config
-			// vs in module manifest, but for now we at least account for the common case of TF Registry
-			if err == nil && strings.HasPrefix(sourceAddr.String(), "registry.terraform.io/") {
-				shortName := strings.TrimPrefix(sourceAddr.String(), "registry.terraform.io/")
+			localAddr, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
+			if ok {
+				path := filepath.Join(meta.Path, localAddr.String())
+				modMeta, err := reader.LocalModuleMeta(path)
+				if err != nil {
+					continue
+				}
 
 				depKeys := schema.DependencyKeys{
 					// Fetching based only on the source can cause conflicts for multiple versions of the same module
@@ -233,17 +246,36 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 						{
 							Name: "source",
 							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(shortName),
+								Static: cty.StringVal(localAddr.String()),
 							},
 						},
 					},
 				}
 
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
+				// TODO revisit and refactor this
+				fakeMod := tfmod.InstalledModuleCall{
+					LocalName:  module.LocalName,
+					SourceAddr: module.SourceAddr,
+				}
+				depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+				if err == nil {
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				}
 			}
 		}
 
 		for _, module := range mc.Installed {
+			if module.SourceAddr == nil {
+				// This should never happen for installed modules, but to
+				// be safe we skip all modules with an empty source address
+				continue
+			}
+			_, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
+			if ok {
+				// Skip local installed module here, the declared one is more up to date
+				continue
+			}
 			modMeta, err := reader.LocalModuleMeta(module.Path)
 			if err != nil {
 				continue
@@ -257,7 +289,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 					{
 						Name: "source",
 						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(module.SourceAddr),
+							Static: cty.StringVal(module.SourceAddr.String()),
 						},
 					},
 				},
@@ -269,10 +301,9 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 			}
 
 			// There's likely more edge cases with how source address can be represented in config
-			// vs in module manifest, but for now we at least account for the common case of TF Registry
-			if err == nil && strings.HasPrefix(module.SourceAddr, "registry.terraform.io/") {
-				shortName := strings.TrimPrefix(module.SourceAddr, "registry.terraform.io/")
-
+			// vs in module manifest, but for now we at least account for the common case of external registries
+			registryAddr, ok := module.SourceAddr.(tfaddr.Module)
+			if err == nil && ok {
 				depKeys := schema.DependencyKeys{
 					// Fetching based only on the source can cause conflicts for multiple versions of the same module
 					// specially if they have different versions or the source of those modules have been modified
@@ -281,7 +312,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 						{
 							Name: "source",
 							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(shortName),
+								Static: cty.StringVal(registryAddr.Package.ForRegistryProtocol()),
 							},
 						},
 					},
@@ -294,7 +325,7 @@ func (m *SchemaMerger) SchemaForModule(meta *module.Meta) (*schema.BodySchema, e
 	return mergedSchema, nil
 }
 
-func variableDependentBody(vars map[string]module.Variable) map[schema.SchemaKey]*schema.BodySchema {
+func variableDependentBody(vars map[string]tfmod.Variable) map[schema.SchemaKey]*schema.BodySchema {
 	depBodies := make(map[schema.SchemaKey]*schema.BodySchema)
 
 	for name, mVar := range vars {
@@ -317,10 +348,10 @@ func variableDependentBody(vars map[string]module.Variable) map[schema.SchemaKey
 	return depBodies
 }
 
-type ProviderReferences map[module.ProviderRef]tfaddr.Provider
+type ProviderReferences map[tfmod.ProviderRef]tfaddr.Provider
 
-func (pr ProviderReferences) ReferencesOfProvider(addr tfaddr.Provider) []module.ProviderRef {
-	refs := make([]module.ProviderRef, 0)
+func (pr ProviderReferences) ReferencesOfProvider(addr tfaddr.Provider) []tfmod.ProviderRef {
+	refs := make([]tfmod.ProviderRef, 0)
 
 	for ref, pAddr := range pr {
 		if pAddr.Equals(addr) {
