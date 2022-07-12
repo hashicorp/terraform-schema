@@ -30,6 +30,21 @@ type DeclaredModuleCall struct {
 	LocalName  string
 	SourceAddr ModuleSourceAddr
 	Version    version.Constraints
+	InputNames []string
+}
+
+func (mc DeclaredModuleCall) Copy() DeclaredModuleCall {
+	inputNames := make([]string, len(mc.InputNames))
+	for i, name := range mc.InputNames {
+		inputNames[i] = name
+	}
+
+	return DeclaredModuleCall{
+		LocalName:  mc.LocalName,
+		SourceAddr: mc.SourceAddr,
+		Version:    mc.Version,
+		InputNames: inputNames,
+	}
 }
 
 type ModuleSourceAddr interface {

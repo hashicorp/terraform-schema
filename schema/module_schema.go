@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"path/filepath"
 	"sort"
 
 	"github.com/hashicorp/hcl-lang/lang"
@@ -225,6 +226,36 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 	}
 
 	return bodySchema, nil
+}
+
+func inferredSchemaForDeclaredDependentModuleBlock(rootPath string, sourceAddr module.LocalSourceAddr, mod module.DeclaredModuleCall) *schema.BodySchema {
+	attributes := make(map[string]*schema.AttributeSchema, 0)
+	for _, name := range mod.InputNames {
+		aSchema := &schema.AttributeSchema{
+			IsOptional: true,
+		}
+		varType := cty.DynamicPseudoType
+		aSchema.Expr = convertAttributeTypeToExprConstraints(varType)
+		aSchema.OriginForTarget = &schema.PathTarget{
+			Address: schema.Address{
+				schema.StaticStep{Name: "var"},
+				schema.AttrNameStep{},
+			},
+			Path: lang.Path{
+				Path:       filepath.Join(rootPath, sourceAddr.String()),
+				LanguageID: ModuleLanguageID,
+			},
+			Constraints: schema.Constraints{
+				ScopeId: refscope.VariableScope,
+				Type:    varType,
+			},
+		}
+		attributes[name] = aSchema
+	}
+
+	return &schema.BodySchema{
+		Attributes: attributes,
+	}
 }
 
 func sliceContains(slice []string, value string) bool {
