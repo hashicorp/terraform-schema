@@ -191,9 +191,9 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 		}
 
 		for _, module := range mc.Declared {
-			registryAddr, ok := module.SourceAddr.(tfaddr.Module)
-			if ok {
-				modMeta, err := reader.RegistryModuleMeta(registryAddr, module.Version)
+			switch sourceAddr := module.SourceAddr.(type) {
+			case tfaddr.Module:
+				modMeta, err := reader.RegistryModuleMeta(sourceAddr, module.Version)
 				if err != nil {
 					continue
 				}
@@ -218,7 +218,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 						{
 							Name: "source",
 							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(registryAddr.Package.ForRegistryProtocol()),
+								Static: cty.StringVal(sourceAddr.Package.ForRegistryProtocol()),
 							},
 						},
 					},
@@ -229,10 +229,8 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeysAddr)] = depSchema
 				}
-			}
-			localAddr, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
-			if ok {
-				path := filepath.Join(meta.Path, localAddr.String())
+			case tfmod.LocalSourceAddr:
+				path := filepath.Join(meta.Path, sourceAddr.String())
 
 				depKeys := schema.DependencyKeys{
 					// Fetching based only on the source can cause conflicts for multiple versions of the same module
@@ -242,7 +240,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 						{
 							Name: "source",
 							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(localAddr.String()),
+								Static: cty.StringVal(sourceAddr.String()),
 							},
 						},
 					},
@@ -263,7 +261,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 				} else {
 					// if module data is not available, we use inferred schema
 					// to enable early reference origin collection
-					depSchema := inferredSchemaForDeclaredDependentModuleBlock(meta.Path, localAddr, module)
+					depSchema := inferredSchemaForDeclaredDependentModuleBlock(meta.Path, sourceAddr, module)
 					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
 			}
