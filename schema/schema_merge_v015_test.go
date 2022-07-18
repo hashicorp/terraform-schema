@@ -547,6 +547,7 @@ var moduleWithDependency = schema.BlockSchema{
 					NestedTargetables: []*schema.Targetable{},
 				},
 			},
+			ImpliedOrigins: schema.ImpliedOrigins{},
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),
@@ -636,7 +637,8 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 					NestedTargetables: []*schema.Targetable{},
 				},
 			},
-			DocsLink: &schema.DocsLink{URL: "https://registry.terraform.io/modules/namespace/foo/bar/latest"},
+			ImpliedOrigins: schema.ImpliedOrigins{},
+			DocsLink:       &schema.DocsLink{URL: "https://registry.terraform.io/modules/namespace/foo/bar/latest"},
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),
@@ -682,7 +684,8 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 					NestedTargetables: []*schema.Targetable{},
 				},
 			},
-			DocsLink: &schema.DocsLink{URL: "https://registry.terraform.io/modules/namespace/foo/bar/latest"},
+			ImpliedOrigins: schema.ImpliedOrigins{},
+			DocsLink:       &schema.DocsLink{URL: "https://registry.terraform.io/modules/namespace/foo/bar/latest"},
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),

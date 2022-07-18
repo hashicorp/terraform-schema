@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -38,6 +39,7 @@ func TestSchemaForDependentModuleBlock_emptyMeta(t *testing.T) {
 				NestedTargetables: []*schema.Targetable{},
 			},
 		},
+		ImpliedOrigins: schema.ImpliedOrigins{},
 	}
 	if diff := cmp.Diff(expectedDepSchema, depSchema, ctydebug.CmpOptions); diff != "" {
 		t.Fatalf("schema mismatch: %s", diff)
@@ -171,7 +173,40 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 				},
 			},
 		},
+		ImpliedOrigins: schema.ImpliedOrigins{
+			{
+				OriginAddress: lang.Address{
+					lang.RootStep{Name: "module"},
+					lang.AttrStep{Name: "refname"},
+					lang.AttrStep{Name: "first"},
+				},
+				TargetAddress: lang.Address{
+					lang.RootStep{Name: "output"},
+					lang.AttrStep{Name: "first"},
+				},
+				Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
+				Constraints: schema.Constraints{ScopeId: "output"},
+			},
+			{
+				OriginAddress: lang.Address{
+					lang.RootStep{Name: "module"},
+					lang.AttrStep{Name: "refname"},
+					lang.AttrStep{Name: "second"},
+				},
+				TargetAddress: lang.Address{
+					lang.RootStep{Name: "output"},
+					lang.AttrStep{Name: "second"},
+				},
+				Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
+				Constraints: schema.Constraints{ScopeId: "output"},
+			},
+		},
 	}
+
+	sort.Slice(expectedDepSchema.ImpliedOrigins, func(i, j int) bool {
+		return expectedDepSchema.ImpliedOrigins[i].OriginAddress.String() < expectedDepSchema.ImpliedOrigins[j].OriginAddress.String()
+	})
+
 	if diff := cmp.Diff(expectedDepSchema, depSchema, ctydebug.CmpOptions); diff != "" {
 		t.Fatalf("schema mismatch: %s", diff)
 	}
@@ -206,7 +241,8 @@ func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
 						NestedTargetables: []*schema.Targetable{},
 					},
 				},
-				Targets: nil,
+				Targets:        nil,
+				ImpliedOrigins: schema.ImpliedOrigins{},
 			},
 		},
 		{
@@ -238,6 +274,7 @@ func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
 						End:      hcl.InitialPos,
 					},
 				},
+				ImpliedOrigins: schema.ImpliedOrigins{},
 			},
 		},
 		{
@@ -269,6 +306,7 @@ func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
 						End:      hcl.InitialPos,
 					},
 				},
+				ImpliedOrigins: schema.ImpliedOrigins{},
 			},
 		},
 	}
@@ -321,7 +359,8 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 						NestedTargetables: []*schema.Targetable{},
 					},
 				},
-				Targets: nil,
+				ImpliedOrigins: schema.ImpliedOrigins{},
+				Targets:        nil,
 			},
 		},
 		{
@@ -349,6 +388,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 						NestedTargetables: []*schema.Targetable{},
 					},
 				},
+				ImpliedOrigins: schema.ImpliedOrigins{},
 				DocsLink: &schema.DocsLink{
 					URL: "https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest",
 				},
@@ -380,6 +420,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 						NestedTargetables: []*schema.Targetable{},
 					},
 				},
+				ImpliedOrigins: schema.ImpliedOrigins{},
 				DocsLink: &schema.DocsLink{
 					URL: "https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/1.33.7",
 				},
@@ -411,6 +452,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 						NestedTargetables: []*schema.Targetable{},
 					},
 				},
+				ImpliedOrigins: schema.ImpliedOrigins{},
 			},
 		},
 	}
