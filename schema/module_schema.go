@@ -142,6 +142,7 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 	modOutputTypes := make(map[string]cty.Type, 0)
 	modOutputVals := make(map[string]cty.Value, 0)
 	targetableOutputs := make(schema.Targetables, 0)
+	impliedOrigins := make(schema.ImpliedOrigins, 0)
 
 	for name, output := range modMeta.Outputs {
 		addr := lang.Address{
@@ -170,7 +171,28 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 
 		modOutputTypes[name] = typ
 		modOutputVals[name] = output.Value
+
+		impliedOrigins = append(impliedOrigins, schema.ImpliedOrigin{
+			OriginAddress: lang.Address{
+				lang.RootStep{Name: "module"},
+				lang.AttrStep{Name: module.LocalName},
+				lang.AttrStep{Name: name},
+			},
+			TargetAddress: lang.Address{
+				lang.RootStep{Name: "output"},
+				lang.AttrStep{Name: name},
+			},
+			Path: lang.Path{
+				Path:       modMeta.Path,
+				LanguageID: ModuleLanguageID,
+			},
+			Constraints: schema.Constraints{
+				ScopeId: refscope.OutputScope,
+			},
+		})
 	}
+
+	bodySchema.ImpliedOrigins = impliedOrigins
 
 	sort.Sort(targetableOutputs)
 
