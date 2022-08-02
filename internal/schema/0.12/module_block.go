@@ -38,12 +38,25 @@ var moduleBlockSchema = &schema.BlockSchema{
 				IsRequired:             true,
 				IsDepKey:               true,
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
+				CompletionHooks: lang.CompletionHooks{
+					{
+						Name: "CompleteLocalModuleSources",
+					},
+					{
+						Name: "CompleteRegistryModuleSources",
+					},
+				},
 			},
 			"version": {
 				Expr:       schema.LiteralTypeOnly(cty.String),
 				IsOptional: true,
 				Description: lang.Markdown("Constraint to set the version of the module, e.g. `~> 1.0`." +
 					" Only applicable to modules in a module registry."),
+				CompletionHooks: lang.CompletionHooks{
+					{
+						Name: "CompleteRegistryModuleVersions",
+					},
+				},
 			},
 			"providers": {
 				Expr: schema.ExprConstraints{
