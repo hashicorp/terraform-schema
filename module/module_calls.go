@@ -32,7 +32,7 @@ type DeclaredModuleCall struct {
 	SourceAddr ModuleSourceAddr
 	Version    version.Constraints
 	InputNames []string
-	Range      *hcl.Range
+	RangePtr   *hcl.Range
 }
 
 func (mc DeclaredModuleCall) Copy() DeclaredModuleCall {
@@ -46,9 +46,9 @@ func (mc DeclaredModuleCall) Copy() DeclaredModuleCall {
 		InputNames: inputNames,
 	}
 
-	if mc.Range != nil {
-		rangeCpy := *mc.Range
-		newModuleCall.Range = &rangeCpy
+	if mc.RangePtr != nil {
+		rangeCpy := *mc.RangePtr
+		newModuleCall.RangePtr = &rangeCpy
 	}
 
 	return newModuleCall

@@ -316,10 +316,10 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 
 			sort.Strings(inputNames)
 
-			var r *hcl.Range
+			var rng *hcl.Range
 			hclBody, ok := block.Body.(*hclsyntax.Body)
 			if ok {
-				r = hclBody.Range().Ptr()
+				rng = hclBody.Range().Ptr()
 			}
 
 			mod.ModuleCalls[name] = &module.DeclaredModuleCall{
@@ -327,7 +327,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				SourceAddr: module.ParseModuleSourceAddr(source),
 				Version:    versionCons,
 				InputNames: inputNames,
-				Range:      r,
+				RangePtr:   rng,
 			}
 		}
 
