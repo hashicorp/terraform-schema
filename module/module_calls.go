@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/hcl/v2"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 )
 
@@ -31,20 +32,26 @@ type DeclaredModuleCall struct {
 	SourceAddr ModuleSourceAddr
 	Version    version.Constraints
 	InputNames []string
+	Range      *hcl.Range
 }
 
 func (mc DeclaredModuleCall) Copy() DeclaredModuleCall {
 	inputNames := make([]string, len(mc.InputNames))
-	for i, name := range mc.InputNames {
-		inputNames[i] = name
-	}
+	copy(inputNames, mc.InputNames)
 
-	return DeclaredModuleCall{
+	newModuleCall := DeclaredModuleCall{
 		LocalName:  mc.LocalName,
 		SourceAddr: mc.SourceAddr,
 		Version:    mc.Version,
 		InputNames: inputNames,
 	}
+
+	if mc.Range != nil {
+		rangeCpy := *mc.Range
+		newModuleCall.Range = &rangeCpy
+	}
+
+	return newModuleCall
 }
 
 type ModuleSourceAddr interface {
