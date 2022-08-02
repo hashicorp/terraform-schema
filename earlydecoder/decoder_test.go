@@ -1089,6 +1089,11 @@ module "name" {
 					"name": {
 						LocalName:  "name",
 						InputNames: []string{},
+						RangePtr: &hcl.Range{
+							Filename: "test.tf",
+							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
+							End:      hcl.Pos{Line: 3, Column: 2, Byte: 18},
+						},
 					},
 				},
 			},
@@ -1112,6 +1117,11 @@ module "name" {
 						LocalName:  "name",
 						SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
 						InputNames: []string{},
+						RangePtr: &hcl.Range{
+							Filename: "test.tf",
+							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
+							End:      hcl.Pos{Line: 4, Column: 2, Byte: 82},
+						},
 					},
 				},
 			},
@@ -1135,6 +1145,11 @@ module "name" {
 						LocalName:  "name",
 						Version:    version.MustConstraints(version.NewConstraint("> 3.0.0, < 4.0.0")),
 						InputNames: []string{},
+						RangePtr: &hcl.Range{
+							Filename: "test.tf",
+							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
+							End:      hcl.Pos{Line: 4, Column: 2, Byte: 48},
+						},
 					},
 				},
 			},
@@ -1160,6 +1175,11 @@ module "name" {
 						SourceAddr: tfaddr.MustParseModuleSource("terraform-aws-modules/vpc/aws"),
 						Version:    version.MustConstraints(version.NewConstraint("1.0.0")),
 						InputNames: []string{},
+						RangePtr: &hcl.Range{
+							Filename: "test.tf",
+							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
+							End:      hcl.Pos{Line: 5, Column: 2, Byte: 79},
+						},
 					},
 				},
 			},
@@ -1183,6 +1203,11 @@ module "name" {
 						LocalName:  "name",
 						SourceAddr: module.LocalSourceAddr("./local"),
 						InputNames: []string{},
+						RangePtr: &hcl.Range{
+							Filename: "test.tf",
+							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
+							End:      hcl.Pos{Line: 4, Column: 2, Byte: 38},
+						},
 					},
 				},
 			},
@@ -1210,6 +1235,11 @@ module "name" {
 						InputNames: []string{
 							"one", "two",
 						},
+						RangePtr: &hcl.Range{
+							Filename: "test.tf",
+							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
+							End:      hcl.Pos{Line: 6, Column: 2, Byte: 61},
+						},
 					},
 				},
 			},
@@ -1233,6 +1263,11 @@ module "name" {
 						LocalName:  "name",
 						SourceAddr: module.UnknownSourceAddr("github.com/terraform-aws-modules/terraform-aws-security-group"),
 						InputNames: []string{},
+						RangePtr: &hcl.Range{
+							Filename: "test.tf",
+							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
+							End:      hcl.Pos{Line: 4, Column: 2, Byte: 92},
+						},
 					},
 				},
 			},
