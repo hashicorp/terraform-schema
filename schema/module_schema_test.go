@@ -203,8 +203,8 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 		},
 	}
 
-	sort.Slice(expectedDepSchema.ImpliedOrigins, func(i, j int) bool {
-		return expectedDepSchema.ImpliedOrigins[i].OriginAddress.String() < expectedDepSchema.ImpliedOrigins[j].OriginAddress.String()
+	sort.Slice(depSchema.ImpliedOrigins, func(i, j int) bool {
+		return depSchema.ImpliedOrigins[i].OriginAddress.String() < depSchema.ImpliedOrigins[j].OriginAddress.String()
 	})
 
 	if diff := cmp.Diff(expectedDepSchema, depSchema, ctydebug.CmpOptions); diff != "" {
