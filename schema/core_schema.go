@@ -51,7 +51,18 @@ func CoreModuleSchemaForVersion(v *version.Version) (*schema.BodySchema, error) 
 		return mod_v0_12.ModuleSchema(ver), nil
 	}
 
-	return nil, fmt.Errorf("no compatible schema found for %s", v.String())
+	return nil, NoCompatibleSchemaErr{Version: ver}
+}
+
+//go:generate go run ../internal/versiongen -w ./versions_gen.go
+func CoreModuleSchemaForConstraint(vc version.Constraints) (*schema.BodySchema, error) {
+	for _, v := range terraformVersions {
+		if vc.Check(v) {
+			return CoreModuleSchemaForVersion(v)
+		}
+	}
+
+	return nil, NoCompatibleSchemaErr{Constraints: vc}
 }
 
 func semVer(ver *version.Version) (*version.Version, error) {
