@@ -71,6 +71,17 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 			if name == "" {
 				continue
 			}
+
+			_, err := tfaddr.ParseProviderPart(name)
+			if err != nil {
+				diags = append(diags, &hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Invalid provider name",
+					Detail:   fmt.Sprintf("%q is not a valid provider name: %s", name, err),
+				})
+				continue
+			}
+
 			src = addr.NewLegacyProvider(name)
 		} else {
 			var err error
@@ -127,6 +138,17 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 
 	for _, resource := range mod.Resources {
 		providerName := resource.Provider.LocalName
+
+		_, err := tfaddr.ParseProviderPart(providerName)
+		if err != nil {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Invalid provider name",
+				Detail:   fmt.Sprintf("%q is not a valid implied provider name: %s", providerName, err),
+			})
+			continue
+		}
+
 		localRef := module.ProviderRef{
 			LocalName: providerName,
 		}
@@ -142,6 +164,17 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 
 	for _, dataSource := range mod.DataSources {
 		providerName := dataSource.Provider.LocalName
+
+		_, err := tfaddr.ParseProviderPart(providerName)
+		if err != nil {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Invalid provider name",
+				Detail:   fmt.Sprintf("%q is not a valid implied provider name: %s", providerName, err),
+			})
+			continue
+		}
+
 		localRef := module.ProviderRef{
 			LocalName: providerName,
 		}

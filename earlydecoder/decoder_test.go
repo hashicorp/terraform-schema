@@ -1273,6 +1273,73 @@ module "name" {
 			},
 			nil,
 		},
+		{
+			"invalid provider name",
+			`
+provider "-" {
+}
+provider "valid" {
+}
+`,
+			&module.Meta{
+				Path: path,
+				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+					{LocalName: "valid"}: addr.NewLegacyProvider("valid"),
+				},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
+					addr.NewLegacyProvider("valid"): {},
+				},
+				Variables:   map[string]module.Variable{},
+				Outputs:     map[string]module.Output{},
+				Filenames:   []string{"test.tf"},
+				ModuleCalls: map[string]module.DeclaredModuleCall{},
+			},
+			hcl.Diagnostics{
+				{
+					Severity: hcl.DiagError,
+					Summary:  "Invalid provider name",
+					Detail:   `"-" is not a valid provider name: must contain only letters, digits, and dashes, and may not use leading or trailing dashes`,
+				},
+			},
+		},
+		{
+			"invalid implied provider name",
+			`
+resource "-invalid_foo" "name" {
+}
+resource "valid_foo" "name" {
+}
+data "-invalid_bar" "name" {
+}
+data "valid_bar" "name" {
+}
+`,
+			&module.Meta{
+				Path: path,
+				ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+					{LocalName: "valid"}: addr.NewLegacyProvider("valid"),
+				},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
+					addr.NewLegacyProvider("valid"): {},
+				},
+				Variables:   map[string]module.Variable{},
+				Outputs:     map[string]module.Output{},
+				Filenames:   []string{"test.tf"},
+				ModuleCalls: map[string]module.DeclaredModuleCall{},
+			},
+			hcl.Diagnostics{
+				{
+					Severity: hcl.DiagError,
+					Summary:  "Invalid provider name",
+					Detail:   `"-invalid" is not a valid implied provider name: must contain only letters, digits, and dashes, and may not use leading or trailing dashes`,
+				},
+				{
+					Severity: hcl.DiagError,
+					Summary:  "Invalid provider name",
+					Detail:   `"-invalid" is not a valid implied provider name: must contain only letters, digits, and dashes, and may not use leading or trailing dashes`,
+				},
+			},
+		},
 	}
 
 	runTestCases(testCases, t, path)
