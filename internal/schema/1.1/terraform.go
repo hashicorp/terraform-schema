@@ -1,13 +1,12 @@
 package schema
 
 import (
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/zclconf/go-cty/cty"
 )
 
-func patchTerraformBlockSchema(bs *schema.BlockSchema, v *version.Version) *schema.BlockSchema {
+func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 	bs.Body.Blocks["cloud"] = &schema.BlockSchema{
 		Description: lang.PlainText("Terraform Cloud configuration"),
 		MaxItems:    1,
