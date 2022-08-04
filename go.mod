@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/google/go-cmp v0.5.8
+	github.com/hashicorp/go-cleanhttp v0.5.1
 	github.com/hashicorp/go-version v1.6.0
 	github.com/hashicorp/hcl-lang v0.0.0-20220801150536-118ac453e267
 	github.com/hashicorp/hcl/v2 v2.13.0
