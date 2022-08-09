@@ -19,21 +19,19 @@ func ConnectionDependentBodies(v *version.Version) map[schema.SchemaKey]*schema.
 	return v013_mod.ConnectionDependentBodies(v)
 }
 
-func ProvisionerDependentBodies(v *version.Version) map[schema.SchemaKey]*schema.BodySchema {
-	return map[schema.SchemaKey]*schema.BodySchema{
-		labelKey("file"):        FileProvisioner,
-		labelKey("local-exec"):  LocalExecProvisioner,
-		labelKey("remote-exec"): RemoteExecProvisioner,
+var ProvisionerDependentBodies = map[schema.SchemaKey]*schema.BodySchema{
+	labelKey("file"):        FileProvisioner,
+	labelKey("local-exec"):  LocalExecProvisioner,
+	labelKey("remote-exec"): RemoteExecProvisioner,
 
-		// Vendor provisioners are deprecated in 0.13.4+
-		// See https://discuss.hashicorp.com/t/notice-terraform-to-begin-deprecation-of-vendor-tool-specific-provisioners-starting-in-terraform-0-13-4/13997
-		// Some of these provisioners have complex schemas
-		// but we can at least helpfully list their names
-		labelKey("chef"):            {IsDeprecated: true},
-		labelKey("salt-masterless"): {IsDeprecated: true},
-		labelKey("habitat"):         {IsDeprecated: true},
-		labelKey("puppet"):          {IsDeprecated: true},
-	}
+	// Vendor provisioners are deprecated in 0.13.4+
+	// See https://discuss.hashicorp.com/t/notice-terraform-to-begin-deprecation-of-vendor-tool-specific-provisioners-starting-in-terraform-0-13-4/13997
+	// Some of these provisioners have complex schemas
+	// but we can at least helpfully list their names
+	labelKey("chef"):            {IsDeprecated: true},
+	labelKey("salt-masterless"): {IsDeprecated: true},
+	labelKey("habitat"):         {IsDeprecated: true},
+	labelKey("puppet"):          {IsDeprecated: true},
 }
 
 func labelKey(value string) schema.SchemaKey {

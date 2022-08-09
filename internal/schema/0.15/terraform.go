@@ -1,14 +1,13 @@
 package schema
 
 import (
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/zclconf/go-cty/cty"
 )
 
-func patchTerraformBlockSchema(bs *schema.BlockSchema, v *version.Version) *schema.BlockSchema {
+func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 	bs.Body.Blocks["required_providers"].Body = &schema.BodySchema{
 		AnyAttribute: &schema.AttributeSchema{
 			Expr: schema.ExprConstraints{

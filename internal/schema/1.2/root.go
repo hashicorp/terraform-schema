@@ -9,8 +9,6 @@ import (
 	v1_1_mod "github.com/hashicorp/terraform-schema/internal/schema/1.1"
 )
 
-var v1_2 = version.Must(version.NewVersion("1.2.0"))
-
 func ModuleSchema(v *version.Version) *schema.BodySchema {
 	bs := v1_1_mod.ModuleSchema(v)
 	bs.Blocks["data"].Body.Blocks = map[string]*schema.BlockSchema{
