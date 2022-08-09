@@ -14,9 +14,9 @@ func TestGetTerraformReleases(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	expectedLength := 234
-	if expectedLength < len(releases) {
-		t.Fatalf("expected >= %d releases, %d given", expectedLength, len(releases))
+	minExpectedLength := 234
+	if minExpectedLength < len(releases) {
+		t.Fatalf("expected >= %d releases, %d given", minExpectedLength, len(releases))
 	}
 
 	expectedDate := time.Date(2017, 3, 1, 17, 36, 49, 0, time.UTC)
