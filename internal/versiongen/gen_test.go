@@ -19,6 +19,9 @@ func TestGetTerraformReleases(t *testing.T) {
 		t.Fatalf("expected >= %d releases, %d given", minExpectedLength, len(releases))
 	}
 
+	// The oldest release should really be 0.1.0. We're however getting
+	// releases sorted by dates and those dates were backfilled as part
+	// of some older data migrations where the original dates were lost.
 	expectedDate := time.Date(2017, 3, 1, 17, 36, 49, 0, time.UTC)
 	expectedOldestRelease := release{
 		Version: version.Must(version.NewVersion("0.6.4")),
