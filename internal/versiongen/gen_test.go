@@ -15,7 +15,7 @@ func TestGetTerraformReleases(t *testing.T) {
 	}
 
 	minExpectedLength := 234
-	if minExpectedLength < len(releases) {
+	if len(releases) < minExpectedLength {
 		t.Fatalf("expected >= %d releases, %d given", minExpectedLength, len(releases))
 	}
 
