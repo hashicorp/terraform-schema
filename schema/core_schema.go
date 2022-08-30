@@ -11,7 +11,6 @@ import (
 	mod_v0_15 "github.com/hashicorp/terraform-schema/internal/schema/0.15"
 	mod_v1_1 "github.com/hashicorp/terraform-schema/internal/schema/1.1"
 	mod_v1_2 "github.com/hashicorp/terraform-schema/internal/schema/1.2"
-	universal "github.com/hashicorp/terraform-schema/internal/schema/universal"
 )
 
 var (
@@ -70,10 +69,4 @@ func semVer(ver *version.Version) (*version.Version, error) {
 	segments := ver.Segments64()
 	segmentsOnly := fmt.Sprintf("%d.%d.%d", segments[0], segments[1], segments[2])
 	return version.NewVersion(segmentsOnly)
-}
-
-// UniversalCoreModuleSchema returns a minimal universal module schema
-// which is valid for any v0.12+ version of Terraform
-func UniversalCoreModuleSchema() *schema.BodySchema {
-	return universal.Module
 }
