@@ -17,9 +17,9 @@ func ModuleSchema(v *version.Version) *schema.BodySchema {
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"data":      datasourceBlockSchema(v),
-			"locals":    localsBlockSchema,
-			"module":    moduleBlockSchema,
-			"output":    outputBlockSchema,
+			"locals":    localsBlockSchema(),
+			"module":    moduleBlockSchema(),
+			"output":    outputBlockSchema(),
 			"provider":  providerBlockSchema(v),
 			"resource":  resourceBlockSchema(v),
 			"variable":  variableBlockSchema(v),
