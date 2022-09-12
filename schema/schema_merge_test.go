@@ -107,6 +107,192 @@ func TestSchemaMerger_SchemaForModule_noProviderSchema(t *testing.T) {
 	}
 }
 
+func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
+	testCoreSchema := &schema.BodySchema{
+		Blocks: map[string]*schema.BlockSchema{
+			"provider": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					},
+				},
+			},
+			"resource": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+			"data": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+			},
+			"module": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"source": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsRequired: true,
+							IsDepKey:   true,
+						},
+						"version": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsOptional: true,
+						},
+					},
+				},
+			},
+		},
+	}
+	sm := NewSchemaMerger(testCoreSchema)
+	sm.SetSchemaReader(&testJsonSchemaReader{
+		ps: &tfjson.ProviderSchemas{
+			FormatVersion: "1.0",
+			Schemas: map[string]*tfjson.ProviderSchema{
+				"registry.terraform.io/hashicorp/data": {
+					ConfigSchema: &tfjson.Schema{},
+					DataSourceSchemas: map[string]*tfjson.Schema{
+						"data": {
+							Block: &tfjson.SchemaBlock{
+								Attributes: map[string]*tfjson.SchemaAttribute{
+									"foobar": {
+										AttributeType: cty.Bool,
+										Optional:      true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+
+	givenBodySchema, err := sm.SchemaForModule(&module.Meta{
+		ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+			{LocalName: "data"}: addr.NewDefaultProvider("data"),
+		},
+		ProviderRequirements: module.ProviderRequirements{
+			addr.NewDefaultProvider("data"): version.MustConstraints(version.NewConstraint("1.0")),
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	expectedBodySchema := &schema.BodySchema{
+		Blocks: map[string]*schema.BlockSchema{
+			"provider": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+					},
+				},
+				DependentBody: map[schema.SchemaKey]*schema.BodySchema{
+					`{"labels":[{"index":0,"value":"data"}]}`: {
+						Blocks:     map[string]*schema.BlockSchema{},
+						Attributes: map[string]*schema.AttributeSchema{},
+						Detail:     "hashicorp/data",
+						DocsLink: &schema.DocsLink{
+							URL:     "https://registry.terraform.io/providers/hashicorp/data/latest/docs",
+							Tooltip: "hashicorp/data Documentation",
+						},
+						HoverURL: "https://registry.terraform.io/providers/hashicorp/data/latest/docs",
+					},
+				},
+			},
+			"resource": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+				DependentBody: map[schema.SchemaKey]*schema.BodySchema{},
+			},
+			"data": {
+				Labels: []*schema.LabelSchema{
+					{Name: "type"},
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+					},
+				},
+				DependentBody: map[schema.SchemaKey]*schema.BodySchema{
+					`{"labels":[{"index":0,"value":"data"}],"attrs":[{"name":"provider","expr":{"addr":"data"}}]}`: {
+						Blocks: map[string]*schema.BlockSchema{},
+						Attributes: map[string]*schema.AttributeSchema{
+							"foobar": {IsOptional: true, Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							}},
+						},
+						Detail: "hashicorp/data",
+					},
+					`{"labels":[{"index":0,"value":"data"}]}`: {
+						Blocks: map[string]*schema.BlockSchema{},
+						Attributes: map[string]*schema.AttributeSchema{
+							"foobar": {IsOptional: true, Expr: schema.ExprConstraints{
+								schema.TraversalExpr{OfType: cty.Bool},
+								schema.LiteralTypeExpr{Type: cty.Bool},
+							}},
+						},
+						Detail: "hashicorp/data",
+					},
+				},
+			},
+			"module": {
+				Labels: []*schema.LabelSchema{
+					{Name: "name"},
+				},
+				Body: &schema.BodySchema{
+					Attributes: map[string]*schema.AttributeSchema{
+						"source": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsRequired: true,
+							IsDepKey:   true,
+						},
+						"version": {
+							Expr:       schema.LiteralTypeOnly(cty.String),
+							IsOptional: true,
+						},
+					},
+				},
+				DependentBody: map[schema.SchemaKey]*schema.BodySchema{},
+			},
+		},
+	}
+
+	if diff := cmp.Diff(expectedBodySchema, givenBodySchema, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("schema mismatch: %s", diff)
+	}
+}
+
 func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 	testCoreSchema := &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
