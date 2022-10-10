@@ -41,6 +41,9 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			"used to refer to this resource from elsewhere in the same Terraform module, but has no significance " +
 			"outside of the scope of a module."),
 		Body: &schema.BodySchema{
+			Extensions: &schema.BodyExtensions{
+				Count: true,
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
 					Expr: schema.ExprConstraints{
@@ -50,14 +53,6 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 					Description:            lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 					IsDepKey:               true,
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
-				},
-				"count": {
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.Number},
-						schema.LiteralTypeExpr{Type: cty.Number},
-					},
-					IsOptional:  true,
-					Description: lang.Markdown("Number of instances of this resource, e.g. `3`"),
 				},
 				"depends_on": {
 					Expr: schema.ExprConstraints{
