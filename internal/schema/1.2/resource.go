@@ -11,6 +11,9 @@ func resourceLifecycleBlock() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Description: lang.Markdown("Lifecycle customizations to change default resource behaviours during plan or apply"),
 		Body: &schema.BodySchema{
+			Extensions: &schema.BodyExtensions{
+				Count:         true,
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"create_before_destroy": {
 					Expr:       schema.LiteralTypeOnly(cty.Bool),
