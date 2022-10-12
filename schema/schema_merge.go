@@ -144,15 +144,19 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 					// Add backend-related core bits of schema
 					if isRemoteStateDataSource(pAddr, dsName) {
-						dsSchema.Attributes["backend"].IsDepKey = true
-						dsSchema.Attributes["backend"].SemanticTokenModifiers = lang.SemanticTokenModifiers{lang.TokenModifierDependent}
-						dsSchema.Attributes["backend"].Expr = backends.BackendTypesAsExprConstraints(m.terraformVersion)
+						remoteStateDs := dsSchema.Copy()
 
-						delete(dsSchema.Attributes, "config")
+						remoteStateDs.Attributes["backend"].IsDepKey = true
+						remoteStateDs.Attributes["backend"].SemanticTokenModifiers = lang.SemanticTokenModifiers{lang.TokenModifierDependent}
+						remoteStateDs.Attributes["backend"].Expr = backends.BackendTypesAsExprConstraints(m.terraformVersion)
+						delete(remoteStateDs.Attributes, "config")
+
 						depBodies := m.dependentBodyForRemoteStateDataSource(providerAddr, localRef)
 						for key, depBody := range depBodies {
 							mergedSchema.Blocks["data"].DependentBody[key] = depBody
 						}
+
+						dsSchema = remoteStateDs
 					}
 
 					mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
+	"sync"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -463,6 +464,63 @@ func TestMergeWithJsonProviderSchemas_v013(t *testing.T) {
 	if diff := cmp.Diff(expectedMergedSchema_v013, mergedSchema, ctydebug.CmpOptions); diff != "" {
 		t.Fatalf("schema differs: %s", diff)
 	}
+}
+
+func TestMergeWithJsonProviderSchemas_concurrencyBug(t *testing.T) {
+	jsonSchema := &tfjson.ProviderSchemas{}
+	b, err := ioutil.ReadFile(filepath.Join("testdata", "provider-schema-terraform.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = json.Unmarshal(b, jsonSchema)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	pAddr := tfaddr.NewProvider(tfaddr.BuiltInProviderHost, tfaddr.BuiltInProviderNamespace, "terraform")
+	ps := ProviderSchemaFromJson(jsonSchema.Schemas[pAddr.String()], pAddr)
+	meta := &module.Meta{
+		Path:      "testdir",
+		Filenames: []string{"test.tf"},
+		ProviderReferences: map[module.ProviderRef]tfaddr.Provider{
+			{LocalName: "terraform"}: pAddr,
+		},
+		ProviderRequirements: module.ProviderRequirements{
+			pAddr: version.Constraints{},
+		},
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func(t *testing.T) {
+		defer wg.Done()
+		sm := NewSchemaMerger(testCoreSchema())
+		sm.SetSchemaReader(exactSchemaReader{ps: ps})
+		sm.SetTerraformVersion(v0_15_0)
+		_, err := sm.SchemaForModule(meta)
+		if err != nil {
+			t.Error(err)
+		}
+	}(t)
+	go func(t *testing.T) {
+		defer wg.Done()
+		sm := NewSchemaMerger(testCoreSchema())
+		sm.SetSchemaReader(exactSchemaReader{ps: ps})
+		sm.SetTerraformVersion(v0_15_0)
+		_, err := sm.SchemaForModule(meta)
+		if err != nil {
+			t.Error(err)
+		}
+	}(t)
+	wg.Wait()
+}
+
+type exactSchemaReader struct {
+	ps *ProviderSchema
+}
+
+func (sr exactSchemaReader) ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*ProviderSchema, error) {
+	return sr.ps, nil
 }
 
 func TestMergeWithJsonProviderSchemas_v015(t *testing.T) {
