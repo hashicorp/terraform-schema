@@ -32,9 +32,6 @@ func providerBlockSchema() *schema.BlockSchema {
 		},
 		Description: lang.PlainText("A provider block is used to specify a provider configuration"),
 		Body: &schema.BodySchema{
-			Extensions: &schema.BodyExtensions{
-				Count: true,
-			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"alias": {
 					Expr:        schema.LiteralTypeOnly(cty.String),

@@ -34,9 +34,6 @@ var variableBlockSchema = &schema.BlockSchema{
 	Description: lang.Markdown("Input variable allowing users to customizate aspects of the configuration when used directly " +
 		"(e.g. via CLI, `tfvars` file or via environment variables), or as a module (via `module` arguments)"),
 	Body: &schema.BodySchema{
-		Extensions: &schema.BodyExtensions{
-			Count: true,
-		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"description": {
 				Expr:        schema.LiteralTypeOnly(cty.String),
