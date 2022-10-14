@@ -10,7 +10,7 @@ func datasourceLifecycleBlock() *schema.BlockSchema {
 		Description: lang.Markdown("Lifecycle customizations to set validity conditions of the datasource"),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count:         true,
+				Count: true,
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"precondition": {

@@ -15,7 +15,7 @@ func connectionBlock(v *version.Version) *schema.BlockSchema {
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Connection},
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count:         true,
+				Count: true,
 			},
 			HoverURL: "https://www.terraform.io/docs/language/resources/provisioners/connection.html",
 			Attributes: map[string]*schema.AttributeSchema{

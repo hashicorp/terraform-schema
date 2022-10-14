@@ -12,7 +12,7 @@ func resourceLifecycleBlock() *schema.BlockSchema {
 		Description: lang.Markdown("Lifecycle customizations to change default resource behaviours during plan or apply"),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count:         true,
+				Count: true,
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"create_before_destroy": {

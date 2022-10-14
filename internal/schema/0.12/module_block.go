@@ -30,7 +30,7 @@ func moduleBlockSchema() *schema.BlockSchema {
 		Description: lang.PlainText("Module block to call a locally or remotely stored module"),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count:         true,
+				Count: true,
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"source": {

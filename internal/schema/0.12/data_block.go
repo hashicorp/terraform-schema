@@ -43,7 +43,7 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			"Terraform module, but has no significance outside of the scope of a module."),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count:         true,
+				Count: true,
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {

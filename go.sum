@@ -27,8 +27,6 @@ github.com/hashicorp/go-version v1.2.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09
 github.com/hashicorp/go-version v1.5.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
 github.com/hashicorp/go-version v1.6.0 h1:feTTfFNnjP967rlCxM/I9g701jU+RN74YKx2mOkIeek=
 github.com/hashicorp/go-version v1.6.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
-github.com/hashicorp/hcl-lang v0.0.0-20220823151539-1fce4f11c137 h1:PdOsf6eIhzEq6k1h5ZL9DQ87WN8KTBHmdxD8mG8nTC8=
-github.com/hashicorp/hcl-lang v0.0.0-20220823151539-1fce4f11c137/go.mod h1:Ev8KD37pqUW9duG1sKiGUnDZTf93cHm0O5ndFEY7Zgw=
 github.com/hashicorp/hcl-lang v0.0.0-20221006125325-369f0e2ec834 h1:3Fcr3MTiKM7mBCR16AfGOx0A7h6eQfoVH6xD76OBIAE=
 github.com/hashicorp/hcl-lang v0.0.0-20221006125325-369f0e2ec834/go.mod h1:olv+pM633vw0rXvyHIPjw62ur/FNqqNV7b5TfSxLY6E=
 github.com/hashicorp/hcl/v2 v2.14.1 h1:x0BpjfZ+CYdbiz+8yZTQ+gdLO7IXvOut7Da+XJayx34=

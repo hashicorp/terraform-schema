@@ -42,7 +42,7 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			"outside of the scope of a module."),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count:         true,
+				Count: true,
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
