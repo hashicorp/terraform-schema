@@ -29,6 +29,8 @@ github.com/hashicorp/go-version v1.6.0 h1:feTTfFNnjP967rlCxM/I9g701jU+RN74YKx2mO
 github.com/hashicorp/go-version v1.6.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
 github.com/hashicorp/hcl-lang v0.0.0-20221006125325-369f0e2ec834 h1:3Fcr3MTiKM7mBCR16AfGOx0A7h6eQfoVH6xD76OBIAE=
 github.com/hashicorp/hcl-lang v0.0.0-20221006125325-369f0e2ec834/go.mod h1:olv+pM633vw0rXvyHIPjw62ur/FNqqNV7b5TfSxLY6E=
+github.com/hashicorp/hcl-lang v0.0.0-20221014125844-7eceda07a779 h1:xzrUeFJXnrQ3U7sNrPLdtY8d2kmYr1BqY8X2fCagsl0=
+github.com/hashicorp/hcl-lang v0.0.0-20221014125844-7eceda07a779/go.mod h1:olv+pM633vw0rXvyHIPjw62ur/FNqqNV7b5TfSxLY6E=
 github.com/hashicorp/hcl/v2 v2.14.1 h1:x0BpjfZ+CYdbiz+8yZTQ+gdLO7IXvOut7Da+XJayx34=
 github.com/hashicorp/hcl/v2 v2.14.1/go.mod h1:e4z5nxYlWNPdDSNYX+ph14EvWYMFm3eP0zIUqPc2jr0=
 github.com/hashicorp/terraform-json v0.14.0 h1:sh9iZ1Y8IFJLx+xQiKHGud6/TSUCM0N8e17dKDpqV7s=
