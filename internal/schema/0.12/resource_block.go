@@ -42,7 +42,8 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			"outside of the scope of a module."),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count: true,
+				Count:         true,
+				DynamicBlocks: true,
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
@@ -73,6 +74,7 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 				"lifecycle":   lifecycleBlock,
 				"connection":  connectionBlock(v),
 				"provisioner": provisionerBlock(v),
+				"dynamic":     dynamicBlock,
 			},
 		},
 	}
@@ -91,6 +93,99 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 	}
 
 	return bs
+}
+
+var dynamicBlock = &schema.BlockSchema{
+	Description: lang.Markdown("A dynamic block to produce blocks dynamically " +
+		"by iterating over a given complex value"),
+	Labels: []*schema.LabelSchema{
+		{
+			Name:        "Block Name",
+			IsDepKey:    true,
+			Completable: true,
+		},
+	},
+	DependentBody: map[schema.SchemaKey]*schema.BodySchema{
+		schema.NewSchemaKey(schema.DependencyKeys{
+			Labels: []schema.LabelDependent{
+				{
+					Index: 0,
+					Value: "setting",
+				},
+			},
+		}): {
+			Attributes: map[string]*schema.AttributeSchema{
+				"for_each": {
+					Expr: schema.ExprConstraints{
+						schema.TraversalExpr{OfType: cty.List(cty.DynamicPseudoType)},
+						schema.TraversalExpr{OfType: cty.Set(cty.DynamicPseudoType)},
+						schema.TraversalExpr{OfType: cty.Map(cty.DynamicPseudoType)},
+						schema.LiteralTypeExpr{Type: cty.List(cty.DynamicPseudoType)},
+						schema.LiteralTypeExpr{Type: cty.Set(cty.DynamicPseudoType)},
+						schema.LiteralTypeExpr{Type: cty.Map(cty.DynamicPseudoType)},
+					},
+					IsRequired:  true,
+					Description: lang.Markdown("A set or a map where each item represents a block instance"),
+				},
+				"iterator": {
+					Expr:       schema.LiteralTypeOnly(cty.String),
+					IsOptional: true,
+					Description: lang.Markdown("The name of a temporary variable that represents the current " +
+						"element of the complex value. Defaults to the label of the dynamic block."),
+				},
+				"labels": {
+					Expr: schema.ExprConstraints{
+						schema.ListExpr{
+							Elem: schema.ExprConstraints{
+								schema.LiteralTypeExpr{Type: cty.String},
+								schema.TraversalExpr{OfType: cty.String},
+							},
+						},
+					},
+					IsOptional: true,
+					Description: lang.Markdown("A list of strings that specifies the block labels, " +
+						"in order, to use for each generated block."),
+				},
+			},
+			Blocks: map[string]*schema.BlockSchema{
+				"content": {
+					Description: lang.PlainText("The body of each generated block"),
+					Body: &schema.BodySchema{
+						Attributes: map[string]*schema.AttributeSchema{
+							"name": {
+								IsRequired: true,
+								Expr: schema.ExprConstraints{
+									schema.TraversalExpr{OfType: cty.String, OfScopeId: lang.ScopeId("builtin")},
+									schema.LiteralTypeExpr{Type: cty.String},
+								},
+							},
+							"namespace": {
+								IsRequired: true,
+								Expr: schema.ExprConstraints{
+									schema.TraversalExpr{OfType: cty.String},
+									schema.LiteralTypeExpr{Type: cty.String},
+								},
+							},
+							"resource": {
+								IsOptional: true,
+								Expr: schema.ExprConstraints{
+									schema.TraversalExpr{OfType: cty.String},
+									schema.LiteralTypeExpr{Type: cty.String},
+								},
+							},
+							"value": {
+								IsRequired: true,
+								Expr: schema.ExprConstraints{
+									schema.TraversalExpr{OfType: cty.String},
+									schema.LiteralTypeExpr{Type: cty.String},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	},
 }
 
 var lifecycleBlock = &schema.BlockSchema{
