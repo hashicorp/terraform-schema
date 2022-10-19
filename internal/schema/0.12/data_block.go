@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
-	"github.com/zclconf/go-cty/cty"
 )
 
 func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
@@ -43,7 +42,8 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			"Terraform module, but has no significance outside of the scope of a module."),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count: true,
+				Count:   true,
+				ForEach: true,
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
@@ -71,19 +71,6 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 				},
 			},
 		},
-	}
-
-	if v.GreaterThanOrEqual(v0_12_6) {
-		bs.Body.Attributes["for_each"] = &schema.AttributeSchema{
-			Expr: schema.ExprConstraints{
-				schema.TraversalExpr{OfType: cty.Set(cty.DynamicPseudoType)},
-				schema.TraversalExpr{OfType: cty.Map(cty.DynamicPseudoType)},
-				schema.LiteralTypeExpr{Type: cty.Set(cty.DynamicPseudoType)},
-				schema.LiteralTypeExpr{Type: cty.Map(cty.DynamicPseudoType)},
-			},
-			IsOptional:  true,
-			Description: lang.Markdown("A set or a map where each item represents an instance of this data source"),
-		}
 	}
 
 	return bs
