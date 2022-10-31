@@ -43,7 +43,7 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
 				Count:   true,
-				ForEach: true,
+				ForEach: true, // for_each was introduced in 0.12.6, but for simplicity we report it for all 0.12+
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
