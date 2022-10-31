@@ -42,7 +42,8 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			"outside of the scope of a module."),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count: true,
+				Count:   true,
+				ForEach: true, // for_each was introduced in 0.12.6, but for simplicity we report it for all 0.12+
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
@@ -75,19 +76,6 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 				"provisioner": provisionerBlock(v),
 			},
 		},
-	}
-
-	if v.GreaterThanOrEqual(v0_12_6) {
-		bs.Body.Attributes["for_each"] = &schema.AttributeSchema{
-			Expr: schema.ExprConstraints{
-				schema.TraversalExpr{OfType: cty.Set(cty.DynamicPseudoType)},
-				schema.TraversalExpr{OfType: cty.Map(cty.DynamicPseudoType)},
-				schema.LiteralTypeExpr{Type: cty.Set(cty.DynamicPseudoType)},
-				schema.LiteralTypeExpr{Type: cty.Map(cty.DynamicPseudoType)},
-			},
-			IsOptional:  true,
-			Description: lang.Markdown("A set or a map where each item represents an instance of this resource"),
-		}
 	}
 
 	return bs

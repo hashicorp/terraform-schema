@@ -31,7 +31,8 @@ func moduleBlockSchema() *schema.BlockSchema {
 		Description: lang.PlainText("Module block to call a locally or remotely stored module"),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count: true,
+				Count:   true,
+				ForEach: true,
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"source": {
@@ -74,16 +75,6 @@ func moduleBlockSchema() *schema.BlockSchema {
 					},
 					IsOptional:  true,
 					Description: lang.Markdown("Explicit mapping of providers which the module uses"),
-				},
-				"for_each": {
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.Set(cty.DynamicPseudoType)},
-						schema.TraversalExpr{OfType: cty.Map(cty.DynamicPseudoType)},
-						schema.LiteralTypeExpr{Type: cty.Set(cty.DynamicPseudoType)},
-						schema.LiteralTypeExpr{Type: cty.Map(cty.DynamicPseudoType)},
-					},
-					IsOptional:  true,
-					Description: lang.Markdown("A set or a map where each item represents an instance of this module"),
 				},
 				"depends_on": {
 					Expr: schema.ExprConstraints{

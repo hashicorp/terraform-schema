@@ -6,7 +6,7 @@ require (
 	github.com/google/go-cmp v0.5.9
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-version v1.6.0
-	github.com/hashicorp/hcl-lang v0.0.0-20221014125844-7eceda07a779
+	github.com/hashicorp/hcl-lang v0.0.0-20221031081328-b20d6288c7f3
 	github.com/hashicorp/hcl/v2 v2.14.1
 	github.com/hashicorp/terraform-json v0.14.0
 	github.com/hashicorp/terraform-registry-address v0.0.0-20220623143253-7d51757b572c
