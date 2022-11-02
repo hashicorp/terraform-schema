@@ -52,10 +52,10 @@ func resourceLifecycleBlock() *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"precondition": {
-					Body: conditionBody(),
+					Body: conditionBody(false),
 				},
 				"postcondition": {
-					Body: conditionBody(),
+					Body: conditionBody(true),
 				},
 			},
 		},

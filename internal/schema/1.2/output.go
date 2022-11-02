@@ -11,7 +11,7 @@ func outputLifecycleBlock() *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Blocks: map[string]*schema.BlockSchema{
 				"precondition": {
-					Body: conditionBody(),
+					Body: conditionBody(false),
 				},
 			},
 		},

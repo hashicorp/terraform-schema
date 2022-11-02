@@ -22,8 +22,8 @@ func ModuleSchema(v *version.Version) *schema.BodySchema {
 	return bs
 }
 
-func conditionBody() *schema.BodySchema {
-	return &schema.BodySchema{
+func conditionBody(enableSelfRefs bool) *schema.BodySchema {
+	bs := &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"condition": {
 				Expr: schema.ExprConstraints{
@@ -45,4 +45,12 @@ func conditionBody() *schema.BodySchema {
 			},
 		},
 	}
+
+	if enableSelfRefs {
+		bs.Extensions = &schema.BodyExtensions{
+			SelfRefs: true,
+		}
+	}
+
+	return bs
 }
