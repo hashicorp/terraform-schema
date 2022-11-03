@@ -25,6 +25,7 @@ func moduleBlockSchema() *schema.BlockSchema {
 				Name:                   "name",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
 				Description:            lang.PlainText("Reference Name"),
+				IsDepKey:               true,
 			},
 		},
 		Description: lang.PlainText("Module block to call a locally or remotely stored module"),

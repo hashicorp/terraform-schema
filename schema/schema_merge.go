@@ -237,6 +237,12 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 				path := filepath.Join(meta.Path, sourceAddr.String())
 
 				depKeys := schema.DependencyKeys{
+					Labels: []schema.LabelDependent{
+						{
+							Index: 0,
+							Value: module.LocalName,
+						},
+					},
 					// Fetching based only on the source can cause conflicts for multiple versions of the same module
 					// specially if they have different versions or the source of those modules have been modified
 					// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
