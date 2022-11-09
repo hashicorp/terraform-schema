@@ -43,8 +43,9 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			"Terraform module, but has no significance outside of the scope of a module."),
 		Body: &schema.BodySchema{
 			Extensions: &schema.BodyExtensions{
-				Count:   true,
-				ForEach: true, // for_each was introduced in 0.12.6, but for simplicity we report it for all 0.12+
+				Count:         true,
+				ForEach:       true, // for_each was introduced in 0.12.6, but for simplicity we report it for all 0.12+
+				DynamicBlocks: true,
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
