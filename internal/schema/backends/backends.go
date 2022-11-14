@@ -132,10 +132,12 @@ func backendBodySchemas(v *version.Version) map[string]*schema.BodySchema {
 		// https://github.com/hashicorp/terraform/commit/aa48af6e
 		delete(backends, "azure")
 		delete(backends, "artifactory")
-		delete(backends, "etcd")
-		delete(backends, "etcdv3")
 		delete(backends, "manta")
 		delete(backends, "swift")
+		// https://github.com/hashicorp/terraform/commit/799ab6c9
+		delete(backends, "etcd")
+		// https://github.com/hashicorp/terraform/commit/d61d3e9f
+		delete(backends, "etcdv3")
 	}
 
 	return backends
