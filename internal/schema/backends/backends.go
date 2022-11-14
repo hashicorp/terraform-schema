@@ -20,6 +20,7 @@ var (
 	v0_13_1  = version.Must(version.NewVersion("0.13.1"))
 	v0_14_0  = version.Must(version.NewVersion("0.14.0"))
 	v0_15_0  = version.Must(version.NewVersion("0.15.0"))
+	v1_3_0   = version.Must(version.NewVersion("1.3.0"))
 )
 
 func BackendTypesAsExprConstraints(tfVersion *version.Version) schema.ExprConstraints {
@@ -125,6 +126,18 @@ func backendBodySchemas(v *version.Version) map[string]*schema.BodySchema {
 	if v.GreaterThanOrEqual(v0_15_0) {
 		// https://github.com/hashicorp/terraform/commit/b8e3b803
 		delete(backends, "atlas")
+	}
+
+	if v.GreaterThanOrEqual(v1_3_0) {
+		// https://github.com/hashicorp/terraform/commit/aa48af6e
+		delete(backends, "azure")
+		delete(backends, "artifactory")
+		delete(backends, "manta")
+		delete(backends, "swift")
+		// https://github.com/hashicorp/terraform/commit/799ab6c9
+		delete(backends, "etcd")
+		// https://github.com/hashicorp/terraform/commit/d61d3e9f
+		delete(backends, "etcdv3")
 	}
 
 	return backends
