@@ -14,6 +14,9 @@ func connectionBlock(v *version.Version) *schema.BlockSchema {
 		MaxItems:               1,
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Connection},
 		Body: &schema.BodySchema{
+			Extensions: &schema.BodyExtensions{
+				SelfRefs: true,
+			},
 			HoverURL: "https://www.terraform.io/docs/language/resources/provisioners/connection.html",
 			Attributes: map[string]*schema.AttributeSchema{
 				"type": {

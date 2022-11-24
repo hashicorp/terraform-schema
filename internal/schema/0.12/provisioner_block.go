@@ -22,6 +22,9 @@ func provisionerBlock(v *version.Version) *schema.BlockSchema {
 			},
 		},
 		Body: &schema.BodySchema{
+			Extensions: &schema.BodyExtensions{
+				SelfRefs: true,
+			},
 			HoverURL: "https://www.terraform.io/docs/language/resources/provisioners/syntax.html",
 			Attributes: map[string]*schema.AttributeSchema{
 				"when": {
