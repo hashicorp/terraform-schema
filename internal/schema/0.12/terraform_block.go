@@ -64,12 +64,11 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	}
 
 	if v.GreaterThanOrEqual(v0_12_18) {
-		experiments := schema.TupleConsExpr{
-			AnyElem: schema.ExprConstraints{},
-			Name:    "set of features",
+		experiments := schema.SetExpr{
+			Elem: schema.ExprConstraints{},
 		}
 		if v.GreaterThanOrEqual(v0_12_20) {
-			experiments.AnyElem = append(experiments.AnyElem, schema.KeywordExpr{
+			experiments.Elem = append(experiments.Elem, schema.KeywordExpr{
 				Keyword: "variable_validation",
 				Name:    "feature",
 			})

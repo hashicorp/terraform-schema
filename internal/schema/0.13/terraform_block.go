@@ -23,9 +23,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 				},
 				"experiments": {
 					Expr: schema.ExprConstraints{
-						schema.TupleConsExpr{
-							Name: "set of features",
-						},
+						schema.SetExpr{},
 					},
 					IsOptional:  true,
 					Description: lang.Markdown("A set of experimental language features to enable"),
