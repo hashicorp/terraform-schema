@@ -59,9 +59,8 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 				},
 				"depends_on": {
 					Expr: schema.ExprConstraints{
-						schema.TupleConsExpr{
-							Name: "set of references",
-							AnyElem: schema.ExprConstraints{
+						schema.SetExpr{
+							Elem: schema.ExprConstraints{
 								schema.TraversalExpr{OfScopeId: refscope.DataScope},
 								schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
 								schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
@@ -102,7 +101,7 @@ func lifecycleBlock() *schema.BlockSchema {
 				},
 				"ignore_changes": {
 					Expr: schema.ExprConstraints{
-						schema.TupleConsExpr{},
+						schema.SetExpr{},
 						schema.KeywordExpr{
 							Keyword: "all",
 							Description: lang.Markdown("Ignore all attributes, which means that Terraform can create" +

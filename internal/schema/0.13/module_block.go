@@ -78,9 +78,8 @@ func moduleBlockSchema() *schema.BlockSchema {
 				},
 				"depends_on": {
 					Expr: schema.ExprConstraints{
-						schema.TupleConsExpr{
-							Name: "set of references",
-							AnyElem: schema.ExprConstraints{
+						schema.SetExpr{
+							Elem: schema.ExprConstraints{
 								schema.TraversalExpr{OfScopeId: refscope.DataScope},
 								schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
 								schema.TraversalExpr{OfScopeId: refscope.ResourceScope},

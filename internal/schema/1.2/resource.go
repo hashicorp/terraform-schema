@@ -26,7 +26,7 @@ func resourceLifecycleBlock() *schema.BlockSchema {
 				},
 				"ignore_changes": {
 					Expr: schema.ExprConstraints{
-						schema.TupleConsExpr{},
+						schema.SetExpr{},
 						schema.KeywordExpr{
 							Keyword: "all",
 							Description: lang.Markdown("Ignore all attributes, which means that Terraform can create" +
@@ -38,9 +38,8 @@ func resourceLifecycleBlock() *schema.BlockSchema {
 				},
 				"replace_triggered_by": {
 					Expr: schema.ExprConstraints{
-						schema.TupleConsExpr{
-							Name: "set of references",
-							AnyElem: schema.ExprConstraints{
+						schema.SetExpr{
+							Elem: schema.ExprConstraints{
 								schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
 							},
 						},

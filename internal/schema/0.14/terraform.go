@@ -24,9 +24,8 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 				},
 				"experiments": {
 					Expr: schema.ExprConstraints{
-						schema.TupleConsExpr{
-							Name: "set of features",
-							AnyElem: schema.ExprConstraints{
+						schema.SetExpr{
+							Elem: schema.ExprConstraints{
 								schema.KeywordExpr{
 									Keyword: "module_variable_optional_attrs",
 									Name:    "feature",
