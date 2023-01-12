@@ -27,7 +27,7 @@ func BackendTypesAsExprConstraints(tfVersion *version.Version) schema.ExprConstr
 	ec := make(schema.ExprConstraints, 0)
 
 	for backendType, bs := range backendBodySchemas(tfVersion) {
-		lv := schema.LiteralValue{
+		lv := schema.LegacyLiteralValue{
 			Val:          cty.StringVal(backendType),
 			IsDeprecated: bs.IsDeprecated,
 		}
@@ -38,8 +38,8 @@ func BackendTypesAsExprConstraints(tfVersion *version.Version) schema.ExprConstr
 	}
 
 	sort.SliceStable(ec, func(i, j int) bool {
-		leftVal := ec[i].(schema.LiteralValue)
-		rightVal := ec[j].(schema.LiteralValue)
+		leftVal := ec[i].(schema.LegacyLiteralValue)
+		rightVal := ec[j].(schema.LegacyLiteralValue)
 		return leftVal.Val.AsString() < rightVal.Val.AsString()
 	})
 

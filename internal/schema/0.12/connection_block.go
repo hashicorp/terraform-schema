@@ -21,11 +21,11 @@ func connectionBlock(v *version.Version) *schema.BlockSchema {
 			Attributes: map[string]*schema.AttributeSchema{
 				"type": {
 					Expr: schema.ExprConstraints{
-						schema.LiteralValue{
+						schema.LegacyLiteralValue{
 							Val:         cty.StringVal("ssh"),
 							Description: lang.Markdown("Use SSH to connect and provision the instance"),
 						},
-						schema.LiteralValue{
+						schema.LegacyLiteralValue{
 							Val:         cty.StringVal("winrm"),
 							Description: lang.Markdown("Use WinRM to connect and provision the instance"),
 						},
