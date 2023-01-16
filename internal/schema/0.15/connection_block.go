@@ -24,8 +24,8 @@ func ConnectionDependentBodies(v *version.Version) map[schema.SchemaKey]*schema.
 	// See https://github.com/hashicorp/terraform/commit/5b99a56f
 	bodies[ssh].Attributes["target_platform"] = &schema.AttributeSchema{
 		Expr: schema.ExprConstraints{
-			schema.LiteralValue{Val: cty.StringVal("windows")},
-			schema.LiteralValue{Val: cty.StringVal("unix")},
+			schema.LegacyLiteralValue{Val: cty.StringVal("windows")},
+			schema.LegacyLiteralValue{Val: cty.StringVal("unix")},
 		},
 		IsOptional: true,
 		Description: lang.Markdown("The target platform to connect to. " +
