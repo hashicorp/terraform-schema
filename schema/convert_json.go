@@ -106,7 +106,7 @@ func convertAttributesFromJson(attributes map[string]*tfjson.SchemaAttribute) ma
 			IsOptional:   attr.Optional,
 			IsRequired:   attr.Required,
 			IsSensitive:  attr.Sensitive,
-			Expr:         exprConstraintsFromAttribute(attr),
+			Constraint:   exprConstraintFromSchemaAttribute(attr),
 		}
 	}
 	return cAttrs
@@ -180,11 +180,44 @@ func bodySchemaForCtyObjectType(typ cty.Type) *schema.BodySchema {
 	}
 	for name, attrType := range attrTypes {
 		ret.Attributes[name] = &schema.AttributeSchema{
+			// TODO
 			Expr:       convertAttributeTypeToExprConstraints(attrType),
 			IsOptional: true,
 		}
 	}
 	return ret
+}
+
+func exprConstraintFromSchemaAttribute(attr *tfjson.SchemaAttribute) schema.Constraint {
+	if attr.AttributeType != cty.NilType {
+		// TODO: replace with AnyExpression
+		return schema.LiteralType{Type: attr.AttributeType}
+	}
+	if attr.AttributeNestedType != nil {
+		switch attr.AttributeNestedType.NestingMode {
+		case tfjson.SchemaNestingModeSingle:
+			return convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes)
+		case tfjson.SchemaNestingModeList:
+			return schema.List{
+				Elem:     convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes),
+				MinItems: attr.AttributeNestedType.MinItems,
+				MaxItems: attr.AttributeNestedType.MaxItems,
+			}
+		case tfjson.SchemaNestingModeSet:
+			return schema.Set{
+				Elem:     convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes),
+				MinItems: attr.AttributeNestedType.MinItems,
+				MaxItems: attr.AttributeNestedType.MaxItems,
+			}
+		case tfjson.SchemaNestingModeMap:
+			return schema.Map{
+				Elem:     convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes),
+				MinItems: attr.AttributeNestedType.MinItems,
+				MaxItems: attr.AttributeNestedType.MaxItems,
+			}
+		}
+	}
+	return nil
 }
 
 func exprConstraintsFromAttribute(attr *tfjson.SchemaAttribute) schema.ExprConstraints {
@@ -233,6 +266,7 @@ func exprConstraintsFromAttribute(attr *tfjson.SchemaAttribute) schema.ExprConst
 	return expr
 }
 
+// TODO: Remove or repurpose
 func convertAttributeTypeToExprConstraints(attrType cty.Type) schema.ExprConstraints {
 	ec := schema.ExprConstraints{
 		schema.TraversalExpr{OfType: attrType},
@@ -273,6 +307,7 @@ func convertCtyObjectToObjectExprAttr(obj cty.Type) schema.ObjectExpr {
 	attributes := make(schema.ObjectExprAttributes, len(attrTypes))
 	for name, attrType := range attrTypes {
 		aSchema := &schema.AttributeSchema{
+			// TODO
 			Expr: convertAttributeTypeToExprConstraints(attrType),
 		}
 
@@ -289,6 +324,24 @@ func convertCtyObjectToObjectExprAttr(obj cty.Type) schema.ObjectExpr {
 	}
 }
 
+func convertJsonAttributesToObjectConstraint(attrs map[string]*tfjson.SchemaAttribute) schema.Object {
+	attributes := make(schema.ObjectAttributes, len(attrs))
+	for name, attr := range attrs {
+		attributes[name] = &schema.AttributeSchema{
+			Description:  markupContent(attr.Description, attr.DescriptionKind),
+			IsDeprecated: attr.Deprecated,
+			IsComputed:   attr.Computed,
+			IsOptional:   attr.Optional,
+			IsRequired:   attr.Required,
+			// TODO
+			Expr: exprConstraintsFromAttribute(attr),
+		}
+	}
+	return schema.Object{
+		Attributes: attributes,
+	}
+}
+
 func convertJsonAttributesToObjectExprAttr(attrs map[string]*tfjson.SchemaAttribute) schema.ObjectExpr {
 	attributes := make(schema.ObjectExprAttributes, len(attrs))
 	for name, attr := range attrs {
@@ -298,7 +351,8 @@ func convertJsonAttributesToObjectExprAttr(attrs map[string]*tfjson.SchemaAttrib
 			IsComputed:   attr.Computed,
 			IsOptional:   attr.Optional,
 			IsRequired:   attr.Required,
-			Expr:         exprConstraintsFromAttribute(attr),
+			// TODO
+			Expr: exprConstraintsFromAttribute(attr),
 		}
 	}
 	return schema.ObjectExpr{
