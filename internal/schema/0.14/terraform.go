@@ -23,17 +23,15 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 						"with this configuration, e.g. `~> 0.12`"),
 				},
 				"experiments": {
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{
-							Elem: schema.ExprConstraints{
-								schema.KeywordExpr{
-									Keyword: "module_variable_optional_attrs",
-									Name:    "feature",
-								},
-								schema.KeywordExpr{
-									Keyword: "provider_sensitive_attrs",
-									Name:    "feature",
-								},
+					Constraint: schema.Set{
+						Elem: schema.OneOf{
+							schema.Keyword{
+								Keyword: "module_variable_optional_attrs",
+								Name:    "feature",
+							},
+							schema.Keyword{
+								Keyword: "provider_sensitive_attrs",
+								Name:    "feature",
 							},
 						},
 					},

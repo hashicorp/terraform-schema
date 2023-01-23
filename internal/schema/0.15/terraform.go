@@ -56,10 +56,8 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 	}
 	bs.Body.Attributes["language"] = &schema.AttributeSchema{
 		IsOptional: true,
-		Expr: schema.ExprConstraints{
-			schema.KeywordExpr{
-				Keyword: "TF2021",
-			},
+		Constraint: schema.Keyword{
+			Keyword: "TF2021",
 		},
 	}
 	return bs

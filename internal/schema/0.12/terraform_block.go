@@ -64,18 +64,16 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	}
 
 	if v.GreaterThanOrEqual(v0_12_18) {
-		experiments := schema.SetExpr{
-			Elem: schema.ExprConstraints{},
-		}
+		experiments := schema.OneOf{}
 		if v.GreaterThanOrEqual(v0_12_20) {
-			experiments.Elem = append(experiments.Elem, schema.KeywordExpr{
+			experiments = append(experiments, schema.Keyword{
 				Keyword: "variable_validation",
 				Name:    "feature",
 			})
 		}
 		bs.Body.Attributes["experiments"] = &schema.AttributeSchema{
-			Expr: schema.ExprConstraints{
-				experiments,
+			Constraint: schema.Set{
+				Elem: experiments,
 			},
 			IsOptional:  true,
 			Description: lang.Markdown("A set of experimental language features to enable"),

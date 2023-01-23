@@ -25,9 +25,11 @@ func resourceLifecycleBlock() *schema.BlockSchema {
 						"to reject with an error any plan that would destroy the resource"),
 				},
 				"ignore_changes": {
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{},
-						schema.KeywordExpr{
+					Constraint: schema.OneOf{
+						schema.Set{
+							// TODO: expose reference targets via attribute-only address
+						},
+						schema.Keyword{
 							Keyword: "all",
 							Description: lang.Markdown("Ignore all attributes, which means that Terraform can create" +
 								" and destroy the remote object but will never propose updates to it"),
