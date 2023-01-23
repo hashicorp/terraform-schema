@@ -42,7 +42,7 @@ func variableBlockSchema(v *version.Version) *schema.BlockSchema {
 					Description: lang.Markdown("Description to document the purpose of the variable and what value is expected"),
 				},
 				"type": {
-					Expr:        schema.ExprConstraints{schema.TypeDeclarationExpr{}},
+					Constraint:  schema.TypeDeclaration{},
 					IsOptional:  true,
 					Description: lang.Markdown("Type constraint restricting the type of value to accept, e.g. `string` or `list(string)`"),
 				},
