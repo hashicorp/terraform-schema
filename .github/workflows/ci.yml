@@ -1,4 +1,4 @@
-name: ci
+nbrandoname: ci
 
 on:
   pull_request:
