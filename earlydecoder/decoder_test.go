@@ -817,9 +817,9 @@ variable "name" {
 			`
 variable "name" {
   type = object({
-		foo = optional(string, "food")
-		bar = optional(number)
-	})
+    foo = optional(string, "food")
+    bar = optional(number)
+  })
 }`,
 			&module.Meta{
 				Path:                 path,

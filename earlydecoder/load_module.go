@@ -216,7 +216,6 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			varType := cty.DynamicPseudoType
 			var defaults *typeexpr.Defaults
 			if attr, defined := content.Attributes["type"]; defined {
-				// varType, valDiags = typeexpr.TypeConstraint(attr.Expr)
 				varType, defaults, valDiags = typeexpr.TypeConstraintWithDefaults(attr.Expr)
 				diags = append(diags, valDiags...)
 			}
