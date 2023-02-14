@@ -17,5 +17,10 @@ type Variable struct {
 	// and is decodable without errors, else cty.NilVal
 	DefaultValue cty.Value
 
+	// TypeDefaults represents any default values for optional object
+	// attributes assuming Type is of cty.Object and has defaults.
+	//
+	// Any relationships between DefaultValue & TypeDefaults are left
+	// for downstream to deal with using e.g. TypeDefaults.Apply().
 	TypeDefaults *typeexpr.Defaults
 }
