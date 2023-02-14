@@ -1,6 +1,7 @@
 package module
 
 import (
+	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -15,4 +16,6 @@ type Variable struct {
 	// DefaultValue represents default value if one is defined
 	// and is decodable without errors, else cty.NilVal
 	DefaultValue cty.Value
+
+	TypeDefaults *typeexpr.Defaults
 }

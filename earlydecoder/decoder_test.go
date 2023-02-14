@@ -7,6 +7,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/backend"
@@ -803,6 +804,42 @@ variable "name" {
 					"name": {
 						Type:         cty.DynamicPseudoType,
 						DefaultValue: cty.EmptyObjectVal,
+					},
+				},
+				Outputs:     map[string]module.Output{},
+				Filenames:   []string{"test.tf"},
+				ModuleCalls: map[string]module.DeclaredModuleCall{},
+			},
+			nil,
+		},
+		{
+			"variables with optional type values",
+			`
+variable "name" {
+  type = object({
+		foo = optional(string, "food")
+		bar = optional(number)
+	})
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables: map[string]module.Variable{
+					"name": {
+						Type: cty.Object(map[string]cty.Type{
+							"foo": cty.String,
+							"bar": cty.Number,
+						}),
+						TypeDefaults: &typeexpr.Defaults{
+							Type: cty.Object(map[string]cty.Type{
+								"foo": cty.String,
+								"bar": cty.Number,
+							}),
+							DefaultValues: map[string]cty.Value{
+								"foo": cty.StringVal("food"),
+							},
+						},
 					},
 				},
 				Outputs:     map[string]module.Output{},
