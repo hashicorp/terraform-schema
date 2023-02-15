@@ -11,6 +11,7 @@ import (
 	funcs_v0_14 "github.com/hashicorp/terraform-schema/internal/funcs/0.14"
 	funcs_v0_15 "github.com/hashicorp/terraform-schema/internal/funcs/0.15"
 	funcs_v1_3 "github.com/hashicorp/terraform-schema/internal/funcs/1.3"
+	funcs_generated "github.com/hashicorp/terraform-schema/internal/funcs/generated"
 )
 
 func FunctionsForVersion(v *version.Version) (map[string]schema.FunctionSignature, error) {
@@ -19,6 +20,9 @@ func FunctionsForVersion(v *version.Version) (map[string]schema.FunctionSignatur
 		return nil, fmt.Errorf("invalid version: %w", err)
 	}
 
+	if ver.GreaterThanOrEqual(v1_4) {
+		return funcs_generated.Functions(ver), nil
+	}
 	if ver.GreaterThanOrEqual(v1_3) {
 		return funcs_v1_3.Functions(ver), nil
 	}
