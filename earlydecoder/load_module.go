@@ -214,8 +214,9 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				diags = append(diags, valDiags...)
 			}
 			varType := cty.DynamicPseudoType
+			var defaults *typeexpr.Defaults
 			if attr, defined := content.Attributes["type"]; defined {
-				varType, valDiags = typeexpr.TypeConstraint(attr.Expr)
+				varType, defaults, valDiags = typeexpr.TypeConstraintWithDefaults(attr.Expr)
 				diags = append(diags, valDiags...)
 			}
 			if attr, defined := content.Attributes["sensitive"]; defined {
@@ -239,6 +240,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 							val = cty.DynamicVal
 						}
 					}
+
 					defaultValue = val
 				}
 			}
@@ -247,6 +249,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				Description:  description,
 				IsSensitive:  isSensitive,
 				DefaultValue: defaultValue,
+				TypeDefaults: defaults,
 			}
 		case "output":
 			content, _, contentDiags := block.Body.PartialContent(outputSchema)
