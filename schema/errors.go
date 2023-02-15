@@ -26,3 +26,18 @@ func (e NoCompatibleSchemaErr) Error() string {
 	}
 	return "no compatible schema found"
 }
+
+type NoCompatibleFunctionsErr struct {
+	Version     *version.Version
+	Constraints version.Constraints
+}
+
+func (e NoCompatibleFunctionsErr) Error() string {
+	if e.Version != nil {
+		return fmt.Sprintf("no compatible functions found for %s", e.Version)
+	}
+	if e.Constraints != nil && len(e.Constraints) > 0 {
+		return fmt.Sprintf("no compatible functions found for %s", e.Constraints)
+	}
+	return "no compatible functions found"
+}
