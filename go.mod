@@ -6,8 +6,10 @@ require (
 	github.com/google/go-cmp v0.5.9
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-version v1.6.0
-	github.com/hashicorp/hcl-lang v0.0.0-20230116103858-6ac47d11e884
+	github.com/hashicorp/hc-install v0.5.0
+	github.com/hashicorp/hcl-lang v0.0.0-20230215175403-7a4806322d6e
 	github.com/hashicorp/hcl/v2 v2.16.1
+	github.com/hashicorp/terraform-exec v0.18.0
 	github.com/hashicorp/terraform-json v0.15.0
 	github.com/hashicorp/terraform-registry-address v0.0.0-20220623143253-7d51757b572c
 	github.com/mh-cbon/go-fmt-fail v0.0.0-20160815164508-67765b3fbcb5
@@ -22,6 +24,8 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
-	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/crypto v0.5.0 // indirect
+	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/net v0.5.0 // indirect
+	golang.org/x/text v0.6.0 // indirect
 )

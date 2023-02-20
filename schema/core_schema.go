@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"fmt"
-
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/schema"
 	mod_v0_12 "github.com/hashicorp/terraform-schema/internal/schema/0.12"
@@ -20,17 +18,15 @@ var (
 	v0_15 = version.Must(version.NewVersion("0.15"))
 	v1_1  = version.Must(version.NewVersion("1.1"))
 	v1_2  = version.Must(version.NewVersion("1.2"))
+	v1_3  = version.Must(version.NewVersion("1.3"))
+	v1_4  = version.Must(version.NewVersion("1.4"))
 )
 
 // CoreModuleSchemaForVersion finds a module schema which is relevant
 // for the given Terraform version.
 // It will return error if such schema cannot be found.
 func CoreModuleSchemaForVersion(v *version.Version) (*schema.BodySchema, error) {
-	ver, err := semVer(v)
-	if err != nil {
-		return nil, fmt.Errorf("invalid version: %w", err)
-	}
-
+	ver := v.Core()
 	if ver.GreaterThanOrEqual(v1_2) {
 		return mod_v1_2.ModuleSchema(ver), nil
 	}
@@ -62,11 +58,4 @@ func CoreModuleSchemaForConstraint(vc version.Constraints) (*schema.BodySchema, 
 	}
 
 	return nil, NoCompatibleSchemaErr{Constraints: vc}
-}
-
-func semVer(ver *version.Version) (*version.Version, error) {
-	// Assume that alpha/beta/rc prereleases have the same compatibility
-	segments := ver.Segments64()
-	segmentsOnly := fmt.Sprintf("%d.%d.%d", segments[0], segments[1], segments[2])
-	return version.NewVersion(segmentsOnly)
 }
