@@ -42,7 +42,7 @@ func Functions(v *version.Version) map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.String,
-			Description: "`uuidv5` generates a _name-based_ UUID, as described in [RFC 4122 section 4.3](https://tools.ietf.org/html/rfc4122#section-4.3), also known as a &amp;#34;version 5&amp;#34; UUID.",
+			Description: "`uuidv5` generates a _name-based_ UUID, as described in [RFC 4122 section 4.3](https://tools.ietf.org/html/rfc4122#section-4.3), also known as a \"version 5\" UUID.",
 		}
 		f["yamldecode"] = schema.FunctionSignature{
 			Params: []function.Parameter{

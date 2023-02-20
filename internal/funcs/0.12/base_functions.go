@@ -56,7 +56,7 @@ func BaseFunctions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.String,
-			Description: "`base64sha256` computes the SHA256 hash of a given string and encodes it with Base64. This is not equivalent to `base64encode(sha256(&amp;#34;test&amp;#34;))` since `sha256()` returns hexadecimal representation.",
+			Description: "`base64sha256` computes the SHA256 hash of a given string and encodes it with Base64. This is not equivalent to `base64encode(sha256(\"test\"))` since `sha256()` returns hexadecimal representation.",
 		},
 		"base64sha512": {
 			Params: []function.Parameter{
@@ -66,7 +66,7 @@ func BaseFunctions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.String,
-			Description: "`base64sha512` computes the SHA512 hash of a given string and encodes it with Base64. This is not equivalent to `base64encode(sha512(&amp;#34;test&amp;#34;))` since `sha512()` returns hexadecimal representation.",
+			Description: "`base64sha512` computes the SHA512 hash of a given string and encodes it with Base64. This is not equivalent to `base64encode(sha512(\"test\"))` since `sha512()` returns hexadecimal representation.",
 		},
 		"basename": {
 			Params: []function.Parameter{
@@ -182,7 +182,7 @@ func BaseFunctions() map[string]schema.FunctionSignature {
 				Type: cty.DynamicPseudoType,
 			},
 			ReturnType:  cty.DynamicPseudoType,
-			Description: "`coalesce` takes any number of arguments and returns the first one that isn&amp;#39;t null or an empty string.",
+			Description: "`coalesce` takes any number of arguments and returns the first one that isn't null or an empty string.",
 		},
 		"coalescelist": {
 			VarParam: &function.Parameter{
@@ -191,7 +191,7 @@ func BaseFunctions() map[string]schema.FunctionSignature {
 				Type:        cty.DynamicPseudoType,
 			},
 			ReturnType:  cty.DynamicPseudoType,
-			Description: "`coalescelist` takes any number of list arguments and returns the first one that isn&amp;#39;t empty.",
+			Description: "`coalescelist` takes any number of list arguments and returns the first one that isn't empty.",
 		},
 		"compact": {
 			Params: []function.Parameter{
@@ -625,7 +625,7 @@ func BaseFunctions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.String,
-			Description: "`pathexpand` takes a filesystem path that might begin with a `~` segment, and if so it replaces that segment with the current user&amp;#39;s home directory path.",
+			Description: "`pathexpand` takes a filesystem path that might begin with a `~` segment, and if so it replaces that segment with the current user's home directory path.",
 		},
 		"pow": {
 			Params: []function.Parameter{

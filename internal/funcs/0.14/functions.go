@@ -20,7 +20,7 @@ func Functions(v *version.Version) map[string]schema.FunctionSignature {
 			},
 		},
 		ReturnType:  cty.Bool,
-		Description: "`alltrue` returns `true` if all elements in a given collection are `true` or `&amp;#34;true&amp;#34;`. It also returns `true` if the collection is empty.",
+		Description: "`alltrue` returns `true` if all elements in a given collection are `true` or `\"true\"`. It also returns `true` if the collection is empty.",
 	}
 	f["anytrue"] = schema.FunctionSignature{
 		Params: []function.Parameter{
@@ -30,7 +30,7 @@ func Functions(v *version.Version) map[string]schema.FunctionSignature {
 			},
 		},
 		ReturnType:  cty.Bool,
-		Description: "`anytrue` returns `true` if any element in a given collection is `true` or `&amp;#34;true&amp;#34;`. It also returns `false` if the collection is empty.",
+		Description: "`anytrue` returns `true` if any element in a given collection is `true` or `\"true\"`. It also returns `false` if the collection is empty.",
 	}
 	f["textdecodebase64"] = schema.FunctionSignature{
 		Params: []function.Parameter{
