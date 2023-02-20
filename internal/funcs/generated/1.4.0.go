@@ -37,7 +37,7 @@ func v1_4_0_Functions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.Bool,
-			Description: "`alltrue` returns `true` if all elements in a given collection are `true` or `&#34;true&#34;`. It also returns `true` if the collection is empty.",
+			Description: "`alltrue` returns `true` if all elements in a given collection are `true` or `\"true\"`. It also returns `true` if the collection is empty.",
 		},
 		"anytrue": {
 			Params: []function.Parameter{
@@ -47,7 +47,7 @@ func v1_4_0_Functions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.Bool,
-			Description: "`anytrue` returns `true` if any element in a given collection is `true` or `&#34;true&#34;`. It also returns `false` if the collection is empty.",
+			Description: "`anytrue` returns `true` if any element in a given collection is `true` or `\"true\"`. It also returns `false` if the collection is empty.",
 		},
 		"base64decode": {
 			Params: []function.Parameter{
@@ -87,7 +87,7 @@ func v1_4_0_Functions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.String,
-			Description: "`base64sha256` computes the SHA256 hash of a given string and encodes it with Base64. This is not equivalent to `base64encode(sha256(&#34;test&#34;))` since `sha256()` returns hexadecimal representation.",
+			Description: "`base64sha256` computes the SHA256 hash of a given string and encodes it with Base64. This is not equivalent to `base64encode(sha256(\"test\"))` since `sha256()` returns hexadecimal representation.",
 		},
 		"base64sha512": {
 			Params: []function.Parameter{
@@ -97,7 +97,7 @@ func v1_4_0_Functions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.String,
-			Description: "`base64sha512` computes the SHA512 hash of a given string and encodes it with Base64. This is not equivalent to `base64encode(sha512(&#34;test&#34;))` since `sha512()` returns hexadecimal representation.",
+			Description: "`base64sha512` computes the SHA512 hash of a given string and encodes it with Base64. This is not equivalent to `base64encode(sha512(\"test\"))` since `sha512()` returns hexadecimal representation.",
 		},
 		"basename": {
 			Params: []function.Parameter{
@@ -240,7 +240,7 @@ func v1_4_0_Functions() map[string]schema.FunctionSignature {
 				Type:        cty.DynamicPseudoType,
 			},
 			ReturnType:  cty.DynamicPseudoType,
-			Description: "`coalesce` takes any number of arguments and returns the first one that isn&#39;t null or an empty string.",
+			Description: "`coalesce` takes any number of arguments and returns the first one that isn't null or an empty string.",
 		},
 		"coalescelist": {
 			VarParam: &function.Parameter{
@@ -249,7 +249,7 @@ func v1_4_0_Functions() map[string]schema.FunctionSignature {
 				Type:        cty.DynamicPseudoType,
 			},
 			ReturnType:  cty.DynamicPseudoType,
-			Description: "`coalescelist` takes any number of list arguments and returns the first one that isn&#39;t empty.",
+			Description: "`coalescelist` takes any number of list arguments and returns the first one that isn't empty.",
 		},
 		"compact": {
 			Params: []function.Parameter{
@@ -736,7 +736,7 @@ func v1_4_0_Functions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.String,
-			Description: "`pathexpand` takes a filesystem path that might begin with a `~` segment, and if so it replaces that segment with the current user&#39;s home directory path.",
+			Description: "`pathexpand` takes a filesystem path that might begin with a `~` segment, and if so it replaces that segment with the current user's home directory path.",
 		},
 		"pow": {
 			Params: []function.Parameter{
@@ -1280,7 +1280,7 @@ func v1_4_0_Functions() map[string]schema.FunctionSignature {
 				},
 			},
 			ReturnType:  cty.String,
-			Description: "`uuidv5` generates a _name-based_ UUID, as described in [RFC 4122 section 4.3](https://tools.ietf.org/html/rfc4122#section-4.3), also known as a &#34;version 5&#34; UUID.",
+			Description: "`uuidv5` generates a _name-based_ UUID, as described in [RFC 4122 section 4.3](https://tools.ietf.org/html/rfc4122#section-4.3), also known as a \"version 5\" UUID.",
 		},
 		"values": {
 			Params: []function.Parameter{

@@ -26,7 +26,7 @@ import (
 
 const (
 	terraformVersion      = "1.4.0"
-	functionSignatureHash = "94f55d9c950d686244657db39894b15ce2548095c9b68fe497d763448bb5e25d"
+	functionSignatureHash = "8877af98abc453ce29d43e390c71b97bceaf90563ed28cf575e0100288602e9d"
 )
 
 func main() {
@@ -186,7 +186,9 @@ func {{ .FunctionName }}() map[string]schema.FunctionSignature {
 }
 
 func escapeDescription(description string) string {
-	return strings.ReplaceAll(description, `\`, `\\`)
+	s := strings.ReplaceAll(description, `\`, `\\`)
+	s = strings.ReplaceAll(s, `"`, `\"`)
+	return s
 }
 
 func escapeVersion(version string) string {
