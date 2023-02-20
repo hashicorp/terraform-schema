@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"fmt"
-
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/schema"
 
@@ -15,11 +13,7 @@ import (
 )
 
 func FunctionsForVersion(v *version.Version) (map[string]schema.FunctionSignature, error) {
-	ver, err := semVer(v)
-	if err != nil {
-		return nil, fmt.Errorf("invalid version: %w", err)
-	}
-
+	ver := v.Core()
 	if ver.GreaterThanOrEqual(v1_4) {
 		return funcs_generated.Functions(ver), nil
 	}
