@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/schema"
 
@@ -41,5 +43,5 @@ func FunctionsForConstraint(vc version.Constraints) (map[string]schema.FunctionS
 		}
 	}
 
-	return nil, NoCompatibleFunctionsErr{Constraints: vc}
+	return nil, fmt.Errorf("no compatible functions found for %s", vc)
 }
