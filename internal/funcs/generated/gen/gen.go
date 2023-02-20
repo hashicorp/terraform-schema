@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"go/format"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -67,7 +66,7 @@ func main() {
 func signaturesFromTerraform(ctx context.Context) (*tfjson.MetadataFunctions, error) {
 	// find or install Terraform
 	log.Println("ensuring terraform is installed")
-	installDir, err := ioutil.TempDir("", "hcinstall")
+	installDir, err := os.MkdirTemp("", "hcinstall")
 	if err != nil {
 		return nil, err
 	}
@@ -207,7 +206,7 @@ func escapeVersion(version string) string {
 // signature files within a path. It will skip all directories and
 // filenames that don't parse as a version string.
 func generatedVersions(path string) ([]*version.Version, error) {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
