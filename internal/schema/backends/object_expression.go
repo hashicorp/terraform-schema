@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package backends
 
 import "github.com/hashicorp/hcl-lang/schema"
