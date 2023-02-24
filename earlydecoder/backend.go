@@ -30,3 +30,26 @@ func decodeBackendsBlock(block *hcl.Block) (backend.BackendData, hcl.Diagnostics
 
 	return &backend.UnknownBackendData{}, diags
 }
+
+func decodeCloudBlock(block *hcl.Block) (backend.CloudData, hcl.Diagnostics) {
+	attrs, diags := block.Body.JustAttributes()
+
+	// https://developer.hashicorp.com/terraform/language/settings/terraform-cloud#usage-example
+	// Required for Terraform Enterprise
+	// Defaults to app.terraform.io for Terraform Cloud
+	if attr, ok := attrs["hostname"]; ok {
+		val, vDiags := attr.Expr.Value(nil)
+		diags = append(diags, vDiags...)
+		if val.IsWhollyKnown() && val.Type() == cty.String {
+			return &backend.Cloud{
+				Hostname: val.AsString(),
+			}, nil
+		}
+	}
+
+	// since it defaults to app.terraform.io, it is safe to return that
+	// if hostname is empty
+	return &backend.Cloud{
+		Hostname: "app.terraform.io",
+	}, nil
+}

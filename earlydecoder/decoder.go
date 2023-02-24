@@ -41,6 +41,13 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 		coreRequirements = append(coreRequirements, c...)
 	}
 
+	var tfCloud *module.CloudBackend
+	if mod.CloudBackend != nil {
+		tfCloud = &module.CloudBackend{
+			Data: mod.CloudBackend,
+		}
+	}
+
 	var backend *module.Backend
 	if len(mod.Backends) == 1 {
 		for bType, data := range mod.Backends {
@@ -208,6 +215,7 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 	return &module.Meta{
 		Path:                 path,
 		Backend:              backend,
+		CloudBackend:         tfCloud,
 		ProviderReferences:   refs,
 		ProviderRequirements: providerRequirements,
 		CoreRequirements:     coreRequirements,

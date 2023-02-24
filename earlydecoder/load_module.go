@@ -22,6 +22,7 @@ import (
 type decodedModule struct {
 	RequiredCore         []string
 	Backends             map[string]backend.BackendData
+	CloudBackend         backend.CloudData
 	ProviderRequirements map[string]*providerRequirement
 	ProviderConfigs      map[string]*providerConfig
 	Resources            map[string]*resource
@@ -78,6 +79,10 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 
 			for _, innerBlock := range content.Blocks {
 				switch innerBlock.Type {
+				case "cloud":
+					data, bDiags := decodeCloudBlock(innerBlock)
+					diags = append(diags, bDiags...)
+					mod.CloudBackend = data
 				case "backend":
 					bType := innerBlock.Labels[0]
 
@@ -95,7 +100,6 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 					}
 
 					mod.Backends[bType] = data
-
 				case "required_providers":
 					reqs, reqsDiags := decodeRequiredProvidersBlock(innerBlock)
 					diags = append(diags, reqsDiags...)
