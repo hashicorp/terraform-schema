@@ -31,7 +31,7 @@ func decodeBackendsBlock(block *hcl.Block) (backend.BackendData, hcl.Diagnostics
 	return &backend.UnknownBackendData{}, diags
 }
 
-func decodeCloudBlock(block *hcl.Block) (backend.CloudData, hcl.Diagnostics) {
+func decodeCloudBlock(block *hcl.Block) (*backend.Cloud, hcl.Diagnostics) {
 	attrs, diags := block.Body.JustAttributes()
 
 	// https://developer.hashicorp.com/terraform/language/settings/terraform-cloud#usage-example

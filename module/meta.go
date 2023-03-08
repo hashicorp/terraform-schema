@@ -14,7 +14,7 @@ type Meta struct {
 	Filenames []string
 
 	Backend              *Backend
-	CloudBackend         *CloudBackend
+	Cloud                *backend.Cloud
 	ProviderReferences   map[ProviderRef]tfaddr.Provider
 	ProviderRequirements ProviderRequirements
 	CoreRequirements     version.Constraints
@@ -41,22 +41,6 @@ func (pr ProviderRequirements) Equals(reqs ProviderRequirements) bool {
 	}
 
 	return true
-}
-
-type CloudBackend struct {
-	Data backend.CloudData
-}
-
-func (be *CloudBackend) Equals(b *CloudBackend) bool {
-	if be == nil && b == nil {
-		return true
-	}
-
-	if be == nil || b == nil {
-		return false
-	}
-
-	return be.Data.Equals(b.Data)
 }
 
 type Backend struct {

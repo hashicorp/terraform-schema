@@ -1015,18 +1015,10 @@ terraform {
 	}
 }`,
 			&module.Meta{
-				Path: path,
-				// Backend: &module.Backend{
-				// 	Type: "cloud",
-				// 	Data: &backend.Remote{
-				// 		Hostname: "app.terraform.io",
-				// 	},
-				// },
+				Path:    path,
 				Backend: nil,
-				CloudBackend: &module.CloudBackend{
-					Data: &backend.Cloud{
-						Hostname: "app.terraform.io",
-					},
+				Cloud: &backend.Cloud{
+					Hostname: "app.terraform.io",
 				},
 				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
@@ -1050,18 +1042,10 @@ terraform {
 	}
 }`,
 			&module.Meta{
-				Path: path,
-				// Backend: &module.Backend{
-				// 	Type: "cloud",
-				// 	Data: &backend.Remote{
-				// 		Hostname: "app.terraform.io",
-				// 	},
-				// },
+				Path:    path,
 				Backend: nil,
-				CloudBackend: &module.CloudBackend{
-					Data: &backend.Cloud{
-						Hostname: "app.terraform.io",
-					},
+				Cloud: &backend.Cloud{
+					Hostname: "app.terraform.io",
 				},
 				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},

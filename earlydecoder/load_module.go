@@ -22,7 +22,7 @@ import (
 type decodedModule struct {
 	RequiredCore         []string
 	Backends             map[string]backend.BackendData
-	CloudBackend         backend.CloudData
+	CloudBackend         *backend.Cloud
 	ProviderRequirements map[string]*providerRequirement
 	ProviderConfigs      map[string]*providerConfig
 	Resources            map[string]*resource
