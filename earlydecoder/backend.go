@@ -43,13 +43,9 @@ func decodeCloudBlock(block *hcl.Block) (*backend.Cloud, hcl.Diagnostics) {
 		if val.IsWhollyKnown() && val.Type() == cty.String {
 			return &backend.Cloud{
 				Hostname: val.AsString(),
-			}, nil
+			}, diags
 		}
 	}
 
-	// since it defaults to app.terraform.io, it is safe to return that
-	// if hostname is empty
-	return &backend.Cloud{
-		Hostname: "app.terraform.io",
-	}, nil
+	return &backend.Cloud{}, nil
 }

@@ -1008,10 +1008,6 @@ terraform {
 	cloud {
 		hostname = "app.terraform.io"
 		organization = "example_corp"
-
-		workspaces {
-			tags = ["app"]
-		}
 	}
 }`,
 			&module.Meta{
@@ -1035,18 +1031,12 @@ terraform {
 terraform {
 	cloud {
 		organization = "example_corp"
-
-		workspaces {
-			tags = ["app"]
-		}
 	}
 }`,
 			&module.Meta{
-				Path:    path,
-				Backend: nil,
-				Cloud: &backend.Cloud{
-					Hostname: "app.terraform.io",
-				},
+				Path:                 path,
+				Backend:              nil,
+				Cloud:                &backend.Cloud{},
 				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
 				Variables:            map[string]module.Variable{},
