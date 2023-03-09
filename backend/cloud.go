@@ -6,5 +6,3 @@ package backend
 type Cloud struct {
 	Hostname string
 }
-
-type UnknownCloudData struct{}
