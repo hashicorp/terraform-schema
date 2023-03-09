@@ -208,6 +208,7 @@ func LoadModule(path string, files map[string]*hcl.File) (*module.Meta, hcl.Diag
 	return &module.Meta{
 		Path:                 path,
 		Backend:              backend,
+		Cloud:                mod.CloudBackend,
 		ProviderReferences:   refs,
 		ProviderRequirements: providerRequirements,
 		CoreRequirements:     coreRequirements,

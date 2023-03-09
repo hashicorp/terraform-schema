@@ -997,6 +997,60 @@ terraform {
 	runTestCases(testCases, t, path)
 }
 
+func TestLoadModule_cloud(t *testing.T) {
+	path := t.TempDir()
+
+	testCases := []testCase{
+		{
+			"cloud backend",
+			`
+terraform {
+	cloud {
+		hostname = "app.terraform.io"
+		organization = "example_corp"
+	}
+}`,
+			&module.Meta{
+				Path:    path,
+				Backend: nil,
+				Cloud: &backend.Cloud{
+					Hostname: "app.terraform.io",
+				},
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+				Filenames:            []string{"test.tf"},
+				ModuleCalls:          map[string]module.DeclaredModuleCall{},
+			},
+			nil,
+		},
+		{
+			"cloud backend empy hostname",
+			`
+terraform {
+	cloud {
+		organization = "example_corp"
+	}
+}`,
+			&module.Meta{
+				Path:                 path,
+				Backend:              nil,
+				Cloud:                &backend.Cloud{},
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+				Filenames:            []string{"test.tf"},
+				ModuleCalls:          map[string]module.DeclaredModuleCall{},
+			},
+			nil,
+		},
+	}
+
+	runTestCases(testCases, t, path)
+}
+
 func TestLoadModule_Modules(t *testing.T) {
 	path := t.TempDir()
 

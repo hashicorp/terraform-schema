@@ -14,6 +14,7 @@ type Meta struct {
 	Filenames []string
 
 	Backend              *Backend
+	Cloud                *backend.Cloud
 	ProviderReferences   map[ProviderRef]tfaddr.Provider
 	ProviderRequirements ProviderRequirements
 	CoreRequirements     version.Constraints
