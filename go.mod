@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/terraform-json v0.16.0
 	github.com/hashicorp/terraform-registry-address v0.1.0
 	github.com/mh-cbon/go-fmt-fail v0.0.0-20160815164508-67765b3fbcb5
-	github.com/zclconf/go-cty v1.13.0
+	github.com/zclconf/go-cty v1.13.1
 	github.com/zclconf/go-cty-debug v0.0.0-20191215020915-b22d67c1ba0b
 )
 
