@@ -15,17 +15,17 @@ var movedBlockSchema = &schema.BlockSchema{
 		HoverURL: "https://www.terraform.io/language/modules/develop/refactoring#moved-block-syntax",
 		Attributes: map[string]*schema.AttributeSchema{
 			"from": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
-					schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
+				Constraint: schema.OneOf{
+					schema.Reference{OfScopeId: refscope.ModuleScope},
+					schema.Reference{OfScopeId: refscope.ResourceScope},
 				},
 				IsRequired:  true,
 				Description: lang.Markdown("Source address to move away from"),
 			},
 			"to": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
-					schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
+				Constraint: schema.OneOf{
+					schema.Reference{OfScopeId: refscope.ModuleScope},
+					schema.Reference{OfScopeId: refscope.ResourceScope},
 				},
 				IsRequired:  true,
 				Description: lang.Markdown("Destination address to move to"),

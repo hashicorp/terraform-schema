@@ -26,10 +26,7 @@ func localsBlockSchema() *schema.BlockSchema {
 					ScopeId:    refscope.LocalScope,
 					AsExprType: true,
 				},
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.DynamicPseudoType},
-					schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
-				},
+				Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
 			},
 		},
 	}

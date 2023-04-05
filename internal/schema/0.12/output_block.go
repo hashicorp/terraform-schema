@@ -34,31 +34,26 @@ func outputBlockSchema() *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"description": {
-					Expr:        schema.LiteralTypeOnly(cty.String),
+					Constraint:  schema.LiteralType{Type: cty.String},
 					IsOptional:  true,
 					Description: lang.PlainText("Human-readable description of the output (for documentation and UI)"),
 				},
 				"value": {
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.DynamicPseudoType},
-						schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
-					},
+					Constraint:  schema.AnyExpression{OfType: cty.DynamicPseudoType},
 					IsRequired:  true,
 					Description: lang.PlainText("Value, typically a reference to an attribute of a resource or a data source"),
 				},
 				"sensitive": {
-					Expr:        schema.LiteralTypeOnly(cty.Bool),
+					Constraint:  schema.LiteralType{Type: cty.Bool},
 					IsOptional:  true,
 					Description: lang.PlainText("Whether the output contains sensitive material and should be hidden in the UI"),
 				},
 				"depends_on": {
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{
-							Elem: schema.ExprConstraints{
-								schema.TraversalExpr{OfScopeId: refscope.DataScope},
-								schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
-								schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
-							},
+					Constraint: schema.Set{
+						Elem: schema.OneOf{
+							schema.Reference{OfScopeId: refscope.DataScope},
+							schema.Reference{OfScopeId: refscope.ModuleScope},
+							schema.Reference{OfScopeId: refscope.ResourceScope},
 						},
 					},
 					IsOptional:  true,

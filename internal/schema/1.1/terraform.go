@@ -16,18 +16,18 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"hostname": {
-					Expr:       schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					IsOptional: true,
 					Description: lang.Markdown("The Terraform Enterprise hostname to connect to. " +
 						"This optional argument defaults to `app.terraform.io` for use with Terraform Cloud."),
 				},
 				"organization": {
-					Expr:        schema.LiteralTypeOnly(cty.String),
+					Constraint:  schema.LiteralType{Type: cty.String},
 					IsRequired:  true,
 					Description: lang.PlainText("The name of the organization containing the targeted workspace(s)."),
 				},
 				"token": {
-					Expr:       schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					IsOptional: true,
 					Description: lang.Markdown("The token used to authenticate with Terraform Cloud/Enterprise. " +
 						"Typically this argument should not be set, and `terraform login` used instead; " +
@@ -42,15 +42,15 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 					Body: &schema.BodySchema{
 						Attributes: map[string]*schema.AttributeSchema{
 							"name": {
-								Expr:       schema.LiteralTypeOnly(cty.String),
+								Constraint: schema.LiteralType{Type: cty.String},
 								IsOptional: true,
 								Description: lang.Markdown("The name of a single Terraform Cloud workspace " +
 									"to be used with this configuration When configured only the specified workspace " +
 									"can be used. This option conflicts with `tags`."),
 							},
 							"tags": {
-								Expr: schema.ExprConstraints{
-									schema.SetExpr{Elem: schema.LiteralTypeOnly(cty.String)},
+								Constraint: schema.Set{
+									Elem: schema.LiteralType{Type: cty.String},
 								},
 								IsOptional: true,
 								Description: lang.Markdown("A set of tags used to select remote Terraform Cloud workspaces" +

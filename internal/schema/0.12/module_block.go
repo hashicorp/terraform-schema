@@ -34,7 +34,7 @@ func moduleBlockSchema() *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"source": {
-					Expr: schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					Description: lang.Markdown("Source where to load the module from, " +
 						"a local directory (e.g. `./module`) or a remote address - e.g. " +
 						"`hashicorp/consul/aws` (Terraform Registry address) or " +
@@ -52,7 +52,7 @@ func moduleBlockSchema() *schema.BlockSchema {
 					},
 				},
 				"version": {
-					Expr:       schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					IsOptional: true,
 					Description: lang.Markdown("Constraint to set the version of the module, e.g. `~> 1.0`." +
 						" Only applicable to modules in a module registry."),
@@ -63,13 +63,9 @@ func moduleBlockSchema() *schema.BlockSchema {
 					},
 				},
 				"providers": {
-					Expr: schema.ExprConstraints{
-						schema.MapExpr{
-							Name: "map of provider references",
-							Elem: schema.ExprConstraints{
-								schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
-							},
-						},
+					Constraint: schema.Map{
+						Name: "map of provider references",
+						Elem: schema.Reference{OfScopeId: refscope.ProviderScope},
 					},
 					IsOptional:  true,
 					Description: lang.Markdown("Explicit mapping of providers which the module uses"),

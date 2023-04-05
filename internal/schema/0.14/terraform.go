@@ -20,23 +20,21 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"required_version": {
-					Expr:       schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					IsOptional: true,
 					Description: lang.Markdown("Constraint to specify which versions of Terraform can be used " +
 						"with this configuration, e.g. `~> 0.12`"),
 				},
 				"experiments": {
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{
-							Elem: schema.ExprConstraints{
-								schema.KeywordExpr{
-									Keyword: "module_variable_optional_attrs",
-									Name:    "feature",
-								},
-								schema.KeywordExpr{
-									Keyword: "provider_sensitive_attrs",
-									Name:    "feature",
-								},
+					Constraint: schema.Set{
+						Elem: schema.OneOf{
+							schema.Keyword{
+								Keyword: "module_variable_optional_attrs",
+								Name:    "feature",
+							},
+							schema.Keyword{
+								Keyword: "provider_sensitive_attrs",
+								Name:    "feature",
 							},
 						},
 					},
@@ -77,22 +75,24 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 						"and where to source it from"),
 					Body: &schema.BodySchema{
 						AnyAttribute: &schema.AttributeSchema{
-							Expr: schema.ExprConstraints{
-								schema.ObjectExpr{
-									Attributes: schema.ObjectExprAttributes{
+							Constraint: schema.OneOf{
+								schema.Object{
+									Attributes: schema.ObjectAttributes{
 										"source": &schema.AttributeSchema{
-											Expr: schema.LiteralTypeOnly(cty.String),
+											Constraint: schema.LiteralType{Type: cty.String},
+											IsRequired: true,
 											Description: lang.Markdown("The global source address for the provider " +
 												"you intend to use, such as `hashicorp/aws`"),
 										},
 										"version": &schema.AttributeSchema{
-											Expr: schema.LiteralTypeOnly(cty.String),
+											Constraint: schema.LiteralType{Type: cty.String},
+											IsOptional: true,
 											Description: lang.Markdown("Version constraint specifying which subset of " +
 												"available provider versions the module is compatible with, e.g. `~> 1.0`"),
 										},
 									},
 								},
-								schema.LiteralTypeExpr{Type: cty.String},
+								schema.LiteralType{Type: cty.String},
 							},
 							Description: lang.Markdown("Provider source and version constraint"),
 							Address: &schema.AttributeAddrSchema{

@@ -20,12 +20,12 @@ func localBackend(v *version.Version) *schema.BodySchema {
 		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"path": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				Description: lang.Markdown("The path to the tfstate file. This defaults to `terraform.tfstate` relative to the root module."),
 				IsOptional:  true,
 			},
 			"workspace_dir": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				Description: lang.Markdown("The path to non-default workspaces."),
 				IsOptional:  true,
 			},

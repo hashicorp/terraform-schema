@@ -22,54 +22,52 @@ func etcdv3Backend(v *version.Version) *schema.BodySchema {
 		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"endpoints": {
-				Expr: schema.ExprConstraints{
-					schema.ListExpr{
-						Elem:     schema.LiteralTypeOnly(cty.String),
-						MinItems: 1,
-					},
+				Constraint: schema.List{
+					Elem:     schema.LiteralType{Type: cty.String},
+					MinItems: 1,
 				},
 				IsRequired:  true,
 				Description: lang.Markdown("Endpoints for the etcd cluster."),
 			},
 
 			"username": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Username used to connect to the etcd cluster."),
 			},
 
 			"password": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Password used to connect to the etcd cluster."),
 			},
 
 			"prefix": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("An optional prefix to be added to keys when to storing state in etcd."),
 			},
 
 			"lock": {
-				Expr:        schema.LiteralTypeOnly(cty.Bool),
+				Constraint:  schema.LiteralType{Type: cty.Bool},
 				IsOptional:  true,
 				Description: lang.Markdown("Whether to lock state access."),
 			},
 
 			"cacert_path": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("The path to a PEM-encoded CA bundle with which to verify certificates of TLS-enabled etcd servers."),
 			},
 
 			"cert_path": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("The path to a PEM-encoded certificate to provide to etcd for secure client identification."),
 			},
 
 			"key_path": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("The path to a PEM-encoded key to provide to etcd for secure client identification."),
 			},

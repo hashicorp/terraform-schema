@@ -5,12 +5,12 @@ package backends
 
 import "github.com/hashicorp/hcl-lang/schema"
 
-func objectExprFromBodySchema(bs *schema.BodySchema) schema.ObjectExpr {
+func objectConstraintFromBodySchema(bs *schema.BodySchema) schema.Object {
 	if bs == nil {
-		return schema.ObjectExpr{}
+		return schema.Object{}
 	}
 
-	oe := schema.ObjectExpr{
+	oe := schema.Object{
 		Description: bs.Description,
 		Attributes:  bs.Attributes,
 	}
@@ -29,38 +29,24 @@ func objectExprFromBodySchema(bs *schema.BodySchema) schema.ObjectExpr {
 
 		switch block.Type {
 		case schema.BlockTypeObject:
-			oe.Attributes[bType].Expr = schema.ExprConstraints{
-				objectExprFromBodySchema(block.Body),
-			}
+			oe.Attributes[bType].Constraint = objectConstraintFromBodySchema(block.Body)
 		case schema.BlockTypeList:
-			oe.Attributes[bType].Expr = schema.ExprConstraints{
-				schema.ListExpr{
-					Elem: schema.ExprConstraints{
-						objectExprFromBodySchema(block.Body),
-					},
-					MinItems: block.MinItems,
-					MaxItems: block.MaxItems,
-				},
+			oe.Attributes[bType].Constraint = schema.List{
+				Elem:     objectConstraintFromBodySchema(block.Body),
+				MinItems: block.MinItems,
+				MaxItems: block.MaxItems,
 			}
 		case schema.BlockTypeSet:
-			oe.Attributes[bType].Expr = schema.ExprConstraints{
-				schema.SetExpr{
-					Elem: schema.ExprConstraints{
-						objectExprFromBodySchema(block.Body),
-					},
-					MinItems: block.MinItems,
-					MaxItems: block.MaxItems,
-				},
+			oe.Attributes[bType].Constraint = schema.Set{
+				Elem:     objectConstraintFromBodySchema(block.Body),
+				MinItems: block.MinItems,
+				MaxItems: block.MaxItems,
 			}
 		case schema.BlockTypeMap:
-			oe.Attributes[bType].Expr = schema.ExprConstraints{
-				schema.MapExpr{
-					Elem: schema.ExprConstraints{
-						objectExprFromBodySchema(block.Body),
-					},
-					MinItems: block.MinItems,
-					MaxItems: block.MaxItems,
-				},
+			oe.Attributes[bType].Constraint = schema.Map{
+				Elem:     objectConstraintFromBodySchema(block.Body),
+				MinItems: block.MinItems,
+				MaxItems: block.MaxItems,
 			}
 		}
 	}

@@ -29,19 +29,13 @@ func conditionBody(enableSelfRefs bool) *schema.BodySchema {
 	bs := &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"condition": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.Bool},
-					schema.LiteralTypeExpr{Type: cty.Bool},
-				},
+				Constraint: schema.AnyExpression{OfType: cty.Bool},
 				IsRequired: true,
 				Description: lang.Markdown("Condition, a boolean expression that should return `true` " +
 					"if the intended assumption or guarantee is fulfilled or `false` if it is not."),
 			},
 			"error_message": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.String},
-					schema.LiteralTypeExpr{Type: cty.String},
-				},
+				Constraint: schema.AnyExpression{OfType: cty.String},
 				IsRequired: true,
 				Description: lang.Markdown("Error message to return if the `condition` isn't met " +
 					"(evaluates to `false`)."),

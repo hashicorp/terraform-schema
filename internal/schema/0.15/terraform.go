@@ -13,30 +13,29 @@ import (
 func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 	bs.Body.Blocks["required_providers"].Body = &schema.BodySchema{
 		AnyAttribute: &schema.AttributeSchema{
-			Expr: schema.ExprConstraints{
-				schema.ObjectExpr{
-					Attributes: schema.ObjectExprAttributes{
+			Constraint: schema.OneOf{
+				schema.Object{
+					Attributes: schema.ObjectAttributes{
 						"source": &schema.AttributeSchema{
-							Expr: schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
+							IsRequired: true,
 							Description: lang.Markdown("The global source address for the provider " +
 								"you intend to use, such as `hashicorp/aws`"),
 						},
 						"version": &schema.AttributeSchema{
-							Expr: schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
+							IsOptional: true,
 							Description: lang.Markdown("Version constraint specifying which subset of " +
 								"available provider versions the module is compatible with, e.g. `~> 1.0`"),
 						},
 						"configuration_aliases": &schema.AttributeSchema{
-							Expr: schema.ExprConstraints{
-								schema.SetExpr{
-									Elem: schema.ExprConstraints{
-										schema.TraversalExpr{
-											Address: &schema.TraversalAddrSchema{
-												ScopeId: refscope.ProviderScope,
-											},
-											Name: "provider",
-										},
+							IsOptional: true,
+							Constraint: schema.Set{
+								Elem: schema.Reference{
+									Address: &schema.ReferenceAddrSchema{
+										ScopeId: refscope.ProviderScope,
 									},
+									Name: "provider",
 								},
 							},
 							Description: lang.Markdown("Aliases under which to make the provider available, " +
@@ -44,7 +43,7 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 						},
 					},
 				},
-				schema.LiteralTypeExpr{Type: cty.String},
+				schema.LiteralType{Type: cty.String},
 			},
 			Address: &schema.AttributeAddrSchema{
 				Steps: []schema.AddrStep{
@@ -59,10 +58,8 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 	}
 	bs.Body.Attributes["language"] = &schema.AttributeSchema{
 		IsOptional: true,
-		Expr: schema.ExprConstraints{
-			schema.KeywordExpr{
-				Keyword: "TF2021",
-			},
+		Constraint: schema.Keyword{
+			Keyword: "TF2021",
 		},
 	}
 	return bs
