@@ -21,7 +21,7 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 			"foo": {
 				Attributes: map[string]*schema.AttributeSchema{
 					"str": {
-						Expr:       schema.LiteralTypeOnly(cty.String),
+						Constraint: schema.LiteralType{Type: cty.String},
 						IsOptional: true,
 					},
 				},
@@ -31,7 +31,7 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 			"bar": {
 				Attributes: map[string]*schema.AttributeSchema{
 					"num": {
-						Expr:       schema.LiteralTypeOnly(cty.Number),
+						Constraint: schema.LiteralType{Type: cty.Number},
 						IsOptional: true,
 					},
 				},
@@ -52,7 +52,7 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 				Detail: "hashicorp/aws 1.2.5",
 				Attributes: map[string]*schema.AttributeSchema{
 					"str": {
-						Expr:       schema.LiteralTypeOnly(cty.String),
+						Constraint: schema.LiteralType{Type: cty.String},
 						IsOptional: true,
 					},
 				},
@@ -63,7 +63,7 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 				Detail: "hashicorp/aws 1.2.5",
 				Attributes: map[string]*schema.AttributeSchema{
 					"num": {
-						Expr:       schema.LiteralTypeOnly(cty.Number),
+						Constraint: schema.LiteralType{Type: cty.Number},
 						IsOptional: true,
 					},
 				},
