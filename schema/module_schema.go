@@ -37,7 +37,7 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 			typ = defaultType
 		}
 
-		aSchema.Expr = convertAttributeTypeToExprConstraints(typ)
+		aSchema.Constraint = convertAttributeTypeToConstraint(typ)
 
 		attributes[input.Name] = aSchema
 	}
@@ -114,7 +114,7 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 	for name, modVar := range modMeta.Variables {
 		aSchema := moduleVarToAttribute(modVar)
 		varType := typeOfModuleVar(modVar)
-		aSchema.Expr = convertAttributeTypeToExprConstraints(varType)
+		aSchema.Constraint = convertAttributeTypeToConstraint(varType)
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{
 				schema.StaticStep{Name: "var"},
@@ -260,7 +260,8 @@ func inferredSchemaForDeclaredDependentModuleBlock(rootPath string, sourceAddr m
 			IsOptional: true,
 		}
 		varType := cty.DynamicPseudoType
-		aSchema.Expr = convertAttributeTypeToExprConstraints(varType)
+		// TODO: Replace with AnyExpression
+		aSchema.Constraint = schema.LiteralType{Type: varType}
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{
 				schema.StaticStep{Name: "var"},
