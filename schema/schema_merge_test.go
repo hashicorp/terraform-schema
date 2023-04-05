@@ -57,7 +57,7 @@ func TestSchemaMerger_SchemaForModule_noProviderSchema(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"alias": {Constraint: schema.LiteralType{Type: cty.String}, IsOptional: true},
 					},
 				},
 			},
@@ -68,7 +68,7 @@ func TestSchemaMerger_SchemaForModule_noProviderSchema(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {Constraint: schema.LiteralType{Type: cty.Number}, IsOptional: true},
 					},
 				},
 			},
@@ -79,7 +79,7 @@ func TestSchemaMerger_SchemaForModule_noProviderSchema(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {Constraint: schema.LiteralType{Type: cty.Number}, IsOptional: true},
 					},
 				},
 			},
@@ -90,12 +90,12 @@ func TestSchemaMerger_SchemaForModule_noProviderSchema(t *testing.T) {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsRequired: true,
 							IsDepKey:   true,
 						},
 						"version": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsOptional: true,
 						},
 					},
@@ -120,7 +120,7 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"alias": {Constraint: schema.LiteralType{Type: cty.String}, IsOptional: true},
 					},
 				},
 			},
@@ -131,7 +131,7 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {Constraint: schema.LiteralType{Type: cty.Number}, IsOptional: true},
 					},
 				},
 			},
@@ -142,7 +142,7 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {Constraint: schema.LiteralType{Type: cty.Number}, IsOptional: true},
 					},
 				},
 			},
@@ -153,12 +153,12 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsRequired: true,
 							IsDepKey:   true,
 						},
 						"version": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsOptional: true,
 						},
 					},
@@ -209,7 +209,7 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"alias": {Constraint: schema.LiteralType{Type: cty.String}, IsOptional: true},
 					},
 				},
 				DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -232,7 +232,7 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {Constraint: schema.LiteralType{Type: cty.Number}, IsOptional: true},
 					},
 				},
 				DependentBody: map[schema.SchemaKey]*schema.BodySchema{},
@@ -244,27 +244,27 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 				},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"count": {Expr: schema.LiteralTypeOnly(cty.Number), IsOptional: true},
+						"count": {Constraint: schema.LiteralType{Type: cty.Number}, IsOptional: true},
 					},
 				},
 				DependentBody: map[schema.SchemaKey]*schema.BodySchema{
 					`{"labels":[{"index":0,"value":"data"}],"attrs":[{"name":"provider","expr":{"addr":"data"}}]}`: {
 						Blocks: map[string]*schema.BlockSchema{},
 						Attributes: map[string]*schema.AttributeSchema{
-							"foobar": {IsOptional: true, Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.Bool},
-								schema.LiteralTypeExpr{Type: cty.Bool},
-							}},
+							"foobar": {
+								IsOptional: true,
+								Constraint: schema.AnyExpression{OfType: cty.Bool},
+							},
 						},
 						Detail: "hashicorp/data",
 					},
 					`{"labels":[{"index":0,"value":"data"}]}`: {
 						Blocks: map[string]*schema.BlockSchema{},
 						Attributes: map[string]*schema.AttributeSchema{
-							"foobar": {IsOptional: true, Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.Bool},
-								schema.LiteralTypeExpr{Type: cty.Bool},
-							}},
+							"foobar": {
+								IsOptional: true,
+								Constraint: schema.AnyExpression{OfType: cty.Bool},
+							},
 						},
 						Detail: "hashicorp/data",
 					},
@@ -277,12 +277,12 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsRequired: true,
 							IsDepKey:   true,
 						},
 						"version": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsOptional: true,
 						},
 					},
@@ -314,7 +314,7 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"alias": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsOptional: true,
 						},
 					},
@@ -338,10 +338,7 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"count": {
-							Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.Number},
-								schema.LiteralTypeExpr{Type: cty.Number},
-							},
+							Constraint: schema.AnyExpression{OfType: cty.Number},
 							IsOptional: true,
 						},
 					},
@@ -365,10 +362,7 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"count": {
-							Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.Number},
-								schema.LiteralTypeExpr{Type: cty.Number},
-							},
+							Constraint: schema.AnyExpression{OfType: cty.Number},
 							IsOptional: true,
 						},
 					},
@@ -382,13 +376,13 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {
-							Expr:                   schema.LiteralTypeOnly(cty.String),
+							Constraint:             schema.LiteralType{Type: cty.String},
 							IsRequired:             true,
 							IsDepKey:               true,
 							SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 						},
 						"version": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsOptional: true,
 						},
 					},
@@ -739,7 +733,7 @@ func testCoreSchema() *schema.BodySchema {
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
-						"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+						"alias": {Constraint: schema.LiteralType{Type: cty.String}, IsOptional: true},
 					},
 				},
 			},
@@ -758,10 +752,7 @@ func testCoreSchema() *schema.BodySchema {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"count": {
-							Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.Number},
-								schema.LiteralTypeExpr{Type: cty.Number},
-							},
+							Constraint: schema.AnyExpression{OfType: cty.Number},
 							IsOptional: true,
 						},
 					},
@@ -782,10 +773,7 @@ func testCoreSchema() *schema.BodySchema {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"count": {
-							Expr: schema.ExprConstraints{
-								schema.TraversalExpr{OfType: cty.Number},
-								schema.LiteralTypeExpr{Type: cty.Number},
-							},
+							Constraint: schema.AnyExpression{OfType: cty.Number},
 							IsOptional: true,
 						},
 					},
@@ -802,13 +790,13 @@ func testCoreSchema() *schema.BodySchema {
 				Body: &schema.BodySchema{
 					Attributes: map[string]*schema.AttributeSchema{
 						"source": {
-							Expr:                   schema.LiteralTypeOnly(cty.String),
+							Constraint:             schema.LiteralType{Type: cty.String},
 							IsRequired:             true,
 							IsDepKey:               true,
 							SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 						},
 						"version": {
-							Expr:       schema.LiteralTypeOnly(cty.String),
+							Constraint: schema.LiteralType{Type: cty.String},
 							IsOptional: true,
 						},
 					},
