@@ -260,8 +260,7 @@ func inferredSchemaForDeclaredDependentModuleBlock(rootPath string, sourceAddr m
 			IsOptional: true,
 		}
 		varType := cty.DynamicPseudoType
-		// TODO: Replace with AnyExpression
-		aSchema.Constraint = schema.LiteralType{Type: varType}
+		aSchema.Constraint = schema.AnyExpression{OfType: varType}
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{
 				schema.StaticStep{Name: "var"},
