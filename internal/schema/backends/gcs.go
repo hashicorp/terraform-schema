@@ -21,32 +21,32 @@ func gcsBackend(v *version.Version) *schema.BodySchema {
 		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"bucket": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("The name of the Google Cloud Storage bucket"),
 			},
 
 			"path": {
-				Expr:         schema.LiteralTypeOnly(cty.String),
+				Constraint:   schema.LiteralType{Type: cty.String},
 				IsOptional:   true,
 				Description:  lang.Markdown("Path of the default state file;\nDEPRECATED: Use the `prefix` option instead"),
 				IsDeprecated: true,
 			},
 
 			"prefix": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("The directory where state files will be saved inside the bucket"),
 			},
 
 			"credentials": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Google Cloud JSON Account Key"),
 			},
 
 			"encryption_key": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("A 32 byte base64 encoded 'customer supplied encryption key' used to encrypt all state."),
 			},
@@ -56,7 +56,7 @@ func gcsBackend(v *version.Version) *schema.BodySchema {
 	if v.GreaterThanOrEqual(v0_12_10) {
 		// https://github.com/hashicorp/terraform/commit/f6c90c1d
 		bodySchema.Attributes["access_token"] = &schema.AttributeSchema{
-			Expr:        schema.LiteralTypeOnly(cty.String),
+			Constraint:  schema.LiteralType{Type: cty.String},
 			IsOptional:  true,
 			Description: lang.Markdown("An OAuth2 token used for GCP authentication"),
 		}
@@ -65,14 +65,14 @@ func gcsBackend(v *version.Version) *schema.BodySchema {
 	if v.GreaterThanOrEqual(v0_14_0) {
 		// https://github.com/hashicorp/terraform/commit/c43731a0
 		bodySchema.Attributes["impersonate_service_account"] = &schema.AttributeSchema{
-			Expr:        schema.LiteralTypeOnly(cty.String),
+			Constraint:  schema.LiteralType{Type: cty.String},
 			IsOptional:  true,
 			Description: lang.Markdown("The service account to impersonate for all Google API Calls"),
 		}
 
 		bodySchema.Attributes["impersonate_service_account_delegates"] = &schema.AttributeSchema{
-			Expr: schema.ExprConstraints{
-				schema.ListExpr{Elem: schema.LiteralTypeOnly(cty.String)},
+			Constraint: schema.List{
+				Elem: schema.LiteralType{Type: cty.String},
 			},
 			IsOptional:  true,
 			Description: lang.Markdown("The delegation chain for the impersonated service account"),

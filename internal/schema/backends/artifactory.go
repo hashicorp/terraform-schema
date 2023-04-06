@@ -24,27 +24,27 @@ func artifactoryBackend(v *version.Version) *schema.BodySchema {
 		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"username": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("Username"),
 			},
 			"password": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("Password"),
 			},
 			"url": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("Artfactory base URL (i.e. URL without repo and subpath)"),
 			},
 			"repo": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("The repository name"),
 			},
 			"subpath": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("Path within the repository"),
 			},

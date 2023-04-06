@@ -26,12 +26,12 @@ var (
 	v1_3_0   = version.Must(version.NewVersion("1.3.0"))
 )
 
-func BackendTypesAsExprConstraints(tfVersion *version.Version) schema.ExprConstraints {
-	ec := make(schema.ExprConstraints, 0)
+func BackendTypesAsOneOfConstraint(tfVersion *version.Version) schema.OneOf {
+	ec := make([]schema.Constraint, 0)
 
 	for backendType, bs := range backendBodySchemas(tfVersion) {
-		lv := schema.LegacyLiteralValue{
-			Val:          cty.StringVal(backendType),
+		lv := schema.LiteralValue{
+			Value:        cty.StringVal(backendType),
 			IsDeprecated: bs.IsDeprecated,
 		}
 		if bs != nil {
@@ -41,21 +41,19 @@ func BackendTypesAsExprConstraints(tfVersion *version.Version) schema.ExprConstr
 	}
 
 	sort.SliceStable(ec, func(i, j int) bool {
-		leftVal := ec[i].(schema.LegacyLiteralValue)
-		rightVal := ec[j].(schema.LegacyLiteralValue)
-		return leftVal.Val.AsString() < rightVal.Val.AsString()
+		leftVal := ec[i].(schema.LiteralValue)
+		rightVal := ec[j].(schema.LiteralValue)
+		return leftVal.Value.AsString() < rightVal.Value.AsString()
 	})
 
 	return ec
 }
 
-func ConfigsAsExprConstraints(tfVersion *version.Version) map[string]schema.ExprConstraints {
-	ecs := make(map[string]schema.ExprConstraints, 0)
+func ConfigsAsObjectConstraint(tfVersion *version.Version) map[string]schema.Object {
+	ecs := make(map[string]schema.Object, 0)
 
 	for backendType, bs := range backendBodySchemas(tfVersion) {
-		ecs[backendType] = schema.ExprConstraints{
-			objectExprFromBodySchema(bs),
-		}
+		ecs[backendType] = objectConstraintFromBodySchema(bs)
 	}
 
 	return ecs

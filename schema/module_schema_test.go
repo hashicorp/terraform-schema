@@ -84,10 +84,7 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 	expectedDepSchema := &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"example_var": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.String},
-					schema.LiteralTypeExpr{Type: cty.String},
-				},
+				Constraint:  schema.AnyExpression{OfType: cty.String},
 				Description: lang.PlainText("Test var"),
 				IsRequired:  true,
 				IsSensitive: true,
@@ -107,10 +104,7 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 				},
 			},
 			"another_var": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.String},
-					schema.LiteralTypeExpr{Type: cty.String},
-				},
+				Constraint: schema.AnyExpression{OfType: cty.String},
 				IsOptional: true,
 				OriginForTarget: &schema.PathTarget{
 					Address: schema.Address{
@@ -513,25 +507,16 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 	expectedDepSchema := &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"example_var": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.String},
-					schema.LiteralTypeExpr{Type: cty.String},
-				},
+				Constraint:  schema.AnyExpression{OfType: cty.String},
 				Description: lang.PlainText("Test var"),
 				IsRequired:  true,
 			},
 			"foo_var": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.Number},
-					schema.LiteralTypeExpr{Type: cty.Number},
-				},
+				Constraint: schema.AnyExpression{OfType: cty.Number},
 				IsOptional: true,
 			},
 			"another_var": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.DynamicPseudoType},
-					schema.LiteralTypeExpr{Type: cty.DynamicPseudoType},
-				},
+				Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
 				IsOptional: true,
 			},
 		},

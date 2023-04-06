@@ -32,12 +32,12 @@ func provisionerBlock(v *version.Version) *schema.BlockSchema {
 			HoverURL: "https://www.terraform.io/docs/language/resources/provisioners/syntax.html",
 			Attributes: map[string]*schema.AttributeSchema{
 				"when": {
-					Expr: schema.ExprConstraints{
-						schema.KeywordExpr{
+					Constraint: schema.OneOf{
+						schema.Keyword{
 							Keyword:     "create",
 							Description: lang.Markdown("Run the provisioner when the resource is created"),
 						},
-						schema.KeywordExpr{
+						schema.Keyword{
 							Keyword:     "destroy",
 							Description: lang.Markdown("Run the provisioner when the resource is destroyed"),
 						},
@@ -48,12 +48,12 @@ func provisionerBlock(v *version.Version) *schema.BlockSchema {
 				},
 				"on_failure": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.KeywordExpr{
+					Constraint: schema.OneOf{
+						schema.Keyword{
 							Keyword:     "fail",
 							Description: lang.Markdown("Raise an error and stop applying (the default behavior). If this is a creation provisioner, taint the resource."),
 						},
-						schema.KeywordExpr{
+						schema.Keyword{
 							Keyword:     "continue",
 							Description: lang.Markdown("Ignore the error and continue with creation or destruction"),
 						},

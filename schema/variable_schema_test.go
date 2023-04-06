@@ -41,7 +41,7 @@ func TestSchemaForVariables(t *testing.T) {
 						Kind:  lang.PlainTextKind,
 					},
 					IsRequired: true,
-					Expr:       schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					OriginForTarget: &schema.PathTarget{
 						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
 						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
@@ -71,7 +71,7 @@ func TestSchemaForVariables(t *testing.T) {
 						Kind:  lang.PlainTextKind,
 					},
 					IsOptional: true,
-					Expr:       schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					OriginForTarget: &schema.PathTarget{
 						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
 						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
@@ -83,7 +83,7 @@ func TestSchemaForVariables(t *testing.T) {
 						Value: "id of the module",
 						Kind:  lang.PlainTextKind,
 					},
-					Expr:        schema.LiteralTypeOnly(cty.Number),
+					Constraint:  schema.LiteralType{Type: cty.Number},
 					IsSensitive: true,
 					IsRequired:  true,
 					OriginForTarget: &schema.PathTarget{
@@ -115,7 +115,7 @@ func TestSchemaForVariables(t *testing.T) {
 						Kind:  lang.PlainTextKind,
 					},
 					IsOptional: true,
-					Expr:       schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					OriginForTarget: &schema.PathTarget{
 						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
 						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
@@ -127,7 +127,7 @@ func TestSchemaForVariables(t *testing.T) {
 						Value: "id of the module",
 						Kind:  lang.PlainTextKind,
 					},
-					Expr:       schema.LiteralTypeOnly(cty.Number),
+					Constraint: schema.LiteralType{Type: cty.Number},
 					IsOptional: true,
 					OriginForTarget: &schema.PathTarget{
 						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},

@@ -17,7 +17,7 @@ func SchemaForVariables(vars map[string]module.Variable, modPath string) (*schem
 	for name, modVar := range vars {
 		aSchema := moduleVarToAttribute(modVar)
 		varType := typeOfModuleVar(modVar)
-		aSchema.Expr = schema.LiteralTypeOnly(varType)
+		aSchema.Constraint = schema.LiteralType{Type: varType}
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{
 				schema.StaticStep{Name: "var"},

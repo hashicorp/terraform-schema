@@ -22,67 +22,67 @@ func consulBackend(v *version.Version) *schema.BodySchema {
 		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"path": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("Path to store state in Consul"),
 			},
 
 			"access_token": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Access token for a Consul ACL"),
 			},
 
 			"address": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Address to the Consul Cluster"),
 			},
 
 			"scheme": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Scheme to communicate to Consul with"),
 			},
 
 			"datacenter": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Datacenter to communicate with"),
 			},
 
 			"http_auth": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("HTTP Auth in the format of 'username:password'"),
 			},
 
 			"gzip": {
-				Expr:        schema.LiteralTypeOnly(cty.Bool),
+				Constraint:  schema.LiteralType{Type: cty.Bool},
 				IsOptional:  true,
 				Description: lang.Markdown("Compress the state data using gzip"),
 			},
 
 			"lock": {
-				Expr:        schema.LiteralTypeOnly(cty.Bool),
+				Constraint:  schema.LiteralType{Type: cty.Bool},
 				IsOptional:  true,
 				Description: lang.Markdown("Lock state access"),
 			},
 
 			"ca_file": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("A path to a PEM-encoded certificate authority used to verify the remote agent's certificate."),
 			},
 
 			"cert_file": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("A path to a PEM-encoded certificate provided to the remote agent; requires use of key_file."),
 			},
 
 			"key_file": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("A path to a PEM-encoded private key, required if cert_file is specified."),
 			},

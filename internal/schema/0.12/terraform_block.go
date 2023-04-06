@@ -20,7 +20,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"required_version": {
-					Expr:       schema.LiteralTypeOnly(cty.String),
+					Constraint: schema.LiteralType{Type: cty.String},
 					IsOptional: true,
 					Description: lang.Markdown("Constraint to specify which versions of Terraform can be used " +
 						"with this configuration, e.g. `~> 0.12`"),
@@ -48,7 +48,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 					Description:            lang.Markdown("What provider version to use within this configuration"),
 					Body: &schema.BodySchema{
 						AnyAttribute: &schema.AttributeSchema{
-							Expr:        schema.LiteralTypeOnly(cty.String),
+							Constraint:  schema.LiteralType{Type: cty.String},
 							Description: lang.Markdown("Version constraint"),
 							Address: &schema.AttributeAddrSchema{
 								Steps: []schema.AddrStep{
@@ -67,18 +67,16 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	}
 
 	if v.GreaterThanOrEqual(v0_12_18) {
-		experiments := schema.SetExpr{
-			Elem: schema.ExprConstraints{},
-		}
+		experiments := schema.OneOf{}
 		if v.GreaterThanOrEqual(v0_12_20) {
-			experiments.Elem = append(experiments.Elem, schema.KeywordExpr{
+			experiments = append(experiments, schema.Keyword{
 				Keyword: "variable_validation",
 				Name:    "feature",
 			})
 		}
 		bs.Body.Attributes["experiments"] = &schema.AttributeSchema{
-			Expr: schema.ExprConstraints{
-				experiments,
+			Constraint: schema.Set{
+				Elem: experiments,
 			},
 			IsOptional:  true,
 			Description: lang.Markdown("A set of experimental language features to enable"),
@@ -88,17 +86,17 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 	if v.GreaterThanOrEqual(v0_12_20) {
 		bs.Body.Blocks["required_providers"].Body = &schema.BodySchema{
 			AnyAttribute: &schema.AttributeSchema{
-				Expr: schema.ExprConstraints{
-					schema.ObjectExpr{
-						Attributes: schema.ObjectExprAttributes{
+				Constraint: schema.OneOf{
+					schema.Object{
+						Attributes: schema.ObjectAttributes{
 							"version": &schema.AttributeSchema{
-								Expr: schema.LiteralTypeOnly(cty.String),
+								Constraint: schema.LiteralType{Type: cty.String},
 								Description: lang.Markdown("Version constraint specifying which subset of " +
 									"available provider versions the module is compatible with, e.g. `~> 1.0`"),
 							},
 						},
 					},
-					schema.LiteralTypeExpr{Type: cty.String},
+					schema.LiteralType{Type: cty.String},
 				},
 				Description: lang.Markdown("Version constraint"),
 			},

@@ -22,22 +22,22 @@ func etcdv2Backend(v *version.Version) *schema.BodySchema {
 		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"path": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("The path where to store the state"),
 			},
 			"endpoints": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("A space-separated list of the etcd endpoints"),
 			},
 			"username": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Username"),
 			},
 			"password": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Password"),
 			},

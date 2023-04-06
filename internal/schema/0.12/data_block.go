@@ -52,22 +52,18 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfScopeId: refscope.ProviderScope},
-					},
+					Constraint:             schema.Reference{OfScopeId: refscope.ProviderScope},
 					IsOptional:             true,
 					Description:            lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 					IsDepKey:               true,
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 				},
 				"depends_on": {
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{
-							Elem: schema.ExprConstraints{
-								schema.TraversalExpr{OfScopeId: refscope.DataScope},
-								schema.TraversalExpr{OfScopeId: refscope.ModuleScope},
-								schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
-							},
+					Constraint: schema.Set{
+						Elem: schema.OneOf{
+							schema.Reference{OfScopeId: refscope.DataScope},
+							schema.Reference{OfScopeId: refscope.ModuleScope},
+							schema.Reference{OfScopeId: refscope.ResourceScope},
 						},
 					},
 					IsOptional:  true,

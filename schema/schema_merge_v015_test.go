@@ -37,10 +37,7 @@ var data = schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"count": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.Number},
-					schema.LiteralTypeExpr{Type: cty.Number},
-				},
+				Constraint: schema.AnyExpression{OfType: cty.Number},
 				IsOptional: true,
 			},
 		},
@@ -51,43 +48,27 @@ var data = schema.BlockSchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"backend": {
 					IsRequired: true,
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.String},
-						schema.LiteralTypeExpr{Type: cty.String},
-					},
+					Constraint: schema.AnyExpression{OfType: cty.String},
 				},
 				"config1": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.ObjectExpr{
-							Attributes: schema.ObjectExprAttributes{
-								"first": {
-									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.String},
-										schema.LiteralTypeExpr{Type: cty.String},
-									},
-								},
-								"second": {
-									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.Number},
-										schema.LiteralTypeExpr{Type: cty.Number},
-									},
-								},
-								"third": {
-									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.ObjectExpr{
-											Attributes: schema.ObjectExprAttributes{
-												"nested": {
-													IsOptional: true,
-													Expr: schema.ExprConstraints{
-														schema.TraversalExpr{OfType: cty.String},
-														schema.LiteralTypeExpr{Type: cty.String},
-													},
-												},
-											},
+					Constraint: schema.Object{
+						Attributes: schema.ObjectAttributes{
+							"first": {
+								IsOptional: true,
+								Constraint: schema.AnyExpression{OfType: cty.String},
+							},
+							"second": {
+								IsOptional: true,
+								Constraint: schema.AnyExpression{OfType: cty.Number},
+							},
+							"third": {
+								IsOptional: true,
+								Constraint: schema.Object{
+									Attributes: schema.ObjectAttributes{
+										"nested": {
+											IsOptional: true,
+											Constraint: schema.AnyExpression{OfType: cty.String},
 										},
 									},
 								},
@@ -97,145 +78,97 @@ var data = schema.BlockSchema{
 				},
 				"config2": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.ListExpr{
-							Elem: schema.ExprConstraints{
-								schema.ObjectExpr{
-									Attributes: schema.ObjectExprAttributes{
-										"first": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.String},
-												schema.LiteralTypeExpr{Type: cty.String},
-											},
-										},
-										"second": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.Number},
-												schema.LiteralTypeExpr{Type: cty.Number},
-											},
-										},
-										"third": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.ObjectExpr{
-													Attributes: schema.ObjectExprAttributes{
-														"nested": {
-															IsOptional: true,
-															Expr: schema.ExprConstraints{
-																schema.TraversalExpr{OfType: cty.String},
-																schema.LiteralTypeExpr{Type: cty.String},
-															},
-														},
-													},
-												},
+					Constraint: schema.List{
+						Elem: schema.Object{
+							Attributes: schema.ObjectAttributes{
+								"first": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.String},
+								},
+								"second": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.Number},
+								},
+								"third": {
+									IsOptional: true,
+									Constraint: schema.Object{
+										Attributes: schema.ObjectAttributes{
+											"nested": {
+												IsOptional: true,
+												Constraint: schema.AnyExpression{OfType: cty.String},
 											},
 										},
 									},
 								},
 							},
-							MinItems: 2,
-							MaxItems: 3,
 						},
+						MinItems: 2,
+						MaxItems: 3,
 					},
 				},
 				"config3": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{
-							Elem: schema.ExprConstraints{
-								schema.ObjectExpr{
-									Attributes: schema.ObjectExprAttributes{
-										"first": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.String},
-												schema.LiteralTypeExpr{Type: cty.String},
-											},
-										},
-										"second": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.Number},
-												schema.LiteralTypeExpr{Type: cty.Number},
-											},
-										},
-										"third": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.ObjectExpr{
-													Attributes: schema.ObjectExprAttributes{
-														"nested": {
-															IsOptional: true,
-															Expr: schema.ExprConstraints{
-																schema.TraversalExpr{OfType: cty.String},
-																schema.LiteralTypeExpr{Type: cty.String},
-															},
-														},
-													},
-												},
+					Constraint: schema.Set{
+						Elem: schema.Object{
+							Attributes: schema.ObjectAttributes{
+								"first": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.String},
+								},
+								"second": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.Number},
+								},
+								"third": {
+									IsOptional: true,
+									Constraint: schema.Object{
+										Attributes: schema.ObjectAttributes{
+											"nested": {
+												IsOptional: true,
+												Constraint: schema.AnyExpression{OfType: cty.String},
 											},
 										},
 									},
 								},
 							},
-							MinItems: 1,
-							MaxItems: 5,
 						},
+						MinItems: 1,
+						MaxItems: 5,
 					},
 				},
 				"config4": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.MapExpr{
-							Elem: schema.ExprConstraints{
-								schema.ObjectExpr{
-									Attributes: schema.ObjectExprAttributes{
-										"first": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.String},
-												schema.LiteralTypeExpr{Type: cty.String},
-											},
-										},
-										"second": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.Number},
-												schema.LiteralTypeExpr{Type: cty.Number},
-											},
-										},
-										"third": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.ObjectExpr{
-													Attributes: schema.ObjectExprAttributes{
-														"nested": {
-															IsOptional: true,
-															Expr: schema.ExprConstraints{
-																schema.TraversalExpr{OfType: cty.String},
-																schema.LiteralTypeExpr{Type: cty.String},
-															},
-														},
-													},
-												},
+					Constraint: schema.Map{
+						Elem: schema.Object{
+							Attributes: schema.ObjectAttributes{
+								"first": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.String},
+								},
+								"second": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.Number},
+								},
+								"third": {
+									IsOptional: true,
+									Constraint: schema.Object{
+										Attributes: schema.ObjectAttributes{
+											"nested": {
+												IsOptional: true,
+												Constraint: schema.AnyExpression{OfType: cty.String},
 											},
 										},
 									},
 								},
 							},
-							MinItems: 9,
-							MaxItems: 10,
 						},
+						MinItems: 9,
+						MaxItems: 10,
 					},
 				},
 				"workspace": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.String},
-						schema.LiteralTypeExpr{Type: cty.String},
-					},
+					Constraint: schema.AnyExpression{OfType: cty.String},
 				},
 			},
 			Detail: "hashicorp/hashicup",
@@ -245,43 +178,27 @@ var data = schema.BlockSchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"backend": {
 					IsRequired: true,
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.String},
-						schema.LiteralTypeExpr{Type: cty.String},
-					},
+					Constraint: schema.AnyExpression{OfType: cty.String},
 				},
 				"config1": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.ObjectExpr{
-							Attributes: schema.ObjectExprAttributes{
-								"first": {
-									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.String},
-										schema.LiteralTypeExpr{Type: cty.String},
-									},
-								},
-								"second": {
-									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.Number},
-										schema.LiteralTypeExpr{Type: cty.Number},
-									},
-								},
-								"third": {
-									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.ObjectExpr{
-											Attributes: schema.ObjectExprAttributes{
-												"nested": {
-													IsOptional: true,
-													Expr: schema.ExprConstraints{
-														schema.TraversalExpr{OfType: cty.String},
-														schema.LiteralTypeExpr{Type: cty.String},
-													},
-												},
-											},
+					Constraint: schema.Object{
+						Attributes: schema.ObjectAttributes{
+							"first": {
+								IsOptional: true,
+								Constraint: schema.AnyExpression{OfType: cty.String},
+							},
+							"second": {
+								IsOptional: true,
+								Constraint: schema.AnyExpression{OfType: cty.Number},
+							},
+							"third": {
+								IsOptional: true,
+								Constraint: schema.Object{
+									Attributes: schema.ObjectAttributes{
+										"nested": {
+											IsOptional: true,
+											Constraint: schema.AnyExpression{OfType: cty.String},
 										},
 									},
 								},
@@ -291,145 +208,97 @@ var data = schema.BlockSchema{
 				},
 				"config2": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.ListExpr{
-							Elem: schema.ExprConstraints{
-								schema.ObjectExpr{
-									Attributes: schema.ObjectExprAttributes{
-										"first": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.String},
-												schema.LiteralTypeExpr{Type: cty.String},
-											},
-										},
-										"second": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.Number},
-												schema.LiteralTypeExpr{Type: cty.Number},
-											},
-										},
-										"third": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.ObjectExpr{
-													Attributes: schema.ObjectExprAttributes{
-														"nested": {
-															IsOptional: true,
-															Expr: schema.ExprConstraints{
-																schema.TraversalExpr{OfType: cty.String},
-																schema.LiteralTypeExpr{Type: cty.String},
-															},
-														},
-													},
-												},
+					Constraint: schema.List{
+						Elem: schema.Object{
+							Attributes: schema.ObjectAttributes{
+								"first": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.String},
+								},
+								"second": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.Number},
+								},
+								"third": {
+									IsOptional: true,
+									Constraint: schema.Object{
+										Attributes: schema.ObjectAttributes{
+											"nested": {
+												IsOptional: true,
+												Constraint: schema.AnyExpression{OfType: cty.String},
 											},
 										},
 									},
 								},
 							},
-							MinItems: 2,
-							MaxItems: 3,
 						},
+						MinItems: 2,
+						MaxItems: 3,
 					},
 				},
 				"config3": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{
-							Elem: schema.ExprConstraints{
-								schema.ObjectExpr{
-									Attributes: schema.ObjectExprAttributes{
-										"first": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.String},
-												schema.LiteralTypeExpr{Type: cty.String},
-											},
-										},
-										"second": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.Number},
-												schema.LiteralTypeExpr{Type: cty.Number},
-											},
-										},
-										"third": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.ObjectExpr{
-													Attributes: schema.ObjectExprAttributes{
-														"nested": {
-															IsOptional: true,
-															Expr: schema.ExprConstraints{
-																schema.TraversalExpr{OfType: cty.String},
-																schema.LiteralTypeExpr{Type: cty.String},
-															},
-														},
-													},
-												},
+					Constraint: schema.Set{
+						Elem: schema.Object{
+							Attributes: schema.ObjectAttributes{
+								"first": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.String},
+								},
+								"second": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.Number},
+								},
+								"third": {
+									IsOptional: true,
+									Constraint: schema.Object{
+										Attributes: schema.ObjectAttributes{
+											"nested": {
+												IsOptional: true,
+												Constraint: schema.AnyExpression{OfType: cty.String},
 											},
 										},
 									},
 								},
 							},
-							MinItems: 1,
-							MaxItems: 5,
 						},
+						MinItems: 1,
+						MaxItems: 5,
 					},
 				},
 				"config4": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.MapExpr{
-							Elem: schema.ExprConstraints{
-								schema.ObjectExpr{
-									Attributes: schema.ObjectExprAttributes{
-										"first": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.String},
-												schema.LiteralTypeExpr{Type: cty.String},
-											},
-										},
-										"second": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.Number},
-												schema.LiteralTypeExpr{Type: cty.Number},
-											},
-										},
-										"third": {
-											IsOptional: true,
-											Expr: schema.ExprConstraints{
-												schema.ObjectExpr{
-													Attributes: schema.ObjectExprAttributes{
-														"nested": {
-															IsOptional: true,
-															Expr: schema.ExprConstraints{
-																schema.TraversalExpr{OfType: cty.String},
-																schema.LiteralTypeExpr{Type: cty.String},
-															},
-														},
-													},
-												},
+					Constraint: schema.Map{
+						Elem: schema.Object{
+							Attributes: schema.ObjectAttributes{
+								"first": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.String},
+								},
+								"second": {
+									IsOptional: true,
+									Constraint: schema.AnyExpression{OfType: cty.Number},
+								},
+								"third": {
+									IsOptional: true,
+									Constraint: schema.Object{
+										Attributes: schema.ObjectAttributes{
+											"nested": {
+												IsOptional: true,
+												Constraint: schema.AnyExpression{OfType: cty.String},
 											},
 										},
 									},
 								},
 							},
-							MinItems: 9,
-							MaxItems: 10,
 						},
+						MinItems: 9,
+						MaxItems: 10,
 					},
 				},
 				"workspace": {
 					IsOptional: true,
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.String},
-						schema.LiteralTypeExpr{Type: cty.String},
-					},
+					Constraint: schema.AnyExpression{OfType: cty.String},
 				},
 			},
 			Detail: "hashicorp/hashicup",
@@ -447,7 +316,7 @@ var provider = schema.BlockSchema{
 	SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
-			"alias": {Expr: schema.LiteralTypeOnly(cty.String), IsOptional: true},
+			"alias": {Constraint: schema.LiteralType{Type: cty.String}, IsOptional: true},
 		},
 	},
 	DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -479,10 +348,7 @@ var resource = schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"count": {
-				Expr: schema.ExprConstraints{
-					schema.TraversalExpr{OfType: cty.Number},
-					schema.LiteralTypeExpr{Type: cty.Number},
-				},
+				Constraint: schema.AnyExpression{OfType: cty.Number},
 				IsOptional: true,
 			},
 		},
@@ -501,13 +367,13 @@ var moduleWithoutDependency = schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"source": {
-				Expr:                   schema.LiteralTypeOnly(cty.String),
+				Constraint:             schema.LiteralType{Type: cty.String},
 				IsRequired:             true,
 				IsDepKey:               true,
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 			"version": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
+				Constraint: schema.LiteralType{Type: cty.String},
 				IsOptional: true,
 			},
 		},
@@ -526,13 +392,13 @@ var moduleWithDependency = schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"source": {
-				Expr:                   schema.LiteralTypeOnly(cty.String),
+				Constraint:             schema.LiteralType{Type: cty.String},
 				IsRequired:             true,
 				IsDepKey:               true,
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 			"version": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
+				Constraint: schema.LiteralType{Type: cty.String},
 				IsOptional: true,
 			},
 		},
@@ -554,11 +420,8 @@ var moduleWithDependency = schema.BlockSchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.String},
-						schema.LiteralTypeExpr{Type: cty.String},
-					},
-					IsRequired: true,
+					Constraint:  schema.AnyExpression{OfType: cty.String},
+					IsRequired:  true,
 					OriginForTarget: &schema.PathTarget{
 						Address: schema.Address{
 							schema.StaticStep{Name: "var"},
@@ -608,13 +471,13 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 	Body: &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"source": {
-				Expr:                   schema.LiteralTypeOnly(cty.String),
+				Constraint:             schema.LiteralType{Type: cty.String},
 				IsRequired:             true,
 				IsDepKey:               true,
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 			},
 			"version": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
+				Constraint: schema.LiteralType{Type: cty.String},
 				IsOptional: true,
 			},
 		},
@@ -645,11 +508,8 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.String},
-						schema.LiteralTypeExpr{Type: cty.String},
-					},
-					IsRequired: true,
+					Constraint:  schema.AnyExpression{OfType: cty.String},
+					IsRequired:  true,
 					OriginForTarget: &schema.PathTarget{
 						Address: schema.Address{
 							schema.StaticStep{Name: "var"},
@@ -692,11 +552,8 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"test": {
 					Description: lang.PlainText("test var"),
-					Expr: schema.ExprConstraints{
-						schema.TraversalExpr{OfType: cty.String},
-						schema.LiteralTypeExpr{Type: cty.String},
-					},
-					IsRequired: true,
+					Constraint:  schema.AnyExpression{OfType: cty.String},
+					IsRequired:  true,
 					OriginForTarget: &schema.PathTarget{
 						Address: schema.Address{
 							schema.StaticStep{Name: "var"},

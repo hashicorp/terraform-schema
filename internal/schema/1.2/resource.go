@@ -16,21 +16,23 @@ func resourceLifecycleBlock() *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"create_before_destroy": {
-					Expr:       schema.LiteralTypeOnly(cty.Bool),
+					Constraint: schema.LiteralType{Type: cty.Bool},
 					IsOptional: true,
 					Description: lang.Markdown("Whether to reverse the default order of operations (destroy -> create) during apply " +
 						"when the resource requires replacement (cannot be updated in-place)"),
 				},
 				"prevent_destroy": {
-					Expr:       schema.LiteralTypeOnly(cty.Bool),
+					Constraint: schema.LiteralType{Type: cty.Bool},
 					IsOptional: true,
 					Description: lang.Markdown("Whether to prevent accidental destruction of the resource and cause Terraform " +
 						"to reject with an error any plan that would destroy the resource"),
 				},
 				"ignore_changes": {
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{},
-						schema.KeywordExpr{
+					Constraint: schema.OneOf{
+						schema.Set{
+							// TODO: expose reference targets via attribute-only address
+						},
+						schema.Keyword{
 							Keyword: "all",
 							Description: lang.Markdown("Ignore all attributes, which means that Terraform can create" +
 								" and destroy the remote object but will never propose updates to it"),
@@ -40,11 +42,9 @@ func resourceLifecycleBlock() *schema.BlockSchema {
 					Description: lang.Markdown("A set of fields (references) of which to ignore changes to, e.g. `tags`"),
 				},
 				"replace_triggered_by": {
-					Expr: schema.ExprConstraints{
-						schema.SetExpr{
-							Elem: schema.ExprConstraints{
-								schema.TraversalExpr{OfScopeId: refscope.ResourceScope},
-							},
+					Constraint: schema.Set{
+						Elem: schema.Reference{
+							OfScopeId: refscope.ResourceScope,
 						},
 					},
 					IsOptional: true,

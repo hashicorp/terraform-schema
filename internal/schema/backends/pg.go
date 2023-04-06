@@ -21,13 +21,13 @@ func pgBackend(v *version.Version) *schema.BodySchema {
 		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"conn_str": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("Postgres connection string; a `postgres://` URL"),
 			},
 
 			"schema_name": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("Name of the automatically managed Postgres schema to store state"),
 			},
@@ -37,7 +37,7 @@ func pgBackend(v *version.Version) *schema.BodySchema {
 	if v.GreaterThanOrEqual(v0_12_8) {
 		// https://github.com/hashicorp/terraform/commit/be5280e4
 		bodySchema.Attributes["skip_schema_creation"] = &schema.AttributeSchema{
-			Expr:        schema.LiteralTypeOnly(cty.Bool),
+			Constraint:  schema.LiteralType{Type: cty.Bool},
 			IsOptional:  true,
 			Description: lang.Markdown("If set to `true`, Terraform won't try to create the Postgres schema"),
 		}
@@ -46,13 +46,13 @@ func pgBackend(v *version.Version) *schema.BodySchema {
 	if v.GreaterThanOrEqual(v0_14_0) {
 		// https://github.com/hashicorp/terraform/commit/12a0a21c
 		bodySchema.Attributes["skip_table_creation"] = &schema.AttributeSchema{
-			Expr:        schema.LiteralTypeOnly(cty.Bool),
+			Constraint:  schema.LiteralType{Type: cty.Bool},
 			IsOptional:  true,
 			Description: lang.Markdown("If set to `true`, Terraform won't try to create the Postgres table"),
 		}
 
 		bodySchema.Attributes["skip_index_creation"] = &schema.AttributeSchema{
-			Expr:        schema.LiteralTypeOnly(cty.Bool),
+			Constraint:  schema.LiteralType{Type: cty.Bool},
 			IsOptional:  true,
 			Description: lang.Markdown("If set to `true`, Terraform won't try to create the Postgres index"),
 		}

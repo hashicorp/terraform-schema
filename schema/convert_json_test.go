@@ -110,68 +110,49 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 					"egress": {
 						IsOptional: true,
 						IsComputed: true,
-						Expr: schema.ExprConstraints{
-							schema.TraversalExpr{OfType: cty.List(cty.Object(map[string]cty.Type{
-								"cidr_blocks": cty.List(cty.String),
-								"description": cty.String,
-								"from_port":   cty.Number,
-								"self":        cty.Bool,
-							}))},
-							schema.LiteralTypeExpr{Type: cty.List(cty.Object(map[string]cty.Type{
-								"cidr_blocks": cty.List(cty.String),
-								"description": cty.String,
-								"from_port":   cty.Number,
-								"self":        cty.Bool,
-							}))},
-							schema.ListExpr{
-								Elem: schema.ExprConstraints{
-									schema.TraversalExpr{OfType: cty.Object(map[string]cty.Type{
-										"cidr_blocks": cty.List(cty.String),
-										"description": cty.String,
-										"from_port":   cty.Number,
-										"self":        cty.Bool,
-									})},
-									schema.LiteralTypeExpr{Type: cty.Object(map[string]cty.Type{
-										"cidr_blocks": cty.List(cty.String),
-										"description": cty.String,
-										"from_port":   cty.Number,
-										"self":        cty.Bool,
-									})},
-									schema.ObjectExpr{
-										Attributes: schema.ObjectExprAttributes{
+						Constraint: schema.OneOf{
+							schema.AnyExpression{
+								OfType: cty.List(cty.Object(map[string]cty.Type{
+									"cidr_blocks": cty.List(cty.String),
+									"description": cty.String,
+									"from_port":   cty.Number,
+									"self":        cty.Bool,
+								})),
+								SkipLiteralComplexTypes: true,
+							},
+							schema.List{
+								Elem: schema.OneOf{
+									schema.AnyExpression{
+										OfType: cty.Object(map[string]cty.Type{
+											"cidr_blocks": cty.List(cty.String),
+											"description": cty.String,
+											"from_port":   cty.Number,
+											"self":        cty.Bool,
+										}),
+										SkipLiteralComplexTypes: true,
+									},
+									schema.Object{
+										Attributes: schema.ObjectAttributes{
 											"cidr_blocks": {
 												IsRequired: true,
-												Expr: schema.ExprConstraints{
-													schema.TraversalExpr{OfType: cty.List(cty.String)},
-													schema.LiteralTypeExpr{Type: cty.List(cty.String)},
-													schema.ListExpr{
-														Elem: schema.ExprConstraints{
-															schema.TraversalExpr{OfType: cty.String},
-															schema.LiteralTypeExpr{Type: cty.String},
-														},
+												Constraint: schema.OneOf{
+													schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
+													schema.List{
+														Elem: schema.AnyExpression{OfType: cty.String},
 													},
 												},
 											},
 											"description": {
 												IsRequired: true,
-												Expr: schema.ExprConstraints{
-													schema.TraversalExpr{OfType: cty.String},
-													schema.LiteralTypeExpr{Type: cty.String},
-												},
+												Constraint: schema.AnyExpression{OfType: cty.String},
 											},
 											"from_port": {
 												IsRequired: true,
-												Expr: schema.ExprConstraints{
-													schema.TraversalExpr{OfType: cty.Number},
-													schema.LiteralTypeExpr{Type: cty.Number},
-												},
+												Constraint: schema.AnyExpression{OfType: cty.Number},
 											},
 											"self": {
 												IsRequired: true,
-												Expr: schema.ExprConstraints{
-													schema.TraversalExpr{OfType: cty.Bool},
-													schema.LiteralTypeExpr{Type: cty.Bool},
-												},
+												Constraint: schema.AnyExpression{OfType: cty.Bool},
 											},
 										},
 									},
@@ -182,68 +163,49 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 					"ingress": {
 						IsOptional: true,
 						IsComputed: true,
-						Expr: schema.ExprConstraints{
-							schema.TraversalExpr{OfType: cty.Set(cty.Object(map[string]cty.Type{
-								"cidr_blocks": cty.List(cty.String),
-								"description": cty.String,
-								"from_port":   cty.Number,
-								"self":        cty.Bool,
-							}))},
-							schema.LiteralTypeExpr{Type: cty.Set(cty.Object(map[string]cty.Type{
-								"cidr_blocks": cty.List(cty.String),
-								"description": cty.String,
-								"from_port":   cty.Number,
-								"self":        cty.Bool,
-							}))},
-							schema.SetExpr{
-								Elem: schema.ExprConstraints{
-									schema.TraversalExpr{OfType: cty.Object(map[string]cty.Type{
-										"cidr_blocks": cty.List(cty.String),
-										"description": cty.String,
-										"from_port":   cty.Number,
-										"self":        cty.Bool,
-									})},
-									schema.LiteralTypeExpr{Type: cty.Object(map[string]cty.Type{
-										"cidr_blocks": cty.List(cty.String),
-										"description": cty.String,
-										"from_port":   cty.Number,
-										"self":        cty.Bool,
-									})},
-									schema.ObjectExpr{
-										Attributes: schema.ObjectExprAttributes{
+						Constraint: schema.OneOf{
+							schema.AnyExpression{
+								OfType: cty.Set(cty.Object(map[string]cty.Type{
+									"cidr_blocks": cty.List(cty.String),
+									"description": cty.String,
+									"from_port":   cty.Number,
+									"self":        cty.Bool,
+								})),
+								SkipLiteralComplexTypes: true,
+							},
+							schema.Set{
+								Elem: schema.OneOf{
+									schema.AnyExpression{
+										OfType: cty.Object(map[string]cty.Type{
+											"cidr_blocks": cty.List(cty.String),
+											"description": cty.String,
+											"from_port":   cty.Number,
+											"self":        cty.Bool,
+										}),
+										SkipLiteralComplexTypes: true,
+									},
+									schema.Object{
+										Attributes: schema.ObjectAttributes{
 											"cidr_blocks": {
 												IsRequired: true,
-												Expr: schema.ExprConstraints{
-													schema.TraversalExpr{OfType: cty.List(cty.String)},
-													schema.LiteralTypeExpr{Type: cty.List(cty.String)},
-													schema.ListExpr{
-														Elem: schema.ExprConstraints{
-															schema.TraversalExpr{OfType: cty.String},
-															schema.LiteralTypeExpr{Type: cty.String},
-														},
+												Constraint: schema.OneOf{
+													schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
+													schema.List{
+														Elem: schema.AnyExpression{OfType: cty.String},
 													},
 												},
 											},
 											"description": {
 												IsRequired: true,
-												Expr: schema.ExprConstraints{
-													schema.TraversalExpr{OfType: cty.String},
-													schema.LiteralTypeExpr{Type: cty.String},
-												},
+												Constraint: schema.AnyExpression{OfType: cty.String},
 											},
 											"from_port": {
 												IsRequired: true,
-												Expr: schema.ExprConstraints{
-													schema.TraversalExpr{OfType: cty.Number},
-													schema.LiteralTypeExpr{Type: cty.Number},
-												},
+												Constraint: schema.AnyExpression{OfType: cty.Number},
 											},
 											"self": {
 												IsRequired: true,
-												Expr: schema.ExprConstraints{
-													schema.TraversalExpr{OfType: cty.Bool},
-													schema.LiteralTypeExpr{Type: cty.Bool},
-												},
+												Constraint: schema.AnyExpression{OfType: cty.Bool},
 											},
 										},
 									},
@@ -253,23 +215,16 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 					},
 					"simple_list": {
 						IsOptional: true,
-						Expr: schema.ExprConstraints{
-							schema.TraversalExpr{OfType: cty.List(cty.String)},
-							schema.LiteralTypeExpr{Type: cty.List(cty.String)},
-							schema.ListExpr{
-								Elem: schema.ExprConstraints{
-									schema.TraversalExpr{OfType: cty.String},
-									schema.LiteralTypeExpr{Type: cty.String},
-								},
+						Constraint: schema.OneOf{
+							schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
+							schema.List{
+								Elem: schema.AnyExpression{OfType: cty.String},
 							},
 						},
 					},
 					"textfield": {
 						IsOptional: true,
-						Expr: schema.ExprConstraints{
-							schema.TraversalExpr{OfType: cty.String},
-							schema.LiteralTypeExpr{Type: cty.String},
-						},
+						Constraint: schema.AnyExpression{OfType: cty.String},
 					},
 				},
 				Blocks: map[string]*schema.BlockSchema{
@@ -279,37 +234,24 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 							Attributes: map[string]*schema.AttributeSchema{
 								"cidr_blocks": {
 									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.List(cty.String)},
-										schema.LiteralTypeExpr{Type: cty.List(cty.String)},
-										schema.ListExpr{
-											Elem: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.String},
-												schema.LiteralTypeExpr{Type: cty.String},
-											},
+									Constraint: schema.OneOf{
+										schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
+										schema.List{
+											Elem: schema.AnyExpression{OfType: cty.String},
 										},
 									},
 								},
 								"description": {
 									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.String},
-										schema.LiteralTypeExpr{Type: cty.String},
-									},
+									Constraint: schema.AnyExpression{OfType: cty.String},
 								},
 								"from_port": {
 									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.Number},
-										schema.LiteralTypeExpr{Type: cty.Number},
-									},
+									Constraint: schema.AnyExpression{OfType: cty.Number},
 								},
 								"self": {
 									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.Bool},
-										schema.LiteralTypeExpr{Type: cty.Bool},
-									},
+									Constraint: schema.AnyExpression{OfType: cty.Bool},
 								},
 							},
 						},
@@ -320,37 +262,24 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 							Attributes: map[string]*schema.AttributeSchema{
 								"cidr_blocks": {
 									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.List(cty.String)},
-										schema.LiteralTypeExpr{Type: cty.List(cty.String)},
-										schema.ListExpr{
-											Elem: schema.ExprConstraints{
-												schema.TraversalExpr{OfType: cty.String},
-												schema.LiteralTypeExpr{Type: cty.String},
-											},
+									Constraint: schema.OneOf{
+										schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
+										schema.List{
+											Elem: schema.AnyExpression{OfType: cty.String},
 										},
 									},
 								},
 								"description": {
 									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.String},
-										schema.LiteralTypeExpr{Type: cty.String},
-									},
+									Constraint: schema.AnyExpression{OfType: cty.String},
 								},
 								"from_port": {
 									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.Number},
-										schema.LiteralTypeExpr{Type: cty.Number},
-									},
+									Constraint: schema.AnyExpression{OfType: cty.Number},
 								},
 								"self": {
 									IsOptional: true,
-									Expr: schema.ExprConstraints{
-										schema.TraversalExpr{OfType: cty.Bool},
-										schema.LiteralTypeExpr{Type: cty.Bool},
-									},
+									Constraint: schema.AnyExpression{OfType: cty.Bool},
 								},
 							},
 						},

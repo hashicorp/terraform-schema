@@ -24,39 +24,39 @@ func mantaBackend(v *version.Version) *schema.BodySchema {
 		},
 		Attributes: map[string]*schema.AttributeSchema{
 			"account": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsRequired:  true,
 				Description: lang.Markdown("The name of the Manta account."),
 			},
 
 			"user": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("The username of the Triton account used to authenticate with the Triton API."),
 			},
 
 			"url": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("The Manta API Endpoint."),
 			},
 
 			"key_material": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
+				Constraint: schema.LiteralType{Type: cty.String},
 				IsOptional: true,
 				Description: lang.Markdown("The private key of an SSH key associated with the Triton account to be used.\n\n" +
 					"If this is not set, the private key corresponding to the fingerprint in `key_id` must be available via an SSH Agent."),
 			},
 
 			"key_id": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
+				Constraint: schema.LiteralType{Type: cty.String},
 				IsRequired: true,
 				Description: lang.Markdown("The fingerprint of the public key matching the key specified in `key_path`.\n\n" +
 					"It can be obtained via the command `ssh-keygen -l -E md5 -f /path/to/key`."),
 			},
 
 			"insecure_skip_tls_verify": {
-				Expr:       schema.LiteralTypeOnly(cty.Bool),
+				Constraint: schema.LiteralType{Type: cty.Bool},
 				IsOptional: true,
 				Description: lang.Markdown("This allows skipping TLS verification of the Triton endpoint. " +
 					"It is useful when connecting to a temporary Triton installation such as Cloud-On-A-Laptop " +
@@ -64,14 +64,14 @@ func mantaBackend(v *version.Version) *schema.BodySchema {
 			},
 
 			"path": {
-				Expr:       schema.LiteralTypeOnly(cty.String),
+				Constraint: schema.LiteralType{Type: cty.String},
 				IsRequired: true,
 				Description: lang.Markdown("The path relative to your private storage directory where the state file will be stored. " +
 					"**Please Note:** If this path does not exist, then the backend will create this folder location as part of backend creation."),
 			},
 
 			"object_name": {
-				Expr:        schema.LiteralTypeOnly(cty.String),
+				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
 				Description: lang.Markdown("The name of the state file"),
 			},

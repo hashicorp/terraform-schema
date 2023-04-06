@@ -151,7 +151,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 						remoteStateDs.Attributes["backend"].IsDepKey = true
 						remoteStateDs.Attributes["backend"].SemanticTokenModifiers = lang.SemanticTokenModifiers{lang.TokenModifierDependent}
-						remoteStateDs.Attributes["backend"].Expr = backends.BackendTypesAsExprConstraints(m.terraformVersion)
+						remoteStateDs.Attributes["backend"].Constraint = backends.BackendTypesAsOneOfConstraint(m.terraformVersion)
 						delete(remoteStateDs.Attributes, "config")
 
 						depBodies := m.dependentBodyForRemoteStateDataSource(providerAddr, localRef)
@@ -355,7 +355,7 @@ func variableDependentBody(vars map[string]tfmod.Variable) map[schema.SchemaKey]
 		depBodies[schema.NewSchemaKey(depKeys)] = &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"default": {
-					Expr:        schema.ExprConstraints{schema.LiteralTypeExpr{Type: mVar.Type}},
+					Constraint:  schema.LiteralType{Type: mVar.Type},
 					IsOptional:  true,
 					Description: lang.Markdown("Default value to use when variable is not explicitly set"),
 				},

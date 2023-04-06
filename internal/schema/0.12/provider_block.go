@@ -40,12 +40,12 @@ func providerBlockSchema(v *version.Version) *schema.BlockSchema {
 			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"alias": {
-					Expr:        schema.LiteralTypeOnly(cty.String),
+					Constraint:  schema.LiteralType{Type: cty.String},
 					IsOptional:  true,
 					Description: lang.Markdown("Alias for using the same provider with different configurations for different resources, e.g. `eu-west`"),
 				},
 				"version": {
-					Expr:        schema.LiteralTypeOnly(cty.String),
+					Constraint:  schema.LiteralType{Type: cty.String},
 					IsOptional:  true,
 					Description: lang.Markdown("Specifies a version constraint for the provider, e.g. `~> 1.0`"),
 				},
