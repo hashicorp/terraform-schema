@@ -111,26 +111,32 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 						IsOptional: true,
 						IsComputed: true,
 						Constraint: schema.OneOf{
-							schema.AnyExpression{OfType: cty.List(cty.Object(map[string]cty.Type{
-								"cidr_blocks": cty.List(cty.String),
-								"description": cty.String,
-								"from_port":   cty.Number,
-								"self":        cty.Bool,
-							}))},
+							schema.AnyExpression{
+								OfType: cty.List(cty.Object(map[string]cty.Type{
+									"cidr_blocks": cty.List(cty.String),
+									"description": cty.String,
+									"from_port":   cty.Number,
+									"self":        cty.Bool,
+								})),
+								SkipLiteralComplexTypes: true,
+							},
 							schema.List{
 								Elem: schema.OneOf{
-									schema.AnyExpression{OfType: cty.Object(map[string]cty.Type{
-										"cidr_blocks": cty.List(cty.String),
-										"description": cty.String,
-										"from_port":   cty.Number,
-										"self":        cty.Bool,
-									})},
+									schema.AnyExpression{
+										OfType: cty.Object(map[string]cty.Type{
+											"cidr_blocks": cty.List(cty.String),
+											"description": cty.String,
+											"from_port":   cty.Number,
+											"self":        cty.Bool,
+										}),
+										SkipLiteralComplexTypes: true,
+									},
 									schema.Object{
 										Attributes: schema.ObjectAttributes{
 											"cidr_blocks": {
 												IsRequired: true,
 												Constraint: schema.OneOf{
-													schema.AnyExpression{OfType: cty.List(cty.String)},
+													schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 													schema.List{
 														Elem: schema.AnyExpression{OfType: cty.String},
 													},
@@ -158,26 +164,32 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 						IsOptional: true,
 						IsComputed: true,
 						Constraint: schema.OneOf{
-							schema.AnyExpression{OfType: cty.Set(cty.Object(map[string]cty.Type{
-								"cidr_blocks": cty.List(cty.String),
-								"description": cty.String,
-								"from_port":   cty.Number,
-								"self":        cty.Bool,
-							}))},
+							schema.AnyExpression{
+								OfType: cty.Set(cty.Object(map[string]cty.Type{
+									"cidr_blocks": cty.List(cty.String),
+									"description": cty.String,
+									"from_port":   cty.Number,
+									"self":        cty.Bool,
+								})),
+								SkipLiteralComplexTypes: true,
+							},
 							schema.Set{
 								Elem: schema.OneOf{
-									schema.AnyExpression{OfType: cty.Object(map[string]cty.Type{
-										"cidr_blocks": cty.List(cty.String),
-										"description": cty.String,
-										"from_port":   cty.Number,
-										"self":        cty.Bool,
-									})},
+									schema.AnyExpression{
+										OfType: cty.Object(map[string]cty.Type{
+											"cidr_blocks": cty.List(cty.String),
+											"description": cty.String,
+											"from_port":   cty.Number,
+											"self":        cty.Bool,
+										}),
+										SkipLiteralComplexTypes: true,
+									},
 									schema.Object{
 										Attributes: schema.ObjectAttributes{
 											"cidr_blocks": {
 												IsRequired: true,
 												Constraint: schema.OneOf{
-													schema.AnyExpression{OfType: cty.List(cty.String)},
+													schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 													schema.List{
 														Elem: schema.AnyExpression{OfType: cty.String},
 													},
@@ -204,7 +216,7 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 					"simple_list": {
 						IsOptional: true,
 						Constraint: schema.OneOf{
-							schema.AnyExpression{OfType: cty.List(cty.String)},
+							schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 							schema.List{
 								Elem: schema.AnyExpression{OfType: cty.String},
 							},
@@ -223,7 +235,7 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 								"cidr_blocks": {
 									IsOptional: true,
 									Constraint: schema.OneOf{
-										schema.AnyExpression{OfType: cty.List(cty.String)},
+										schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 										schema.List{
 											Elem: schema.AnyExpression{OfType: cty.String},
 										},
@@ -251,7 +263,7 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 								"cidr_blocks": {
 									IsOptional: true,
 									Constraint: schema.OneOf{
-										schema.AnyExpression{OfType: cty.List(cty.String)},
+										schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 										schema.List{
 											Elem: schema.AnyExpression{OfType: cty.String},
 										},

@@ -128,7 +128,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"settings": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -415,7 +415,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"admins": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -428,7 +428,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"editors": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -450,7 +450,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"viewers": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -474,7 +474,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"members": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -546,7 +546,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"settings": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -833,7 +833,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"admins": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -846,7 +846,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"editors": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -868,7 +868,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"viewers": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -892,7 +892,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"members": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -948,7 +948,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 						},
 						"triggers": {
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -980,7 +980,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1008,7 +1008,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1076,7 +1076,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1112,7 +1112,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1172,7 +1172,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1289,7 +1289,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1342,7 +1342,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							},
 							IsRequired: true,
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1354,7 +1354,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1368,7 +1368,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							},
 							IsComputed: true,
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.List(cty.String)},
+								schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
 								schema.List{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1411,7 +1411,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1527,7 +1527,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1595,7 +1595,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1609,7 +1609,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							},
 							IsComputed: true,
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1653,7 +1653,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1667,7 +1667,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							},
 							IsComputed: true,
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1711,7 +1711,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 								Kind:  lang.MarkdownKind,
 							},
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},
@@ -1725,7 +1725,7 @@ var expectedMergedSchema_v013 = &schema.BodySchema{
 							},
 							IsComputed: true,
 							Constraint: schema.OneOf{
-								schema.AnyExpression{OfType: cty.Map(cty.String)},
+								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
 									Elem: schema.AnyExpression{OfType: cty.String},
 								},

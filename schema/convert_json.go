@@ -227,7 +227,10 @@ func convertAttributeTypeToConstraint(attrType cty.Type) schema.Constraint {
 	}
 
 	cons := schema.OneOf{
-		schema.AnyExpression{OfType: attrType},
+		schema.AnyExpression{
+			OfType:                  attrType,
+			SkipLiteralComplexTypes: true,
+		},
 	}
 
 	if attrType.IsListType() {
