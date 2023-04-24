@@ -7,13 +7,41 @@ import (
 
 var (
 	OldestAvailableVersion = version.Must(version.NewVersion("0.12.0"))
-	LatestAvailableVersion = version.Must(version.NewVersion("1.3.0-alpha20220803"))
+	LatestAvailableVersion = version.Must(version.NewVersion("1.5.0-alpha20230405"))
 
 	terraformVersions = version.Collection{
+		version.Must(version.NewVersion("1.5.0-alpha20230405")),
+		version.Must(version.NewVersion("1.4.5")),
+		version.Must(version.NewVersion("1.4.4")),
+		version.Must(version.NewVersion("1.4.3")),
+		version.Must(version.NewVersion("1.4.2")),
+		version.Must(version.NewVersion("1.4.1")),
+		version.Must(version.NewVersion("1.4.0")),
+		version.Must(version.NewVersion("1.4.0-rc1")),
+		version.Must(version.NewVersion("1.4.0-beta2")),
+		version.Must(version.NewVersion("1.4.0-beta1")),
+		version.Must(version.NewVersion("1.4.0-alpha20221207")),
+		version.Must(version.NewVersion("1.4.0-alpha20221109")),
+		version.Must(version.NewVersion("1.3.9")),
+		version.Must(version.NewVersion("1.3.8")),
+		version.Must(version.NewVersion("1.3.7")),
+		version.Must(version.NewVersion("1.3.6")),
+		version.Must(version.NewVersion("1.3.5")),
+		version.Must(version.NewVersion("1.3.4")),
+		version.Must(version.NewVersion("1.3.3")),
+		version.Must(version.NewVersion("1.3.2")),
+		version.Must(version.NewVersion("1.3.1")),
+		version.Must(version.NewVersion("1.3.0")),
+		version.Must(version.NewVersion("1.3.0-rc1")),
+		version.Must(version.NewVersion("1.3.0-beta1")),
+		version.Must(version.NewVersion("1.3.0-alpha20220817")),
 		version.Must(version.NewVersion("1.3.0-alpha20220803")),
 		version.Must(version.NewVersion("1.3.0-alpha20220706")),
 		version.Must(version.NewVersion("1.3.0-alpha20220622")),
 		version.Must(version.NewVersion("1.3.0-alpha20220608")),
+		version.Must(version.NewVersion("1.2.9")),
+		version.Must(version.NewVersion("1.2.8")),
+		version.Must(version.NewVersion("1.2.7")),
 		version.Must(version.NewVersion("1.2.6")),
 		version.Must(version.NewVersion("1.2.5")),
 		version.Must(version.NewVersion("1.2.4")),
