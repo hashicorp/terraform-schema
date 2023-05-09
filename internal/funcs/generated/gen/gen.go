@@ -26,8 +26,11 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
+var (
+	terraformVersion = version.Must(version.NewVersion("1.4.0"))
+)
+
 const (
-	terraformVersion      = "1.4.0"
 	functionSignatureHash = "8877af98abc453ce29d43e390c71b97bceaf90563ed28cf575e0100288602e9d"
 )
 
@@ -47,7 +50,7 @@ func main() {
 		return
 	}
 	log.Printf("generating new signatures for %q\n", newSignatureHash)
-	functionsFile := fmt.Sprintf("%s.go", terraformVersion)
+	functionsFile := fmt.Sprintf("%s.go", terraformVersion.Core().String())
 	err = writeFunctions(functionsFile, functions)
 	if err != nil {
 		log.Fatal(err)
@@ -79,7 +82,7 @@ func signaturesFromTerraform(ctx context.Context) (*tfjson.MetadataFunctions, er
 		&releases.ExactVersion{
 			Product:    product.Terraform,
 			InstallDir: installDir,
-			Version:    version.Must(version.NewVersion(terraformVersion)),
+			Version:    terraformVersion,
 		},
 	})
 	if err != nil {
@@ -171,7 +174,7 @@ func {{ .FunctionName }}() map[string]schema.FunctionSignature {
 
 	var buf bytes.Buffer
 	err = tpl.Execute(&buf, data{
-		FunctionName: fmt.Sprintf("v%s_Functions", escapeVersion(terraformVersion)),
+		FunctionName: fmt.Sprintf("v%s_Functions", escapeVersion(terraformVersion.Core().String())),
 		Signatures:   functions.Signatures,
 	})
 	if err != nil {
