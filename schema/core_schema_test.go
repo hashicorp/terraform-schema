@@ -122,7 +122,7 @@ func TestCoreModuleSchemaForConstraint(t *testing.T) {
 		},
 		{
 			version.Constraints{},
-			mod_v1_2.ModuleSchema(version.Must(version.NewVersion("1.3.0"))),
+			mod_v1_2.ModuleSchema(version.Must(version.NewVersion("1.4.0"))),
 			nil,
 		},
 		{
