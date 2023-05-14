@@ -64,5 +64,14 @@ func cosBackend(v *version.Version) *schema.BodySchema {
 		},
 	}
 
+	if v.GreaterThanOrEqual(v1_3_0) {
+		// See https://github.com/hashicorp/terraform/pull/31425/files
+		bodySchema.Attributes["accelerate"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.Bool},
+			IsOptional:  true,
+			Description: lang.Markdown("Whether to enable global Acceleration"),
+		}
+	}
+
 	return bodySchema
 }
