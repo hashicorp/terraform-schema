@@ -82,8 +82,11 @@ var LocalExecProvisioner = &schema.BodySchema{
 		},
 		"interpreter": {
 			IsOptional: true,
-			Constraint: schema.List{
-				Elem: schema.AnyExpression{OfType: cty.String},
+			Constraint: schema.OneOf{
+				schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
+				schema.List{
+					Elem: schema.AnyExpression{OfType: cty.String},
+				},
 			},
 			Description: lang.Markdown("If provided, this is a list of interpreter arguments used to execute " +
 				"the command. The first argument is the interpreter itself. It can be provided as a relative " +
@@ -117,8 +120,11 @@ var RemoteExecProvisioner = &schema.BodySchema{
 	Attributes: map[string]*schema.AttributeSchema{
 		"inline": {
 			IsOptional: true,
-			Constraint: schema.List{
-				Elem: schema.AnyExpression{OfType: cty.String},
+			Constraint: schema.OneOf{
+				schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
+				schema.List{
+					Elem: schema.AnyExpression{OfType: cty.String},
+				},
 			},
 			Description: lang.Markdown("A list of command strings. They are executed in the order they are provided." +
 				" This cannot be provided with `script` or `scripts`."),
@@ -131,8 +137,11 @@ var RemoteExecProvisioner = &schema.BodySchema{
 		},
 		"scripts": {
 			IsOptional: true,
-			Constraint: schema.List{
-				Elem: schema.AnyExpression{OfType: cty.String},
+			Constraint: schema.OneOf{
+				schema.AnyExpression{OfType: cty.List(cty.String), SkipLiteralComplexTypes: true},
+				schema.List{
+					Elem: schema.AnyExpression{OfType: cty.String},
+				},
 			},
 			Description: lang.Markdown("A list of paths (relative or absolute) to local scripts that will be copied " +
 				"to the remote resource and then executed. They are executed in the order they are provided." +
