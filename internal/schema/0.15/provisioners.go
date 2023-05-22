@@ -10,13 +10,19 @@ import (
 	v014_mod "github.com/hashicorp/terraform-schema/internal/schema/0.14"
 )
 
+var (
+	FileProvisioner       = v014_mod.FileProvisioner
+	LocalExecProvisioner  = v014_mod.LocalExecProvisioner
+	RemoteExecProvisioner = v014_mod.RemoteExecProvisioner
+)
+
 // See https://github.com/hashicorp/terraform/tree/v0.15.0/builtin/provisioners
 
 func ProvisionerDependentBodies(v *version.Version) map[schema.SchemaKey]*schema.BodySchema {
 	return map[schema.SchemaKey]*schema.BodySchema{
-		labelKey("file"):        v014_mod.FileProvisioner,
-		labelKey("local-exec"):  v014_mod.LocalExecProvisioner,
-		labelKey("remote-exec"): v014_mod.RemoteExecProvisioner,
+		labelKey("file"):        FileProvisioner,
+		labelKey("local-exec"):  LocalExecProvisioner,
+		labelKey("remote-exec"): RemoteExecProvisioner,
 	}
 }
 

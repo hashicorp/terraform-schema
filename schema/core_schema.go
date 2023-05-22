@@ -12,6 +12,7 @@ import (
 	mod_v0_15 "github.com/hashicorp/terraform-schema/internal/schema/0.15"
 	mod_v1_1 "github.com/hashicorp/terraform-schema/internal/schema/1.1"
 	mod_v1_2 "github.com/hashicorp/terraform-schema/internal/schema/1.2"
+	mod_v1_4 "github.com/hashicorp/terraform-schema/internal/schema/1.4"
 )
 
 var (
@@ -30,6 +31,9 @@ var (
 // It will return error if such schema cannot be found.
 func CoreModuleSchemaForVersion(v *version.Version) (*schema.BodySchema, error) {
 	ver := v.Core()
+	if ver.GreaterThanOrEqual(v1_4) {
+		return mod_v1_4.ModuleSchema(ver), nil
+	}
 	if ver.GreaterThanOrEqual(v1_2) {
 		return mod_v1_2.ModuleSchema(ver), nil
 	}
