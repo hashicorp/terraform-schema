@@ -23,6 +23,7 @@ var (
 	v0_13_1  = version.Must(version.NewVersion("0.13.1"))
 	v0_14_0  = version.Must(version.NewVersion("0.14.0"))
 	v0_15_0  = version.Must(version.NewVersion("0.15.0"))
+	v1_2_0   = version.Must(version.NewVersion("1.2.0"))
 	v1_3_0   = version.Must(version.NewVersion("1.3.0"))
 	v1_4_0   = version.Must(version.NewVersion("1.4.0"))
 )
