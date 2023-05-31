@@ -87,5 +87,24 @@ func httpBackend(v *version.Version) *schema.BodySchema {
 		}
 	}
 
+	if v.GreaterThanOrEqual(v1_4_0) {
+		// https://github.com/hashicorp/terraform/commit/75e5ae27
+		bodySchema.Attributes["client_ca_certificate_pem"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("A PEM-encoded CA certificate chain used by the client to verify server certificates during TLS authentication."),
+		}
+		bodySchema.Attributes["client_certificate_pem"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("A PEM-encoded certificate used by the server to verify the client during mutual TLS (mTLS) authentication."),
+		}
+		bodySchema.Attributes["client_private_key_pem"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("A PEM-encoded private key, required if client_certificate_pem is specified."),
+		}
+	}
+
 	return bodySchema
 }
