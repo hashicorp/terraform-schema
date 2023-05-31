@@ -84,5 +84,20 @@ func gcsBackend(v *version.Version) *schema.BodySchema {
 		delete(bodySchema.Attributes, "path")
 	}
 
+	if v.GreaterThanOrEqual(v1_4_0) {
+		// https://github.com/hashicorp/terraform/commit/89ef27d3
+		bodySchema.Attributes["storage_custom_endpoint"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("A URL containing three parts: the protocol, the DNS name pointing to a Private Service Connect endpoint, and the path for the Cloud Storage API (`/storage/v1/b`, [see here](https://cloud.google.com/storage/docs/json_api/v1/buckets/get#http-request))."),
+		}
+		// https://github.com/hashicorp/terraform/commit/d43ec0f30
+		bodySchema.Attributes["kms_encryption_key"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("A Cloud KMS key ('customer managed encryption key') used when reading and writing state files in the bucket. Format should be 'projects/{{project}}/locations/{{location}}/keyRings/{{keyRing}}/cryptoKeys/{{name}}'."),
+		}
+	}
+
 	return bodySchema
 }
