@@ -75,6 +75,9 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 	if mergedSchema.Blocks["module"].DependentBody == nil {
 		mergedSchema.Blocks["module"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
+	if checkBlock, ok := mergedSchema.Blocks["check"]; ok && checkBlock.Body.Blocks["data"].DependentBody == nil {
+		mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
+	}
 
 	providerRefs := ProviderReferences(meta.ProviderReferences)
 
@@ -157,12 +160,19 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 						depBodies := m.dependentBodyForRemoteStateDataSource(providerAddr, localRef)
 						for key, depBody := range depBodies {
 							mergedSchema.Blocks["data"].DependentBody[key] = depBody
+							if _, ok := mergedSchema.Blocks["check"]; ok {
+								mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody[key] = depBody
+							}
 						}
 
 						dsSchema = remoteStateDs
 					}
 
 					mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+
+					if _, ok := mergedSchema.Blocks["check"]; ok {
+						mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+					}
 
 					// No explicit association is required
 					// if the resource prefix matches provider name
@@ -173,6 +183,9 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 							},
 						}
 						mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+						if _, ok := mergedSchema.Blocks["check"]; ok {
+							mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+						}
 					}
 				}
 			}

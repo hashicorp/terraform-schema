@@ -13,6 +13,7 @@ import (
 func ModuleSchema(v *version.Version) *schema.BodySchema {
 	bs := v1_4_mod.ModuleSchema(v)
 	bs.Blocks["import"] = importBlock()
+	bs.Blocks["check"] = checkBlock()
 
 	return bs
 }
