@@ -177,5 +177,20 @@ func azureRmBackend(v *version.Version) *schema.BodySchema {
 		}
 	}
 
+	// This attribute was both introduced and deprecated in 1.2 🙈
+	// https://github.com/hashicorp/terraform/commit/9f710558 (introduction)
+	// https://github.com/hashicorp/terraform/commit/2eb9118c (deprecation)
+	if v.GreaterThanOrEqual(v1_2_0) {
+		bodySchema.Attributes["use_microsoft_graph"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.Bool},
+			IsOptional:  true,
+			Description: lang.Markdown("This field now defaults to `true` and will be removed in v1.3 of Terraform Core due to the deprecation of ADAL by Microsoft."),
+		}
+		if v.GreaterThanOrEqual(v1_3_0) {
+			// See https://github.com/hashicorp/terraform/commit/05528e8c (removal)
+			delete(bodySchema.Attributes, "use_microsoft_graph")
+		}
+	}
+
 	return bodySchema
 }
