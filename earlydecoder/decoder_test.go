@@ -1046,6 +1046,32 @@ terraform {
 			},
 			nil,
 		},
+		{
+			"additional block",
+			`
+terraform {
+	cloud {
+		hostname = "foo.com"
+		workspaces {
+			tags = ["app"]
+		}
+	}
+}`,
+			&module.Meta{
+				Path:    path,
+				Backend: nil,
+				Cloud: &backend.Cloud{
+					Hostname: "foo.com",
+				},
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+				Filenames:            []string{"test.tf"},
+				ModuleCalls:          map[string]module.DeclaredModuleCall{},
+			},
+			nil,
+		},
 	}
 
 	runTestCases(testCases, t, path)

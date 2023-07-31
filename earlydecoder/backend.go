@@ -32,18 +32,18 @@ func decodeBackendsBlock(block *hcl.Block) (backend.BackendData, hcl.Diagnostics
 }
 
 func decodeCloudBlock(block *hcl.Block) (*backend.Cloud, hcl.Diagnostics) {
-	attrs, diags := block.Body.JustAttributes()
+	attrs, _ := block.Body.JustAttributes()
+	// Ignore diagnostics which may complain about unknown blocks
 
 	// https://developer.hashicorp.com/terraform/language/settings/terraform-cloud#usage-example
 	// Required for Terraform Enterprise
 	// Defaults to app.terraform.io for Terraform Cloud
 	if attr, ok := attrs["hostname"]; ok {
 		val, vDiags := attr.Expr.Value(nil)
-		diags = append(diags, vDiags...)
 		if val.IsWhollyKnown() && val.Type() == cty.String {
 			return &backend.Cloud{
 				Hostname: val.AsString(),
-			}, diags
+			}, vDiags
 		}
 	}
 
