@@ -51,6 +51,11 @@ func (sm *SchemaMerger) dependentBodyForRemoteStateDataSource(providerAddr lang.
 
 		dsSchema := &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
+				"backend": {
+					Constraint:             backends.BackendTypesAsOneOfConstraint(sm.terraformVersion),
+					IsRequired:             true,
+					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
+				},
 				"config": {
 					Constraint: objConstraint,
 					IsOptional: true,
