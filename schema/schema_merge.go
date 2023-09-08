@@ -278,11 +278,6 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 					if err == nil {
 						mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 					}
-				} else {
-					// if module data is not available, we use inferred schema
-					// to enable early reference origin collection
-					depSchema := inferredSchemaForDeclaredDependentModuleBlock(meta.Path, sourceAddr, module)
-					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
 			}
 		}
