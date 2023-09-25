@@ -16,7 +16,7 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 				Constraint: schema.LiteralType{Type: cty.String},
 				IsOptional: true,
 				Description: lang.Markdown("The name of a single Terraform Cloud workspace " +
-					"to be used with this configuration When configured only the specified workspace " +
+					"to be used with this configuration. When configured only the specified workspace " +
 					"can be used. This option conflicts with `tags`."),
 			},
 			"project": {
@@ -30,8 +30,8 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 				},
 				IsOptional: true,
 				Description: lang.Markdown("A set of tags used to select remote Terraform Cloud workspaces" +
-					" to be used for this single configuration.  New workspaces will automatically be tagged " +
-					"with these tag values.  Generally, this is the primary and recommended strategy to use. " +
+					" to be used for this single configuration. New workspaces will automatically be tagged " +
+					"with these tag values. Generally, this is the primary and recommended strategy to use. " +
 					"This option conflicts with `name`."),
 			},
 		},
