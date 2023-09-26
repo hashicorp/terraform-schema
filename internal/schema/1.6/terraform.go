@@ -22,7 +22,7 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 			"project": {
 				Constraint:  schema.LiteralType{Type: cty.String},
 				IsOptional:  true,
-				Description: lang.PlainText("The name of a project that resulting workspace(s) will be created in."),
+				Description: lang.PlainText("The name of a Terraform Cloud project. Workspaces that need creating will be created within this project."),
 			},
 			"tags": {
 				Constraint: schema.Set{
