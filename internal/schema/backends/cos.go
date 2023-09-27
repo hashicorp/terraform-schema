@@ -119,5 +119,18 @@ func cosBackend(v *version.Version) *schema.BodySchema {
 		}
 	}
 
+	if v.GreaterThanOrEqual(v1_6_0) {
+		bodySchema.Attributes["endpoint"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("The custom endpoint for the COS API, e.g. `http://cos-internal.{Region}.tencentcos.cn`. Both HTTP and HTTPS are accepted."),
+		}
+		bodySchema.Attributes["domain"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("The root domain of the API request. Default is `tencentcloudapi.com`."),
+		}
+	}
+
 	return bodySchema
 }
