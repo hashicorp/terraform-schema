@@ -13,7 +13,7 @@ import (
 func ModuleSchema(v *version.Version) *schema.BodySchema {
 	bs := v013_mod.ModuleSchema(v)
 
-	bs.Blocks["variable"] = variableBlockSchema
+	bs.Blocks["variable"] = variableBlockSchema()
 	bs.Blocks["terraform"] = terraformBlockSchema(v)
 	bs.Blocks["resource"].Body.Blocks["provisioner"].DependentBody = ProvisionerDependentBodies
 
