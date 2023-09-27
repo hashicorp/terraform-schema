@@ -26,6 +26,7 @@ var (
 	v1_2_0   = version.Must(version.NewVersion("1.2.0"))
 	v1_3_0   = version.Must(version.NewVersion("1.3.0"))
 	v1_4_0   = version.Must(version.NewVersion("1.4.0"))
+	v1_6_0   = version.Must(version.NewVersion("1.6.0"))
 )
 
 func BackendTypesAsOneOfConstraint(tfVersion *version.Version) schema.OneOf {
