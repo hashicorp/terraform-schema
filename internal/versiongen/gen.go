@@ -82,14 +82,29 @@ var (
 	// we don't have schema for older versions
 	oldestVersion := version.Must(version.NewVersion("0.12.0"))
 
+	latestVersion, err := firstStableVersion(releases)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	err = tpl.Execute(output, data{
 		Releases:      releases,
-		LatestVersion: releases[0].Version,
+		LatestVersion: latestVersion,
 		OldestVersion: oldestVersion,
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func firstStableVersion(releases []release) (*version.Version, error) {
+	for _, release := range releases {
+		if release.Version.Prerelease() == "" {
+			return release.Version, nil
+		}
+	}
+
+	return nil, fmt.Errorf("unable to find stable version in %d given releases", len(releases))
 }
 
 func GetTerraformReleases() ([]release, error) {
