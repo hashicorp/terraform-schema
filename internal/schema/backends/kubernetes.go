@@ -146,5 +146,13 @@ func kubernetesBackend(v *version.Version) *schema.BodySchema {
 		},
 	}
 
+	if v.GreaterThanOrEqual(v1_6_0) {
+		bodySchema.Attributes["proxy_url"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.PlainText("URL to the proxy to be used for all API requests"),
+		}
+	}
+
 	return bodySchema
 }
