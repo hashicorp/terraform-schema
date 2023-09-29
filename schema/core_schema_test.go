@@ -16,7 +16,7 @@ import (
 	mod_v0_14 "github.com/hashicorp/terraform-schema/internal/schema/0.14"
 	mod_v1_1 "github.com/hashicorp/terraform-schema/internal/schema/1.1"
 	mod_v1_2 "github.com/hashicorp/terraform-schema/internal/schema/1.2"
-	mod_v1_5 "github.com/hashicorp/terraform-schema/internal/schema/1.5"
+	mod_v1_6 "github.com/hashicorp/terraform-schema/internal/schema/1.6"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 )
 
@@ -123,7 +123,7 @@ func TestCoreModuleSchemaForConstraint(t *testing.T) {
 		},
 		{
 			version.Constraints{},
-			mod_v1_5.ModuleSchema(version.Must(version.NewVersion("1.5.0"))),
+			mod_v1_6.ModuleSchema(version.Must(version.NewVersion("1.6.0"))),
 			nil,
 		},
 		{
