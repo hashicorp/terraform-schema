@@ -7,11 +7,11 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/schema"
 
-	v1_2_mod "github.com/hashicorp/terraform-schema/internal/schema/1.2"
+	v1_3_mod "github.com/hashicorp/terraform-schema/internal/schema/1.3"
 )
 
 func ModuleSchema(v *version.Version) *schema.BodySchema {
-	bs := v1_2_mod.ModuleSchema(v)
+	bs := v1_3_mod.ModuleSchema(v)
 	bs.Blocks["resource"].Body.Blocks["provisioner"].DependentBody = ProvisionerDependentBodies(v)
 
 	return bs
