@@ -50,9 +50,10 @@ func variableBlockSchema() *schema.BlockSchema {
 					Description: lang.Markdown("Type constraint restricting the type of value to accept, e.g. `string` or `list(string)`"),
 				},
 				"sensitive": {
-					Constraint:  schema.LiteralType{Type: cty.Bool},
-					IsOptional:  true,
-					Description: lang.Markdown("Whether the variable contains sensitive material and should be hidden in the UI"),
+					Constraint:   schema.LiteralType{Type: cty.Bool},
+					DefaultValue: schema.DefaultValue{Value: cty.False},
+					IsOptional:   true,
+					Description:  lang.Markdown("Whether the variable contains sensitive material and should be hidden in the UI"),
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{

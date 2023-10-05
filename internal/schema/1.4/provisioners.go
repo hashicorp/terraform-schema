@@ -18,9 +18,10 @@ var (
 		// See https: //github.com/hashicorp/terraform/pull/32116/files
 		bodySchema := v0_15_mod.LocalExecProvisioner
 		bodySchema.Attributes["quiet"] = &schema.AttributeSchema{
-			Constraint:  schema.LiteralType{Type: cty.Bool},
-			IsOptional:  true,
-			Description: lang.Markdown("Whether to suppress script output"),
+			Constraint:   schema.LiteralType{Type: cty.Bool},
+			DefaultValue: schema.DefaultValue{Value: cty.False},
+			IsOptional:   true,
+			Description:  lang.Markdown("Whether to suppress script output"),
 		}
 		return bodySchema
 	}()

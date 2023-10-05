@@ -30,7 +30,8 @@ func ConnectionDependentBodies(v *version.Version) map[schema.SchemaKey]*schema.
 			schema.LiteralValue{Value: cty.StringVal("windows")},
 			schema.LiteralValue{Value: cty.StringVal("unix")},
 		},
-		IsOptional: true,
+		DefaultValue: schema.DefaultValue{Value: cty.StringVal("unix")},
+		IsOptional:   true,
 		Description: lang.Markdown("The target platform to connect to. " +
 			"Defaults to `unix` if not set. If the platform is set to `windows`, the default `script_path`" +
 			" is `" + `c:\windows\temp\terraform_%RAND%.cmd` + ", assuming the SSH default shell is `cmd.exe`."),
