@@ -33,6 +33,7 @@ func connectionBlock(v *version.Version) *schema.BlockSchema {
 							Description: lang.Markdown("Use WinRM to connect and provision the instance"),
 						},
 					},
+					DefaultValue:           schema.DefaultValue{Value: cty.StringVal("ssh")},
 					IsOptional:             true,
 					IsDepKey:               true,
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
@@ -63,8 +64,9 @@ func connectionBlock(v *version.Version) *schema.BlockSchema {
 						"when using type `ssh` and defaults to `5985` when using type `winrm`."),
 				},
 				"timeout": {
-					Constraint: schema.AnyExpression{OfType: cty.String},
-					IsOptional: true,
+					Constraint:   schema.AnyExpression{OfType: cty.String},
+					DefaultValue: schema.DefaultValue{Value: cty.StringVal("5m")},
+					IsOptional:   true,
 					Description: lang.Markdown("The timeout to wait for the connection to become " +
 						"available. Should be provided as a string like `30s` or `5m`. " +
 						"Defaults to 5 minutes."),

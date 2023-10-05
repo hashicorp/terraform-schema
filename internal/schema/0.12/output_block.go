@@ -44,9 +44,10 @@ func outputBlockSchema() *schema.BlockSchema {
 					Description: lang.PlainText("Value, typically a reference to an attribute of a resource or a data source"),
 				},
 				"sensitive": {
-					Constraint:  schema.LiteralType{Type: cty.Bool},
-					IsOptional:  true,
-					Description: lang.PlainText("Whether the output contains sensitive material and should be hidden in the UI"),
+					Constraint:   schema.LiteralType{Type: cty.Bool},
+					DefaultValue: schema.DefaultValue{Value: cty.BoolVal(false)},
+					IsOptional:   true,
+					Description:  lang.PlainText("Whether the output contains sensitive material and should be hidden in the UI"),
 				},
 				"depends_on": {
 					Constraint: schema.Set{

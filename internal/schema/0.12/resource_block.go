@@ -87,14 +87,16 @@ func lifecycleBlock() *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"create_before_destroy": {
-					Constraint: schema.LiteralType{Type: cty.Bool},
-					IsOptional: true,
+					Constraint:   schema.LiteralType{Type: cty.Bool},
+					DefaultValue: schema.DefaultValue{Value: cty.BoolVal(false)},
+					IsOptional:   true,
 					Description: lang.Markdown("Whether to reverse the default order of operations (destroy -> create) during apply " +
 						"when the resource requires replacement (cannot be updated in-place)"),
 				},
 				"prevent_destroy": {
-					Constraint: schema.LiteralType{Type: cty.Bool},
-					IsOptional: true,
+					Constraint:   schema.LiteralType{Type: cty.Bool},
+					DefaultValue: schema.DefaultValue{Value: cty.BoolVal(false)},
+					IsOptional:   true,
 					Description: lang.Markdown("Whether to prevent accidental destruction of the resource and cause Terraform " +
 						"to reject with an error any plan that would destroy the resource"),
 				},

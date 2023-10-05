@@ -11,9 +11,10 @@ import (
 
 func patchVariableBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 	bs.Body.Attributes["nullable"] = &schema.AttributeSchema{
-		Constraint:  schema.LiteralType{Type: cty.Bool},
-		IsOptional:  true,
-		Description: lang.Markdown("Specifies whether `null` is a valid value for this variable"),
+		Constraint:   schema.LiteralType{Type: cty.Bool},
+		DefaultValue: schema.DefaultValue{Value: cty.False},
+		IsOptional:   true,
+		Description:  lang.Markdown("Specifies whether `null` is a valid value for this variable"),
 	}
 
 	return bs
