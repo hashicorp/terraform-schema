@@ -24,7 +24,7 @@ func isRemoteStateDataSource(pAddr tfaddr.Provider, dsName string) bool {
 		dsName == remoteStateDsName
 }
 
-func (sm *SchemaMerger) dependentBodyForRemoteStateDataSource(providerAddr lang.Address, localRef module.ProviderRef) map[schema.SchemaKey]*schema.BodySchema {
+func (sm *SchemaMerger) dependentBodyForRemoteStateDataSource(originalBodySchema *schema.BodySchema, providerAddr lang.Address, localRef module.ProviderRef) map[schema.SchemaKey]*schema.BodySchema {
 	m := make(map[schema.SchemaKey]*schema.BodySchema, 0)
 	backendsAsCons := backends.ConfigsAsObjectConstraint(sm.terraformVersion)
 
@@ -49,18 +49,15 @@ func (sm *SchemaMerger) dependentBodyForRemoteStateDataSource(providerAddr lang.
 			},
 		}
 
-		dsSchema := &schema.BodySchema{
-			Attributes: map[string]*schema.AttributeSchema{
-				"backend": {
-					Constraint:             backends.BackendTypesAsOneOfConstraint(sm.terraformVersion),
-					IsRequired:             true,
-					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
-				},
-				"config": {
-					Constraint: objConstraint,
-					IsOptional: true,
-				},
-			},
+		dsSchema := originalBodySchema.Copy()
+		dsSchema.Attributes["backend"] = &schema.AttributeSchema{
+			Constraint:             backends.BackendTypesAsOneOfConstraint(sm.terraformVersion),
+			IsRequired:             true,
+			SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
+		}
+		dsSchema.Attributes["config"] = &schema.AttributeSchema{
+			Constraint: objConstraint,
+			IsOptional: true,
 		}
 
 		m[schema.NewSchemaKey(depKeys)] = dsSchema
