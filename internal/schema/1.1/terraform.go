@@ -23,7 +23,7 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 				},
 				"organization": {
 					Constraint:  schema.LiteralType{Type: cty.String},
-					IsRequired:  true,
+					IsOptional:  true,
 					Description: lang.PlainText("The name of the organization containing the targeted workspace(s)."),
 				},
 				"token": {
