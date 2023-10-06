@@ -157,7 +157,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 						remoteStateDs.Attributes["backend"].Constraint = backends.BackendTypesAsOneOfConstraint(m.terraformVersion)
 						delete(remoteStateDs.Attributes, "config")
 
-						depBodies := m.dependentBodyForRemoteStateDataSource(providerAddr, localRef)
+						depBodies := m.dependentBodyForRemoteStateDataSource(remoteStateDs, providerAddr, localRef)
 						for key, depBody := range depBodies {
 							mergedSchema.Blocks["data"].DependentBody[key] = depBody
 							if _, ok := mergedSchema.Blocks["check"]; ok {
