@@ -65,22 +65,3 @@ func CoreModuleSchemaForVersion(v *version.Version) (*schema.BodySchema, error) 
 
 	return nil, NoCompatibleSchemaErr{Version: ver}
 }
-
-// CoreModuleSchemaForConstraint returns schema relevant to the given constraint.
-//
-// Since the underlying implementation relies on knowing exact version and
-// that is the "happy path" when exact version is known, we pre-generate
-// known available versions, to be able to convert from constraints to
-// versions easily. This means that e.g. `~> 1` translates to latest
-// known version.
-//
-//go:generate go run ../internal/versiongen -w ./versions_gen.go
-func CoreModuleSchemaForConstraint(vc version.Constraints) (*schema.BodySchema, error) {
-	for _, v := range terraformVersions {
-		if vc.Check(v) {
-			return CoreModuleSchemaForVersion(v)
-		}
-	}
-
-	return nil, NoCompatibleSchemaErr{Constraints: vc}
-}
