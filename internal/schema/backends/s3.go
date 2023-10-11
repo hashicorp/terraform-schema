@@ -477,5 +477,13 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 		}
 	}
 
+	if v.GreaterThanOrEqual(v1_6_1) {
+		bodySchema.Attributes["skip_requesting_account_id"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.Bool},
+			IsOptional:  true,
+			Description: lang.Markdown("Skip the requesting account ID. Useful for AWS API implementations that do not have the IAM, STS API, or metadata API."),
+		}
+	}
+
 	return bodySchema
 }
