@@ -19,7 +19,9 @@ func ModuleSchema(v *version.Version) *schema.BodySchema {
 	}
 	bs.Blocks["resource"].Body.Blocks["lifecycle"] = resourceLifecycleBlock()
 	bs.Blocks["output"].Body.Blocks = map[string]*schema.BlockSchema{
-		"lifecycle": outputLifecycleBlock(),
+		"precondition": {
+			Body: conditionBody(false),
+		},
 	}
 
 	return bs
