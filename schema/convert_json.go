@@ -181,12 +181,30 @@ func bodySchemaForCtyObjectType(typ cty.Type) *schema.BodySchema {
 	ret := &schema.BodySchema{
 		Attributes: make(map[string]*schema.AttributeSchema, len(attrTypes)),
 	}
+	blocks := make(map[string]*schema.BlockSchema, 0)
+
 	for name, attrType := range attrTypes {
 		ret.Attributes[name] = &schema.AttributeSchema{
 			Constraint: convertAttributeTypeToConstraint(attrType),
 			IsOptional: true,
 		}
+
+		if typeCanBeBlocks(attrType) {
+			fAttr := tfjson.SchemaAttribute{
+				AttributeType: attrType,
+			}
+			blockSchema, ok := blockSchemaForAttribute(&fAttr)
+			if !ok {
+				continue
+			}
+			blocks[name] = blockSchema
+		}
 	}
+
+	if len(blocks) > 0 {
+		ret.Blocks = blocks
+	}
+
 	return ret
 }
 
