@@ -295,3 +295,207 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 		t.Fatalf("provider schema mismatch: %s", diff)
 	}
 }
+
+func TestProviderSchemaFromJson_nested_set_list(t *testing.T) {
+	rawSchema := `{
+	"resource_schemas": {
+		"azurerm_site_recovery_replicated_vm": {
+			"version": 0,
+			"block": {
+				"attributes": {
+					"managed_disk": {
+						"type": [
+							"set",
+							[
+								"object",
+								{
+									"target_disk_encryption": [
+										"list",
+										[
+											"object",
+											{
+												"disk_encryption_key": "string",
+												"key_encryption_key": "string"
+											}
+										]
+									]
+								}
+							]
+						],
+						"description_kind": "plain",
+						"optional": true
+					}
+				},
+				"block_types": {},
+				"description_kind": "plain"
+			}
+		}
+	}
+}`
+	jsonSchema := &tfjson.ProviderSchema{}
+	err := json.Unmarshal([]byte(rawSchema), jsonSchema)
+	if err != nil {
+		t.Fatal(err)
+	}
+	providerAddr := addr.NewDefaultProvider("aws")
+
+	ps := ProviderSchemaFromJson(jsonSchema, providerAddr)
+
+	expectedPs := &ProviderSchema{
+		Resources: map[string]*schema.BodySchema{
+			"azurerm_site_recovery_replicated_vm": {
+				Attributes: map[string]*schema.AttributeSchema{
+					"managed_disk": {
+						IsOptional: true,
+						Constraint: schema.OneOf{
+							schema.AnyExpression{
+								OfType: cty.Set(cty.Object(
+									map[string]cty.Type{
+										"target_disk_encryption": cty.List(cty.Object(
+											map[string]cty.Type{
+												"disk_encryption_key": cty.String,
+												"key_encryption_key":  cty.String,
+											},
+										)),
+									},
+								)),
+								SkipLiteralComplexTypes: true,
+							},
+							schema.Set{
+								Elem: schema.OneOf{
+									schema.AnyExpression{
+										OfType: cty.Object(
+											map[string]cty.Type{
+												"target_disk_encryption": cty.List(cty.Object(
+													map[string]cty.Type{
+														"disk_encryption_key": cty.String,
+														"key_encryption_key":  cty.String,
+													},
+												)),
+											},
+										),
+										SkipLiteralComplexTypes: true,
+									},
+									schema.Object{
+										Attributes: schema.ObjectAttributes{
+											"target_disk_encryption": {
+												IsRequired: true,
+												Constraint: schema.OneOf{
+													schema.AnyExpression{
+														OfType: cty.List(cty.Object(
+															map[string]cty.Type{
+																"disk_encryption_key": cty.String,
+																"key_encryption_key":  cty.String,
+															},
+														)),
+														SkipLiteralComplexTypes: true,
+													},
+													schema.List{
+														Elem: schema.OneOf{
+															schema.AnyExpression{
+																OfType: cty.Object(
+																	map[string]cty.Type{
+																		"disk_encryption_key": cty.String,
+																		"key_encryption_key":  cty.String,
+																	},
+																),
+																SkipLiteralComplexTypes: true,
+															},
+															schema.Object{
+																Attributes: schema.ObjectAttributes{
+																	"disk_encryption_key": {
+																		IsRequired: true,
+																		Constraint: schema.AnyExpression{OfType: cty.String},
+																	},
+																	"key_encryption_key": {
+																		IsRequired: true,
+																		Constraint: schema.AnyExpression{OfType: cty.String},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				Blocks: map[string]*schema.BlockSchema{
+					"managed_disk": {
+						Type: schema.BlockTypeSet,
+						Body: &schema.BodySchema{
+							Blocks: map[string]*schema.BlockSchema{
+								"target_disk_encryption": {
+									Type: schema.BlockTypeList,
+									Body: &schema.BodySchema{
+										Attributes: map[string]*schema.AttributeSchema{
+											"disk_encryption_key": {
+												IsOptional: true,
+												Constraint: schema.AnyExpression{OfType: cty.String},
+											},
+											"key_encryption_key": {
+												IsOptional: true,
+												Constraint: schema.AnyExpression{OfType: cty.String},
+											},
+										},
+									},
+								},
+							},
+							Attributes: map[string]*schema.AttributeSchema{
+								"target_disk_encryption": {
+									IsOptional: true,
+									Constraint: schema.OneOf{
+										schema.AnyExpression{
+											OfType: cty.List(cty.Object(
+												map[string]cty.Type{
+													"disk_encryption_key": cty.String,
+													"key_encryption_key":  cty.String,
+												},
+											)),
+											SkipLiteralComplexTypes: true,
+										},
+										schema.List{
+											Elem: schema.OneOf{
+												schema.AnyExpression{
+													OfType: cty.Object(
+														map[string]cty.Type{
+															"disk_encryption_key": cty.String,
+															"key_encryption_key":  cty.String,
+														},
+													),
+													SkipLiteralComplexTypes: true,
+												},
+												schema.Object{
+													Attributes: schema.ObjectAttributes{
+														"disk_encryption_key": {
+															IsRequired: true,
+															Constraint: schema.AnyExpression{OfType: cty.String},
+														},
+														"key_encryption_key": {
+															IsRequired: true,
+															Constraint: schema.AnyExpression{OfType: cty.String},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				Detail: "hashicorp/aws",
+			},
+		},
+		DataSources: map[string]*schema.BodySchema{},
+	}
+
+	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("provider schema mismatch: %s", diff)
+	}
+}
