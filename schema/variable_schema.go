@@ -16,7 +16,7 @@ func SchemaForVariables(vars map[string]module.Variable, modPath string) (*schem
 
 	for name, modVar := range vars {
 		aSchema := moduleVarToAttribute(modVar)
-		varType := typeOfModuleVar(modVar)
+		varType := modVar.Type
 		aSchema.Constraint = schema.LiteralType{Type: varType}
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{
@@ -59,15 +59,4 @@ func moduleVarToAttribute(modVar module.Variable) *schema.AttributeSchema {
 	}
 
 	return aSchema
-}
-
-func typeOfModuleVar(modVar module.Variable) cty.Type {
-	if (modVar.Type == cty.DynamicPseudoType || modVar.Type == cty.NilType) &&
-		modVar.DefaultValue != cty.NilVal {
-		// infer type from default value if one is not specified
-		// or when it's "any"
-		return modVar.DefaultValue.Type()
-	}
-
-	return modVar.Type
 }

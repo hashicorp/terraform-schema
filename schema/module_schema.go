@@ -112,7 +112,7 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 
 	for name, modVar := range modMeta.Variables {
 		aSchema := moduleVarToAttribute(modVar)
-		varType := typeOfModuleVar(modVar)
+		varType := modVar.Type
 		aSchema.Constraint = convertAttributeTypeToConstraint(varType)
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{
