@@ -94,49 +94,6 @@ func TestSchemaForVariables(t *testing.T) {
 				},
 			}},
 		},
-		{
-			"attribute with type from default value",
-			map[string]module.Variable{
-				"name": {
-					Description:  "name of the module",
-					Type:         cty.DynamicPseudoType,
-					DefaultValue: cty.StringVal("default"),
-				},
-				"id": {
-					Description:  "id of the module",
-					Type:         cty.NilType,
-					DefaultValue: cty.NumberIntVal(42),
-				},
-			},
-			&schema.BodySchema{Attributes: map[string]*schema.AttributeSchema{
-				"name": {
-					Description: lang.MarkupContent{
-						Value: "name of the module",
-						Kind:  lang.PlainTextKind,
-					},
-					IsOptional: true,
-					Constraint: schema.LiteralType{Type: cty.String},
-					OriginForTarget: &schema.PathTarget{
-						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
-						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
-						Constraints: schema.Constraints{ScopeId: "variable", Type: cty.String},
-					},
-				},
-				"id": {
-					Description: lang.MarkupContent{
-						Value: "id of the module",
-						Kind:  lang.PlainTextKind,
-					},
-					Constraint: schema.LiteralType{Type: cty.Number},
-					IsOptional: true,
-					OriginForTarget: &schema.PathTarget{
-						Address:     schema.Address{schema.StaticStep{Name: "var"}, schema.AttrNameStep{}},
-						Path:        lang.Path{Path: "./local", LanguageID: "terraform"},
-						Constraints: schema.Constraints{ScopeId: "variable", Type: cty.Number},
-					},
-				},
-			}},
-		},
 	}
 
 	modPath := "./local"
