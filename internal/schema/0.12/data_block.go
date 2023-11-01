@@ -65,6 +65,7 @@ func datasourceBlockSchema(v *version.Version) *schema.BlockSchema {
 							schema.Reference{OfScopeId: refscope.ModuleScope},
 							schema.Reference{OfScopeId: refscope.ResourceScope},
 							schema.Reference{OfScopeId: refscope.VariableScope},
+							schema.Reference{OfScopeId: refscope.LocalScope},
 						},
 					},
 					IsOptional:  true,
