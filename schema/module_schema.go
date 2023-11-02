@@ -31,11 +31,9 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 		}
 
 		typ := input.Type
-		defaultType := input.Default.Type()
-		if typ == cty.DynamicPseudoType && (defaultType != cty.DynamicPseudoType && defaultType != cty.NilType) {
-			typ = defaultType
+		if typ == cty.NilType {
+			typ = cty.DynamicPseudoType
 		}
-
 		aSchema.Constraint = convertAttributeTypeToConstraint(typ)
 
 		attributes[input.Name] = aSchema
@@ -111,8 +109,11 @@ func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *m
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
 	for name, modVar := range modMeta.Variables {
+		varType := modVar.Type
+		if varType == cty.NilType {
+			varType = cty.DynamicPseudoType
+		}
 		aSchema := moduleVarToAttribute(modVar)
-		varType := typeOfModuleVar(modVar)
 		aSchema.Constraint = convertAttributeTypeToConstraint(varType)
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{

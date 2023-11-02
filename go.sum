@@ -44,8 +44,8 @@ github.com/hashicorp/go-version v1.6.0 h1:feTTfFNnjP967rlCxM/I9g701jU+RN74YKx2mO
 github.com/hashicorp/go-version v1.6.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
 github.com/hashicorp/hc-install v0.6.1 h1:IGxShH7AVhPaSuSJpKtVi/EFORNjO+OYVJJrAtGG2mY=
 github.com/hashicorp/hc-install v0.6.1/go.mod h1:0fW3jpg+wraYSnFDJ6Rlie3RvLf1bIqVIkzoon4KoVE=
-github.com/hashicorp/hcl-lang v0.0.0-20231005141915-402c82e5ccb1 h1:GEjoNvn9WaZDMpUtNs0VB+FtP/ndclhr10Zcmkraax4=
-github.com/hashicorp/hcl-lang v0.0.0-20231005141915-402c82e5ccb1/go.mod h1:67DxtN9WnM5dTdDPFn79G2Azgs9b5/8yOKP5LU2XBIc=
+github.com/hashicorp/hcl-lang v0.0.0-20231102085329-caa96d65d15b h1:j8TNMurAPPN05V2/FXOo16c6RpNKY57ZV7iqwO0vAOc=
+github.com/hashicorp/hcl-lang v0.0.0-20231102085329-caa96d65d15b/go.mod h1:f8Trmd1qEAs00+y4etS5uTDqYhU3Z/pxJgzsTwWXWM8=
 github.com/hashicorp/hcl/v2 v2.19.1 h1://i05Jqznmb2EXqa39Nsvyan2o5XyMowW5fnCKW5RPI=
 github.com/hashicorp/hcl/v2 v2.19.1/go.mod h1:ThLC89FV4p9MPW804KVbe/cEXoQ8NZEh+JtMeeGErHE=
 github.com/hashicorp/terraform-exec v0.19.0 h1:FpqZ6n50Tk95mItTSS9BjeOVUb4eg81SpgVtZNNtFSM=
@@ -137,8 +137,8 @@ golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGm
 golang.org/x/tools v0.0.0-20191119224855-298f0cb1881e/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.1.12/go.mod h1:hNGJHUnrk76NpqgfD5Aqm5Crs+Hm0VOH/i9J2+nxYbc=
 golang.org/x/tools v0.6.0/go.mod h1:Xwgl3UAJ/d3gWutnCtw505GrjyAbvKui8lOU390QaIU=
-golang.org/x/tools v0.13.0 h1:Iey4qkscZuv0VvIt8E0neZjtPVQFSc870HQ448QgEmQ=
-golang.org/x/tools v0.13.0/go.mod h1:HvlwmtVNQAhOuCjW7xxvovg8wbNq7LwfXh/k7wXUl58=
+golang.org/x/tools v0.14.0 h1:jvNa2pY0M4r62jkRQ6RwEZZyPcymeL9XZMLBbV7U2nc=
+golang.org/x/tools v0.14.0/go.mod h1:uYBEerGOWcJyEORxN+Ek8+TT266gXkNlHdJBwexUsBg=
 golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 google.golang.org/appengine v1.1.0/go.mod h1:EbEs0AVv82hx2wNQdGPgUI5lhzA/G0D9YwlJXL52JkM=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=

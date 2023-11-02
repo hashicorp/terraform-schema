@@ -23,8 +23,7 @@ func variableBlockSchema() *schema.BlockSchema {
 			ScopeId:      refscope.VariableScope,
 			AsReference:  true,
 			AsTypeOf: &schema.BlockAsTypeOf{
-				AttributeExpr:  "type",
-				AttributeValue: "default",
+				AttributeExpr: "type",
 			},
 		},
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Variable},
