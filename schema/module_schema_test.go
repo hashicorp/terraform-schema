@@ -104,7 +104,7 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 				},
 			},
 			"another_var": {
-				Constraint: schema.AnyExpression{OfType: cty.String},
+				Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
 				IsOptional: true,
 				OriginForTarget: &schema.PathTarget{
 					Address: schema.Address{
@@ -117,7 +117,7 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 					},
 					Constraints: schema.Constraints{
 						ScopeId: "variable",
-						Type:    cty.String,
+						Type:    cty.DynamicPseudoType,
 					},
 				},
 			},
@@ -512,7 +512,7 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 				IsRequired:  true,
 			},
 			"foo_var": {
-				Constraint: schema.AnyExpression{OfType: cty.Number},
+				Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
 				IsOptional: true,
 			},
 			"another_var": {
