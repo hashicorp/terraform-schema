@@ -29,12 +29,12 @@ func TestResolveVersion(t *testing.T) {
 		{
 			nil,
 			version.MustConstraints(version.NewConstraint("< 0.12")),
-			version.Must(version.NewVersion("0.12.0")),
+			OldestAvailableVersion,
 		},
 		{
 			version.Must(version.NewVersion("0.11.0")),
 			nil,
-			version.Must(version.NewVersion("0.12.0")),
+			OldestAvailableVersion,
 		},
 		{
 			nil,
@@ -60,6 +60,16 @@ func TestResolveVersion(t *testing.T) {
 			version.Must(version.NewVersion("1.5.3")),
 			nil,
 			version.Must(version.NewVersion("1.5.3")),
+		},
+		{
+			version.Must(version.NewVersion("1.7.0-alpha20231025")),
+			nil,
+			version.Must(version.NewVersion("1.7.0")),
+		},
+		{
+			version.Must(version.NewVersion("1.6.0-beta2")),
+			nil,
+			version.Must(version.NewVersion("1.6.0")),
 		},
 	}
 
