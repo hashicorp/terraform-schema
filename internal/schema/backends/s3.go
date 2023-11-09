@@ -127,7 +127,7 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 			"skip_credentials_validation": {
 				Constraint:  schema.LiteralType{Type: cty.Bool},
 				IsOptional:  true,
-				Description: lang.Markdown("Skip the credentials validation via STS API."),
+				Description: lang.Markdown("Skip the credentials validation via STS API. Useful for testing and for AWS API implementations that do not have STS available."),
 			},
 
 			"skip_get_ec2_platforms": {
@@ -482,6 +482,14 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 			Constraint:  schema.LiteralType{Type: cty.Bool},
 			IsOptional:  true,
 			Description: lang.Markdown("Skip the requesting account ID. Useful for AWS API implementations that do not have the IAM, STS API, or metadata API."),
+		}
+	}
+
+	if v.GreaterThanOrEqual(v1_6_2) {
+		bodySchema.Attributes["skip_s3_checksum"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.Bool},
+			IsOptional:  true,
+			Description: lang.Markdown("Do not include checksum when uploading S3 Objects. Useful for some S3-Compatible APIs."),
 		}
 	}
 
