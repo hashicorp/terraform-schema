@@ -29,12 +29,12 @@ func TestResolveVersion(t *testing.T) {
 		{
 			nil,
 			version.MustConstraints(version.NewConstraint("< 0.12")),
-			version.Must(version.NewVersion("0.12.0")),
+			OldestAvailableVersion,
 		},
 		{
 			version.Must(version.NewVersion("0.11.0")),
 			nil,
-			version.Must(version.NewVersion("0.12.0")),
+			OldestAvailableVersion,
 		},
 		{
 			nil,

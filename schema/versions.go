@@ -19,19 +19,19 @@ func ResolveVersion(tfVersion *version.Version, tfCons version.Constraints) *ver
 		if coreVersion.GreaterThan(LatestAvailableVersion) {
 			return LatestAvailableVersion
 		}
-		if tfCons.Check(coreVersion) {
+		if len(tfCons) > 0 && tfCons.Check(coreVersion) {
 			return coreVersion
 		}
 	}
 
 	for _, v := range terraformVersions {
-		if tfCons.Check(v) && v.LessThan(OldestAvailableVersion) {
+		if len(tfCons) > 0 && tfCons.Check(v) && v.LessThan(OldestAvailableVersion) {
 			return OldestAvailableVersion
 		}
 		if tfVersion != nil && tfVersion.Core().Equal(v) {
 			return tfVersion.Core()
 		}
-		if tfCons.Check(v) {
+		if len(tfCons) > 0 && tfCons.Check(v) {
 			return v
 		}
 	}
