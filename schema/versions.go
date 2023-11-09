@@ -17,6 +17,14 @@ func ResolveVersion(tfVersion *version.Version, tfCons version.Constraints) *ver
 			return OldestAvailableVersion
 		}
 		if coreVersion.GreaterThan(LatestAvailableVersion) {
+			// We could simply return coreVersion or tfVersion here
+			// but we ensure the return version is actually known, i.e.
+			// that we actually have schema for it.
+			//
+			// Also we strip the pre-release part as it simplifies
+			// the version comparisons downstream (we don't care
+			// about differences between individual pre-releases
+			// of the same patch version).
 			for _, v := range terraformVersions {
 				if tfVersion.Equal(v) {
 					return coreVersion
