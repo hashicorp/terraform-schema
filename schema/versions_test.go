@@ -61,6 +61,16 @@ func TestResolveVersion(t *testing.T) {
 			nil,
 			version.Must(version.NewVersion("1.5.3")),
 		},
+		{
+			version.Must(version.NewVersion("1.7.0-alpha20231025")),
+			nil,
+			version.Must(version.NewVersion("1.7.0")),
+		},
+		{
+			version.Must(version.NewVersion("1.6.0-beta2")),
+			nil,
+			version.Must(version.NewVersion("1.6.0")),
+		},
 	}
 
 	for i, tc := range testCases {
