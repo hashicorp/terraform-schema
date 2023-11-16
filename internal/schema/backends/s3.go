@@ -458,7 +458,7 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 		bodySchema.Attributes["http_proxy"] = &schema.AttributeSchema{
 			Constraint:  schema.LiteralType{Type: cty.String},
 			IsOptional:  true,
-			Description: lang.Markdown("Address of an HTTP proxy to use when accessing the AWS API."),
+			Description: lang.Markdown("URL of a proxy to use for HTTP requests when accessing the AWS API."),
 		}
 		bodySchema.Attributes["insecure"] = &schema.AttributeSchema{
 			Constraint:  schema.LiteralType{Type: cty.Bool},
@@ -490,6 +490,19 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 			Constraint:  schema.LiteralType{Type: cty.Bool},
 			IsOptional:  true,
 			Description: lang.Markdown("Do not include checksum when uploading S3 Objects. Useful for some S3-Compatible APIs."),
+		}
+	}
+
+	if v.GreaterThanOrEqual(v1_6_4) {
+		bodySchema.Attributes["https_proxy"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("URL of a proxy to use for HTTPS requests when accessing the AWS API."),
+		}
+		bodySchema.Attributes["no_proxy"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.String},
+			IsOptional:  true,
+			Description: lang.Markdown("Comma-separated list of hosts that should not use HTTP or HTTPS proxies."),
 		}
 	}
 
