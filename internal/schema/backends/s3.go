@@ -504,6 +504,41 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 			IsOptional:  true,
 			Description: lang.Markdown("Comma-separated list of hosts that should not use HTTP or HTTPS proxies."),
 		}
+		bodySchema.Attributes["endpoints"] = &schema.AttributeSchema{
+			Constraint: schema.Object{
+				Attributes: schema.ObjectAttributes{
+					"dynamodb": &schema.AttributeSchema{
+						Constraint:  schema.LiteralType{Type: cty.String},
+						IsOptional:  true,
+						Description: lang.Markdown("A custom endpoint for the DynamoDB API"),
+					},
+
+					"iam": &schema.AttributeSchema{
+						Constraint:  schema.LiteralType{Type: cty.String},
+						IsOptional:  true,
+						Description: lang.Markdown("A custom endpoint for the IAM API"),
+					},
+
+					"s3": &schema.AttributeSchema{
+						Constraint:  schema.LiteralType{Type: cty.String},
+						IsOptional:  true,
+						Description: lang.Markdown("A custom endpoint for the S3 API"),
+					},
+
+					"sts": &schema.AttributeSchema{
+						Constraint:  schema.LiteralType{Type: cty.String},
+						IsOptional:  true,
+						Description: lang.Markdown("A custom endpoint for the STS API"),
+					},
+
+					"sso": &schema.AttributeSchema{
+						Constraint:  schema.LiteralType{Type: cty.String},
+						IsOptional:  true,
+						Description: lang.Markdown("A custom endpoint for the IAM Identity Center (formerly known as SSO) API"),
+					},
+				},
+			},
+		}
 	}
 
 	return bodySchema
