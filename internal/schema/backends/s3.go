@@ -485,7 +485,7 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 		}
 	}
 
-	if v.GreaterThanOrEqual(v1_6_2) {
+	if v.GreaterThanOrEqual(v1_6_3) {
 		bodySchema.Attributes["skip_s3_checksum"] = &schema.AttributeSchema{
 			Constraint:  schema.LiteralType{Type: cty.Bool},
 			IsOptional:  true,
