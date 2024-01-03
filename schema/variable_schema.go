@@ -41,8 +41,6 @@ func SchemaForVariables(vars map[string]module.Variable, modPath string) (*schem
 	}, nil
 }
 
-type exprFunc func(cty.Type) schema.ExprConstraints
-
 func moduleVarToAttribute(modVar module.Variable) *schema.AttributeSchema {
 	aSchema := &schema.AttributeSchema{
 		IsSensitive: modVar.IsSensitive,
