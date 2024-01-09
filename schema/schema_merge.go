@@ -24,6 +24,26 @@ type SchemaMerger struct {
 	moduleReader     ModuleReader
 }
 
+type FunctionsMerger struct {
+	coreFunctions    map[string]schema.FunctionSignature
+	schemaReader     SchemaReader
+	terraformVersion *version.Version
+}
+
+func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *FunctionsMerger {
+	return &FunctionsMerger{
+		coreFunctions: coreFunctions,
+	}
+}
+
+func (m *FunctionsMerger) SetSchemaReader(sr SchemaReader) {
+	m.schemaReader = sr
+}
+
+func (m *FunctionsMerger) SetTerraformVersion(v *version.Version) {
+	m.terraformVersion = v
+}
+
 type ModuleReader interface {
 	ModuleCalls(modPath string) (tfmod.ModuleCalls, error)
 	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
@@ -50,6 +70,13 @@ func (m *SchemaMerger) SetModuleReader(mr ModuleReader) {
 
 func (m *SchemaMerger) SetTerraformVersion(v *version.Version) {
 	m.terraformVersion = v
+}
+
+func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schema.FunctionSignature, error) {
+	x := m.coreFunctions
+
+	x["provider::alibabacloudstack::contains"] = m.coreFunctions["contains"]
+	return x, nil
 }
 
 func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, error) {

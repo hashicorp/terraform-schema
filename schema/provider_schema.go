@@ -13,6 +13,7 @@ type ProviderSchema struct {
 	Provider    *schema.BodySchema
 	Resources   map[string]*schema.BodySchema
 	DataSources map[string]*schema.BodySchema
+	Functions   map[string]schema.FunctionSignature
 }
 
 func (ps *ProviderSchema) Copy() *ProviderSchema {
