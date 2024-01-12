@@ -541,5 +541,14 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 		}
 	}
 
+	if v.GreaterThanOrEqual(v1_7_0) {
+		bodySchema.Attributes["use_legacy_workflow"] = &schema.AttributeSchema{
+			Constraint:   schema.LiteralType{Type: cty.Bool},
+			IsOptional:   true,
+			Description:  lang.Markdown("Use the legacy authentication workflow, preferring environment variables over backend configuration."),
+			IsDeprecated: true,
+		}
+	}
+
 	return bodySchema
 }
