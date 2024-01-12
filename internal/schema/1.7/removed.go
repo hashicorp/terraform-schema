@@ -12,7 +12,8 @@ import (
 
 func removedBlock() *schema.BlockSchema {
 	return &schema.BlockSchema{
-		Description: lang.Markdown("Declaration to specify what address to remove from the state"),
+		Description: lang.Markdown("Declaration to specify what resource or module to remove from the state"),
+		HoverURL: "https://developer.hashicorp.com/terraform/language/resources/syntax#removing-resources"
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"from": {
@@ -26,11 +27,13 @@ func removedBlock() *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"lifecycle": {
+					Description: lang.Markdown("Lifecycle customizations controlling the removal"),
 					Body: &schema.BodySchema{
 						Attributes: map[string]*schema.AttributeSchema{
 							"destroy": {
 								Constraint: schema.LiteralType{Type: cty.Bool},
 								IsRequired: true,
+								Description: lang.Markdown("Whether Terraform will attempt to destroy the objects (`true`) or not, i.e. just remove from state (`false`)."),
 							},
 						},
 					},
