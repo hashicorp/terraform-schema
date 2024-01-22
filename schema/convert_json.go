@@ -230,9 +230,10 @@ func exprConstraintFromSchemaAttribute(attr *tfjson.SchemaAttribute) schema.Cons
 			}
 		case tfjson.SchemaNestingModeMap:
 			return schema.Map{
-				Elem:     convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes),
-				MinItems: attr.AttributeNestedType.MinItems,
-				MaxItems: attr.AttributeNestedType.MaxItems,
+				Elem:                  convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes),
+				MinItems:              attr.AttributeNestedType.MinItems,
+				MaxItems:              attr.AttributeNestedType.MaxItems,
+				AllowInterpolatedKeys: true,
 			}
 		}
 	}
@@ -270,7 +271,8 @@ func convertAttributeTypeToConstraint(attrType cty.Type) schema.Constraint {
 	}
 	if attrType.IsMapType() {
 		cons = append(cons, schema.Map{
-			Elem: convertAttributeTypeToConstraint(attrType.ElementType()),
+			Elem:                  convertAttributeTypeToConstraint(attrType.ElementType()),
+			AllowInterpolatedKeys: true,
 		})
 	}
 	if attrType.IsObjectType() {
@@ -297,7 +299,8 @@ func convertCtyObjectToObjectCons(obj cty.Type) schema.Object {
 		attributes[name] = aSchema
 	}
 	return schema.Object{
-		Attributes: attributes,
+		Attributes:            attributes,
+		AllowInterpolatedKeys: true,
 	}
 }
 
@@ -314,7 +317,8 @@ func convertJsonAttributesToObjectConstraint(attrs map[string]*tfjson.SchemaAttr
 		}
 	}
 	return schema.Object{
-		Attributes: attributes,
+		Attributes:            attributes,
+		AllowInterpolatedKeys: true,
 	}
 }
 

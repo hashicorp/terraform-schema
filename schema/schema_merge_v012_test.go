@@ -90,7 +90,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -112,7 +113,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -134,7 +136,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -197,7 +200,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 						},
@@ -226,7 +230,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -280,7 +285,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -391,7 +397,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -450,7 +457,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -501,7 +509,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -611,7 +620,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -682,7 +692,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 						},
@@ -711,7 +722,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -765,7 +777,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -876,7 +889,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -935,7 +949,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -986,7 +1001,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -1096,7 +1112,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -1158,7 +1175,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -1172,7 +1190,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 						},
@@ -1210,7 +1229,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -1224,7 +1244,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 						},
@@ -1262,7 +1283,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 							IsOptional: true,
@@ -1276,7 +1298,8 @@ var expectedMergedSchema_v012 = &schema.BodySchema{
 							Constraint: schema.OneOf{
 								schema.AnyExpression{OfType: cty.Map(cty.String), SkipLiteralComplexTypes: true},
 								schema.Map{
-									Elem: schema.AnyExpression{OfType: cty.String},
+									Elem:                  schema.AnyExpression{OfType: cty.String},
+									AllowInterpolatedKeys: true,
 								},
 							},
 						},
