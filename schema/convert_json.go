@@ -213,27 +213,47 @@ func exprConstraintFromSchemaAttribute(attr *tfjson.SchemaAttribute) schema.Cons
 		return convertAttributeTypeToConstraint(attr.AttributeType)
 	}
 	if attr.AttributeNestedType != nil {
+		var attrType cty.Type
+		var cons schema.Constraint
+
+		objType := convertJsonAttributesToCtyObject(attr.AttributeNestedType.Attributes)
+		objectCons := convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes)
+
 		switch attr.AttributeNestedType.NestingMode {
 		case tfjson.SchemaNestingModeSingle:
-			return convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes)
+			attrType = objType
+			cons = objectCons
 		case tfjson.SchemaNestingModeList:
-			return schema.List{
-				Elem:     convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes),
+			attrType = cty.List(objType)
+			cons = schema.List{
+				Elem:     objectCons,
 				MinItems: attr.AttributeNestedType.MinItems,
 				MaxItems: attr.AttributeNestedType.MaxItems,
 			}
 		case tfjson.SchemaNestingModeSet:
-			return schema.Set{
-				Elem:     convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes),
+			attrType = cty.Set(objType)
+			cons = schema.Set{
+				Elem:     objectCons,
 				MinItems: attr.AttributeNestedType.MinItems,
 				MaxItems: attr.AttributeNestedType.MaxItems,
 			}
 		case tfjson.SchemaNestingModeMap:
-			return schema.Map{
-				Elem:     convertJsonAttributesToObjectConstraint(attr.AttributeNestedType.Attributes),
+			attrType = cty.Map(objType)
+			cons = schema.Map{
+				Elem:     objectCons,
 				MinItems: attr.AttributeNestedType.MinItems,
 				MaxItems: attr.AttributeNestedType.MaxItems,
 			}
+		default:
+			return nil
+		}
+
+		return schema.OneOf{
+			schema.AnyExpression{
+				OfType:                  attrType,
+				SkipLiteralComplexTypes: true,
+			},
+			cons,
 		}
 	}
 	return nil
@@ -316,6 +336,41 @@ func convertJsonAttributesToObjectConstraint(attrs map[string]*tfjson.SchemaAttr
 	return schema.Object{
 		Attributes: attributes,
 	}
+}
+
+func convertJsonAttributesToCtyObject(attrs map[string]*tfjson.SchemaAttribute) cty.Type {
+	optional := make([]string, 0)
+	attributes := make(map[string]cty.Type, 0)
+
+	for name, attr := range attrs {
+		attributes[name] = convertJsonAttributeToCtyType(attr)
+		if attr.Optional {
+			optional = append(optional, name)
+		}
+	}
+
+	return cty.ObjectWithOptionalAttrs(attributes, optional)
+}
+
+func convertJsonAttributeToCtyType(attr *tfjson.SchemaAttribute) cty.Type {
+	if attr.AttributeType != cty.NilType {
+		return attr.AttributeType
+	}
+	if attr.AttributeNestedType != nil {
+		objType := convertJsonAttributesToCtyObject(attr.AttributeNestedType.Attributes)
+
+		switch attr.AttributeNestedType.NestingMode {
+		case tfjson.SchemaNestingModeSingle:
+			return objType
+		case tfjson.SchemaNestingModeList:
+			return cty.List(objType)
+		case tfjson.SchemaNestingModeSet:
+			return cty.Set(objType)
+		case tfjson.SchemaNestingModeMap:
+			return cty.Map(objType)
+		}
+	}
+	return cty.NilType
 }
 
 func markupContent(value string, kind tfjson.SchemaDescriptionKind) lang.MarkupContent {
