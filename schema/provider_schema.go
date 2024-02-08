@@ -13,7 +13,7 @@ type ProviderSchema struct {
 	Provider    *schema.BodySchema
 	Resources   map[string]*schema.BodySchema
 	DataSources map[string]*schema.BodySchema
-	Functions   map[string]schema.FunctionSignature
+	Functions   map[string]*schema.FunctionSignature
 }
 
 func (ps *ProviderSchema) Copy() *ProviderSchema {
@@ -36,6 +36,13 @@ func (ps *ProviderSchema) Copy() *ProviderSchema {
 		newPs.DataSources = make(map[string]*schema.BodySchema, len(ps.DataSources))
 		for name, rSchema := range ps.DataSources {
 			newPs.DataSources[name] = rSchema.Copy()
+		}
+	}
+
+	if ps.Functions != nil {
+		newPs.Functions = make(map[string]*schema.FunctionSignature, len(ps.Functions))
+		for name, fSig := range ps.Functions {
+			newPs.Functions[name] = fSig.Copy()
 		}
 	}
 
