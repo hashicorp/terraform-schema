@@ -61,4 +61,7 @@ func (ps *ProviderSchema) SetProviderVersion(pAddr tfaddr.Provider, v *version.V
 	for _, dsSchema := range ps.DataSources {
 		dsSchema.Detail = detailForSrcAddr(pAddr, v)
 	}
+	for _, fSig := range ps.Functions {
+		fSig.Detail = detailForSrcAddr(pAddr, v)
+	}
 }
