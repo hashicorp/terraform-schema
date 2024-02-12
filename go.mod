@@ -7,8 +7,8 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-version v1.6.0
 	github.com/hashicorp/hc-install v0.6.3
-	github.com/hashicorp/hcl-lang v0.0.0-20240122101040-f43c27231c10
-	github.com/hashicorp/hcl/v2 v2.19.1
+	github.com/hashicorp/hcl-lang v0.0.0-20240212133238-eb0e2c7c70ef
+	github.com/hashicorp/hcl/v2 v2.19.2-0.20240209134327-1e1a6b858a91
 	github.com/hashicorp/terraform-exec v0.20.0
 	github.com/hashicorp/terraform-json v0.21.0
 	github.com/hashicorp/terraform-registry-address v0.2.3
