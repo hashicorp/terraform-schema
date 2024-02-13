@@ -99,9 +99,7 @@ func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schem
 
 			for _, localRef := range refs {
 				for fName, fSig := range pSchema.Functions {
-
 					mergedFunctions["provider::"+localRef.LocalName+"::"+fName] = *fSig.Copy()
-
 				}
 			}
 		}
