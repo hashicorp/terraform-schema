@@ -10,9 +10,11 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfjson "github.com/hashicorp/terraform-json"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/addr"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/function"
 )
 
 func TestProviderSchemaFromJson_empty(t *testing.T) {
@@ -23,6 +25,7 @@ func TestProviderSchemaFromJson_empty(t *testing.T) {
 	expectedPs := &ProviderSchema{
 		Resources:   map[string]*schema.BodySchema{},
 		DataSources: map[string]*schema.BodySchema{},
+		Functions:   map[string]*schema.FunctionSignature{},
 	}
 
 	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
@@ -291,6 +294,7 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 			},
 		},
 		DataSources: map[string]*schema.BodySchema{},
+		Functions:   map[string]*schema.FunctionSignature{},
 	}
 
 	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
@@ -498,6 +502,60 @@ func TestProviderSchemaFromJson_nested_set_list(t *testing.T) {
 			},
 		},
 		DataSources: map[string]*schema.BodySchema{},
+		Functions:   map[string]*schema.FunctionSignature{},
+	}
+
+	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("provider schema mismatch: %s", diff)
+	}
+}
+
+func TestProviderSchemaFromJson_function(t *testing.T) {
+	rawSchema := `{
+		"functions": {
+			"example": {
+			  "description": "Echoes given argument as result",
+			  "summary": "Example function",
+			  "return_type": "string",
+			  "parameters": [
+				{
+				  "name": "input",
+				  "description": "String to echo",
+				  "type": "string"
+				}
+			  ]
+			}
+		  }
+	}`
+	jsonSchema := &tfjson.ProviderSchema{}
+	err := json.Unmarshal([]byte(rawSchema), jsonSchema)
+	if err != nil {
+		t.Fatal(err)
+	}
+	providerAddr := tfaddr.Provider{
+		Type:      tfaddr.MustParseProviderPart("framework"),
+		Namespace: "bflad",
+		Hostname:  tfaddr.DefaultProviderRegistryHost,
+	}
+
+	ps := ProviderSchemaFromJson(jsonSchema, providerAddr)
+	expectedPs := &ProviderSchema{
+		Resources:   map[string]*schema.BodySchema{},
+		DataSources: map[string]*schema.BodySchema{},
+		Functions: map[string]*schema.FunctionSignature{
+			"example": {
+				Description: "Echoes given argument as result",
+				Detail:      "bflad/framework",
+				ReturnType:  cty.String,
+				Params: []function.Parameter{
+					{
+						Name:        "input",
+						Description: "String to echo",
+						Type:        cty.String,
+					},
+				},
+			},
+		},
 	}
 
 	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
