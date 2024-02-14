@@ -24,26 +24,6 @@ type SchemaMerger struct {
 	moduleReader     ModuleReader
 }
 
-type FunctionsMerger struct {
-	coreFunctions    map[string]schema.FunctionSignature
-	schemaReader     SchemaReader
-	terraformVersion *version.Version
-}
-
-func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *FunctionsMerger {
-	return &FunctionsMerger{
-		coreFunctions: coreFunctions,
-	}
-}
-
-func (m *FunctionsMerger) SetSchemaReader(sr SchemaReader) {
-	m.schemaReader = sr
-}
-
-func (m *FunctionsMerger) SetTerraformVersion(v *version.Version) {
-	m.terraformVersion = v
-}
-
 type ModuleReader interface {
 	ModuleCalls(modPath string) (tfmod.ModuleCalls, error)
 	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
@@ -70,42 +50,6 @@ func (m *SchemaMerger) SetModuleReader(mr ModuleReader) {
 
 func (m *SchemaMerger) SetTerraformVersion(v *version.Version) {
 	m.terraformVersion = v
-}
-
-func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schema.FunctionSignature, error) {
-	if m.coreFunctions == nil {
-		return nil, coreFunctionsRequiredErr{}
-	}
-
-	if meta == nil {
-		return m.coreFunctions, nil
-	}
-
-	mergedFunctions := make(map[string]schema.FunctionSignature, len(m.coreFunctions))
-	for fName, fSig := range m.coreFunctions {
-		mergedFunctions[fName] = *fSig.Copy()
-	}
-
-	providerRefs := ProviderReferences(meta.ProviderReferences)
-
-	if m.schemaReader != nil {
-		for pAddr, pVersionCons := range meta.ProviderRequirements {
-			pSchema, err := m.schemaReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
-			if err != nil {
-				continue
-			}
-
-			refs := providerRefs.ReferencesOfProvider(pAddr)
-
-			for _, localRef := range refs {
-				for fName, fSig := range pSchema.Functions {
-					mergedFunctions["provider::"+localRef.LocalName+"::"+fName] = *fSig.Copy()
-				}
-			}
-		}
-	}
-
-	return mergedFunctions, nil
 }
 
 func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, error) {
