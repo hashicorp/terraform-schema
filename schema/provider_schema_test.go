@@ -12,6 +12,7 @@ import (
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/function"
 )
 
 func TestProviderSchema_SetProviderVersion(t *testing.T) {
@@ -35,6 +36,18 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 						IsOptional: true,
 					},
 				},
+			},
+		},
+		Functions: map[string]*schema.FunctionSignature{
+			"baz": {
+				Params: []function.Parameter{
+					{
+						Name:        "a",
+						Type:        cty.String,
+						Description: "first parameter",
+					},
+				},
+				Description: "baz",
 			},
 		},
 	}
@@ -66,6 +79,15 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 						Constraint: schema.LiteralType{Type: cty.Number},
 						IsOptional: true,
 					},
+				},
+			},
+		},
+		Functions: map[string]*schema.FunctionSignature{
+			"baz": {
+				Description: "baz",
+				Detail:      "hashicorp/aws 1.2.5",
+				Params: []function.Parameter{
+					{Name: "a", Type: cty.String, Description: "first parameter"},
 				},
 			},
 		},
