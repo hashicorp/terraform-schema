@@ -83,6 +83,13 @@ func TestFunctionsMerger_FunctionsForModule(t *testing.T) {
 							},
 							Description: "bar function",
 						},
+						"alleven": {
+							VariadicParameter: &tfjson.FunctionParameter{
+								Name: "numbers",
+								Type: cty.List(cty.Number),
+							},
+							Description: "Returns true if all passed arguments are even numbers",
+						},
 					},
 				},
 			},
@@ -117,6 +124,14 @@ func TestFunctionsMerger_FunctionsForModule(t *testing.T) {
 				{Name: "baz", Type: cty.String, Description: "baz param"},
 			},
 			Description: "bar function",
+			Detail:      "hashicorp/test",
+		},
+		"provider::localtest::alleven": {
+			Params: []function.Parameter{},
+			VarParam: &function.Parameter{
+				Name: "numbers", Type: cty.List(cty.Number),
+			},
+			Description: "Returns true if all passed arguments are even numbers",
 			Detail:      "hashicorp/test",
 		},
 	}
