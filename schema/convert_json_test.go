@@ -523,7 +523,12 @@ func TestProviderSchemaFromJson_function(t *testing.T) {
 				  "description": "String to echo",
 				  "type": "string"
 				}
-			  ]
+			  ],
+			  "variadic_parameter": {
+				"name": "vars",
+				"description": "Optional additional arguments",
+				"type": "string"
+			  }
 			}
 		  }
 	}`
@@ -553,6 +558,11 @@ func TestProviderSchemaFromJson_function(t *testing.T) {
 						Description: "String to echo",
 						Type:        cty.String,
 					},
+				},
+				VarParam: &function.Parameter{
+					Name:        "vars",
+					Type:        cty.String,
+					Description: "Optional additional arguments",
 				},
 			},
 		},
