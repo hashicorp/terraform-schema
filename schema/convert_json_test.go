@@ -10,7 +10,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfjson "github.com/hashicorp/terraform-json"
-	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/internal/addr"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
@@ -537,11 +536,7 @@ func TestProviderSchemaFromJson_function(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	providerAddr := tfaddr.Provider{
-		Type:      tfaddr.MustParseProviderPart("framework"),
-		Namespace: "bflad",
-		Hostname:  tfaddr.DefaultProviderRegistryHost,
-	}
+	providerAddr := addr.NewDefaultProvider("aws")
 
 	ps := ProviderSchemaFromJson(jsonSchema, providerAddr)
 	expectedPs := &ProviderSchema{
@@ -550,7 +545,7 @@ func TestProviderSchemaFromJson_function(t *testing.T) {
 		Functions: map[string]*schema.FunctionSignature{
 			"example": {
 				Description: "Echoes given argument as result",
-				Detail:      "bflad/framework",
+				Detail:      "hashicorp/aws",
 				ReturnType:  cty.String,
 				Params: []function.Parameter{
 					{

@@ -406,7 +406,7 @@ func detailForSrcAddr(addr tfaddr.Provider, v *version.Version) string {
 
 func functionSignatureFromJson(fnSig *tfjson.FunctionSignature) *schema.FunctionSignature {
 	if fnSig == nil {
-		panic("function signature has been unexpectedly nil")
+		return &schema.FunctionSignature{}
 	}
 
 	varParam := convertParameterFromJson(fnSig.VariadicParameter)
@@ -432,5 +432,6 @@ func convertParameterFromJson(param *tfjson.FunctionParameter) *function.Paramet
 		Name:        param.Name,
 		Type:        param.Type,
 		Description: param.Description,
+		AllowNull:   param.IsNullable,
 	}
 }

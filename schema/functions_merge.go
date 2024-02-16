@@ -4,15 +4,15 @@
 package schema
 
 import (
-	"github.com/hashicorp/go-version"
+	"fmt"
+
 	"github.com/hashicorp/hcl-lang/schema"
 	tfmod "github.com/hashicorp/terraform-schema/module"
 )
 
 type FunctionsMerger struct {
-	coreFunctions    map[string]schema.FunctionSignature
-	schemaReader     SchemaReader
-	terraformVersion *version.Version
+	coreFunctions map[string]schema.FunctionSignature
+	schemaReader  SchemaReader
 }
 
 func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *FunctionsMerger {
@@ -23,10 +23,6 @@ func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *Func
 
 func (m *FunctionsMerger) SetSchemaReader(sr SchemaReader) {
 	m.schemaReader = sr
-}
-
-func (m *FunctionsMerger) SetTerraformVersion(v *version.Version) {
-	m.terraformVersion = v
 }
 
 func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schema.FunctionSignature, error) {
@@ -56,7 +52,7 @@ func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schem
 
 			for _, localRef := range refs {
 				for fName, fSig := range pSchema.Functions {
-					mergedFunctions["provider::"+localRef.LocalName+"::"+fName] = *fSig.Copy()
+					mergedFunctions[fmt.Sprintf("provider::%s::%s", localRef.LocalName, fName)] = *fSig.Copy()
 				}
 			}
 		}
