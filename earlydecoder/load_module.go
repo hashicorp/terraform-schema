@@ -277,7 +277,9 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				diags = append(diags, valDiags...)
 			}
 			value := cty.NilVal
-			if attr, defined := content.Attributes["value"]; defined {
+			// skip if attr.Expr is nil, which can happen when a module is opened that has incomplete
+			// provider defined functions in outputs (might happen when a wip project is opened)
+			if attr, defined := content.Attributes["value"]; defined && attr.Expr != nil {
 				// TODO: Provide context w/ funcs and variables
 				val, diags := attr.Expr.Value(nil)
 				if !diags.HasErrors() {

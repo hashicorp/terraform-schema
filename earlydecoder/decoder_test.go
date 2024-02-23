@@ -567,6 +567,42 @@ resource "google_something" "test" {
 	runTestCases(testCases, t, path)
 }
 
+func TestLoadModule_nil_expr(t *testing.T) {
+	path := t.TempDir()
+
+	cfg := `
+	output "foo" {
+		value = provider::
+	}`
+
+	// We're ignoring diagnostics here, since our config contains invalid HCL
+	f, _ := hclsyntax.ParseConfig([]byte(cfg), "test.tf", hcl.InitialPos)
+
+	files := map[string]*hcl.File{
+		"test.tf": f,
+	}
+
+	meta, diags := LoadModule(path, files)
+
+	if len(diags) > 0 {
+		t.Fatalf("unexpected diagnostics: %s", diags)
+	}
+
+	expectedMeta := &module.Meta{
+		Path:                 path,
+		ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+		ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+		Variables:            map[string]module.Variable{},
+		Outputs:              map[string]module.Output{"foo": {}},
+		Filenames:            []string{"test.tf"},
+		ModuleCalls:          map[string]module.DeclaredModuleCall{},
+	}
+
+	if diff := cmp.Diff(expectedMeta, meta, customComparer...); diff != "" {
+		t.Fatalf("module meta doesn't match: %s", diff)
+	}
+}
+
 func TestLoadModule_Variables(t *testing.T) {
 	path := t.TempDir()
 
