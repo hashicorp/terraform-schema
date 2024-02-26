@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/internal/module/detect"
 )
 
 var moduleSourceLocalPrefixes = []string{
@@ -16,6 +17,11 @@ var moduleSourceLocalPrefixes = []string{
 	"../",
 	".\\",
 	"..\\",
+}
+
+var RemoteSourceDetectors = []detect.Detector{
+	new(detect.GitHubDetector),
+	new(detect.GitDetector),
 }
 
 type ModuleCalls struct {
@@ -71,6 +77,15 @@ func (lsa LocalSourceAddr) String() string {
 	return string(lsa)
 }
 
+type RemoteSourceAddr string
+
+func (rsa RemoteSourceAddr) ForDisplay() string {
+	return string(rsa)
+}
+func (rsa RemoteSourceAddr) String() string {
+	return string(rsa)
+}
+
 type UnknownSourceAddr string
 
 func (usa UnknownSourceAddr) ForDisplay() string {
@@ -83,11 +98,12 @@ func (usa UnknownSourceAddr) String() string {
 // Parses the raw module source string from a module block
 func ParseModuleSourceAddr(source string) ModuleSourceAddr {
 	var sourceAddr ModuleSourceAddr
-	registryAddr, err := tfaddr.ParseModuleSource(source)
-	if err == nil {
+	if registryAddr, err := tfaddr.ParseModuleSource(source); err == nil {
 		sourceAddr = registryAddr
 	} else if isModuleSourceLocal(source) {
 		sourceAddr = LocalSourceAddr(source)
+	} else if remoteAddr, err := isRemoteSourceAddr(source); err == nil {
+		sourceAddr = RemoteSourceAddr(remoteAddr)
 	} else if source != "" {
 		sourceAddr = UnknownSourceAddr(source)
 	}
@@ -102,4 +118,8 @@ func isModuleSourceLocal(raw string) bool {
 		}
 	}
 	return false
+}
+
+func isRemoteSourceAddr(raw string) (string, error) {
+	return detect.Detect(raw, "", RemoteSourceDetectors)
 }
