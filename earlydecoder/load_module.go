@@ -68,7 +68,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			content, _, contentDiags := block.Body.PartialContent(terraformBlockSchema)
 			diags = append(diags, contentDiags...)
 
-			if attr, defined := content.Attributes["required_version"]; defined {
+			if attr, defined := content.Attributes["required_version"]; defined && attr.Expr != nil {
 				var version string
 				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
 				diags = append(diags, valDiags...)
@@ -136,7 +136,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			if _, exists := mod.ProviderRequirements[name]; !exists {
 				mod.ProviderRequirements[name] = &providerRequirement{}
 			}
-			if attr, defined := content.Attributes["version"]; defined {
+			if attr, defined := content.Attributes["version"]; defined && attr.Expr != nil {
 				var version string
 				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
 				diags = append(diags, valDiags...)
@@ -147,7 +147,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 
 			providerKey := name
 			var alias string
-			if attr, defined := content.Attributes["alias"]; defined {
+			if attr, defined := content.Attributes["alias"]; defined && attr.Expr != nil {
 				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &alias)
 				diags = append(diags, valDiags...)
 				if !valDiags.HasErrors() && alias != "" {
@@ -171,7 +171,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 
 			mod.DataSources[ds.MapKey()] = ds
 
-			if attr, defined := content.Attributes["provider"]; defined {
+			if attr, defined := content.Attributes["provider"]; defined && attr.Expr != nil {
 				ref, aDiags := decodeProviderAttribute(attr)
 				diags = append(diags, aDiags...)
 				ds.Provider = ref
@@ -194,7 +194,7 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 
 			mod.Resources[r.MapKey()] = r
 
-			if attr, defined := content.Attributes["provider"]; defined {
+			if attr, defined := content.Attributes["provider"]; defined && attr.Expr != nil {
 				ref, aDiags := decodeProviderAttribute(attr)
 				diags = append(diags, aDiags...)
 				r.Provider = ref
@@ -216,22 +216,22 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			description := ""
 			isSensitive := false
 			var valDiags hcl.Diagnostics
-			if attr, defined := content.Attributes["description"]; defined {
+			if attr, defined := content.Attributes["description"]; defined && attr.Expr != nil {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &description)
 				diags = append(diags, valDiags...)
 			}
 			varType := cty.DynamicPseudoType
 			var defaults *typeexpr.Defaults
-			if attr, defined := content.Attributes["type"]; defined {
+			if attr, defined := content.Attributes["type"]; defined && attr.Expr != nil {
 				varType, defaults, valDiags = typeexpr.TypeConstraintWithDefaults(attr.Expr)
 				diags = append(diags, valDiags...)
 			}
-			if attr, defined := content.Attributes["sensitive"]; defined {
+			if attr, defined := content.Attributes["sensitive"]; defined && attr.Expr != nil {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &isSensitive)
 				diags = append(diags, valDiags...)
 			}
 			defaultValue := cty.NilVal
-			if attr, defined := content.Attributes["default"]; defined {
+			if attr, defined := content.Attributes["default"]; defined && attr.Expr != nil {
 				val, diags := attr.Expr.Value(nil)
 				if !diags.HasErrors() {
 					if varType != cty.NilType {
@@ -268,11 +268,11 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			description := ""
 			isSensitive := false
 			var valDiags hcl.Diagnostics
-			if attr, defined := content.Attributes["description"]; defined {
+			if attr, defined := content.Attributes["description"]; defined && attr.Expr != nil {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &description)
 				diags = append(diags, valDiags...)
 			}
-			if attr, defined := content.Attributes["sensitive"]; defined {
+			if attr, defined := content.Attributes["sensitive"]; defined && attr.Expr != nil {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &isSensitive)
 				diags = append(diags, valDiags...)
 			}
@@ -302,11 +302,11 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			var versionCons version.Constraints
 
 			var valDiags hcl.Diagnostics
-			if attr, defined := content.Attributes["source"]; defined {
+			if attr, defined := content.Attributes["source"]; defined && attr.Expr != nil {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &source)
 				diags = append(diags, valDiags...)
 			}
-			if attr, defined := content.Attributes["version"]; defined {
+			if attr, defined := content.Attributes["version"]; defined && attr.Expr != nil {
 				var versionStr string
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &versionStr)
 				diags = append(diags, valDiags...)

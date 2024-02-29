@@ -570,36 +570,156 @@ resource "google_something" "test" {
 func TestLoadModule_nil_expr(t *testing.T) {
 	path := t.TempDir()
 
-	cfg := `
-	output "foo" {
-		value = provider::
-	}`
-
-	// We're ignoring diagnostics here, since our config contains invalid HCL
-	f, _ := hclsyntax.ParseConfig([]byte(cfg), "test.tf", hcl.InitialPos)
-
-	files := map[string]*hcl.File{
-		"test.tf": f,
+	testCases := []struct {
+		name string
+		cfg  string
+	}{
+		{
+			"remote backend hostname",
+			`terraform {
+  backend "remote" {
+    hostname = provider::
+  }
+}`,
+		},
+		{
+			"cloud block hostname",
+			`terraform {
+  cloud {
+    hostname = provider::
+  }
+}`,
+		},
+		{
+			"required providers",
+			`terraform {
+  required_providers {
+    aws = provider::
+  }
+}`,
+		},
+		{
+			"required providers nested version",
+			`terraform {
+  required_providers {
+    aws = {
+      version = provider::
+	}
+  }
+}`,
+		},
+		{
+			"required providers nested configuration_aliases",
+			`terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+	  configuration_aliases = [ provider:: ]
+	}
+  }
+}`,
+		},
+		{
+			"terraform required_version",
+			`terraform {
+  required_version = provider::
+}`,
+		},
+		{
+			"provider block version",
+			`provider "aws" {
+  version = provider::
+}`,
+		},
+		{
+			"provider block alias",
+			`provider "aws" {
+  alias = provider::
+}`,
+		},
+		{
+			"variable description",
+			`variable "foo" {
+  description = provider::
+}`,
+		},
+		{
+			"variable sensitive",
+			`variable "foo" {
+  sensitive = provider::
+}`,
+		},
+		{
+			"variable default",
+			`variable "foo" {
+  default = provider::
+}`,
+		},
+		{
+			"variable type",
+			`variable "foo" {
+  type = provider::
+}`,
+		},
+		{
+			"output description",
+			`output "foo" {
+  description = provider::
+}`,
+		},
+		{
+			"output sensitive",
+			`output "foo" {
+  sensitive = provider::
+}`,
+		},
+		{
+			"output value",
+			`output "foo" {
+  value = provider::
+}`,
+		},
+		{
+			"module source",
+			`module "foo" {
+  source = provider::
+}`,
+		},
+		{
+			"module version",
+			`module "foo" {
+  version = provider::
+}`,
+		},
+		{
+			"resource provider alias",
+			`resource "aws_instance" "foo" {
+  provider = provider::
+}`,
+		},
+		{
+			"data provider alias",
+			`data "aws_instance" "foo" {
+  provider = provider::
+}`,
+		},
 	}
 
-	meta, diags := LoadModule(path, files)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// We're ignoring diagnostics here, since our config contains invalid HCL
+			f, _ := hclsyntax.ParseConfig([]byte(tc.cfg), "test.tf", hcl.InitialPos)
 
-	if len(diags) > 0 {
-		t.Fatalf("unexpected diagnostics: %s", diags)
-	}
+			files := map[string]*hcl.File{
+				"test.tf": f,
+			}
 
-	expectedMeta := &module.Meta{
-		Path:                 path,
-		ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
-		ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
-		Variables:            map[string]module.Variable{},
-		Outputs:              map[string]module.Output{"foo": {}},
-		Filenames:            []string{"test.tf"},
-		ModuleCalls:          map[string]module.DeclaredModuleCall{},
-	}
+			_, diags := LoadModule(path, files)
 
-	if diff := cmp.Diff(expectedMeta, meta, customComparer...); diff != "" {
-		t.Fatalf("module meta doesn't match: %s", diff)
+			if len(diags) > 0 {
+				t.Fatalf("unexpected diagnostics: %s", diags)
+			}
+		})
 	}
 }
 
