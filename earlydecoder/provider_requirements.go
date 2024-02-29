@@ -22,6 +22,10 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 	attrs, diags := block.Body.JustAttributes()
 	reqs := make(map[string]*providerRequirement)
 	for name, attr := range attrs {
+		if attr.Expr == nil {
+			continue
+		}
+
 		// Look for a legacy version in the attribute first
 		if expr, err := attr.Expr.Value(nil); err == nil && expr.Type().IsPrimitiveType() {
 			var version string

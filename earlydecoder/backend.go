@@ -15,7 +15,7 @@ func decodeBackendsBlock(block *hcl.Block) (backend.BackendData, hcl.Diagnostics
 
 	switch bType {
 	case "remote":
-		if attr, ok := attrs["hostname"]; ok {
+		if attr, ok := attrs["hostname"]; ok && attr.Expr != nil {
 			val, vDiags := attr.Expr.Value(nil)
 			diags = append(diags, vDiags...)
 			if val.IsWhollyKnown() && val.Type() == cty.String {
@@ -38,7 +38,7 @@ func decodeCloudBlock(block *hcl.Block) (*backend.Cloud, hcl.Diagnostics) {
 	// https://developer.hashicorp.com/terraform/language/settings/terraform-cloud#usage-example
 	// Required for Terraform Enterprise
 	// Defaults to app.terraform.io for Terraform Cloud
-	if attr, ok := attrs["hostname"]; ok {
+	if attr, ok := attrs["hostname"]; ok && attr.Expr != nil {
 		val, vDiags := attr.Expr.Value(nil)
 		if val.IsWhollyKnown() && val.Type() == cty.String {
 			return &backend.Cloud{
