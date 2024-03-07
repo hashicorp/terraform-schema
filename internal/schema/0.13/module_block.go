@@ -8,9 +8,22 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/zclconf/go-cty/cty"
 
+	"github.com/hashicorp/terraform-schema/internal/module/detect"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
+	"github.com/hashicorp/terraform-schema/module"
 )
+
+func TransformModuleSource(value cty.Value) (cty.Value, error) {
+	v := value.AsString()
+
+	transformedValue, error := detect.Detect(v, "", module.RemoteSourceDetectors)
+	if error != nil {
+		return value, error
+	}
+
+	return cty.StringVal(transformedValue), nil
+}
 
 func moduleBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
@@ -46,6 +59,7 @@ func moduleBlockSchema() *schema.BlockSchema {
 						"`github.com/hashicorp/example` (GitHub)"),
 					IsRequired:             true,
 					IsDepKey:               true,
+					DepKeyTransformer:      TransformModuleSource,
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 					CompletionHooks: lang.CompletionHooks{
 						{
