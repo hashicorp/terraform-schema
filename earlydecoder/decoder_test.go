@@ -567,6 +567,158 @@ resource "google_something" "test" {
 	runTestCases(testCases, t, path)
 }
 
+func TestLoadModule_nil_expr(t *testing.T) {
+	path := t.TempDir()
+
+	testCases := []struct {
+		name string
+		cfg  string
+	}{
+		{
+			"remote backend hostname",
+			`terraform {
+  backend "remote" {
+    hostname = provider::
+  }
+}`,
+		},
+		{
+			"cloud block hostname",
+			`terraform {
+  cloud {
+    hostname = provider::
+  }
+}`,
+		},
+		{
+			"required providers",
+			`terraform {
+  required_providers {
+    aws = provider::
+  }
+}`,
+		},
+		{
+			"required providers nested version",
+			`terraform {
+  required_providers {
+    aws = {
+      version = provider::
+	}
+  }
+}`,
+		},
+		{
+			"required providers nested configuration_aliases",
+			`terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+	  configuration_aliases = [ provider:: ]
+	}
+  }
+}`,
+		},
+		{
+			"terraform required_version",
+			`terraform {
+  required_version = provider::
+}`,
+		},
+		{
+			"provider block version",
+			`provider "aws" {
+  version = provider::
+}`,
+		},
+		{
+			"provider block alias",
+			`provider "aws" {
+  alias = provider::
+}`,
+		},
+		{
+			"variable description",
+			`variable "foo" {
+  description = provider::
+}`,
+		},
+		{
+			"variable sensitive",
+			`variable "foo" {
+  sensitive = provider::
+}`,
+		},
+		{
+			"variable default",
+			`variable "foo" {
+  default = provider::
+}`,
+		},
+		{
+			"variable type",
+			`variable "foo" {
+  type = provider::
+}`,
+		},
+		{
+			"output description",
+			`output "foo" {
+  description = provider::
+}`,
+		},
+		{
+			"output sensitive",
+			`output "foo" {
+  sensitive = provider::
+}`,
+		},
+		{
+			"output value",
+			`output "foo" {
+  value = provider::
+}`,
+		},
+		{
+			"module source",
+			`module "foo" {
+  source = provider::
+}`,
+		},
+		{
+			"module version",
+			`module "foo" {
+  version = provider::
+}`,
+		},
+		{
+			"resource provider alias",
+			`resource "aws_instance" "foo" {
+  provider = provider::
+}`,
+		},
+		{
+			"data provider alias",
+			`data "aws_instance" "foo" {
+  provider = provider::
+}`,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// We're ignoring diagnostics here, since our config contains invalid HCL
+			f, _ := hclsyntax.ParseConfig([]byte(tc.cfg), "test.tf", hcl.InitialPos)
+
+			files := map[string]*hcl.File{
+				"test.tf": f,
+			}
+
+			LoadModule(path, files) // This should not panic
+		})
+	}
+}
+
 func TestLoadModule_Variables(t *testing.T) {
 	path := t.TempDir()
 
