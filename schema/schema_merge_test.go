@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sync"
 	"testing"
@@ -167,7 +168,7 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 		},
 	}
 	sm := NewSchemaMerger(testCoreSchema)
-	sm.SetSchemaReader(&testJsonSchemaReader{
+	sm.SetStateReader(&testJsonSchemaReader{
 		ps: &tfjson.ProviderSchemas{
 			FormatVersion: "1.0",
 			Schemas: map[string]*tfjson.ProviderSchema{
@@ -391,8 +392,8 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 		},
 	}
 	sm := NewSchemaMerger(testCoreSchema)
-	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false)
-	sm.SetSchemaReader(sr)
+	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false, false)
+	sm.SetStateReader(sr)
 
 	vc := version.MustConstraints(version.NewConstraint("0.0.0"))
 
@@ -433,8 +434,8 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 
 func TestMergeWithJsonProviderSchemas_v012(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
-	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.12.json"), true)
-	sm.SetSchemaReader(sr)
+	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.12.json"), true, false)
+	sm.SetStateReader(sr)
 	sm.SetTerraformVersion(v0_12_0)
 	meta := testModuleMeta(t, "testdata/test-config-0.12.tf")
 	mergedSchema, err := sm.SchemaForModule(meta)
@@ -449,8 +450,8 @@ func TestMergeWithJsonProviderSchemas_v012(t *testing.T) {
 
 func TestMergeWithJsonProviderSchemas_v013(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
-	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.13.json"), false)
-	sm.SetSchemaReader(sr)
+	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.13.json"), false, false)
+	sm.SetStateReader(sr)
 	sm.SetTerraformVersion(v0_13_0)
 	meta := testModuleMeta(t, "testdata/test-config-0.13.tf")
 	mergedSchema, err := sm.SchemaForModule(meta)
@@ -492,7 +493,7 @@ func TestMergeWithJsonProviderSchemas_concurrencyBug(t *testing.T) {
 	go func(t *testing.T) {
 		defer wg.Done()
 		sm := NewSchemaMerger(testCoreSchema())
-		sm.SetSchemaReader(exactSchemaReader{ps: ps})
+		sm.SetStateReader(&exactSchemaReader{ps: ps})
 		sm.SetTerraformVersion(v0_15_0)
 		_, err := sm.SchemaForModule(meta)
 		if err != nil {
@@ -502,7 +503,7 @@ func TestMergeWithJsonProviderSchemas_concurrencyBug(t *testing.T) {
 	go func(t *testing.T) {
 		defer wg.Done()
 		sm := NewSchemaMerger(testCoreSchema())
-		sm.SetSchemaReader(exactSchemaReader{ps: ps})
+		sm.SetStateReader(&exactSchemaReader{ps: ps})
 		sm.SetTerraformVersion(v0_15_0)
 		_, err := sm.SchemaForModule(meta)
 		if err != nil {
@@ -516,14 +517,30 @@ type exactSchemaReader struct {
 	ps *ProviderSchema
 }
 
-func (sr exactSchemaReader) ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*ProviderSchema, error) {
+func (sr *exactSchemaReader) ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*ProviderSchema, error) {
 	return sr.ps, nil
+}
+
+func (sr *exactSchemaReader) RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error) {
+	return nil, nil
+}
+
+func (sr *exactSchemaReader) DeclaredModuleCalls(modPath string) (map[string]module.DeclaredModuleCall, error) {
+	return nil, nil
+}
+
+func (sr *exactSchemaReader) InstalledModuleCalls(modPath string) (map[string]module.InstalledModuleCall, error) {
+	return nil, nil
+}
+
+func (sr *exactSchemaReader) LocalModuleMeta(modPath string) (*module.Meta, error) {
+	return nil, nil
 }
 
 func TestMergeWithJsonProviderSchemas_v015(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
-	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false)
-	sm.SetSchemaReader(sr)
+	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false, false)
+	sm.SetStateReader(sr)
 	sm.SetTerraformVersion(v0_15_0)
 	meta := testModuleMeta(t, "testdata/test-config-0.15.tf")
 	mergedSchema, err := sm.SchemaForModule(meta)
@@ -538,9 +555,8 @@ func TestMergeWithJsonProviderSchemas_v015(t *testing.T) {
 
 func TestMergeWithJsonProviderSchemasAndModuleVariables_v015(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
-	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false)
-	sm.SetSchemaReader(sr)
-	sm.SetModuleReader(testModuleReader())
+	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false, true)
+	sm.SetStateReader(sr)
 	sm.SetTerraformVersion(v0_15_0)
 	meta := testModuleMeta(t, "testdata/test-config-0.15.tf")
 	mergedSchema, err := sm.SchemaForModule(meta)
@@ -555,7 +571,7 @@ func TestMergeWithJsonProviderSchemasAndModuleVariables_v015(t *testing.T) {
 
 func TestMergeWithJsonProviderSchemasAndModuleVariables_registryModule(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
-	sm.SetModuleReader(testRegistryModuleReader())
+	sm.SetStateReader(testRegistryStateReader())
 	sm.SetTerraformVersion(v0_15_0)
 	meta := testModuleMeta(t, "testdata/test-config-remote-module.tf")
 	mergedSchema, err := sm.SchemaForModule(meta)
@@ -590,9 +606,9 @@ func testModuleMeta(t *testing.T, path string) *module.Meta {
 	return meta
 }
 
-func testSchemaReader(t *testing.T, jsonPath string, legacyStyle bool) SchemaReader {
+func testSchemaReader(t *testing.T, jsonPath string, legacyStyle bool, withModuleCalls bool) StateReader {
 	ps := &tfjson.ProviderSchemas{}
-	b, err := ioutil.ReadFile(jsonPath)
+	b, err := os.ReadFile(jsonPath)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -603,8 +619,9 @@ func testSchemaReader(t *testing.T, jsonPath string, legacyStyle bool) SchemaRea
 
 	if legacyStyle {
 		return &testJsonSchemaReader{
-			ps:          ps,
-			useTypeOnly: true,
+			ps:              ps,
+			useTypeOnly:     true,
+			withModuleCalls: withModuleCalls,
 			migrations: map[tfaddr.Provider]tfaddr.Provider{
 				addr.NewLegacyProvider("null"):      addr.NewDefaultProvider("null"),
 				addr.NewLegacyProvider("random"):    addr.NewDefaultProvider("random"),
@@ -613,7 +630,8 @@ func testSchemaReader(t *testing.T, jsonPath string, legacyStyle bool) SchemaRea
 		}
 	}
 	return &testJsonSchemaReader{
-		ps: ps,
+		ps:              ps,
+		withModuleCalls: withModuleCalls,
 		migrations: map[tfaddr.Provider]tfaddr.Provider{
 			// the builtin provider doesn't have entry in required_providers
 			addr.NewLegacyProvider("terraform"): addr.NewBuiltInProvider("terraform"),
@@ -622,12 +640,71 @@ func testSchemaReader(t *testing.T, jsonPath string, legacyStyle bool) SchemaRea
 }
 
 type testJsonSchemaReader struct {
-	ps          *tfjson.ProviderSchemas
-	useTypeOnly bool
-	migrations  map[tfaddr.Provider]tfaddr.Provider
+	ps              *tfjson.ProviderSchemas
+	useTypeOnly     bool
+	migrations      map[tfaddr.Provider]tfaddr.Provider
+	withModuleCalls bool
 }
 
-func testModuleReader() ModuleReader {
+func (r *testJsonSchemaReader) ProviderSchema(_ string, pAddr tfaddr.Provider, _ version.Constraints) (*ProviderSchema, error) {
+	if newAddr, ok := r.migrations[pAddr]; ok {
+		pAddr = newAddr
+	}
+
+	addr := pAddr.String()
+	if r.useTypeOnly {
+		addr = pAddr.Type
+	}
+
+	jsonSchema, ok := r.ps.Schemas[addr]
+	if !ok {
+		return nil, fmt.Errorf("%s: schema not found", pAddr.String())
+	}
+
+	return ProviderSchemaFromJson(jsonSchema, pAddr), nil
+}
+
+func (m *testJsonSchemaReader) RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error) {
+	return nil, nil
+}
+
+func (m *testJsonSchemaReader) DeclaredModuleCalls(modPath string) (map[string]module.DeclaredModuleCall, error) {
+	if !m.withModuleCalls {
+		return nil, nil
+	}
+
+	return map[string]module.DeclaredModuleCall{
+		"example": {
+			LocalName:  "example",
+			SourceAddr: module.LocalSourceAddr("./source"),
+		},
+	}, nil
+}
+
+func (m *testJsonSchemaReader) InstalledModuleCalls(modPath string) (map[string]module.InstalledModuleCall, error) {
+	return nil, nil
+}
+
+func (m *testJsonSchemaReader) LocalModuleMeta(modPath string) (*module.Meta, error) {
+	if !m.withModuleCalls {
+		return nil, nil
+	}
+
+	if modPath == filepath.Join("testdata", "source") {
+		return &module.Meta{
+			Path: "path",
+			Variables: map[string]module.Variable{
+				"test": {
+					Type:        cty.String,
+					Description: "test var",
+				},
+			},
+		}, nil
+	}
+	return nil, fmt.Errorf("invalid source")
+}
+
+func testModuleStateReader() StateReader {
 	return &testModuleReaderStruct{}
 }
 
@@ -638,15 +715,17 @@ func (m *testModuleReaderStruct) RegistryModuleMeta(addr tfaddr.Module, cons ver
 	return nil, nil
 }
 
-func (m *testModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {
-	return module.ModuleCalls{
-		Declared: map[string]module.DeclaredModuleCall{
-			"example": {
-				LocalName:  "example",
-				SourceAddr: module.LocalSourceAddr("./source"),
-			},
+func (m *testModuleReaderStruct) DeclaredModuleCalls(modPath string) (map[string]module.DeclaredModuleCall, error) {
+	return map[string]module.DeclaredModuleCall{
+		"example": {
+			LocalName:  "example",
+			SourceAddr: module.LocalSourceAddr("./source"),
 		},
 	}, nil
+}
+
+func (m *testModuleReaderStruct) InstalledModuleCalls(modPath string) (map[string]module.InstalledModuleCall, error) {
+	return nil, nil
 }
 
 func (m *testModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, error) {
@@ -664,7 +743,11 @@ func (m *testModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, 
 	return nil, fmt.Errorf("invalid source")
 }
 
-func testRegistryModuleReader() ModuleReader {
+func (r *testModuleReaderStruct) ProviderSchema(_ string, pAddr tfaddr.Provider, _ version.Constraints) (*ProviderSchema, error) {
+	return nil, nil
+}
+
+func testRegistryStateReader() StateReader {
 	return &testRegistryModuleReaderStruct{}
 }
 
@@ -675,14 +758,16 @@ func (m *testRegistryModuleReaderStruct) RegistryModuleMeta(addr tfaddr.Module, 
 	return nil, nil
 }
 
-func (m *testRegistryModuleReaderStruct) ModuleCalls(modPath string) (module.ModuleCalls, error) {
-	return module.ModuleCalls{
-		Installed: map[string]module.InstalledModuleCall{
-			"remote-example": {
-				LocalName:  "remote-example",
-				SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/namespace/foo/bar"),
-				Path:       ".terraform/modules/remote-example",
-			},
+func (m *testRegistryModuleReaderStruct) DeclaredModuleCalls(modPath string) (map[string]module.DeclaredModuleCall, error) {
+	return nil, nil
+}
+
+func (m *testRegistryModuleReaderStruct) InstalledModuleCalls(modPath string) (map[string]module.InstalledModuleCall, error) {
+	return map[string]module.InstalledModuleCall{
+		"remote-example": {
+			LocalName:  "remote-example",
+			SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/namespace/foo/bar"),
+			Path:       ".terraform/modules/remote-example",
 		},
 	}, nil
 }
@@ -702,22 +787,8 @@ func (m *testRegistryModuleReaderStruct) LocalModuleMeta(modPath string) (*modul
 	return nil, fmt.Errorf("invalid source")
 }
 
-func (r *testJsonSchemaReader) ProviderSchema(_ string, pAddr tfaddr.Provider, _ version.Constraints) (*ProviderSchema, error) {
-	if newAddr, ok := r.migrations[pAddr]; ok {
-		pAddr = newAddr
-	}
-
-	addr := pAddr.String()
-	if r.useTypeOnly {
-		addr = pAddr.Type
-	}
-
-	jsonSchema, ok := r.ps.Schemas[addr]
-	if !ok {
-		return nil, fmt.Errorf("%s: schema not found", pAddr.String())
-	}
-
-	return ProviderSchemaFromJson(jsonSchema, pAddr), nil
+func (r *testRegistryModuleReaderStruct) ProviderSchema(_ string, pAddr tfaddr.Provider, _ version.Constraints) (*ProviderSchema, error) {
+	return nil, nil
 }
 
 func testCoreSchema() *schema.BodySchema {
