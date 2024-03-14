@@ -14,7 +14,7 @@ import (
 type FunctionsMerger struct {
 	coreFunctions    map[string]schema.FunctionSignature
 	terraformVersion *version.Version
-	schemaReader     SchemaReader
+	stateReader      StateReader
 }
 
 func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *FunctionsMerger {
@@ -23,8 +23,8 @@ func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *Func
 	}
 }
 
-func (m *FunctionsMerger) SetSchemaReader(sr SchemaReader) {
-	m.schemaReader = sr
+func (m *FunctionsMerger) SetStateReader(mr StateReader) {
+	m.stateReader = mr
 }
 
 func (m *FunctionsMerger) SetTerraformVersion(v *version.Version) {
@@ -40,6 +40,10 @@ func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schem
 		return m.coreFunctions, nil
 	}
 
+	if m.stateReader == nil {
+		return m.coreFunctions, nil
+	}
+
 	if m.terraformVersion.LessThan(v1_8) {
 		return m.coreFunctions, nil
 	}
@@ -51,19 +55,17 @@ func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schem
 
 	providerRefs := ProviderReferences(meta.ProviderReferences)
 
-	if m.schemaReader != nil {
-		for pAddr, pVersionCons := range meta.ProviderRequirements {
-			pSchema, err := m.schemaReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
-			if err != nil {
-				continue
-			}
+	for pAddr, pVersionCons := range meta.ProviderRequirements {
+		pSchema, err := m.stateReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
+		if err != nil {
+			continue
+		}
 
-			refs := providerRefs.ReferencesOfProvider(pAddr)
+		refs := providerRefs.ReferencesOfProvider(pAddr)
 
-			for _, localRef := range refs {
-				for fName, fSig := range pSchema.Functions {
-					mergedFunctions[fmt.Sprintf("provider::%s::%s", localRef.LocalName, fName)] = *fSig.Copy()
-				}
+		for _, localRef := range refs {
+			for fName, fSig := range pSchema.Functions {
+				mergedFunctions[fmt.Sprintf("provider::%s::%s", localRef.LocalName, fName)] = *fSig.Copy()
 			}
 		}
 	}
