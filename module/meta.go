@@ -13,11 +13,11 @@ type Meta struct {
 	Path      string
 	Filenames []string
 
+	CoreRequirements     version.Constraints
 	Backend              *Backend
 	Cloud                *backend.Cloud
 	ProviderReferences   map[ProviderRef]tfaddr.Provider
 	ProviderRequirements ProviderRequirements
-	CoreRequirements     version.Constraints
 	Variables            map[string]Variable
 	Outputs              map[string]Output
 	ModuleCalls          map[string]DeclaredModuleCall
