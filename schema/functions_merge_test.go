@@ -93,7 +93,7 @@ func TestFunctionsMerger_FunctionsForModule_18(t *testing.T) {
 	}
 
 	fm := NewFunctionsMerger(coreFunctions)
-	fm.SetSchemaReader(&testJsonSchemaReader{
+	fm.SetStateReader(&testJsonSchemaReader{
 		ps: &tfjson.ProviderSchemas{
 			FormatVersion: "1.0",
 			Schemas:       providerSchemaWithFunctions,
@@ -150,7 +150,7 @@ func TestFunctionsMerger_FunctionsForModule_18(t *testing.T) {
 
 func TestFunctionsMerger_FunctionsForModule_17(t *testing.T) {
 	fm := NewFunctionsMerger(map[string]schema.FunctionSignature{})
-	fm.SetSchemaReader(&testJsonSchemaReader{
+	fm.SetStateReader(&testJsonSchemaReader{
 		ps: &tfjson.ProviderSchemas{
 			FormatVersion: "1.0",
 			Schemas:       providerSchemaWithFunctions,

@@ -19,18 +19,29 @@ import (
 
 type SchemaMerger struct {
 	coreSchema       *schema.BodySchema
-	schemaReader     SchemaReader
 	terraformVersion *version.Version
-	moduleReader     ModuleReader
+	stateReader      StateReader
 }
 
-type ModuleReader interface {
-	ModuleCalls(modPath string) (tfmod.ModuleCalls, error)
+// StateReader exposes a set of methods to read data from the internal language server state
+type StateReader interface {
+	// DeclaredModuleCalls returns a map of declared module calls for the given module
+	// A declared module call refers to a module block in the configuration
+	DeclaredModuleCalls(modPath string) (map[string]tfmod.DeclaredModuleCall, error)
+
+	// InstalledModuleCalls returns a map of installed modules for a given root module
+	InstalledModuleCalls(modPath string) (map[string]tfmod.InstalledModuleCall, error)
+
+	// LocalModuleMeta returns the module meta data for a local module. This is the result
+	// of the [earlydecoder] when processing module files
 	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
-	RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error)
-}
 
-type SchemaReader interface {
+	// RegistryModuleMeta returns the module meta data for public registry modules. We fetch this
+	// data from the registry API.
+	RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error)
+
+	// ProviderSchema returns the schema for a provider we have stored in memory. The can come
+	// from different sources.
 	ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*ProviderSchema, error)
 }
 
@@ -40,12 +51,8 @@ func NewSchemaMerger(coreSchema *schema.BodySchema) *SchemaMerger {
 	}
 }
 
-func (m *SchemaMerger) SetSchemaReader(sr SchemaReader) {
-	m.schemaReader = sr
-}
-
-func (m *SchemaMerger) SetModuleReader(mr ModuleReader) {
-	m.moduleReader = mr
+func (m *SchemaMerger) SetStateReader(mr StateReader) {
+	m.stateReader = mr
 }
 
 func (m *SchemaMerger) SetTerraformVersion(v *version.Version) {
@@ -58,6 +65,10 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 	}
 
 	if meta == nil {
+		return m.coreSchema, nil
+	}
+
+	if m.stateReader == nil {
 		return m.coreSchema, nil
 	}
 
@@ -81,111 +92,109 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 	providerRefs := ProviderReferences(meta.ProviderReferences)
 
-	if m.schemaReader != nil {
-		for pAddr, pVersionCons := range meta.ProviderRequirements {
-			pSchema, err := m.schemaReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
-			if err != nil {
-				continue
+	for pAddr, pVersionCons := range meta.ProviderRequirements {
+		pSchema, err := m.stateReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
+		if err != nil {
+			continue
+		}
+
+		refs := providerRefs.ReferencesOfProvider(pAddr)
+		for _, localRef := range refs {
+			if pSchema.Provider != nil {
+				mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
+					Labels: []schema.LabelDependent{
+						{Index: 0, Value: localRef.LocalName},
+					},
+				})] = pSchema.Provider
 			}
 
-			refs := providerRefs.ReferencesOfProvider(pAddr)
-			for _, localRef := range refs {
-				if pSchema.Provider != nil {
-					mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
-						Labels: []schema.LabelDependent{
-							{Index: 0, Value: localRef.LocalName},
+			providerAddr := lang.Address{
+				lang.RootStep{Name: localRef.LocalName},
+			}
+			if localRef.Alias != "" {
+				providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
+			}
+
+			for rName, rSchema := range pSchema.Resources {
+				depKeys := schema.DependencyKeys{
+					Labels: []schema.LabelDependent{
+						{Index: 0, Value: rName},
+					},
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "provider",
+							Expr: schema.ExpressionValue{
+								Address: providerAddr,
+							},
 						},
-					})] = pSchema.Provider
+					},
 				}
+				mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
 
-				providerAddr := lang.Address{
-					lang.RootStep{Name: localRef.LocalName},
-				}
-				if localRef.Alias != "" {
-					providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
-				}
-
-				for rName, rSchema := range pSchema.Resources {
+				// No explicit association is required
+				// if the resource prefix matches provider name
+				if typeBelongsToProvider(rName, localRef) {
 					depKeys := schema.DependencyKeys{
 						Labels: []schema.LabelDependent{
 							{Index: 0, Value: rName},
 						},
-						Attributes: []schema.AttributeDependent{
-							{
-								Name: "provider",
-								Expr: schema.ExpressionValue{
-									Address: providerAddr,
-								},
-							},
-						},
 					}
 					mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
+				}
+			}
 
-					// No explicit association is required
-					// if the resource prefix matches provider name
-					if typeBelongsToProvider(rName, localRef) {
-						depKeys := schema.DependencyKeys{
-							Labels: []schema.LabelDependent{
-								{Index: 0, Value: rName},
+			for dsName, dsSchema := range pSchema.DataSources {
+				depKeys := schema.DependencyKeys{
+					Labels: []schema.LabelDependent{
+						{Index: 0, Value: dsName},
+					},
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "provider",
+							Expr: schema.ExpressionValue{
+								Address: providerAddr,
 							},
-						}
-						mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
-					}
+						},
+					},
 				}
 
-				for dsName, dsSchema := range pSchema.DataSources {
+				// Add backend-related core bits of schema
+				if isRemoteStateDataSource(pAddr, dsName) {
+					remoteStateDs := dsSchema.Copy()
+
+					remoteStateDs.Attributes["backend"].IsDepKey = true
+					remoteStateDs.Attributes["backend"].SemanticTokenModifiers = lang.SemanticTokenModifiers{lang.TokenModifierDependent}
+					remoteStateDs.Attributes["backend"].Constraint = backends.BackendTypesAsOneOfConstraint(m.terraformVersion)
+					delete(remoteStateDs.Attributes, "config")
+
+					depBodies := m.dependentBodyForRemoteStateDataSource(remoteStateDs, providerAddr, localRef)
+					for key, depBody := range depBodies {
+						mergedSchema.Blocks["data"].DependentBody[key] = depBody
+						if _, ok := mergedSchema.Blocks["check"]; ok {
+							mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody[key] = depBody
+						}
+					}
+
+					dsSchema = remoteStateDs
+				}
+
+				mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+
+				if _, ok := mergedSchema.Blocks["check"]; ok {
+					mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
+				}
+
+				// No explicit association is required
+				// if the resource prefix matches provider name
+				if typeBelongsToProvider(dsName, localRef) {
 					depKeys := schema.DependencyKeys{
 						Labels: []schema.LabelDependent{
 							{Index: 0, Value: dsName},
 						},
-						Attributes: []schema.AttributeDependent{
-							{
-								Name: "provider",
-								Expr: schema.ExpressionValue{
-									Address: providerAddr,
-								},
-							},
-						},
 					}
-
-					// Add backend-related core bits of schema
-					if isRemoteStateDataSource(pAddr, dsName) {
-						remoteStateDs := dsSchema.Copy()
-
-						remoteStateDs.Attributes["backend"].IsDepKey = true
-						remoteStateDs.Attributes["backend"].SemanticTokenModifiers = lang.SemanticTokenModifiers{lang.TokenModifierDependent}
-						remoteStateDs.Attributes["backend"].Constraint = backends.BackendTypesAsOneOfConstraint(m.terraformVersion)
-						delete(remoteStateDs.Attributes, "config")
-
-						depBodies := m.dependentBodyForRemoteStateDataSource(remoteStateDs, providerAddr, localRef)
-						for key, depBody := range depBodies {
-							mergedSchema.Blocks["data"].DependentBody[key] = depBody
-							if _, ok := mergedSchema.Blocks["check"]; ok {
-								mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody[key] = depBody
-							}
-						}
-
-						dsSchema = remoteStateDs
-					}
-
 					mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
-
 					if _, ok := mergedSchema.Blocks["check"]; ok {
 						mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
-					}
-
-					// No explicit association is required
-					// if the resource prefix matches provider name
-					if typeBelongsToProvider(dsName, localRef) {
-						depKeys := schema.DependencyKeys{
-							Labels: []schema.LabelDependent{
-								{Index: 0, Value: dsName},
-							},
-						}
-						mergedSchema.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
-						if _, ok := mergedSchema.Blocks["check"]; ok {
-							mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody[schema.NewSchemaKey(depKeys)] = dsSchema
-						}
 					}
 				}
 			}
@@ -203,105 +212,23 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
 	}
 
-	if m.moduleReader != nil {
-		reader := m.moduleReader
-		mc, err := reader.ModuleCalls(meta.Path)
-		if err != nil {
-			return mergedSchema, nil
-		}
+	declared, err := m.stateReader.DeclaredModuleCalls(meta.Path)
+	if err != nil {
+		return mergedSchema, nil
+	}
 
-		for _, module := range mc.Declared {
-			switch sourceAddr := module.SourceAddr.(type) {
-			case tfaddr.Module:
-				modMeta, err := reader.RegistryModuleMeta(sourceAddr, module.Version)
-				if err != nil {
-					continue
-				}
-
-				// Fetching based only on the source can cause conflicts for multiple versions of the same module
-				// specially if they have different versions or the source of those modules have been modified
-				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-				depKeys := schema.DependencyKeys{
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "source",
-							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(module.SourceAddr.String()),
-							},
-						},
-					},
-				}
-				// There's likely more edge cases with how source address can be represented in config
-				// vs in module manifest, but for now we at least account for the common case of external registries
-				depKeysAddr := schema.DependencyKeys{
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "source",
-							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(sourceAddr.Package.ForRegistryProtocol()),
-							},
-						},
-					},
-				}
-
-				depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
-				if err == nil {
-					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeysAddr)] = depSchema
-				}
-			case tfmod.LocalSourceAddr:
-				path := filepath.Join(meta.Path, sourceAddr.String())
-
-				depKeys := schema.DependencyKeys{
-					// Fetching based only on the source can cause conflicts for multiple versions of the same module
-					// specially if they have different versions or the source of those modules have been modified
-					// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "source",
-							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(sourceAddr.String()),
-							},
-						},
-					},
-				}
-
-				modMeta, err := reader.LocalModuleMeta(path)
-				if err == nil {
-					// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
-					// TODO revisit and refactor this
-					fakeMod := tfmod.InstalledModuleCall{
-						LocalName:  module.LocalName,
-						SourceAddr: module.SourceAddr,
-					}
-					depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
-					if err == nil {
-						mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-					}
-				}
-			}
-		}
-
-		for _, module := range mc.Installed {
-			if module.SourceAddr == nil {
-				// This should never happen for installed modules, but to
-				// be safe we skip all modules with an empty source address
-				continue
-			}
-			_, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
-			if ok {
-				// Skip local installed module here, the declared one is more up to date
-				continue
-			}
-			modMeta, err := reader.LocalModuleMeta(module.Path)
+	for _, module := range declared {
+		switch sourceAddr := module.SourceAddr.(type) {
+		case tfaddr.Module:
+			modMeta, err := m.stateReader.RegistryModuleMeta(sourceAddr, module.Version)
 			if err != nil {
 				continue
 			}
 
+			// Fetching based only on the source can cause conflicts for multiple versions of the same module
+			// specially if they have different versions or the source of those modules have been modified
+			// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
 			depKeys := schema.DependencyKeys{
-				// Fetching based only on the source can cause conflicts for multiple versions of the same module
-				// specially if they have different versions or the source of those modules have been modified
-				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
 				Attributes: []schema.AttributeDependent{
 					{
 						Name: "source",
@@ -311,34 +238,119 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 					},
 				},
 			}
-
-			depSchema, err := schemaForDependentModuleBlock(module, modMeta)
-			if err == nil {
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-			}
-
 			// There's likely more edge cases with how source address can be represented in config
 			// vs in module manifest, but for now we at least account for the common case of external registries
-			registryAddr, ok := module.SourceAddr.(tfaddr.Module)
-			if err == nil && ok {
-				depKeys := schema.DependencyKeys{
-					// Fetching based only on the source can cause conflicts for multiple versions of the same module
-					// specially if they have different versions or the source of those modules have been modified
-					// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "source",
-							Expr: schema.ExpressionValue{
-								Static: cty.StringVal(registryAddr.Package.ForRegistryProtocol()),
-							},
+			depKeysAddr := schema.DependencyKeys{
+				Attributes: []schema.AttributeDependent{
+					{
+						Name: "source",
+						Expr: schema.ExpressionValue{
+							Static: cty.StringVal(sourceAddr.Package.ForRegistryProtocol()),
 						},
 					},
-				}
+				},
+			}
 
+			depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
+			if err == nil {
 				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeysAddr)] = depSchema
+			}
+		case tfmod.LocalSourceAddr:
+			path := filepath.Join(meta.Path, sourceAddr.String())
+
+			depKeys := schema.DependencyKeys{
+				// Fetching based only on the source can cause conflicts for multiple versions of the same module
+				// specially if they have different versions or the source of those modules have been modified
+				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+				Attributes: []schema.AttributeDependent{
+					{
+						Name: "source",
+						Expr: schema.ExpressionValue{
+							Static: cty.StringVal(sourceAddr.String()),
+						},
+					},
+				},
+			}
+
+			modMeta, err := m.stateReader.LocalModuleMeta(path)
+			if err == nil {
+				// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
+				// TODO revisit and refactor this
+				fakeMod := tfmod.InstalledModuleCall{
+					LocalName:  module.LocalName,
+					SourceAddr: module.SourceAddr,
+				}
+				depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+				if err == nil {
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				}
 			}
 		}
 	}
+
+	installed, err := m.stateReader.InstalledModuleCalls(meta.Path)
+	if err != nil {
+		return mergedSchema, nil
+	}
+
+	for _, module := range installed {
+		if module.SourceAddr == nil {
+			// This should never happen for installed modules, but to
+			// be safe we skip all modules with an empty source address
+			continue
+		}
+		_, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
+		if ok {
+			// Skip local installed module here, the declared one is more up to date
+			continue
+		}
+		modMeta, err := m.stateReader.LocalModuleMeta(module.Path)
+		if err != nil {
+			continue
+		}
+
+		depKeys := schema.DependencyKeys{
+			// Fetching based only on the source can cause conflicts for multiple versions of the same module
+			// specially if they have different versions or the source of those modules have been modified
+			// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+			Attributes: []schema.AttributeDependent{
+				{
+					Name: "source",
+					Expr: schema.ExpressionValue{
+						Static: cty.StringVal(module.SourceAddr.String()),
+					},
+				},
+			},
+		}
+
+		depSchema, err := schemaForDependentModuleBlock(module, modMeta)
+		if err == nil {
+			mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+		}
+
+		// There's likely more edge cases with how source address can be represented in config
+		// vs in module manifest, but for now we at least account for the common case of external registries
+		registryAddr, ok := module.SourceAddr.(tfaddr.Module)
+		if err == nil && ok {
+			depKeys := schema.DependencyKeys{
+				// Fetching based only on the source can cause conflicts for multiple versions of the same module
+				// specially if they have different versions or the source of those modules have been modified
+				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+				Attributes: []schema.AttributeDependent{
+					{
+						Name: "source",
+						Expr: schema.ExpressionValue{
+							Static: cty.StringVal(registryAddr.Package.ForRegistryProtocol()),
+						},
+					},
+				},
+			}
+
+			mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+		}
+	}
+
 	return mergedSchema, nil
 }
 
