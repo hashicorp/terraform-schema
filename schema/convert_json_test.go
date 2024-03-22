@@ -5,6 +5,7 @@ package schema
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -510,60 +511,139 @@ func TestProviderSchemaFromJson_nested_set_list(t *testing.T) {
 }
 
 func TestProviderSchemaFromJson_function(t *testing.T) {
-	rawSchema := `{
-		"functions": {
-			"example": {
-			  "description": "Echoes given argument as result",
-			  "summary": "Example function",
-			  "return_type": "string",
-			  "parameters": [
-				{
-				  "name": "input",
-				  "description": "String to echo",
-				  "type": "string"
-				}
-			  ],
-			  "variadic_parameter": {
-				"name": "vars",
-				"description": "Optional additional arguments",
-				"type": "string"
-			  }
-			}
-		  }
-	}`
-	jsonSchema := &tfjson.ProviderSchema{}
-	err := json.Unmarshal([]byte(rawSchema), jsonSchema)
-	if err != nil {
-		t.Fatal(err)
-	}
-	providerAddr := addr.NewDefaultProvider("aws")
-
-	ps := ProviderSchemaFromJson(jsonSchema, providerAddr)
-	expectedPs := &ProviderSchema{
-		Resources:   map[string]*schema.BodySchema{},
-		DataSources: map[string]*schema.BodySchema{},
-		Functions: map[string]*schema.FunctionSignature{
-			"example": {
-				Description: "Echoes given argument as result",
-				Detail:      "hashicorp/aws",
-				ReturnType:  cty.String,
-				Params: []function.Parameter{
+	testCases := []struct {
+		testName       string
+		rawSchema      string
+		expectedSchema ProviderSchema
+	}{
+		{
+			"basic",
+			`{
+			"functions": {
+				"example": {
+				  "description": "Echoes given argument as result",
+				  "summary": "Example function",
+				  "return_type": "string",
+				  "parameters": [
 					{
-						Name:        "input",
-						Description: "String to echo",
-						Type:        cty.String,
+					  "name": "input",
+					  "description": "String to echo",
+					  "type": "string"
+					}
+				  ]
+				}
+			  }
+		}`,
+			ProviderSchema{
+				Resources:   map[string]*schema.BodySchema{},
+				DataSources: map[string]*schema.BodySchema{},
+				Functions: map[string]*schema.FunctionSignature{
+					"example": {
+						Description: "Echoes given argument as result",
+						Detail:      "hashicorp/aws",
+						ReturnType:  cty.String,
+						Params: []function.Parameter{
+							{
+								Name:        "input",
+								Description: "String to echo",
+								Type:        cty.String,
+							},
+						},
+						VarParam: nil,
 					},
 				},
-				VarParam: &function.Parameter{
-					Name:        "vars",
-					Type:        cty.String,
-					Description: "Optional additional arguments",
+			},
+		},
+		{
+			"no parameters",
+			`{
+			"functions": {
+				"example": {
+				  "description": "Returns a string",
+				  "summary": "Example function",
+				  "return_type": "string",
+				  "parameters": []
+				}
+			  }
+		}`,
+			ProviderSchema{
+				Resources:   map[string]*schema.BodySchema{},
+				DataSources: map[string]*schema.BodySchema{},
+				Functions: map[string]*schema.FunctionSignature{
+					"example": {
+						Description: "Returns a string",
+						Detail:      "hashicorp/aws",
+						ReturnType:  cty.String,
+						Params:      []function.Parameter{},
+						VarParam:    nil,
+					},
+				},
+			},
+		},
+		{
+			"with variadic parameter",
+			`{
+			"functions": {
+				"example": {
+				  "description": "Echoes given argument as result",
+				  "summary": "Example function",
+				  "return_type": "string",
+				  "parameters": [
+					{
+					  "name": "input",
+					  "description": "String to echo",
+					  "type": "string"
+					}
+				  ],
+				  "variadic_parameter": {
+					"name": "vars",
+					"description": "Optional additional arguments",
+					"type": "string"
+				  }
+				}
+			  }
+		}`,
+			ProviderSchema{
+				Resources:   map[string]*schema.BodySchema{},
+				DataSources: map[string]*schema.BodySchema{},
+				Functions: map[string]*schema.FunctionSignature{
+					"example": {
+						Description: "Echoes given argument as result",
+						Detail:      "hashicorp/aws",
+						ReturnType:  cty.String,
+						Params: []function.Parameter{
+							{
+								Name:        "input",
+								Description: "String to echo",
+								Type:        cty.String,
+							},
+						},
+						VarParam: &function.Parameter{
+							Name:        "vars",
+							Type:        cty.String,
+							Description: "Optional additional arguments",
+						},
+					},
 				},
 			},
 		},
 	}
 
-	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
-		t.Fatalf("provider schema mismatch: %s", diff)
+	for i, tc := range testCases {
+		t.Run(fmt.Sprintf("%2d-%s", i, tc.testName), func(t *testing.T) {
+
+			jsonSchema := &tfjson.ProviderSchema{}
+			err := json.Unmarshal([]byte(tc.rawSchema), jsonSchema)
+			if err != nil {
+				t.Fatal(err)
+			}
+			providerAddr := addr.NewDefaultProvider("aws")
+
+			ps := ProviderSchemaFromJson(jsonSchema, providerAddr)
+			if diff := cmp.Diff(&tc.expectedSchema, ps, ctydebug.CmpOptions); diff != "" {
+				t.Fatalf("provider schema mismatch: %s", diff)
+			}
+		})
 	}
+
 }
