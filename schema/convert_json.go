@@ -12,12 +12,14 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/function"
 )
 
 func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Provider) *ProviderSchema {
 	ps := &ProviderSchema{
 		Resources:   map[string]*schema.BodySchema{},
 		DataSources: map[string]*schema.BodySchema{},
+		Functions:   map[string]*schema.FunctionSignature{},
 	}
 
 	if jsonSchema.ConfigSchema != nil {
@@ -35,6 +37,11 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 	for dsName, dsSchema := range jsonSchema.DataSourceSchemas {
 		ps.DataSources[dsName] = bodySchemaFromJson(dsSchema.Block)
 		ps.DataSources[dsName].Detail = detailForSrcAddr(pAddr, nil)
+	}
+
+	for fnName, fnSig := range jsonSchema.Functions {
+		ps.Functions[fnName] = functionSignatureFromJson(fnSig)
+		ps.Functions[fnName].Detail = detailForSrcAddr(pAddr, nil)
 	}
 
 	return ps
@@ -395,4 +402,36 @@ func detailForSrcAddr(addr tfaddr.Provider, v *version.Version) string {
 	}
 
 	return detail
+}
+
+func functionSignatureFromJson(fnSig *tfjson.FunctionSignature) *schema.FunctionSignature {
+	if fnSig == nil {
+		return &schema.FunctionSignature{}
+	}
+
+	varParam := convertParameterFromJson(fnSig.VariadicParameter)
+	params := make([]function.Parameter, len(fnSig.Parameters))
+	for i, param := range fnSig.Parameters {
+		params[i] = *convertParameterFromJson(param)
+	}
+
+	return &schema.FunctionSignature{
+		Description: fnSig.Description,
+		ReturnType:  fnSig.ReturnType,
+		Params:      params,
+		VarParam:    varParam,
+	}
+}
+
+func convertParameterFromJson(param *tfjson.FunctionParameter) *function.Parameter {
+	if param == nil {
+		return nil
+	}
+
+	return &function.Parameter{
+		Name:        param.Name,
+		Type:        param.Type,
+		Description: param.Description,
+		AllowNull:   param.IsNullable,
+	}
 }

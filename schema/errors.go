@@ -15,6 +15,12 @@ func (e coreSchemaRequiredErr) Error() string {
 	return "core schema required (none provided)"
 }
 
+type coreFunctionsRequiredErr struct{}
+
+func (e coreFunctionsRequiredErr) Error() string {
+	return "core functions required (none provided)"
+}
+
 type NoCompatibleSchemaErr struct {
 	Version     *version.Version
 	Constraints version.Constraints
