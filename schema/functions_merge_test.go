@@ -57,7 +57,32 @@ func TestFunctionsMerger_FunctionsForModule_noMeta(t *testing.T) {
 	}
 }
 
-func TestFunctionsMerger_FunctionsForModule(t *testing.T) {
+var providerSchemaWithFunctions = map[string]*tfjson.ProviderSchema{
+	"registry.terraform.io/hashicorp/test": {
+		ConfigSchema:      &tfjson.Schema{},
+		DataSourceSchemas: map[string]*tfjson.Schema{},
+		ResourceSchemas:   map[string]*tfjson.Schema{},
+		Functions: map[string]*tfjson.FunctionSignature{
+			"bar": {
+				Parameters: []*tfjson.FunctionParameter{
+					{Name: "baz", Type: cty.String, Description: "baz param"},
+				},
+				Description: "bar function",
+				ReturnType:  cty.String,
+			},
+			"alleven": {
+				VariadicParameter: &tfjson.FunctionParameter{
+					Name: "numbers",
+					Type: cty.List(cty.Number),
+				},
+				Description: "Returns true if all passed arguments are even numbers",
+				ReturnType:  cty.Bool,
+			},
+		},
+	},
+}
+
+func TestFunctionsMerger_FunctionsForModule_18(t *testing.T) {
 	coreFunctions := map[string]schema.FunctionSignature{
 		"foo": {
 			Params: []function.Parameter{
@@ -71,40 +96,13 @@ func TestFunctionsMerger_FunctionsForModule(t *testing.T) {
 	fm.SetSchemaReader(&testJsonSchemaReader{
 		ps: &tfjson.ProviderSchemas{
 			FormatVersion: "1.0",
-			Schemas: map[string]*tfjson.ProviderSchema{
-				"registry.terraform.io/hashicorp/test": {
-					ConfigSchema:      &tfjson.Schema{},
-					DataSourceSchemas: map[string]*tfjson.Schema{},
-					ResourceSchemas:   map[string]*tfjson.Schema{},
-					Functions: map[string]*tfjson.FunctionSignature{
-						"bar": {
-							Parameters: []*tfjson.FunctionParameter{
-								{Name: "baz", Type: cty.String, Description: "baz param"},
-							},
-							Description: "bar function",
-							ReturnType:  cty.String,
-						},
-						"alleven": {
-							VariadicParameter: &tfjson.FunctionParameter{
-								Name: "numbers",
-								Type: cty.List(cty.Number),
-							},
-							Description: "Returns true if all passed arguments are even numbers",
-							ReturnType:  cty.Bool,
-						},
-					},
-				},
-			},
+			Schemas:       providerSchemaWithFunctions,
 		},
 	})
+	fm.SetTerraformVersion(version.Must(version.NewVersion("1.8")))
 
 	testProvider := addr.NewDefaultProvider("test")
-	versionConstraints, err := version.NewConstraint("1.0.0")
-
-	if err != nil {
-		t.Fatalf("unexpected error: %#v", err)
-	}
-
+	versionConstraints := version.MustConstraints(version.NewConstraint("1.0.0"))
 	meta := &tfmod.Meta{
 		ProviderReferences: map[tfmod.ProviderRef]tfaddr.Provider{
 			{LocalName: "localtest"}: testProvider,
@@ -139,6 +137,39 @@ func TestFunctionsMerger_FunctionsForModule(t *testing.T) {
 			ReturnType:  cty.Bool,
 		},
 	}
+
+	givenFunctions, err := fm.FunctionsForModule(meta)
+	if err != nil {
+		t.Fatalf("unexpected error: %#v", err)
+	}
+
+	if diff := cmp.Diff(expectedFunctions, givenFunctions, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("functions mismatch: %s", diff)
+	}
+}
+
+func TestFunctionsMerger_FunctionsForModule_17(t *testing.T) {
+	fm := NewFunctionsMerger(map[string]schema.FunctionSignature{})
+	fm.SetSchemaReader(&testJsonSchemaReader{
+		ps: &tfjson.ProviderSchemas{
+			FormatVersion: "1.0",
+			Schemas:       providerSchemaWithFunctions,
+		},
+	})
+	fm.SetTerraformVersion(version.Must(version.NewVersion("1.7")))
+
+	testProvider := addr.NewDefaultProvider("test")
+	versionConstraints := version.MustConstraints(version.NewConstraint("1.0.0"))
+	meta := &tfmod.Meta{
+		ProviderReferences: map[tfmod.ProviderRef]tfaddr.Provider{
+			{LocalName: "localtest"}: testProvider,
+		},
+		ProviderRequirements: tfmod.ProviderRequirements{
+			testProvider: versionConstraints,
+		},
+	}
+
+	expectedFunctions := map[string]schema.FunctionSignature{}
 
 	givenFunctions, err := fm.FunctionsForModule(meta)
 	if err != nil {
