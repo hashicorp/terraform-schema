@@ -30,6 +30,7 @@ var (
 	v1_5  = version.Must(version.NewVersion("1.5"))
 	v1_6  = version.Must(version.NewVersion("1.6"))
 	v1_7  = version.Must(version.NewVersion("1.7"))
+	v1_8  = version.Must(version.NewVersion("1.8"))
 )
 
 // CoreModuleSchemaForVersion finds a module schema which is relevant

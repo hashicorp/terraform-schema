@@ -40,6 +40,10 @@ func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schem
 		return m.coreFunctions, nil
 	}
 
+	if m.terraformVersion.LessThan(v1_8) {
+		return m.coreFunctions, nil
+	}
+
 	mergedFunctions := make(map[string]schema.FunctionSignature, len(m.coreFunctions))
 	for fName, fSig := range m.coreFunctions {
 		mergedFunctions[fName] = *fSig.Copy()
