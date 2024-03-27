@@ -6,13 +6,15 @@ package schema
 import (
 	"fmt"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfmod "github.com/hashicorp/terraform-schema/module"
 )
 
 type FunctionsMerger struct {
-	coreFunctions map[string]schema.FunctionSignature
-	schemaReader  SchemaReader
+	coreFunctions    map[string]schema.FunctionSignature
+	terraformVersion *version.Version
+	schemaReader     SchemaReader
 }
 
 func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *FunctionsMerger {
@@ -23,6 +25,10 @@ func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *Func
 
 func (m *FunctionsMerger) SetSchemaReader(sr SchemaReader) {
 	m.schemaReader = sr
+}
+
+func (m *FunctionsMerger) SetTerraformVersion(v *version.Version) {
+	m.terraformVersion = v
 }
 
 func (m *FunctionsMerger) FunctionsForModule(meta *tfmod.Meta) (map[string]schema.FunctionSignature, error) {
