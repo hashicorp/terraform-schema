@@ -553,7 +553,7 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 
 	if v.GreaterThanOrEqual(v1_8_0) {
 		// In Terraform 1.8 the use_legacy_workflow argument is be removed to encourage consistency with the AWS SDKs
-		bodySchema.Attributes["use_legacy_workflow"] = nil
+		delete(bodySchema.Attributes, "use_legacy_workflow")
 	}
 
 	return bodySchema
