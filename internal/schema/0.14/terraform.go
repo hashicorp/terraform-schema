@@ -29,7 +29,7 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 					Constraint: schema.LiteralType{Type: cty.String},
 					IsOptional: true,
 					Description: lang.Markdown("A set of experimental language features to enable. Consult the documentation" +
-						" for the version of Terraform you arte using for a list of available experiments"),
+						" for the version of Terraform you are using for a list of available experiments"),
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
