@@ -42,8 +42,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Terraform 1.8.0 started returning all functions twice, once with the prefix "core::" and once without
-	// As we only want to suggest the ones without the prefix, we filter them here
+	// Starting in v1.8.0, Terraform returns all functions twice: once with the prefix "core::" and once without
+	// It is a better UX right now to only suggest the ones without the prefix, so we filter them here before it becomes available to terraform-ls
 	if terraformVersion.GreaterThanOrEqual(version.Must(version.NewVersion("1.8.0-rc1"))) {
 		filteredFunctions := make(map[string]*tfjson.FunctionSignature)
 		for name, sig := range functions.Signatures {
