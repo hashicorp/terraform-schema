@@ -31,7 +31,7 @@ var (
 )
 
 const (
-	functionSignatureHash = "3edcd73cb8643903dde229b04dfc36d10d8dd6679e7804ea37001be38650d950"
+	functionSignatureHash = "42e102cb1520d1c9f8fcc97937b2350eb19e393867370b96bed7cb3c9db04c7a"
 )
 
 func main() {
