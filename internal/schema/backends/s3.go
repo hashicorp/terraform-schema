@@ -445,6 +445,11 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 				},
 			},
 		}
+		bodySchema.Attributes["use_legacy_workflow"] = &schema.AttributeSchema{
+			Constraint:  schema.LiteralType{Type: cty.Bool},
+			IsOptional:  true,
+			Description: lang.Markdown("Use the legacy authentication workflow, preferring environment variables over backend configuration."),
+		}
 		bodySchema.Attributes["custom_ca_bundle"] = &schema.AttributeSchema{
 			Constraint:  schema.LiteralType{Type: cty.String},
 			IsOptional:  true,
@@ -536,13 +541,7 @@ func s3Backend(v *version.Version) *schema.BodySchema {
 		}
 	}
 
-	bodySchema.Attributes["use_legacy_workflow"] = &schema.AttributeSchema{
-		Constraint:  schema.LiteralType{Type: cty.Bool},
-		IsOptional:  true,
-		Description: lang.Markdown("Use the legacy authentication workflow, preferring environment variables over backend configuration."),
-	}
-
-	if v.GreaterThanOrEqual(v1_7_0) && v.LessThan(v1_8_0) {
+	if v.GreaterThanOrEqual(v1_7_0) {
 		bodySchema.Attributes["use_legacy_workflow"] = &schema.AttributeSchema{
 			Constraint:   schema.LiteralType{Type: cty.Bool},
 			IsOptional:   true,
