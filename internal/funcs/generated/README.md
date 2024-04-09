@@ -24,4 +24,4 @@ Run `go generate ./internal/funcs/generated`. This command will:
 1. Create a new Go file with the function signatures of that Terraform version.
 1. Regenerate the function signature selection in `functions.go`.
 
-If everything looks solid, update the `functionSignatureHash` with the one from the output, and commit all changes.
+**If everything looks solid, update the `functionSignatureHash` with the one from the output, and commit all changes.**
