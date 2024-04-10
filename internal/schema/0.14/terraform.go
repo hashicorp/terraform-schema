@@ -26,10 +26,20 @@ func terraformBlockSchema(v *version.Version) *schema.BlockSchema {
 						"with this configuration, e.g. `~> 0.12`"),
 				},
 				"experiments": {
-					Constraint: schema.LiteralType{Type: cty.String},
-					IsOptional: true,
-					Description: lang.Markdown("A set of experimental language features to enable. Consult the documentation" +
-						" for the version of Terraform you are using for a list of available experiments"),
+					Constraint: schema.Set{
+						Elem: schema.OneOf{
+							schema.Keyword{
+								Keyword: "module_variable_optional_attrs",
+								Name:    "feature",
+							},
+							schema.Keyword{
+								Keyword: "provider_sensitive_attrs",
+								Name:    "feature",
+							},
+						},
+					},
+					IsOptional:  true,
+					Description: lang.Markdown("A set of experimental language features to enable"),
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
