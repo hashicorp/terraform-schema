@@ -11,7 +11,7 @@ import (
 
 func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 	bs.Body.Blocks["cloud"] = &schema.BlockSchema{
-		Description: lang.PlainText("Terraform Cloud configuration"),
+		Description: lang.PlainText("HCP Terraform configuration"),
 		MaxItems:    1,
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
@@ -19,7 +19,7 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 					Constraint: schema.LiteralType{Type: cty.String},
 					IsOptional: true,
 					Description: lang.Markdown("The Terraform Enterprise hostname to connect to. " +
-						"This optional argument defaults to `app.terraform.io` for use with Terraform Cloud."),
+						"This optional argument defaults to `app.terraform.io` for use with HCP Terraform."),
 				},
 				"organization": {
 					Constraint:  schema.LiteralType{Type: cty.String},
@@ -29,7 +29,7 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 				"token": {
 					Constraint: schema.LiteralType{Type: cty.String},
 					IsOptional: true,
-					Description: lang.Markdown("The token used to authenticate with Terraform Cloud/Enterprise. " +
+					Description: lang.Markdown("The token used to authenticate with HCP Terraform/Terraform Enterprise. " +
 						"Typically this argument should not be set, and `terraform login` used instead; " +
 						"your credentials will then be fetched from your CLI configuration file " +
 						"or configured credential helper."),
@@ -44,7 +44,7 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 							"name": {
 								Constraint: schema.LiteralType{Type: cty.String},
 								IsOptional: true,
-								Description: lang.Markdown("The name of a single Terraform Cloud workspace " +
+								Description: lang.Markdown("The name of a single HCP Terraform workspace " +
 									"to be used with this configuration. When configured only the specified workspace " +
 									"can be used. This option conflicts with `tags`."),
 							},
@@ -53,7 +53,7 @@ func patchTerraformBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 									Elem: schema.LiteralType{Type: cty.String},
 								},
 								IsOptional: true,
-								Description: lang.Markdown("A set of tags used to select remote Terraform Cloud workspaces" +
+								Description: lang.Markdown("A set of tags used to select remote HCP Terraform workspaces" +
 									" to be used for this single configuration. New workspaces will automatically be tagged " +
 									"with these tag values. Generally, this is the primary and recommended strategy to use. " +
 									"This option conflicts with `name`."),

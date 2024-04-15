@@ -37,7 +37,7 @@ func decodeCloudBlock(block *hcl.Block) (*backend.Cloud, hcl.Diagnostics) {
 
 	// https://developer.hashicorp.com/terraform/language/settings/terraform-cloud#usage-example
 	// Required for Terraform Enterprise
-	// Defaults to app.terraform.io for Terraform Cloud
+	// Defaults to app.terraform.io for HCP Terraform
 	if attr, ok := attrs["hostname"]; ok {
 		val, vDiags := attr.Expr.Value(nil)
 		if val.IsWhollyKnown() && val.Type() == cty.String {

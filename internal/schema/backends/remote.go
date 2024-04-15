@@ -13,7 +13,7 @@ import (
 func remoteBackend(v *version.Version) *schema.BodySchema {
 	docsUrl := "https://www.terraform.io/docs/language/settings/backends/remote.html"
 	return &schema.BodySchema{
-		Description: lang.Markdown("Remote backend to store state and run operations in Terraform Cloud."),
+		Description: lang.Markdown("Remote backend to store state and run operations in HCP Terraform."),
 		HoverURL:    docsUrl,
 		DocsLink: &schema.DocsLink{
 			URL: docsUrl,
