@@ -11,6 +11,34 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
+// AnySchemaForVariableCollection returns a schema for collecting all
+// variables in a variable file. It doesn't check if a variable has
+// been defined in the module or not.
+//
+// We can use this schema to collect variable references without waiting
+// on the module metadata.
+func AnySchemaForVariableCollection(modPath string) *schema.BodySchema {
+	return &schema.BodySchema{
+		AnyAttribute: &schema.AttributeSchema{
+			OriginForTarget: &schema.PathTarget{
+				Address: schema.Address{
+					schema.StaticStep{Name: "var"},
+					schema.AttrNameStep{},
+				},
+				Path: lang.Path{
+					Path:       modPath,
+					LanguageID: ModuleLanguageID,
+				},
+				Constraints: schema.Constraints{
+					ScopeId: refscope.VariableScope,
+					Type:    cty.DynamicPseudoType,
+				},
+			},
+			Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
+		},
+	}
+}
+
 func SchemaForVariables(vars map[string]module.Variable, modPath string) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema)
 
