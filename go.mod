@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/hcl-lang v0.0.0-20240326153306-49d737897778
 	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/terraform-exec v0.20.0
-	github.com/hashicorp/terraform-json v0.21.0
+	github.com/hashicorp/terraform-json v0.22.0
 	github.com/hashicorp/terraform-registry-address v0.2.3
 	github.com/mh-cbon/go-fmt-fail v0.0.0-20160815164508-67765b3fbcb5
 	github.com/zclconf/go-cty v1.14.4
