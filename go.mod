@@ -5,7 +5,7 @@ go 1.21.0
 require (
 	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
-	github.com/hashicorp/go-version v1.6.0
+	github.com/hashicorp/go-version v1.7.0
 	github.com/hashicorp/hc-install v0.7.0
 	github.com/hashicorp/hcl-lang v0.0.0-20240326153306-49d737897778
 	github.com/hashicorp/hcl/v2 v2.20.1
