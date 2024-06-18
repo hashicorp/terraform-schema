@@ -7,10 +7,20 @@ import (
 
 var (
 	OldestAvailableVersion = version.Must(version.NewVersion("0.12.0"))
-	LatestAvailableVersion = version.Must(version.NewVersion("1.8.0"))
+	LatestAvailableVersion = version.Must(version.NewVersion("1.9.0"))
 
 	terraformVersions = version.Collection{
+		version.Must(version.NewVersion("1.10.0-alpha20240606")),
+		version.Must(version.NewVersion("1.9.0-rc1")),
+		version.Must(version.NewVersion("1.9.0-beta1")),
+		version.Must(version.NewVersion("1.9.0-alpha20240516")),
+		version.Must(version.NewVersion("1.9.0-alpha20240501")),
 		version.Must(version.NewVersion("1.9.0-alpha20240404")),
+		version.Must(version.NewVersion("1.8.5")),
+		version.Must(version.NewVersion("1.8.4")),
+		version.Must(version.NewVersion("1.8.3")),
+		version.Must(version.NewVersion("1.8.2")),
+		version.Must(version.NewVersion("1.8.1")),
 		version.Must(version.NewVersion("1.8.0")),
 		version.Must(version.NewVersion("1.8.0-rc2")),
 		version.Must(version.NewVersion("1.8.0-rc1")),
