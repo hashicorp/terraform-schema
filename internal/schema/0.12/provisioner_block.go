@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 )
 
-func provisionerBlock(v *version.Version) *schema.BlockSchema {
+func ProvisionerBlock(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provisioner},
 		Description: lang.Markdown("Provisioner to model specific actions on the local machine or on a remote machine " +
@@ -63,7 +63,7 @@ func provisionerBlock(v *version.Version) *schema.BlockSchema {
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
-				"connection": connectionBlock(v),
+				"connection": ConnectionBlock(v),
 			},
 		},
 		DependentBody: ProvisionerDependentBodies(v),

@@ -74,8 +74,8 @@ func resourceBlockSchema(v *version.Version) *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"lifecycle":   lifecycleBlock(),
-				"connection":  connectionBlock(v),
-				"provisioner": provisionerBlock(v),
+				"connection":  ConnectionBlock(v),
+				"provisioner": ProvisionerBlock(v),
 			},
 		},
 	}
