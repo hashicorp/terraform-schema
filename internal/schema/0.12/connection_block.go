@@ -11,7 +11,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func connectionBlock(v *version.Version) *schema.BlockSchema {
+func ConnectionBlock(v *version.Version) *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Description:            lang.Markdown("Connection block describing how the provisioner connects to the given instance"),
 		MaxItems:               1,
