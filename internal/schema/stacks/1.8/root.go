@@ -8,8 +8,9 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 )
 
-func StackSchema(v *version.Version) *schema.BodySchema {
-	// TODO: This will likely change after the refactor
+// StackSchema returns the static schema for a stack
+// configuration (*.tfstack.hcl) file.
+func StackSchema(_ *version.Version) *schema.BodySchema {
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"component":         componentBlockSchema(),
@@ -21,8 +22,9 @@ func StackSchema(v *version.Version) *schema.BodySchema {
 	}
 }
 
-func DeploymentSchema(v *version.Version) *schema.BodySchema {
-	// TODO: This will likely change after the refactor
+// DeploymentSchema returns the static schema for a deployment
+// configuration (*.tfdeploy.hcl) file.
+func DeploymentSchema(_ *version.Version) *schema.BodySchema {
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"deployment":     deploymentBlockSchema(),
