@@ -4,14 +4,13 @@
 package schema
 
 import (
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 )
 
-func deploymentBlockSchema(v *version.Version) *schema.BlockSchema {
+func deploymentBlockSchema() *schema.BlockSchema {
 	/*
 		Reference: https://github.com/hashicorp/tfc-agent/blob/main/core/components/stacks/tfdeploycfg/deployment.go
 		TODO:
@@ -20,16 +19,6 @@ func deploymentBlockSchema(v *version.Version) *schema.BlockSchema {
 	*/
 	return &schema.BlockSchema{
 		Description: lang.Markdown("Deployment"),
-		Address: &schema.BlockAddrSchema{
-			FriendlyName: "deployment",
-			ScopeId:      refscope.ProviderScope,
-			AsReference:  true,
-			Steps: []schema.AddrStep{
-				schema.LabelStep{Index: 0},
-				schema.AttrValueStep{Name: "alias", IsOptional: true},
-			},
-		},
-		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "name",

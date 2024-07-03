@@ -4,15 +4,13 @@
 package schema
 
 import (
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
-	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
-func identityTokenBlockSchema(v *version.Version) *schema.BlockSchema {
+func identityTokenBlockSchema() *schema.BlockSchema {
 	/*
 		Reference: https://github.com/hashicorp/tfc-agent/blob/main/core/components/stacks/tfdeploycfg/identity_token.go
 		TODO:
@@ -21,16 +19,6 @@ func identityTokenBlockSchema(v *version.Version) *schema.BlockSchema {
 	*/
 	return &schema.BlockSchema{
 		Description: lang.PlainText("An identity token block is a definition of a JSON Web Token (JWT) that will be generated for a given deployment if referenced in the inputs for that deployment block. The block label defines the token name, which must be unique within the stack."),
-		Address: &schema.BlockAddrSchema{
-			FriendlyName: "deployment",
-			ScopeId:      refscope.ProviderScope,
-			AsReference:  true,
-			Steps: []schema.AddrStep{
-				schema.LabelStep{Index: 0},
-				schema.AttrValueStep{Name: "alias", IsOptional: true},
-			},
-		},
-		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "name",

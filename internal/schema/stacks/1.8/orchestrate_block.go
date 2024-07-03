@@ -4,15 +4,13 @@
 package schema
 
 import (
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
-	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
-func orchestrateBlockSchema(v *version.Version) *schema.BlockSchema {
+func orchestrateBlockSchema() *schema.BlockSchema {
 	/*
 		Reference: https://github.com/hashicorp/tfc-agent/blob/main/core/components/stacks/tfdeploycfg/orchestrate.go
 		TODO:
@@ -21,16 +19,6 @@ func orchestrateBlockSchema(v *version.Version) *schema.BlockSchema {
 	*/
 	return &schema.BlockSchema{
 		Description: lang.PlainText("Defines an orchestration rule, such as a rule for when to auto-approve one or more deployments in the stack to be evaluated after a plan or apply operation. These rules allow you to define the behavior of various aspects of the stack in code, and make managing large numbers of deployments more manageable. The block labels include the rule type and the rule name, which together must be unique within the stack"),
-		Address: &schema.BlockAddrSchema{
-			FriendlyName: "orchestrate",
-			ScopeId:      refscope.ProviderScope,
-			AsReference:  true,
-			Steps: []schema.AddrStep{
-				schema.LabelStep{Index: 0},
-				schema.AttrValueStep{Name: "alias", IsOptional: true},
-			},
-		},
-		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "type",

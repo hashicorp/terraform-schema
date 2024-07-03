@@ -4,7 +4,6 @@
 package schema
 
 import (
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
@@ -12,19 +11,9 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func componentBlockSchema(v *version.Version) *schema.BlockSchema {
+func componentBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Description: lang.Markdown("Component represents the declaration of a single component within a particular Terraform Stack. Components are the most important object in a stack configuration, just as resources are the most important object in a Terraform module: each one refers to a Terraform module that describes the infrastructure that the component is 'made of'."),
-		Address: &schema.BlockAddrSchema{
-			FriendlyName: "component",
-			ScopeId:      refscope.ModuleScope,
-			AsReference:  true,
-			Steps: []schema.AddrStep{
-				schema.StaticStep{Name: "component"},
-				schema.LabelStep{Index: 0},
-			},
-		},
-		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "name",

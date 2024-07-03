@@ -12,11 +12,11 @@ func StackSchema(v *version.Version) *schema.BodySchema {
 	// TODO: This will likely change after the refactor
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
-			"component":         componentBlockSchema(v),
-			"provider":          providerBlockSchema(v),
-			"required_provider": providerBlockSchema(v),
-			"variable":          variableBlockSchema(v),
-			"output":            outputBlockSchema(v),
+			"component":         componentBlockSchema(),
+			"provider":          providerBlockSchema(),
+			"required_provider": providerBlockSchema(),
+			"variable":          variableBlockSchema(),
+			"output":            outputBlockSchema(),
 		},
 	}
 }
@@ -25,10 +25,9 @@ func DeploymentSchema(v *version.Version) *schema.BodySchema {
 	// TODO: This will likely change after the refactor
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
-			// tfdeploy.hcl
-			"deployment":     deploymentBlockSchema(v),
-			"identity_token": identityTokenBlockSchema(v),
-			"orchestrate":    orchestrateBlockSchema(v),
+			"deployment":     deploymentBlockSchema(),
+			"identity_token": identityTokenBlockSchema(),
+			"orchestrate":    orchestrateBlockSchema(),
 		},
 	}
 }

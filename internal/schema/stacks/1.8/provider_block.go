@@ -4,15 +4,13 @@
 package schema
 
 import (
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 )
 
-func providerBlockSchema(v *version.Version) *schema.BlockSchema {
-
+func providerBlockSchema() *schema.BlockSchema {
 	/*
 		Reference: https://github.com/hashicorp/terraform/blob/main/internal/stacks/stackconfig/provider_config.go
 		TODO:
@@ -23,16 +21,7 @@ func providerBlockSchema(v *version.Version) *schema.BlockSchema {
 	*/
 
 	return &schema.BlockSchema{
-		Description: lang.PlainText("A Stack provider block is used to specify a provider configuration"),
-		Address: &schema.BlockAddrSchema{
-			FriendlyName: "provider",
-			ScopeId:      refscope.ProviderScope,
-			AsReference:  true,
-			Steps: []schema.AddrStep{
-				schema.LabelStep{Index: 0},
-				schema.LabelStep{Index: 1},
-			},
-		},
+		Description:            lang.PlainText("A Stack provider block is used to specify a provider configuration"),
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 		Labels: []*schema.LabelSchema{
 			{
