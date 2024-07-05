@@ -10,8 +10,6 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-// schema: https://github.com/hashicorp/terraform/blob/44963672497429cb0249a3808fcd51c06a01f0b5/internal/stacks/stackconfig/output_value.go#L76-L87
-
 func outputBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Output},

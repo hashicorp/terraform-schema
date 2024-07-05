@@ -11,12 +11,6 @@ import (
 )
 
 func deploymentBlockSchema() *schema.BlockSchema {
-	/*
-		Reference: https://github.com/hashicorp/tfc-agent/blob/main/core/components/stacks/tfdeploycfg/deployment.go
-		TODO:
-			- Source better descriptions
-			- Verify all attributes are added here
-	*/
 	return &schema.BlockSchema{
 		Description: lang.Markdown("Deployment"),
 		Labels: []*schema.LabelSchema{

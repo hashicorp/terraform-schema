@@ -11,15 +11,6 @@ import (
 )
 
 func providerBlockSchema() *schema.BlockSchema {
-	/*
-		Reference: https://github.com/hashicorp/terraform/blob/main/internal/stacks/stackconfig/provider_config.go
-		TODO:
-			- Source better descriptions
-			- config should autocomplete from the specified provider
-			- Verify all attributes are added here
-			- for_each
-	*/
-
 	return &schema.BlockSchema{
 		Description:            lang.PlainText("A Stack provider block is used to specify a provider configuration"),
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},

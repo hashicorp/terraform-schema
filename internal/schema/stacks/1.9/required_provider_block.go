@@ -11,11 +11,6 @@ import (
 )
 
 func requiredProviderBlockSchema() *schema.BlockSchema {
-
-	/*
-		Reference: https://github.com/hashicorp/terraform/blob/44963672497429cb0249a3808fcd51c06a01f0b5/internal/stacks/stackconfig/provider_requirements.go
-	*/
-
 	return &schema.BlockSchema{
 		Body: &schema.BodySchema{
 			AnyAttribute: &schema.AttributeSchema{

@@ -11,12 +11,6 @@ import (
 )
 
 func identityTokenBlockSchema() *schema.BlockSchema {
-	/*
-		Reference: https://github.com/hashicorp/tfc-agent/blob/main/core/components/stacks/tfdeploycfg/identity_token.go
-		TODO:
-			- Source better descriptions
-			- Verify all attributes are added here
-	*/
 	return &schema.BlockSchema{
 		Description: lang.PlainText("An identity token block is a definition of a JSON Web Token (JWT) that will be generated for a given deployment if referenced in the inputs for that deployment block. The block label defines the token name, which must be unique within the stack."),
 		Labels: []*schema.LabelSchema{

@@ -11,12 +11,6 @@ import (
 )
 
 func orchestrateBlockSchema() *schema.BlockSchema {
-	/*
-		Reference: https://github.com/hashicorp/tfc-agent/blob/main/core/components/stacks/tfdeploycfg/orchestrate.go
-		TODO:
-			- Source better descriptions
-			- Verify all attributes are added here
-	*/
 	return &schema.BlockSchema{
 		Description: lang.PlainText("Defines an orchestration rule, such as a rule for when to auto-approve one or more deployments in the stack to be evaluated after a plan or apply operation. These rules allow you to define the behavior of various aspects of the stack in code, and make managing large numbers of deployments more manageable. The block labels include the rule type and the rule name, which together must be unique within the stack"),
 		Labels: []*schema.LabelSchema{
