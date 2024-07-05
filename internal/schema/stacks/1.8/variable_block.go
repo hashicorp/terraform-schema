@@ -20,8 +20,8 @@ func variableBlockSchema() *schema.BlockSchema {
 				Description:            lang.PlainText("Variable Name"),
 			},
 		},
-		Description: lang.Markdown("Input variable allowing users to customizate aspects of the configuration when used directly " +
-			"(e.g. via CLI, `tfvars` file or via environment variables), or as a module (via `module` arguments)"),
+		Description: lang.Markdown("Stack variable allowing users to customize aspects of the stack that differ between deployments" +
+			"(e.g. different instance sizes, regions, etc.)"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"description": {
