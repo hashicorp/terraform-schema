@@ -15,7 +15,7 @@ func StackSchema(_ *version.Version) *schema.BodySchema {
 		Blocks: map[string]*schema.BlockSchema{
 			"component":         componentBlockSchema(),
 			"provider":          providerBlockSchema(),
-			"required_provider": providerBlockSchema(),
+			"required_provider": requiredProviderBlockSchema(),
 			"variable":          variableBlockSchema(),
 			"output":            outputBlockSchema(),
 		},

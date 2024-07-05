@@ -34,7 +34,7 @@ func componentBlockSchema() *schema.BlockSchema {
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 				},
 				"inputs": {
-					Description: lang.Markdown("A mapping of module input variable names to values. The keys of this map must correspond to the Terraform variable names in the module defined by source. can be any Terraform expression, and can refer to anything which is in scope, including input variables, component outputs, the `each` object, and provider configurations"),
+					Description: lang.Markdown("A mapping of module input variable names to values. The keys of this map must correspond to the Terraform variable names in the module defined by source. Can be any Terraform expression, and can refer to anything which is in scope, including input variables, component outputs, the `each` object, and provider configurations"),
 					IsOptional:  true,
 					Constraint: schema.Map{
 						Name: "map of input references",
@@ -49,7 +49,7 @@ func componentBlockSchema() *schema.BlockSchema {
 					},
 				},
 				"providers": {
-					Description: lang.Markdown(" A mapping of provider names to providers declared in the stack configuration. Providers must be declared in the top level of the stack and passed into each module in the stack. Modules cannot configure their own providers"),
+					Description: lang.Markdown(" A mapping of provider names to providers declared in the stack configuration. Providers must be declared in the top level of the stack and passed into each component in the stack. Components cannot configure their own providers"),
 					IsOptional:  true,
 					Constraint: schema.Map{
 						Name: "map of provider references",

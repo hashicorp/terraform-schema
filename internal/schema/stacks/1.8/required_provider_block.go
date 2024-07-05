@@ -7,48 +7,46 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
-	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
+	"github.com/zclconf/go-cty/cty"
 )
 
 func requiredProviderBlockSchema() *schema.BlockSchema {
 
 	/*
-		Reference: https://github.com/hashicorp/terraform/blob/main/internal/stacks/stackconfig/provider_config.go
-		TODO:
-			- Source better descriptions
-			- config should autocomplete from the specified provider
-			- Verify all attributes are added here
-			- for_each
+		Reference: https://github.com/hashicorp/terraform/blob/44963672497429cb0249a3808fcd51c06a01f0b5/internal/stacks/stackconfig/provider_requirements.go
 	*/
 
 	return &schema.BlockSchema{
-		Description:            lang.PlainText("A Stack provider block is used to specify a provider configuration"),
-		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.RequiredProviders},
-		Labels: []*schema.LabelSchema{
-			{
-				Name:                   "type",
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
-				Description:            lang.PlainText("Provider Type"),
-				IsDepKey:               true,
-				Completable:            true,
-			},
-			{
-				Name:                   "name",
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
-				Description:            lang.PlainText("Provider Name"),
-				// TODO: this is the index, so is it a depkey?
-			},
-		},
 		Body: &schema.BodySchema{
-			Attributes: map[string]*schema.AttributeSchema{
-				"config": {
-					Constraint: schema.Map{
-						Name: "map of configuration",
-						Elem: schema.Reference{OfScopeId: refscope.ProviderScope},
+			AnyAttribute: &schema.AttributeSchema{
+				Constraint: schema.OneOf{
+					schema.Object{
+						Attributes: schema.ObjectAttributes{
+							"source": &schema.AttributeSchema{
+								Constraint: schema.LiteralType{Type: cty.String},
+								IsRequired: true,
+								Description: lang.Markdown("The global source address for the provider " +
+									"you intend to use, such as `hashicorp/aws`"),
+							},
+							"version": &schema.AttributeSchema{
+								Constraint: schema.LiteralType{Type: cty.String},
+								IsOptional: true,
+								Description: lang.Markdown("Version constraint specifying which subset of " +
+									"available provider versions the module is compatible with, e.g. `~> 1.0`"),
+							},
+						},
 					},
-					IsOptional:  true,
-					Description: lang.Markdown("Explicit mapping of configuration for the provider"),
+					schema.LiteralType{Type: cty.String},
 				},
+				Address: &schema.AttributeAddrSchema{
+					Steps: []schema.AddrStep{
+						schema.AttrNameStep{},
+					},
+					FriendlyName: "provider",
+					AsReference:  true,
+					ScopeId:      refscope.ProviderScope,
+				},
+				Description: lang.Markdown("Provider source, version constraint"),
 			},
 		},
 	}
