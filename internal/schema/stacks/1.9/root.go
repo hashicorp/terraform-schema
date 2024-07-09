@@ -13,11 +13,11 @@ import (
 func StackSchema(_ *version.Version) *schema.BodySchema {
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
-			"component":         componentBlockSchema(),
-			"provider":          providerBlockSchema(),
-			"required_provider": requiredProviderBlockSchema(),
-			"variable":          variableBlockSchema(),
-			"output":            outputBlockSchema(),
+			"component":          componentBlockSchema(),
+			"provider":           providerBlockSchema(),
+			"required_providers": requiredProvidersBlockSchema(),
+			"variable":           variableBlockSchema(),
+			"output":             outputBlockSchema(),
 		},
 	}
 }

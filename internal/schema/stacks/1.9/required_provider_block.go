@@ -10,7 +10,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func requiredProviderBlockSchema() *schema.BlockSchema {
+func requiredProvidersBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Body: &schema.BodySchema{
 			AnyAttribute: &schema.AttributeSchema{
