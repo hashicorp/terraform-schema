@@ -242,13 +242,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 				modMeta, err := m.stateReader.LocalModuleMeta(path)
 				if err == nil {
-					// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
-					// TODO revisit and refactor this
-					fakeMod := tfmod.InstalledModuleCall{
-						LocalName:  module.LocalName,
-						SourceAddr: module.SourceAddr,
-					}
-					depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+					depSchema, err := schemaForDependentModuleBlock(module, modMeta)
 					if err == nil {
 						mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 					}
@@ -264,7 +258,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 				continue
 			}
 
-			depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
+			depSchema, err := schemaForDependentRegistryModuleBlock(module, modMeta)
 			if err == nil {
 				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 			}
@@ -278,13 +272,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 			modMeta, err := m.stateReader.LocalModuleMeta(path)
 			if err == nil {
-				// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
-				// TODO revisit and refactor this
-				fakeMod := tfmod.InstalledModuleCall{
-					LocalName:  module.LocalName,
-					SourceAddr: module.SourceAddr,
-				}
-				depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+				depSchema, err := schemaForDependentModuleBlock(module, modMeta)
 				if err == nil {
 					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
@@ -295,13 +283,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 			modMeta, err := m.stateReader.LocalModuleMeta(path)
 			if err == nil {
-				// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
-				// TODO revisit and refactor this
-				fakeMod := tfmod.InstalledModuleCall{
-					LocalName:  module.LocalName,
-					SourceAddr: module.SourceAddr,
-				}
-				depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+				depSchema, err := schemaForDependentModuleBlock(module, modMeta)
 				if err == nil {
 					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
