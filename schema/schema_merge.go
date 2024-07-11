@@ -32,6 +32,10 @@ type StateReader interface {
 	// InstalledModuleCalls returns a map of installed modules for a given root module
 	InstalledModuleCalls(modPath string) (map[string]tfmod.InstalledModuleCall, error)
 
+	// InstalledModulePath checks if there is an installed module available for
+	// the given normalized source address.
+	InstalledModulePath(rootPath string, normalizedSource string) (string, bool)
+
 	// LocalModuleMeta returns the module meta data for a local module. This is the result
 	// of the [earlydecoder] when processing module files
 	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
@@ -218,60 +222,79 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 	}
 
 	for _, module := range declared {
+		depKeys := schema.DependencyKeys{
+			// Fetching based only on the source can cause conflicts for multiple versions of the same module
+			// specially if they have different versions or the source of those modules have been modified
+			// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
+			Attributes: []schema.AttributeDependent{
+				{
+					Name: "source",
+					Expr: schema.ExpressionValue{
+						Static: cty.StringVal(module.RawSourceAddr),
+					},
+				},
+			},
+		}
+
 		switch sourceAddr := module.SourceAddr.(type) {
 		case tfaddr.Module:
+			// 1. See if we have a local installation of the module available
+			installedDir, ok := m.stateReader.InstalledModulePath(meta.Path, sourceAddr.String())
+			if ok {
+				path := filepath.Join(meta.Path, installedDir)
+
+				modMeta, err := m.stateReader.LocalModuleMeta(path)
+				if err == nil {
+					// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
+					// TODO revisit and refactor this
+					fakeMod := tfmod.InstalledModuleCall{
+						LocalName:  module.LocalName,
+						SourceAddr: module.SourceAddr,
+					}
+					depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+					if err == nil {
+						mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+					}
+
+					// We continue here, so we don't end up overwriting the schema with one from the registry
+					continue
+				}
+			}
+
+			// 2. See if we have fetched the module schema from the registry
 			modMeta, err := m.stateReader.RegistryModuleMeta(sourceAddr, module.Version)
 			if err != nil {
 				continue
 			}
 
-			// Fetching based only on the source can cause conflicts for multiple versions of the same module
-			// specially if they have different versions or the source of those modules have been modified
-			// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-			depKeys := schema.DependencyKeys{
-				Attributes: []schema.AttributeDependent{
-					{
-						Name: "source",
-						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(module.SourceAddr.String()),
-						},
-					},
-				},
-			}
-			// There's likely more edge cases with how source address can be represented in config
-			// vs in module manifest, but for now we at least account for the common case of external registries
-			depKeysAddr := schema.DependencyKeys{
-				Attributes: []schema.AttributeDependent{
-					{
-						Name: "source",
-						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(sourceAddr.Package.ForRegistryProtocol()),
-						},
-					},
-				},
-			}
-
 			depSchema, err := schemaForDeclaredDependentModuleBlock(module, modMeta)
 			if err == nil {
 				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeysAddr)] = depSchema
 			}
+
+		case tfmod.RemoteSourceAddr:
+			installedDir, ok := m.stateReader.InstalledModulePath(meta.Path, sourceAddr.String())
+			if !ok {
+				continue
+			}
+			path := filepath.Join(meta.Path, installedDir)
+
+			modMeta, err := m.stateReader.LocalModuleMeta(path)
+			if err == nil {
+				// We're creating a InstalledModuleCall here, because we need one to call schemaForDependentModuleBlock
+				// TODO revisit and refactor this
+				fakeMod := tfmod.InstalledModuleCall{
+					LocalName:  module.LocalName,
+					SourceAddr: module.SourceAddr,
+				}
+				depSchema, err := schemaForDependentModuleBlock(fakeMod, modMeta)
+				if err == nil {
+					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				}
+			}
+
 		case tfmod.LocalSourceAddr:
 			path := filepath.Join(meta.Path, sourceAddr.String())
-
-			depKeys := schema.DependencyKeys{
-				// Fetching based only on the source can cause conflicts for multiple versions of the same module
-				// specially if they have different versions or the source of those modules have been modified
-				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-				Attributes: []schema.AttributeDependent{
-					{
-						Name: "source",
-						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(sourceAddr.String()),
-						},
-					},
-				},
-			}
 
 			modMeta, err := m.stateReader.LocalModuleMeta(path)
 			if err == nil {
