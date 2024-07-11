@@ -22,7 +22,7 @@ import (
 
 func TestSchemaForDependentModuleBlock_emptyMeta(t *testing.T) {
 	meta := &module.Meta{}
-	module := module.InstalledModuleCall{
+	module := module.DeclaredModuleCall{
 		LocalName: "refname",
 	}
 	depSchema, err := schemaForDependentModuleBlock(module, meta)
@@ -74,7 +74,7 @@ func TestSchemaForDependentModuleBlock_basic(t *testing.T) {
 			},
 		},
 	}
-	module := module.InstalledModuleCall{
+	module := module.DeclaredModuleCall{
 		LocalName: "refname",
 	}
 	depSchema, err := schemaForDependentModuleBlock(module, meta)
@@ -307,7 +307,7 @@ func TestSchemaForDependentModuleBlock_Target(t *testing.T) {
 			},
 		},
 	}
-	module := module.InstalledModuleCall{
+	module := module.DeclaredModuleCall{
 		LocalName: "refname",
 	}
 
@@ -326,7 +326,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 	type testCase struct {
 		name           string
 		meta           *module.Meta
-		module         module.InstalledModuleCall
+		module         module.DeclaredModuleCall
 		expectedSchema *schema.BodySchema
 	}
 
@@ -339,7 +339,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 				Outputs:   map[string]module.Output{},
 				Filenames: nil,
 			},
-			module.InstalledModuleCall{
+			module.DeclaredModuleCall{
 				LocalName:  "refname",
 				SourceAddr: module.LocalSourceAddr("./local"),
 			},
@@ -368,7 +368,7 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 				Outputs:   map[string]module.Output{},
 				Filenames: nil,
 			},
-			module.InstalledModuleCall{
+			module.DeclaredModuleCall{
 				LocalName:  "vpc",
 				SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
 			},
@@ -399,10 +399,10 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 				Outputs:   map[string]module.Output{},
 				Filenames: nil,
 			},
-			module.InstalledModuleCall{
+			module.DeclaredModuleCall{
 				LocalName:  "vpc",
 				SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
-				Version:    version.Must(version.NewVersion("1.33.7")),
+				Version:    version.MustConstraints(version.NewConstraint("1.33.7")),
 			},
 			&schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{},
@@ -431,10 +431,10 @@ func TestSchemaForDependentModuleBlock_DocsLink(t *testing.T) {
 				Outputs:   map[string]module.Output{},
 				Filenames: nil,
 			},
-			module.InstalledModuleCall{
+			module.DeclaredModuleCall{
 				LocalName:  "vpc",
 				SourceAddr: tfaddr.MustParseModuleSource("example.com/terraform-aws-modules/vpc/aws"),
-				Version:    version.Must(version.NewVersion("1.33.7")),
+				Version:    version.MustConstraints(version.NewConstraint("1.33.7")),
 			},
 			&schema.BodySchema{
 				Attributes: map[string]*schema.AttributeSchema{},
@@ -500,7 +500,7 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 		LocalName:  "refname",
 		SourceAddr: tfaddr.MustParseModuleSource("terraform-aws-modules/eks/aws"),
 	}
-	depSchema, err := schemaForDeclaredDependentModuleBlock(module, meta)
+	depSchema, err := schemaForDependentRegistryModuleBlock(module, meta)
 	if err != nil {
 		t.Fatal(err)
 	}

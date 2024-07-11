@@ -17,7 +17,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, modMeta *registry.ModuleData) (*schema.BodySchema, error) {
+func schemaForDependentRegistryModuleBlock(module module.DeclaredModuleCall, modMeta *registry.ModuleData) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
 	for _, input := range modMeta.Inputs {
@@ -105,7 +105,7 @@ func schemaForDeclaredDependentModuleBlock(module module.DeclaredModuleCall, mod
 	return bodySchema, nil
 }
 
-func schemaForDependentModuleBlock(module module.InstalledModuleCall, modMeta *module.Meta) (*schema.BodySchema, error) {
+func schemaForDependentModuleBlock(module module.DeclaredModuleCall, modMeta *module.Meta) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
 	for name, modVar := range modMeta.Variables {
