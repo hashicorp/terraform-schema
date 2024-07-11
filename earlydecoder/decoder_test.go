@@ -1386,9 +1386,10 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName:  "name",
-						SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
-						InputNames: []string{},
+						LocalName:     "name",
+						RawSourceAddr: "registry.terraform.io/terraform-aws-modules/vpc/aws",
+						SourceAddr:    tfaddr.MustParseModuleSource("registry.terraform.io/terraform-aws-modules/vpc/aws"),
+						InputNames:    []string{},
 						RangePtr: &hcl.Range{
 							Filename: "test.tf",
 							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
@@ -1443,10 +1444,11 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName:  "name",
-						SourceAddr: tfaddr.MustParseModuleSource("terraform-aws-modules/vpc/aws"),
-						Version:    version.MustConstraints(version.NewConstraint("1.0.0")),
-						InputNames: []string{},
+						LocalName:     "name",
+						RawSourceAddr: "terraform-aws-modules/vpc/aws",
+						SourceAddr:    tfaddr.MustParseModuleSource("terraform-aws-modules/vpc/aws"),
+						Version:       version.MustConstraints(version.NewConstraint("1.0.0")),
+						InputNames:    []string{},
 						RangePtr: &hcl.Range{
 							Filename: "test.tf",
 							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
@@ -1472,9 +1474,10 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName:  "name",
-						SourceAddr: module.LocalSourceAddr("./local"),
-						InputNames: []string{},
+						LocalName:     "name",
+						RawSourceAddr: "./local",
+						SourceAddr:    module.LocalSourceAddr("./local"),
+						InputNames:    []string{},
 						RangePtr: &hcl.Range{
 							Filename: "test.tf",
 							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
@@ -1502,8 +1505,9 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName:  "name",
-						SourceAddr: module.LocalSourceAddr("./local"),
+						LocalName:     "name",
+						RawSourceAddr: "./local",
+						SourceAddr:    module.LocalSourceAddr("./local"),
 						InputNames: []string{
 							"one", "two",
 						},
@@ -1518,7 +1522,7 @@ module "name" {
 			nil,
 		},
 		{
-			"modules with unknown source",
+			"modules with remote source",
 			`
 module "name" {
 	source = "github.com/terraform-aws-modules/terraform-aws-security-group"
@@ -1532,13 +1536,43 @@ module "name" {
 				Filenames:            []string{"test.tf"},
 				ModuleCalls: map[string]module.DeclaredModuleCall{
 					"name": {
-						LocalName:  "name",
-						SourceAddr: module.UnknownSourceAddr("github.com/terraform-aws-modules/terraform-aws-security-group"),
-						InputNames: []string{},
+						LocalName:     "name",
+						RawSourceAddr: "github.com/terraform-aws-modules/terraform-aws-security-group",
+						SourceAddr:    module.RemoteSourceAddr("git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git"),
+						InputNames:    []string{},
 						RangePtr: &hcl.Range{
 							Filename: "test.tf",
 							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
 							End:      hcl.Pos{Line: 4, Column: 2, Byte: 92},
+						},
+					},
+				},
+			},
+			nil,
+		},
+		{
+			"modules with unknown source",
+			`
+module "name" {
+	source = "file::/test"
+}`,
+			&module.Meta{
+				Path:                 path,
+				ProviderReferences:   map[module.ProviderRef]tfaddr.Provider{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				Variables:            map[string]module.Variable{},
+				Outputs:              map[string]module.Output{},
+				Filenames:            []string{"test.tf"},
+				ModuleCalls: map[string]module.DeclaredModuleCall{
+					"name": {
+						LocalName:     "name",
+						RawSourceAddr: "file::/test",
+						SourceAddr:    module.UnknownSourceAddr("file::/test"),
+						InputNames:    []string{},
+						RangePtr: &hcl.Range{
+							Filename: "test.tf",
+							Start:    hcl.Pos{Line: 2, Column: 15, Byte: 15},
+							End:      hcl.Pos{Line: 4, Column: 2, Byte: 42},
 						},
 					},
 				},
