@@ -21,7 +21,6 @@ type decodedStack struct {
 	Variables            map[string]*stack.Variable
 	Outputs              map[string]*stack.Output
 	ProviderRequirements map[string]*providerRequirement
-	ProviderConfigs      map[string]*providerConfig
 }
 
 func newDecodedStack() *decodedStack {
@@ -30,14 +29,7 @@ func newDecodedStack() *decodedStack {
 		Variables:            make(map[string]*stack.Variable),
 		Outputs:              make(map[string]*stack.Output),
 		ProviderRequirements: make(map[string]*providerRequirement),
-		ProviderConfigs:      make(map[string]*providerConfig),
 	}
-}
-
-// providerConfig represents a provider block in the configuration
-type providerConfig struct {
-	Name  string
-	Alias string
 }
 
 // loadStackFromFile reads given file, interprets it and stores in given Stack

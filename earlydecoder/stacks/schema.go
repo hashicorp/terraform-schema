@@ -14,10 +14,6 @@ var rootSchema = &hcl.BodySchema{
 			LabelNames: []string{"name"},
 		},
 		{
-			Type:       "provider",
-			LabelNames: []string{"type", "name"},
-		},
-		{
 			Type: "required_providers",
 		},
 		{
@@ -37,13 +33,7 @@ var componentSchema = &hcl.BodySchema{
 			Name: "source",
 		},
 		{
-			Name: "inputs",
-		},
-		{
 			Name: "version",
-		},
-		{
-			Name: "providers",
 		},
 	},
 }
