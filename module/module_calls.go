@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/internal/detect"
 )
 
 var moduleSourceLocalPrefixes = []string{
@@ -64,6 +65,8 @@ type ModuleSourceAddr interface {
 	String() string
 }
 
+// LocalSourceAddr represents a local module source address containing a path
+// to a local directory
 type LocalSourceAddr string
 
 func (lsa LocalSourceAddr) ForDisplay() string {
@@ -73,6 +76,18 @@ func (lsa LocalSourceAddr) String() string {
 	return string(lsa)
 }
 
+// RemoteSourceAddr represents a remote module source address containing
+// a source string normalized by go-getter's detection logic
+type RemoteSourceAddr string
+
+func (rsa RemoteSourceAddr) ForDisplay() string {
+	return string(rsa)
+}
+func (rsa RemoteSourceAddr) String() string {
+	return string(rsa)
+}
+
+// UnknownSourceAddr represents an unknown module source address as a fallback
 type UnknownSourceAddr string
 
 func (usa UnknownSourceAddr) ForDisplay() string {
@@ -90,6 +105,8 @@ func ParseModuleSourceAddr(source string) ModuleSourceAddr {
 		sourceAddr = registryAddr
 	} else if isModuleSourceLocal(source) {
 		sourceAddr = LocalSourceAddr(source)
+	} else if remoteAddr, err := isRemoteModuleSource(source); err == nil {
+		sourceAddr = RemoteSourceAddr(remoteAddr)
 	} else if source != "" {
 		sourceAddr = UnknownSourceAddr(source)
 	}
@@ -104,4 +121,8 @@ func isModuleSourceLocal(raw string) bool {
 		}
 	}
 	return false
+}
+
+func isRemoteModuleSource(raw string) (string, error) {
+	return detect.Detect(raw, detect.RemoteSourceDetectors)
 }
