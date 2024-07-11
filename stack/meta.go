@@ -17,4 +17,3 @@ type Meta struct {
 	Outputs              map[string]Output
 	ProviderRequirements map[string]ProviderRequirement
 }
-
