@@ -333,11 +333,12 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 			}
 
 			mod.ModuleCalls[name] = &module.DeclaredModuleCall{
-				LocalName:  name,
-				SourceAddr: module.ParseModuleSourceAddr(source),
-				Version:    versionCons,
-				InputNames: inputNames,
-				RangePtr:   rng,
+				LocalName:     name,
+				RawSourceAddr: source,
+				SourceAddr:    module.ParseModuleSourceAddr(source),
+				Version:       versionCons,
+				InputNames:    inputNames,
+				RangePtr:      rng,
 			}
 		}
 
