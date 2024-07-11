@@ -44,7 +44,7 @@ func TestSchemaMerger_SchemaForModule_noCoreSchema(t *testing.T) {
 		t.Fatal("expected error for nil core schema")
 	}
 
-	if !errors.Is(err, coreSchemaRequiredErr{}) {
+	if !errors.Is(err, CoreSchemaRequiredErr{}) {
 		t.Fatalf("unexpected error: %#v", err)
 	}
 }
