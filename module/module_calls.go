@@ -31,11 +31,12 @@ type InstalledModuleCall struct {
 }
 
 type DeclaredModuleCall struct {
-	LocalName  string
-	SourceAddr ModuleSourceAddr
-	Version    version.Constraints
-	InputNames []string
-	RangePtr   *hcl.Range
+	LocalName     string
+	RawSourceAddr string
+	SourceAddr    ModuleSourceAddr
+	Version       version.Constraints
+	InputNames    []string
+	RangePtr      *hcl.Range
 }
 
 func (mc DeclaredModuleCall) Copy() DeclaredModuleCall {
@@ -43,10 +44,11 @@ func (mc DeclaredModuleCall) Copy() DeclaredModuleCall {
 	copy(inputNames, mc.InputNames)
 
 	newModuleCall := DeclaredModuleCall{
-		LocalName:  mc.LocalName,
-		SourceAddr: mc.SourceAddr,
-		Version:    mc.Version,
-		InputNames: inputNames,
+		LocalName:     mc.LocalName,
+		RawSourceAddr: mc.RawSourceAddr,
+		SourceAddr:    mc.SourceAddr,
+		Version:       mc.Version,
+		InputNames:    inputNames,
 	}
 
 	if mc.RangePtr != nil {
