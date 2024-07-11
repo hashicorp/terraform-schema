@@ -713,54 +713,6 @@ func (m *testJsonSchemaReader) InstalledModulePath(rootPath string, normalizedSo
 	return "", false
 }
 
-func testModuleStateReader() StateReader {
-	return &testModuleReaderStruct{}
-}
-
-type testModuleReaderStruct struct {
-}
-
-func (m *testModuleReaderStruct) RegistryModuleMeta(addr tfaddr.Module, cons version.Constraints) (*registry.ModuleData, error) {
-	return nil, nil
-}
-
-func (m *testModuleReaderStruct) DeclaredModuleCalls(modPath string) (map[string]module.DeclaredModuleCall, error) {
-	return map[string]module.DeclaredModuleCall{
-		"example": {
-			LocalName:     "example",
-			RawSourceAddr: "./source",
-			SourceAddr:    module.LocalSourceAddr("./source"),
-		},
-	}, nil
-}
-
-func (m *testModuleReaderStruct) InstalledModuleCalls(modPath string) (map[string]module.InstalledModuleCall, error) {
-	return nil, nil
-}
-
-func (m *testModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, error) {
-	if modPath == filepath.Join("testdata", "source") {
-		return &module.Meta{
-			Path: "path",
-			Variables: map[string]module.Variable{
-				"test": {
-					Type:        cty.String,
-					Description: "test var",
-				},
-			},
-		}, nil
-	}
-	return nil, fmt.Errorf("invalid source")
-}
-
-func (r *testModuleReaderStruct) ProviderSchema(_ string, pAddr tfaddr.Provider, _ version.Constraints) (*ProviderSchema, error) {
-	return nil, nil
-}
-
-func (m *testModuleReaderStruct) InstalledModulePath(rootPath string, normalizedSource string) (string, bool) {
-	return "", false
-}
-
 func testRegistryStateReader() StateReader {
 	return &testRegistryModuleReaderStruct{}
 }
@@ -773,21 +725,17 @@ func (m *testRegistryModuleReaderStruct) RegistryModuleMeta(addr tfaddr.Module, 
 }
 
 func (m *testRegistryModuleReaderStruct) DeclaredModuleCalls(modPath string) (map[string]module.DeclaredModuleCall, error) {
-	return nil, nil
-}
-
-func (m *testRegistryModuleReaderStruct) InstalledModuleCalls(modPath string) (map[string]module.InstalledModuleCall, error) {
-	return map[string]module.InstalledModuleCall{
+	return map[string]module.DeclaredModuleCall{
 		"remote-example": {
-			LocalName:  "remote-example",
-			SourceAddr: tfaddr.MustParseModuleSource("registry.terraform.io/namespace/foo/bar"),
-			Path:       ".terraform/modules/remote-example",
+			LocalName:     "remote-example",
+			RawSourceAddr: "namespace/foo/bar",
+			SourceAddr:    tfaddr.MustParseModuleSource("registry.terraform.io/namespace/foo/bar"),
 		},
 	}, nil
 }
 
 func (m *testRegistryModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, error) {
-	if modPath == ".terraform/modules/remote-example" {
+	if modPath == "testdata/.terraform/modules/remote-example" {
 		return &module.Meta{
 			Path: ".terraform/modules/remote-example",
 			Variables: map[string]module.Variable{
@@ -802,6 +750,9 @@ func (m *testRegistryModuleReaderStruct) LocalModuleMeta(modPath string) (*modul
 }
 
 func (m *testRegistryModuleReaderStruct) InstalledModulePath(rootPath string, normalizedSource string) (string, bool) {
+	if normalizedSource == "registry.terraform.io/namespace/foo/bar" {
+		return ".terraform/modules/remote-example", true
+	}
 	return "", false
 }
 
