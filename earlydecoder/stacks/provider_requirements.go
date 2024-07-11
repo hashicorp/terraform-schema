@@ -62,6 +62,8 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 					continue
 				}
 				if !version.IsNull() {
+					// TODO: simplify this to only allow a single version constraint string
+					// if stacks only allows a single required_providers block
 					pr.VersionConstraints = append(pr.VersionConstraints, version.AsString())
 				}
 
