@@ -7,6 +7,6 @@ terraform {
   }
 }
 
-module "test" {
-  source = "source"
+module "example" {
+  source = "./source"
 }

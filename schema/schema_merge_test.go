@@ -537,6 +537,10 @@ func (sr *exactSchemaReader) LocalModuleMeta(modPath string) (*module.Meta, erro
 	return nil, nil
 }
 
+func (m *exactSchemaReader) InstalledModulePath(rootPath string, normalizedSource string) (string, bool) {
+	return "", false
+}
+
 func TestMergeWithJsonProviderSchemas_v015(t *testing.T) {
 	sm := NewSchemaMerger(testCoreSchema())
 	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false, false)
@@ -675,8 +679,9 @@ func (m *testJsonSchemaReader) DeclaredModuleCalls(modPath string) (map[string]m
 
 	return map[string]module.DeclaredModuleCall{
 		"example": {
-			LocalName:  "example",
-			SourceAddr: module.LocalSourceAddr("./source"),
+			LocalName:     "example",
+			RawSourceAddr: "./source",
+			SourceAddr:    module.LocalSourceAddr("./source"),
 		},
 	}, nil
 }
@@ -704,6 +709,10 @@ func (m *testJsonSchemaReader) LocalModuleMeta(modPath string) (*module.Meta, er
 	return nil, fmt.Errorf("invalid source")
 }
 
+func (m *testJsonSchemaReader) InstalledModulePath(rootPath string, normalizedSource string) (string, bool) {
+	return "", false
+}
+
 func testModuleStateReader() StateReader {
 	return &testModuleReaderStruct{}
 }
@@ -718,8 +727,9 @@ func (m *testModuleReaderStruct) RegistryModuleMeta(addr tfaddr.Module, cons ver
 func (m *testModuleReaderStruct) DeclaredModuleCalls(modPath string) (map[string]module.DeclaredModuleCall, error) {
 	return map[string]module.DeclaredModuleCall{
 		"example": {
-			LocalName:  "example",
-			SourceAddr: module.LocalSourceAddr("./source"),
+			LocalName:     "example",
+			RawSourceAddr: "./source",
+			SourceAddr:    module.LocalSourceAddr("./source"),
 		},
 	}, nil
 }
@@ -745,6 +755,10 @@ func (m *testModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, 
 
 func (r *testModuleReaderStruct) ProviderSchema(_ string, pAddr tfaddr.Provider, _ version.Constraints) (*ProviderSchema, error) {
 	return nil, nil
+}
+
+func (m *testModuleReaderStruct) InstalledModulePath(rootPath string, normalizedSource string) (string, bool) {
+	return "", false
 }
 
 func testRegistryStateReader() StateReader {
@@ -785,6 +799,10 @@ func (m *testRegistryModuleReaderStruct) LocalModuleMeta(modPath string) (*modul
 		}, nil
 	}
 	return nil, fmt.Errorf("invalid source")
+}
+
+func (m *testRegistryModuleReaderStruct) InstalledModulePath(rootPath string, normalizedSource string) (string, bool) {
+	return "", false
 }
 
 func (r *testRegistryModuleReaderStruct) ProviderSchema(_ string, pAddr tfaddr.Provider, _ version.Constraints) (*ProviderSchema, error) {
