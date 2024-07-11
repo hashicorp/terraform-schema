@@ -1,3 +1,3 @@
 module "remote-example" {
-  source = "namespace/foobar"
+  source = "namespace/foo/bar"
 }

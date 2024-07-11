@@ -29,9 +29,6 @@ type StateReader interface {
 	// A declared module call refers to a module block in the configuration
 	DeclaredModuleCalls(modPath string) (map[string]tfmod.DeclaredModuleCall, error)
 
-	// InstalledModuleCalls returns a map of installed modules for a given root module
-	InstalledModuleCalls(modPath string) (map[string]tfmod.InstalledModuleCall, error)
-
 	// InstalledModulePath checks if there is an installed module available for
 	// the given normalized source address.
 	InstalledModulePath(rootPath string, normalizedSource string) (string, bool)
@@ -309,68 +306,6 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
 			}
-		}
-	}
-
-	installed, err := m.stateReader.InstalledModuleCalls(meta.Path)
-	if err != nil {
-		return mergedSchema, nil
-	}
-
-	for _, module := range installed {
-		if module.SourceAddr == nil {
-			// This should never happen for installed modules, but to
-			// be safe we skip all modules with an empty source address
-			continue
-		}
-		_, ok := module.SourceAddr.(tfmod.LocalSourceAddr)
-		if ok {
-			// Skip local installed module here, the declared one is more up to date
-			continue
-		}
-		modMeta, err := m.stateReader.LocalModuleMeta(module.Path)
-		if err != nil {
-			continue
-		}
-
-		depKeys := schema.DependencyKeys{
-			// Fetching based only on the source can cause conflicts for multiple versions of the same module
-			// specially if they have different versions or the source of those modules have been modified
-			// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-			Attributes: []schema.AttributeDependent{
-				{
-					Name: "source",
-					Expr: schema.ExpressionValue{
-						Static: cty.StringVal(module.SourceAddr.String()),
-					},
-				},
-			},
-		}
-
-		depSchema, err := schemaForDependentModuleBlock(module, modMeta)
-		if err == nil {
-			mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-		}
-
-		// There's likely more edge cases with how source address can be represented in config
-		// vs in module manifest, but for now we at least account for the common case of external registries
-		registryAddr, ok := module.SourceAddr.(tfaddr.Module)
-		if err == nil && ok {
-			depKeys := schema.DependencyKeys{
-				// Fetching based only on the source can cause conflicts for multiple versions of the same module
-				// specially if they have different versions or the source of those modules have been modified
-				// inside the .terraform folder. This is a compromise that we made in this moment since it would impact only auto completion
-				Attributes: []schema.AttributeDependent{
-					{
-						Name: "source",
-						Expr: schema.ExpressionValue{
-							Static: cty.StringVal(registryAddr.Package.ForRegistryProtocol()),
-						},
-					},
-				},
-			}
-
-			mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 		}
 	}
 
