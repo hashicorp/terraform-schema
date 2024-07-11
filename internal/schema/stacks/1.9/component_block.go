@@ -41,7 +41,7 @@ func componentBlockSchema() *schema.BlockSchema {
 						Elem: schema.Reference{OfScopeId: refscope.ModuleScope}, // TODO: This should be refscope.InputScope ?
 					},
 				},
-				"versions": {
+				"version": {
 					Description: lang.Markdown("Accepts a comma-separated list of version constraints for registry modules"),
 					IsOptional:  true,
 					Constraint: schema.List{
