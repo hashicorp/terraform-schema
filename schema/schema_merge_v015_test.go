@@ -545,49 +545,5 @@ var expectedRemoteModuleSchema = &schema.BlockSchema{
 				},
 			},
 		},
-		schema.NewSchemaKey(schema.DependencyKeys{
-			Attributes: []schema.AttributeDependent{
-				{
-					Name: "source",
-					Expr: schema.ExpressionValue{
-						Static: cty.StringVal("registry.terraform.io/namespace/foo/bar"),
-					},
-				},
-			}}): {
-			TargetableAs: []*schema.Targetable{
-				{
-					Address: lang.Address{
-						lang.RootStep{Name: "module"},
-						lang.AttrStep{Name: "remote-example"},
-					},
-					ScopeId:           refscope.ModuleScope,
-					AsType:            cty.Object(map[string]cty.Type{}),
-					NestedTargetables: []*schema.Targetable{},
-				},
-			},
-			ImpliedOrigins: schema.ImpliedOrigins{},
-			DocsLink:       &schema.DocsLink{URL: "https://registry.terraform.io/modules/namespace/foo/bar/latest"},
-			Attributes: map[string]*schema.AttributeSchema{
-				"test": {
-					Description: lang.PlainText("test var"),
-					Constraint:  schema.AnyExpression{OfType: cty.String},
-					IsRequired:  true,
-					OriginForTarget: &schema.PathTarget{
-						Address: schema.Address{
-							schema.StaticStep{Name: "var"},
-							schema.AttrNameStep{},
-						},
-						Path: lang.Path{
-							Path:       ".terraform/modules/remote-example",
-							LanguageID: "terraform",
-						},
-						Constraints: schema.Constraints{
-							ScopeId: "variable",
-							Type:    cty.String,
-						},
-					},
-				},
-			},
-		},
 	},
 }
