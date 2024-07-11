@@ -3,11 +3,6 @@
 
 package stack
 
-import (
-	"github.com/hashicorp/go-version"
-	tfaddr "github.com/hashicorp/terraform-registry-address"
-)
-
 type Meta struct {
 	Path      string
 	Filenames []string
