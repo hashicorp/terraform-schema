@@ -105,7 +105,7 @@ func ParseModuleSourceAddr(source string) ModuleSourceAddr {
 		sourceAddr = registryAddr
 	} else if isModuleSourceLocal(source) {
 		sourceAddr = LocalSourceAddr(source)
-	} else if remoteAddr, err := isRemoteModuleSource(source); err == nil {
+	} else if remoteAddr, err := parseRemoteModuleSource(source); err == nil {
 		sourceAddr = RemoteSourceAddr(remoteAddr)
 	} else if source != "" {
 		sourceAddr = UnknownSourceAddr(source)
@@ -123,6 +123,6 @@ func isModuleSourceLocal(raw string) bool {
 	return false
 }
 
-func isRemoteModuleSource(raw string) (string, error) {
+func parseRemoteModuleSource(raw string) (string, error) {
 	return detect.Detect(raw, detect.RemoteSourceDetectors)
 }
