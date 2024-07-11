@@ -75,11 +75,11 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 	}
 
 	return &stack.Meta{
-		Path:       path,
-		Filenames:  filenames,
-		Components: components,
-		Variables:  variables,
-		Outputs:    outputs,
-		// ProviderRequirements: providerRequirements,
+		Path:                 path,
+		Filenames:            filenames,
+		Components:           components,
+		Variables:            variables,
+		Outputs:              outputs,
+		ProviderRequirements: providerRequirements,
 	}, diags
 }

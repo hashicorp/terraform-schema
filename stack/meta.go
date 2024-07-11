@@ -10,10 +10,10 @@ type Meta struct {
 	Components           map[string]Component
 	Variables            map[string]Variable
 	Outputs              map[string]Output
-	ProviderRequirements map[string]ProviderRequirement
+	ProviderRequirements ProviderRequirements
 }
 
-type ProviderRequirements map[tfaddr.Provider]version.Constraints // ??
+type ProviderRequirements map[tfaddr.Provider]version.Constraints
 
 func (pr ProviderRequirements) Equals(reqs ProviderRequirements) bool {
 	if len(pr) != len(reqs) {
@@ -31,12 +31,4 @@ func (pr ProviderRequirements) Equals(reqs ProviderRequirements) bool {
 	}
 
 	return true
-}
-
-type ProviderRef struct {
-	LocalName string
-
-	// If not empty, Alias identifies which non-default (aliased) provider
-	// configuration this address refers to.
-	Alias string
 }
