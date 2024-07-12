@@ -735,7 +735,7 @@ func (m *testRegistryModuleReaderStruct) DeclaredModuleCalls(modPath string) (ma
 }
 
 func (m *testRegistryModuleReaderStruct) LocalModuleMeta(modPath string) (*module.Meta, error) {
-	if modPath == "testdata/.terraform/modules/remote-example" {
+	if modPath == filepath.Join("testdata", ".terraform", "modules", "remote-example") {
 		return &module.Meta{
 			Path: ".terraform/modules/remote-example",
 			Variables: map[string]module.Variable{
@@ -751,7 +751,7 @@ func (m *testRegistryModuleReaderStruct) LocalModuleMeta(modPath string) (*modul
 
 func (m *testRegistryModuleReaderStruct) InstalledModulePath(rootPath string, normalizedSource string) (string, bool) {
 	if normalizedSource == "registry.terraform.io/namespace/foo/bar" {
-		return ".terraform/modules/remote-example", true
+		return filepath.Join(".terraform", "modules", "remote-example"), true
 	}
 	return "", false
 }
