@@ -42,7 +42,7 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		outputs[key] = *output
 	}
 
-	var providerRequirements = make(map[tfaddr.Provider]version.Constraints, 0)
+	var providerRequirements = make(map[string]stack.ProviderRequirement, 0)
 	for name, req := range mod.ProviderRequirements {
 		var src tfaddr.Provider
 
@@ -71,7 +71,10 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 			constraints = append(constraints, c...)
 		}
 
-		providerRequirements[src] = constraints
+		providerRequirements[name] = stack.ProviderRequirement{
+			Source:             src,
+			VersionConstraints: constraints,
+		}
 	}
 
 	return &stack.Meta{
