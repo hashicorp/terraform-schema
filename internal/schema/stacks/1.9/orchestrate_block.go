@@ -32,15 +32,15 @@ func orchestrateBlockSchema() *schema.BlockSchema {
 			// TODO proper constraints for these
 			Blocks: map[string]*schema.BlockSchema{
 				"check": {
-					Description: lang.Markdown("Each rule has one or more check blocks, which must all pass in order for the rule to execute its action. The check block follows Terraform’s custom conditions concept pattern, and includes expressions for condition and error_message. These are evaluated against the orchestration context below"),
+					Description: lang.Markdown("Each rule has one or more check blocks, which must all pass in order for the rule to execute its action. The check block follows Terraform’s custom conditions concept pattern, and includes expressions for condition and reason. These are evaluated against the orchestration context below"),
 					Body: &schema.BodySchema{
 						Attributes: map[string]*schema.AttributeSchema{
 							"condition": {
 								Description: lang.Markdown("The condition must evaluate to true or false"),
 								Constraint:  schema.LiteralType{Type: cty.Bool},
 							},
-							"error_message": {
-								Description: lang.Markdown("The error message must be a string"),
+							"reason": {
+								Description: lang.Markdown("The reason must be a string"),
 								Constraint:  schema.LiteralType{Type: cty.String},
 							},
 						},
