@@ -3,9 +3,13 @@
 
 package stack
 
-import "github.com/hashicorp/go-version"
+import (
+	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/terraform-schema/module"
+)
 
 type Component struct {
-	Source  string
-	Version version.Constraints
+	Source     string
+	SourceAddr module.ModuleSourceAddr
+	Version    version.Constraints
 }
