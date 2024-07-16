@@ -12,6 +12,7 @@ import (
 
 func requiredProvidersBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
+		Description: lang.Markdown("What provider version to use within this configuration and where to source it from"),
 		Body: &schema.BodySchema{
 			AnyAttribute: &schema.AttributeSchema{
 				Constraint: schema.OneOf{
