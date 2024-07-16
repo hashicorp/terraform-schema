@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/hashicorp/hcl/v2/gohcl"
+	"github.com/hashicorp/terraform-schema/module"
 	"github.com/hashicorp/terraform-schema/stack"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/convert"
@@ -74,8 +75,9 @@ func loadStackFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 			}
 
 			ds.Components[name] = &stack.Component{
-				Source:  source,
-				Version: versionCons,
+				Source:     source,
+				SourceAddr: module.ParseModuleSourceAddr(source),
+				Version:    versionCons,
 			}
 		case "provider":
 			// there is no point to parsing provider blocks here, as they need the full
