@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/module"
 	"github.com/hashicorp/terraform-schema/stack"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 )
@@ -55,9 +56,15 @@ func TestLoadStack(t *testing.T) {
 	}
 }`,
 			&stack.Meta{
-				Path:                 path,
-				Filenames:            []string{"test.tf"},
-				Components:           map[string]stack.Component{"test": {Source: "github.com/acme/infra/core", Version: version.MustConstraints(version.NewConstraint(">= 1.0, < 2.0"))}},
+				Path:      path,
+				Filenames: []string{"test.tf"},
+				Components: map[string]stack.Component{
+					"test": {
+						Source:     "github.com/acme/infra/core",
+						SourceAddr: module.ParseModuleSourceAddr("git::https://github.com/acme/infra.git//core"),
+						Version:    version.MustConstraints(version.NewConstraint(">= 1.0, < 2.0")),
+					},
+				},
 				Variables:            map[string]stack.Variable{},
 				Outputs:              map[string]stack.Output{},
 				ProviderRequirements: map[string]stack.ProviderRequirement{},
