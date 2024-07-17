@@ -58,18 +58,14 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 			continue
 		}
 
-		constraints := make(version.Constraints, 0)
-		for _, vc := range req.VersionConstraints {
-			c, err := version.NewConstraint(vc)
-			if err != nil {
-				diags = append(diags, &hcl.Diagnostic{
-					Severity: hcl.DiagError,
-					Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
-					Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", vc, err),
-				})
-				continue
-			}
-			constraints = append(constraints, c...)
+		constraints, err := version.NewConstraint(req.VersionConstraints)
+		if err != nil {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
+				Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", req.VersionConstraints, err),
+			})
+			continue
 		}
 
 		providerRequirements[name] = stack.ProviderRequirement{

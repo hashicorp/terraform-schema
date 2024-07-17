@@ -12,7 +12,7 @@ import (
 
 type providerRequirement struct {
 	Source             string
-	VersionConstraints []string
+	VersionConstraints string
 }
 
 func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequirement, hcl.Diagnostics) {
@@ -62,7 +62,7 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 					continue
 				}
 				if !version.IsNull() {
-					pr.VersionConstraints = append(pr.VersionConstraints, version.AsString())
+					pr.VersionConstraints = version.AsString()
 				}
 
 			case "source":
