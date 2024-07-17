@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/stack"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 )
@@ -82,8 +83,8 @@ func TestLoadStack(t *testing.T) {
 				Variables:  map[string]stack.Variable{},
 				Outputs:    map[string]stack.Output{},
 				ProviderRequirements: map[string]stack.ProviderRequirement{
-					"aws":    {Source: "hashicorp/aws", VersionConstraints: []string{"~> 5.7.0"}},
-					"random": {Source: "hashicorp/random", VersionConstraints: []string{"~> 3.5.1"}},
+					"aws":    {Source: tfaddr.MustParseProviderSource("hashicorp/aws"), VersionConstraints: version.MustConstraints(version.NewConstraint("~> 5.7.0"))},
+					"random": {Source: tfaddr.MustParseProviderSource("hashicorp/random"), VersionConstraints: version.MustConstraints(version.NewConstraint("~> 3.5.1"))},
 				},
 			},
 			nil,

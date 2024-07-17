@@ -4,10 +4,14 @@
 package earlydecoder
 
 import (
+	"fmt"
 	"sort"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/terraform-schema/stack"
+
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 )
 
 func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagnostics) {
@@ -39,11 +43,38 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		outputs[key] = *output
 	}
 
-	providerRequirements := make(map[string]stack.ProviderRequirement)
-	for key, providerRequirement := range mod.ProviderRequirements {
-		providerRequirements[key] = stack.ProviderRequirement{
-			Source:             providerRequirement.Source,
-			VersionConstraints: providerRequirement.VersionConstraints,
+	var providerRequirements = make(map[string]stack.ProviderRequirement, 0)
+	for name, req := range mod.ProviderRequirements {
+		var src tfaddr.Provider
+
+		var err error
+		src, err = tfaddr.ParseProviderSource(req.Source)
+		if err != nil {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  fmt.Sprintf("Unable to parse provider source for %q", name),
+				Detail:   fmt.Sprintf("%q provider source (%q) is not a valid source string", name, req.Source),
+			})
+			continue
+		}
+
+		constraints := make(version.Constraints, 0)
+		for _, vc := range req.VersionConstraints {
+			c, err := version.NewConstraint(vc)
+			if err != nil {
+				diags = append(diags, &hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
+					Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", vc, err),
+				})
+				continue
+			}
+			constraints = append(constraints, c...)
+		}
+
+		providerRequirements[name] = stack.ProviderRequirement{
+			Source:             src,
+			VersionConstraints: constraints,
 		}
 	}
 
