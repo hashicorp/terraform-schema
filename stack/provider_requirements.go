@@ -3,7 +3,12 @@
 
 package stack
 
+import (
+	"github.com/hashicorp/go-version"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
+)
+
 type ProviderRequirement struct {
-	Source             string
-	VersionConstraints []string
+	Source             tfaddr.Provider
+	VersionConstraints version.Constraints
 }

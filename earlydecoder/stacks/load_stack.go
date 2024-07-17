@@ -101,7 +101,19 @@ func loadStackFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 						}
 					}
 
-					ds.ProviderRequirements[name].VersionConstraints = append(ds.ProviderRequirements[name].VersionConstraints, req.VersionConstraints...)
+					if req.VersionConstraints != "" {
+						existingVersionConstraints := ds.ProviderRequirements[name].VersionConstraints
+						if existingVersionConstraints != "" && existingVersionConstraints != req.VersionConstraints {
+							diags = append(diags, &hcl.Diagnostic{
+								Severity: hcl.DiagError,
+								Summary:  "Multiple provider version constraints",
+								Detail:   fmt.Sprintf("Found multiple version constraints for provider %s: %q, %q", name, existingVersionConstraints, req.VersionConstraints),
+								Subject:  &block.DefRange,
+							})
+						} else {
+							ds.ProviderRequirements[name].VersionConstraints = req.VersionConstraints
+						}
+					}
 				}
 			}
 		case "variable":
