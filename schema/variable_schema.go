@@ -43,7 +43,7 @@ func SchemaForVariables(vars map[string]module.Variable, modPath string) (*schem
 	attributes := make(map[string]*schema.AttributeSchema)
 
 	for name, modVar := range vars {
-		aSchema := moduleVarToAttribute(modVar)
+		aSchema := ModuleVarToAttribute(modVar)
 		varType := modVar.Type
 		aSchema.Constraint = schema.LiteralType{Type: varType}
 		aSchema.OriginForTarget = &schema.PathTarget{
@@ -69,7 +69,7 @@ func SchemaForVariables(vars map[string]module.Variable, modPath string) (*schem
 	}, nil
 }
 
-func moduleVarToAttribute(modVar module.Variable) *schema.AttributeSchema {
+func ModuleVarToAttribute(modVar module.Variable) *schema.AttributeSchema {
 	aSchema := &schema.AttributeSchema{
 		IsSensitive: modVar.IsSensitive,
 	}

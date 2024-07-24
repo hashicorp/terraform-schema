@@ -67,6 +67,9 @@ func (m *StackSchemaMerger) SchemaForModule(meta *stack.Meta) (*schema.BodySchem
 	if mergedSchema.Blocks["provider"].DependentBody == nil {
 		mergedSchema.Blocks["provider"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
+	if mergedSchema.Blocks["component"].DependentBody == nil {
+		mergedSchema.Blocks["component"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
+	}
 
 	for localName, pReq := range meta.ProviderRequirements {
 		pSchema, err := m.stateReader.ProviderSchema(meta.Path, pReq.Source, pReq.VersionConstraints)
@@ -122,7 +125,7 @@ func (m *StackSchemaMerger) SchemaForModule(meta *stack.Meta) (*schema.BodySchem
 
 			modMeta, err := m.moduleReader.LocalModuleMeta(path)
 			if err == nil {
-				depSchema, err := schemaForDependentComponentBlock(comp, modMeta)
+				depSchema, err := schemaForDependentComponentBlock(modMeta)
 				if err == nil {
 					mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
@@ -156,9 +159,29 @@ func variableDependentBody(vars map[string]stack.Variable) map[schema.SchemaKey]
 	return depBodies
 }
 
-// TODO: move to extra file? (there's an extra file in the original code in modules)
-func schemaForDependentComponentBlock(component stack.Component, modMeta *tfmod.Meta) (*schema.BodySchema, error) {
-	// TODO: implement
+func schemaForDependentComponentBlock(modMeta *tfmod.Meta) (*schema.BodySchema, error) {
+	inputs := make(map[string]*schema.AttributeSchema, 0)
 
-	return nil, nil
+	for name, modVar := range modMeta.Variables {
+		varType := modVar.Type
+		if varType == cty.NilType {
+			varType = cty.DynamicPseudoType
+		}
+		aSchema := tfschema.ModuleVarToAttribute(modVar)
+		aSchema.Constraint = tfschema.ConvertAttributeTypeToConstraint(varType)
+
+		inputs[name] = aSchema
+	}
+
+	bodySchema := &schema.BodySchema{
+		Attributes: map[string]*schema.AttributeSchema{
+			"inputs": {
+				Constraint: schema.Object{
+					Attributes: inputs,
+				},
+			},
+		},
+	}
+
+	return bodySchema, nil
 }
