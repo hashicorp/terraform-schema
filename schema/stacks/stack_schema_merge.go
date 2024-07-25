@@ -161,6 +161,7 @@ func variableDependentBody(vars map[string]stack.Variable) map[schema.SchemaKey]
 
 func schemaForDependentComponentBlock(modMeta *tfmod.Meta) (*schema.BodySchema, error) {
 	inputs := make(map[string]*schema.AttributeSchema, 0)
+	providers := make(map[string]*schema.AttributeSchema, 0)
 
 	for name, modVar := range modMeta.Variables {
 		varType := modVar.Type
@@ -173,11 +174,30 @@ func schemaForDependentComponentBlock(modMeta *tfmod.Meta) (*schema.BodySchema, 
 		inputs[name] = aSchema
 	}
 
+	for pRef := range modMeta.ProviderReferences {
+		addr := pRef.LocalName
+		if pRef.Alias != "" {
+			addr += "." + pRef.Alias
+		}
+
+		providers[addr] = &schema.AttributeSchema{
+			Constraint: schema.Reference{
+				Name:   addr,
+				OfType: cty.DynamicPseudoType,
+			},
+		}
+	}
+
 	bodySchema := &schema.BodySchema{
 		Attributes: map[string]*schema.AttributeSchema{
 			"inputs": {
 				Constraint: schema.Object{
 					Attributes: inputs,
+				},
+			},
+			"providers": {
+				Constraint: schema.Object{
+					Attributes: providers,
 				},
 			},
 		},
