@@ -22,6 +22,8 @@ var (
 	Name              = lang.SemanticTokenModifier("terraform-name")
 	Type              = lang.SemanticTokenModifier("terraform-type")
 	RequiredProviders = lang.SemanticTokenModifier("terraform-requiredProviders")
+	Run               = lang.SemanticTokenModifier("terraform-run")
+	Variables         = lang.SemanticTokenModifier("terraform-variables")
 )
 
 var SupportedModifiers = []lang.SemanticTokenModifier{
@@ -36,7 +38,9 @@ var SupportedModifiers = []lang.SemanticTokenModifier{
 	Provisioner,
 	RequiredProviders,
 	Resource,
+	Run,
 	Terraform,
 	Type,
 	Variable,
+	Variables,
 }
