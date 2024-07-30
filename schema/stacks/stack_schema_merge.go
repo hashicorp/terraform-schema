@@ -17,9 +17,8 @@ import (
 )
 
 type StackSchemaMerger struct {
-	coreSchema   *schema.BodySchema
-	stateReader  StateReader
-	moduleReader ModuleReader
+	coreSchema  *schema.BodySchema
+	stateReader StateReader
 }
 
 // StateReader exposes a set of methods to read data from the internal language server state
@@ -27,9 +26,7 @@ type StateReader interface {
 	// ProviderSchema returns the schema for a provider we have stored in memory. The can come
 	// from different sources.
 	ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*tfschema.ProviderSchema, error)
-}
 
-type ModuleReader interface {
 	// LocalModuleMeta returns the module meta data for a local module. This is the result
 	// of the [earlydecoder] when processing module files
 	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
@@ -43,10 +40,6 @@ func NewStackSchemaMerger(coreSchema *schema.BodySchema) *StackSchemaMerger {
 
 func (m *StackSchemaMerger) SetStateReader(mr StateReader) {
 	m.stateReader = mr
-}
-
-func (m *StackSchemaMerger) SetModuleReader(mr ModuleReader) {
-	m.moduleReader = mr
 }
 
 func (m *StackSchemaMerger) SchemaForModule(meta *stack.Meta) (*schema.BodySchema, error) {
@@ -123,7 +116,7 @@ func (m *StackSchemaMerger) SchemaForModule(meta *stack.Meta) (*schema.BodySchem
 		case tfmod.LocalSourceAddr:
 			path := filepath.Join(meta.Path, sourceAddr.String())
 
-			modMeta, err := m.moduleReader.LocalModuleMeta(path)
+			modMeta, err := m.stateReader.LocalModuleMeta(path)
 			if err == nil {
 				depSchema, err := schemaForDependentComponentBlock(modMeta)
 				if err == nil {
