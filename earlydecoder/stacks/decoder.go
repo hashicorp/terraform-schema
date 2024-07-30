@@ -9,9 +9,8 @@ import (
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
-	"github.com/hashicorp/terraform-schema/stack"
-
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/stack"
 )
 
 func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagnostics) {

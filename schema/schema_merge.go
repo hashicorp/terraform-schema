@@ -62,7 +62,7 @@ func (m *SchemaMerger) SetTerraformVersion(v *version.Version) {
 
 func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, error) {
 	if m.coreSchema == nil {
-		return nil, coreSchemaRequiredErr{}
+		return nil, CoreSchemaRequiredErr{}
 	}
 
 	if meta == nil {
