@@ -192,7 +192,7 @@ func bodySchemaForCtyObjectType(typ cty.Type) *schema.BodySchema {
 
 	for name, attrType := range attrTypes {
 		ret.Attributes[name] = &schema.AttributeSchema{
-			Constraint: convertAttributeTypeToConstraint(attrType),
+			Constraint: ConvertAttributeTypeToConstraint(attrType),
 			IsOptional: true,
 		}
 
@@ -217,7 +217,7 @@ func bodySchemaForCtyObjectType(typ cty.Type) *schema.BodySchema {
 
 func exprConstraintFromSchemaAttribute(attr *tfjson.SchemaAttribute) schema.Constraint {
 	if attr.AttributeType != cty.NilType {
-		return convertAttributeTypeToConstraint(attr.AttributeType)
+		return ConvertAttributeTypeToConstraint(attr.AttributeType)
 	}
 	if attr.AttributeNestedType != nil {
 		switch attr.AttributeNestedType.NestingMode {
@@ -247,7 +247,7 @@ func exprConstraintFromSchemaAttribute(attr *tfjson.SchemaAttribute) schema.Cons
 	return nil
 }
 
-func convertAttributeTypeToConstraint(attrType cty.Type) schema.Constraint {
+func ConvertAttributeTypeToConstraint(attrType cty.Type) schema.Constraint {
 	if attrType.IsPrimitiveType() || attrType == cty.DynamicPseudoType {
 		return schema.AnyExpression{OfType: attrType}
 	}
@@ -261,24 +261,24 @@ func convertAttributeTypeToConstraint(attrType cty.Type) schema.Constraint {
 
 	if attrType.IsListType() {
 		cons = append(cons, schema.List{
-			Elem: convertAttributeTypeToConstraint(attrType.ElementType()),
+			Elem: ConvertAttributeTypeToConstraint(attrType.ElementType()),
 		})
 	}
 	if attrType.IsSetType() {
 		cons = append(cons, schema.Set{
-			Elem: convertAttributeTypeToConstraint(attrType.ElementType()),
+			Elem: ConvertAttributeTypeToConstraint(attrType.ElementType()),
 		})
 	}
 	if attrType.IsTupleType() {
 		te := schema.Tuple{Elems: make([]schema.Constraint, 0)}
 		for _, elemType := range attrType.TupleElementTypes() {
-			te.Elems = append(te.Elems, convertAttributeTypeToConstraint(elemType))
+			te.Elems = append(te.Elems, ConvertAttributeTypeToConstraint(elemType))
 		}
 		cons = append(cons, te)
 	}
 	if attrType.IsMapType() {
 		cons = append(cons, schema.Map{
-			Elem:                  convertAttributeTypeToConstraint(attrType.ElementType()),
+			Elem:                  ConvertAttributeTypeToConstraint(attrType.ElementType()),
 			AllowInterpolatedKeys: true,
 		})
 	}
@@ -294,7 +294,7 @@ func convertCtyObjectToObjectCons(obj cty.Type) schema.Object {
 	attributes := make(schema.ObjectAttributes, len(attrTypes))
 	for name, attrType := range attrTypes {
 		aSchema := &schema.AttributeSchema{
-			Constraint: convertAttributeTypeToConstraint(attrType),
+			Constraint: ConvertAttributeTypeToConstraint(attrType),
 		}
 
 		if obj.AttributeOptional(name) {
