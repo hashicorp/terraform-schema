@@ -129,10 +129,16 @@ func loadStackFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 
 			name := block.Labels[0]
 			description := ""
+			isSensitive := false
 			var valDiags hcl.Diagnostics
 
 			if attr, defined := content.Attributes["description"]; defined {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &description)
+				diags = append(diags, valDiags...)
+			}
+
+			if attr, defined := content.Attributes["sensitive"]; defined {
+				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &isSensitive)
 				diags = append(diags, valDiags...)
 			}
 
@@ -171,6 +177,7 @@ func loadStackFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 				Description:  description,
 				DefaultValue: defaultValue,
 				TypeDefaults: defaults,
+				IsSensitive:  isSensitive,
 			}
 		case "output":
 			content, _, contentDiags := block.Body.PartialContent(outputSchema)
