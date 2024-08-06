@@ -30,6 +30,7 @@ func DeploymentSchema(_ *version.Version) *schema.BodySchema {
 			"deployment":     deploymentBlockSchema(),
 			"identity_token": identityTokenBlockSchema(),
 			"orchestrate":    orchestrateBlockSchema(),
+			"store":          storeBlockSchema(),
 		},
 	}
 }
