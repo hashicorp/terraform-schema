@@ -6,12 +6,25 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
 
 func variableBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
+		Address: &schema.BlockAddrSchema{
+			Steps: []schema.AddrStep{
+				schema.StaticStep{Name: "var"},
+				schema.LabelStep{Index: 0},
+			},
+			FriendlyName: "variable",
+			ScopeId:      refscope.VariableScope,
+			AsReference:  true,
+			AsTypeOf: &schema.BlockAsTypeOf{
+				AttributeExpr: "type",
+			},
+		},
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Variable},
 		Labels: []*schema.LabelSchema{
 			{
