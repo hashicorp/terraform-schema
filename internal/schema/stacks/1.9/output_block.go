@@ -6,6 +6,7 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -13,6 +14,15 @@ import (
 func outputBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Output},
+		Address: &schema.BlockAddrSchema{
+			Steps: []schema.AddrStep{
+				schema.StaticStep{Name: "output"},
+				schema.LabelStep{Index: 0},
+			},
+			FriendlyName: "output",
+			ScopeId:      refscope.OutputScope,
+			AsReference:  true,
+		},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "name",
@@ -34,7 +44,7 @@ func outputBlockSchema() *schema.BlockSchema {
 					Description: lang.PlainText("Value, typically a reference to an attribute of a resource or a data source"),
 				},
 				"type": {
-					Constraint:  schema.AnyExpression{OfType: cty.DynamicPseudoType},
+					Constraint:  schema.TypeDeclaration{},
 					IsRequired:  true,
 					Description: lang.PlainText("Type of the output value"),
 				},
