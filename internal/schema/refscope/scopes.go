@@ -16,4 +16,6 @@ var (
 	ProviderScope = lang.ScopeId("provider")
 	ResourceScope = lang.ScopeId("resource")
 	VariableScope = lang.ScopeId("variable")
+
+	ComponentScope = lang.ScopeId("component")
 )

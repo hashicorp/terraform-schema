@@ -28,8 +28,8 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 	sort.Strings(filenames)
 
 	components := make(map[string]stack.Component)
-	for key, variable := range mod.Components {
-		components[key] = *variable
+	for key, component := range mod.Components {
+		components[key] = *component
 	}
 
 	variables := make(map[string]stack.Variable)
