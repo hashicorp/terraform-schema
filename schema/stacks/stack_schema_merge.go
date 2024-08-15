@@ -5,11 +5,14 @@ package schema
 
 import (
 	"path/filepath"
+	"sort"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/hcl/v2"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	tfmod "github.com/hashicorp/terraform-schema/module"
 	tfschema "github.com/hashicorp/terraform-schema/schema"
 	"github.com/hashicorp/terraform-schema/stack"
@@ -42,7 +45,7 @@ func (m *StackSchemaMerger) SetStateReader(mr StateReader) {
 	m.stateReader = mr
 }
 
-func (m *StackSchemaMerger) SchemaForModule(meta *stack.Meta) (*schema.BodySchema, error) {
+func (m *StackSchemaMerger) SchemaForStack(meta *stack.Meta) (*schema.BodySchema, error) {
 	if m.coreSchema == nil {
 		return nil, tfschema.CoreSchemaRequiredErr{}
 	}
@@ -101,7 +104,7 @@ func (m *StackSchemaMerger) SchemaForModule(meta *stack.Meta) (*schema.BodySchem
 		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
 	}
 
-	for _, comp := range meta.Components {
+	for name, comp := range meta.Components {
 		depKeys := schema.DependencyKeys{
 			Attributes: []schema.AttributeDependent{
 				{
@@ -112,13 +115,14 @@ func (m *StackSchemaMerger) SchemaForModule(meta *stack.Meta) (*schema.BodySchem
 				},
 			},
 		}
+
 		switch sourceAddr := comp.SourceAddr.(type) {
 		case tfmod.LocalSourceAddr:
 			path := filepath.Join(meta.Path, sourceAddr.String())
 
 			modMeta, err := m.stateReader.LocalModuleMeta(path)
 			if err == nil {
-				depSchema, err := schemaForDependentComponentBlock(modMeta)
+				depSchema, err := schemaForDependentComponentBlock(modMeta, comp, name)
 				if err == nil {
 					mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
@@ -152,7 +156,7 @@ func variableDependentBody(vars map[string]stack.Variable) map[schema.SchemaKey]
 	return depBodies
 }
 
-func schemaForDependentComponentBlock(modMeta *tfmod.Meta) (*schema.BodySchema, error) {
+func schemaForDependentComponentBlock(modMeta *tfmod.Meta, component stack.Component, componentName string) (*schema.BodySchema, error) {
 	inputs := make(map[string]*schema.AttributeSchema, 0)
 	providers := make(map[string]*schema.AttributeSchema, 0)
 
@@ -163,6 +167,20 @@ func schemaForDependentComponentBlock(modMeta *tfmod.Meta) (*schema.BodySchema, 
 		}
 		aSchema := tfschema.ModuleVarToAttribute(modVar)
 		aSchema.Constraint = tfschema.ConvertAttributeTypeToConstraint(varType)
+		aSchema.OriginForTarget = &schema.PathTarget{
+			Address: schema.Address{
+				schema.StaticStep{Name: "var"},
+				schema.AttrNameStep{},
+			},
+			Path: lang.Path{
+				Path:       modMeta.Path,
+				LanguageID: tfschema.ModuleLanguageID,
+			},
+			Constraints: schema.Constraints{
+				ScopeId: refscope.VariableScope,
+				Type:    varType,
+			},
+		}
 
 		inputs[name] = aSchema
 	}
@@ -196,5 +214,109 @@ func schemaForDependentComponentBlock(modMeta *tfmod.Meta) (*schema.BodySchema, 
 		},
 	}
 
+	if component.Source == "" {
+		// avoid creating output refs if we don't have reference name
+		return bodySchema, nil
+	}
+
+	modOutputTypes := make(map[string]cty.Type, 0)
+	modOutputVals := make(map[string]cty.Value, 0)
+	targetableOutputs := make(schema.Targetables, 0)
+	impliedOrigins := make(schema.ImpliedOrigins, 0)
+
+	for name, output := range modMeta.Outputs {
+		addr := lang.Address{
+			lang.RootStep{Name: "component"},
+			lang.AttrStep{Name: componentName},
+			lang.AttrStep{Name: name},
+		}
+
+		typ := cty.DynamicPseudoType
+		if !output.Value.IsNull() {
+			typ = output.Value.Type()
+		}
+
+		targetable := &schema.Targetable{
+			Address:           addr,
+			ScopeId:           refscope.ComponentScope,
+			AsType:            typ,
+			IsSensitive:       output.IsSensitive,
+			NestedTargetables: schema.NestedTargetablesForValue(addr, refscope.ComponentScope, output.Value),
+		}
+		if output.Description != "" {
+			targetable.Description = lang.PlainText(output.Description)
+		}
+
+		targetableOutputs = append(targetableOutputs, targetable)
+
+		modOutputTypes[name] = typ
+		modOutputVals[name] = output.Value
+
+		impliedOrigins = append(impliedOrigins, schema.ImpliedOrigin{
+			OriginAddress: lang.Address{
+				lang.RootStep{Name: "component"},
+				lang.AttrStep{Name: componentName},
+				lang.AttrStep{Name: name},
+			},
+			TargetAddress: lang.Address{
+				lang.RootStep{Name: "output"},
+				lang.AttrStep{Name: name},
+			},
+			Path: lang.Path{
+				Path:       modMeta.Path,
+				LanguageID: tfschema.ModuleLanguageID,
+			},
+			Constraints: schema.Constraints{
+				ScopeId: refscope.OutputScope,
+			},
+		})
+	}
+
+	bodySchema.ImpliedOrigins = impliedOrigins
+
+	sort.Sort(targetableOutputs)
+
+	addr := lang.Address{
+		lang.RootStep{Name: "component"},
+		lang.AttrStep{Name: componentName},
+	}
+	bodySchema.TargetableAs = append(bodySchema.TargetableAs, &schema.Targetable{
+		Address:           addr,
+		ScopeId:           refscope.ModuleScope,
+		AsType:            cty.Object(modOutputTypes),
+		NestedTargetables: targetableOutputs,
+	})
+
+	if len(modMeta.Filenames) > 0 {
+		filename := modMeta.Filenames[0]
+
+		// Prioritize main.tf based on best practices as documented at
+		// https://learn.hashicorp.com/tutorials/terraform/module-create
+		if sliceContains(modMeta.Filenames, "main.tf") {
+			filename = "main.tf"
+		}
+
+		bodySchema.Targets = &schema.Target{
+			Path: lang.Path{
+				Path:       modMeta.Path,
+				LanguageID: tfschema.ModuleLanguageID,
+			},
+			Range: hcl.Range{
+				Filename: filename,
+				Start:    hcl.InitialPos,
+				End:      hcl.InitialPos,
+			},
+		}
+	}
+
 	return bodySchema, nil
+}
+
+func sliceContains(slice []string, value string) bool {
+	for _, val := range slice {
+		if val == value {
+			return true
+		}
+	}
+	return false
 }
