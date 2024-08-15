@@ -38,11 +38,12 @@ func TestLoadStack(t *testing.T) {
 			``,
 			&stack.Meta{
 				Path:                 path,
-				Filenames:            []string{"test.tf"},
+				Filenames:            []string{"test.tfstack.hcl"},
 				Components:           map[string]stack.Component{},
 				Variables:            map[string]stack.Variable{},
 				Outputs:              map[string]stack.Output{},
 				ProviderRequirements: map[string]stack.ProviderRequirement{},
+				Deployments:          map[string]stack.Deployment{},
 			},
 			nil,
 		},
@@ -57,7 +58,7 @@ func TestLoadStack(t *testing.T) {
 }`,
 			&stack.Meta{
 				Path:      path,
-				Filenames: []string{"test.tf"},
+				Filenames: []string{"test.tfstack.hcl"},
 				Components: map[string]stack.Component{
 					"test": {
 						Source:     "github.com/acme/infra/core",
@@ -68,6 +69,7 @@ func TestLoadStack(t *testing.T) {
 				Variables:            map[string]stack.Variable{},
 				Outputs:              map[string]stack.Output{},
 				ProviderRequirements: map[string]stack.ProviderRequirement{},
+				Deployments:          map[string]stack.Deployment{},
 			},
 			nil,
 		},
@@ -85,7 +87,7 @@ func TestLoadStack(t *testing.T) {
 }`,
 			&stack.Meta{
 				Path:       path,
-				Filenames:  []string{"test.tf"},
+				Filenames:  []string{"test.tfstack.hcl"},
 				Components: map[string]stack.Component{},
 				Variables:  map[string]stack.Variable{},
 				Outputs:    map[string]stack.Output{},
@@ -93,6 +95,7 @@ func TestLoadStack(t *testing.T) {
 					"aws":    {Source: tfaddr.MustParseProviderSource("hashicorp/aws"), VersionConstraints: version.MustConstraints(version.NewConstraint("~> 5.7.0"))},
 					"random": {Source: tfaddr.MustParseProviderSource("hashicorp/random"), VersionConstraints: version.MustConstraints(version.NewConstraint("~> 3.5.1"))},
 				},
+				Deployments: map[string]stack.Deployment{},
 			},
 			nil,
 		},
@@ -104,12 +107,12 @@ func TestLoadStack(t *testing.T) {
 func runTestCases(testCases []testCase, t *testing.T, path string) {
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d-%s", i, tc.name), func(t *testing.T) {
-			f, diags := hclsyntax.ParseConfig([]byte(tc.cfg), "test.tf", hcl.InitialPos)
+			f, diags := hclsyntax.ParseConfig([]byte(tc.cfg), "test.tfstack.hcl", hcl.InitialPos)
 			if len(diags) > 0 {
 				t.Fatal(diags)
 			}
 			files := map[string]*hcl.File{
-				"test.tf": f,
+				"test.tfstack.hcl": f,
 			}
 
 			meta, diags := LoadStack(path, files)
