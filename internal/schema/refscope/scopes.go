@@ -17,5 +17,6 @@ var (
 	ResourceScope = lang.ScopeId("resource")
 	VariableScope = lang.ScopeId("variable")
 
-	ComponentScope = lang.ScopeId("component")
+	ComponentScope     = lang.ScopeId("component")
+	IdentityTokenScope = lang.ScopeId("identity_token")
 )

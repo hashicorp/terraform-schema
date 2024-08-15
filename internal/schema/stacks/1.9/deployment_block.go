@@ -6,8 +6,8 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
-	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
+	"github.com/zclconf/go-cty/cty"
 )
 
 func deploymentBlockSchema() *schema.BlockSchema {
@@ -32,7 +32,7 @@ func deploymentBlockSchema() *schema.BlockSchema {
 					IsOptional:  true,
 					Constraint: schema.Map{
 						Name: "map of variable references",
-						Elem: schema.Reference{OfScopeId: refscope.VariableScope},
+						Elem: schema.AnyExpression{OfType: cty.DynamicPseudoType},
 					},
 				},
 			},
