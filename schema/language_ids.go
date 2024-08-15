@@ -6,4 +6,5 @@ package schema
 const (
 	ModuleLanguageID    = "terraform"
 	VariablesLanguageID = "terraform-vars"
+	StackLanguageID     = "terraform-stack"
 )
