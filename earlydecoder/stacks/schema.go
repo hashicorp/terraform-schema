@@ -27,6 +27,15 @@ var rootSchema = &hcl.BodySchema{
 	},
 }
 
+var deploymentRootSchema = &hcl.BodySchema{
+	Blocks: []hcl.BlockHeaderSchema{
+		{
+			Type:       "deployment",
+			LabelNames: []string{"name"},
+		},
+	},
+}
+
 var componentSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
 		{
@@ -62,6 +71,14 @@ var outputSchema = &hcl.BodySchema{
 		},
 		{
 			Name: "type",
+		},
+	},
+}
+
+var deploymentSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "inputs",
 		},
 	},
 }

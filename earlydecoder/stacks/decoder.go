@@ -6,6 +6,7 @@ package earlydecoder
 import (
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
@@ -20,9 +21,14 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 	mod := newDecodedStack()
 	for filename, f := range files {
 		filenames = append(filenames, filename)
-		// TODO need more stack metas
-		fDiags := loadStackFromFile(f, mod)
-		diags = append(diags, fDiags...)
+
+		if isStackFilename(filename) {
+			fDiags := loadStackFromFile(f, mod)
+			diags = append(diags, fDiags...)
+		} else if isDeployFilename(filename) {
+			fDiags := loadDeployFromFile(f, mod)
+			diags = append(diags, fDiags...)
+		}
 	}
 
 	sort.Strings(filenames)
@@ -73,6 +79,11 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		}
 	}
 
+	deployments := make(map[string]stack.Deployment)
+	for key, deployment := range mod.Deployments {
+		deployments[key] = *deployment
+	}
+
 	return &stack.Meta{
 		Path:                 path,
 		Filenames:            filenames,
@@ -80,5 +91,16 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		Variables:            variables,
 		Outputs:              outputs,
 		ProviderRequirements: providerRequirements,
+		Deployments:          deployments,
 	}, diags
+}
+
+func isStackFilename(name string) bool {
+	return strings.HasSuffix(name, ".tfstack.hcl") ||
+		strings.HasSuffix(name, ".tfstack.json")
+}
+
+func isDeployFilename(name string) bool {
+	return strings.HasSuffix(name, ".tfdeploy.hcl") ||
+		strings.HasSuffix(name, ".tfdeploy.json")
 }

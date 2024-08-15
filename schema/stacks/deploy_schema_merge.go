@@ -6,6 +6,7 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	tfschema "github.com/hashicorp/terraform-schema/schema"
 	"github.com/hashicorp/terraform-schema/stack"
 	"github.com/zclconf/go-cty/cty"
@@ -50,6 +51,21 @@ func constraintForDeploymentInputs(stackMeta stack.Meta) (schema.Constraint, err
 		}
 		aSchema := StackVarToAttribute(variable)
 		aSchema.Constraint = tfschema.ConvertAttributeTypeToConstraint(varType)
+
+		aSchema.OriginForTarget = &schema.PathTarget{
+			Address: schema.Address{
+				schema.StaticStep{Name: "var"},
+				schema.AttrNameStep{},
+			},
+			Path: lang.Path{
+				Path:       stackMeta.Path,
+				LanguageID: tfschema.StackLanguageID,
+			},
+			Constraints: schema.Constraints{
+				ScopeId: refscope.VariableScope,
+				Type:    varType,
+			},
+		}
 
 		inputs[name] = aSchema
 	}
