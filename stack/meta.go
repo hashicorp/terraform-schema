@@ -11,4 +11,6 @@ type Meta struct {
 	Variables            map[string]Variable
 	Outputs              map[string]Output
 	ProviderRequirements map[string]ProviderRequirement
+
+	Deployments map[string]Deployment
 }
