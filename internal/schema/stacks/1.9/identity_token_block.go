@@ -6,6 +6,7 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -13,6 +14,17 @@ import (
 func identityTokenBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Description: lang.PlainText("An identity token block is a definition of a JSON Web Token (JWT) that will be generated for a given deployment if referenced in the inputs for that deployment block. The block label defines the token name, which must be unique within the stack."),
+		Address: &schema.BlockAddrSchema{
+			Steps: []schema.AddrStep{
+				schema.StaticStep{Name: "identity_token"},
+				schema.LabelStep{Index: 0},
+			},
+			FriendlyName: "identity_token",
+			ScopeId:      refscope.IdentityTokenScope,
+			AsReference:  true,
+			InferBody:    true,
+			BodyAsData:   true,
+		},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "name",
@@ -31,6 +43,16 @@ func identityTokenBlockSchema() *schema.BlockSchema {
 						// TODO: Is a list correct for this attribute?
 						Elem: schema.AnyExpression{OfType: cty.String},
 					},
+				},
+				"jwt": {
+					Description: lang.Markdown("Token that will be generated that you can pass to a given provider's configuration for OIDC/JWT authentication"),
+					IsComputed:  true,
+					Constraint:  schema.AnyExpression{OfType: cty.String},
+				},
+				"jwt_filename": {
+					Description: lang.Markdown("Path to the token that will be generated on the filesystem that you can pass to a given provider's configuration for OIDC/JWT authentication"),
+					IsComputed:  true,
+					Constraint:  schema.AnyExpression{OfType: cty.String},
 				},
 			},
 		},
