@@ -192,10 +192,7 @@ func schemaForDependentComponentBlock(modMeta *tfmod.Meta, component stack.Compo
 		}
 
 		providers[addr] = &schema.AttributeSchema{
-			Constraint: schema.Reference{
-				Name:   addr,
-				OfType: cty.DynamicPseudoType,
-			},
+			Constraint: schema.Reference{OfScopeId: refscope.ProviderScope},
 		}
 	}
 
