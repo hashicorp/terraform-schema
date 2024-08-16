@@ -13,4 +13,5 @@ type Meta struct {
 	ProviderRequirements map[string]ProviderRequirement
 
 	Deployments map[string]Deployment
+	Stores      map[string]Store
 }
