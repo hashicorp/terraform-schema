@@ -68,6 +68,14 @@ func componentBlockSchema() *schema.BlockSchema {
 						Elem: schema.Reference{OfScopeId: refscope.ProviderScope},
 					},
 				},
+				"depends_on": {
+					Description: lang.Markdown("Optionally specify explicit dependencies for components in a stack configuration, which must also be used when determining an order of operations for components"),
+					IsOptional:  true,
+					Constraint: schema.List{
+						// TODO: This eventually will support embedded stack references
+						Elem: schema.Reference{OfScopeId: refscope.ComponentScope},
+					},
+				},
 			},
 		},
 	}
