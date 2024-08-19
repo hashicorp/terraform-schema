@@ -40,7 +40,19 @@ func loadDeployFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 			ds.Deployments[name] = &stack.Deployment{
 				Inputs: inputs,
 			}
+		case "store":
+			if len(block.Labels) != 2 || block.Labels[0] == "" || block.Labels[1] == "" {
+				continue
+			}
+
+			storeType := block.Labels[0]
+			storeName := block.Labels[1]
+
+			ds.Stores[storeName] = &stack.Store{
+				Type: storeType,
+			}
 		}
+
 	}
 
 	return diags
