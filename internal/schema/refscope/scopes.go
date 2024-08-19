@@ -19,4 +19,5 @@ var (
 
 	ComponentScope     = lang.ScopeId("component")
 	IdentityTokenScope = lang.ScopeId("identity_token")
+	StoreScope         = lang.ScopeId("store")
 )

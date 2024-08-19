@@ -25,6 +25,7 @@ func storeBlockSchema() *schema.BlockSchema {
 				Name:                   "name",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
 				Description:            lang.PlainText("Store name"),
+				IsDepKey:               true,
 			},
 		},
 		DependentBody: map[schema.SchemaKey]*schema.BodySchema{
@@ -50,8 +51,12 @@ func storeBlockSchema() *schema.BlockSchema {
 					"id": {
 						IsRequired:  true,
 						Constraint:  schema.LiteralType{Type: cty.String},
-						Description: lang.Markdown("The id of the varset. In the form of 'varset-nnnnnnnnnnnnnnnn'."),
+						Description: lang.Markdown("The id of the varset. In the form of 'varset-QKpocVOC3uQQxVrF'."),
 					},
+				},
+				AnyAttribute: &schema.AttributeSchema{
+					IsComputed: true,
+					Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
 				},
 			},
 		},

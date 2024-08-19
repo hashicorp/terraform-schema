@@ -24,6 +24,7 @@ type decodedStack struct {
 	ProviderRequirements map[string]*providerRequirement
 
 	Deployments map[string]*stack.Deployment
+	Stores      map[string]*stack.Store
 }
 
 func newDecodedStack() *decodedStack {
@@ -33,6 +34,7 @@ func newDecodedStack() *decodedStack {
 		Outputs:              make(map[string]*stack.Output),
 		ProviderRequirements: make(map[string]*providerRequirement),
 		Deployments:          make(map[string]*stack.Deployment),
+		Stores:               make(map[string]*stack.Store),
 	}
 }
 
