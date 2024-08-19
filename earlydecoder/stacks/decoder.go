@@ -84,6 +84,11 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		deployments[key] = *deployment
 	}
 
+	stores := make(map[string]stack.Store)
+	for key, store := range mod.Stores {
+		stores[key] = *store
+	}
+
 	return &stack.Meta{
 		Path:                 path,
 		Filenames:            filenames,
@@ -92,6 +97,7 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		Outputs:              outputs,
 		ProviderRequirements: providerRequirements,
 		Deployments:          deployments,
+		Stores:               stores,
 	}, diags
 }
 

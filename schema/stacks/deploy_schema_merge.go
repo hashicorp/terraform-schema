@@ -38,6 +38,48 @@ func (m *DeploySchemaMerger) SchemaForDeployment(meta *stack.Meta) (*schema.Body
 	// TODO: isOptional should be set to true if at least one input is required
 	mergedSchema.Blocks["deployment"].Body.Attributes["inputs"].Constraint = constr
 
+	// We add specific Targetables with a dynamic type for each store as the AnyAttribute defined in the store schema
+	// is not picked up when reference targets are collected because we don't know all the available attributes that
+	// are eventually available in the varset and reference targets need a specific name to match against
+	// However, it is also possible to target the parent if its type is dynamic. This is why we add this target.
+	// We can't set the body to dynamic in the schema as that would remove the completions for the "id" attribute of the
+	// varset store block.
+	// If there's a better way to do this, we should consider it as this feels like a bit of a hack.
+	// TODO: once we parse tfvars files, do this differently for the tfvars type store block
+	for name, store := range meta.Stores {
+		key := schema.NewSchemaKey(schema.DependencyKeys{
+			Labels: []schema.LabelDependent{
+				{Index: 0, Value: store.Type},
+				{Index: 1, Value: name},
+			}})
+
+		// Copy the body of the store block for the specific store type to keep attributes and constraints
+		// as dependent bodies replace the original ones
+		newBody := mergedSchema.Blocks["store"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
+			Labels: []schema.LabelDependent{
+				{Index: 0, Value: store.Type},
+			}})].Copy()
+
+		if newBody == nil {
+			newBody = mergedSchema.Blocks["store"].Body
+		}
+
+		newBody.TargetableAs = schema.Targetables{
+			&schema.Targetable{
+				Address: lang.Address{
+					lang.RootStep{Name: "store"},
+					lang.AttrStep{Name: store.Type},
+					lang.AttrStep{Name: name},
+				},
+				AsType:       cty.DynamicPseudoType, // we need this type for the target for this store block as it matches every nested value
+				ScopeId:      refscope.StoreScope,
+				FriendlyName: "store",
+			},
+		}
+
+		mergedSchema.Blocks["store"].DependentBody[key] = newBody
+	}
+
 	return mergedSchema, nil
 }
 
