@@ -33,6 +33,10 @@ var deploymentRootSchema = &hcl.BodySchema{
 			Type:       "deployment",
 			LabelNames: []string{"name"},
 		},
+		{
+			Type:       "store",
+			LabelNames: []string{"type", "name"},
+		},
 	},
 }
 
