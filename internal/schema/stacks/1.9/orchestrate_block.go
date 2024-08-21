@@ -47,6 +47,13 @@ func orchestrateBlockSchema() *schema.BlockSchema {
 					},
 				},
 			},
+			Attributes: map[string]*schema.AttributeSchema{
+				"description": {
+					Constraint:  schema.LiteralType{Type: cty.String},
+					IsOptional:  true,
+					Description: lang.PlainText("Human-readable description of the orchestration rule (for documentation and UI)"),
+				},
+			},
 		},
 	}
 }
