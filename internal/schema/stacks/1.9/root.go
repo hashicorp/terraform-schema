@@ -18,6 +18,7 @@ func StackSchema(_ *version.Version) *schema.BodySchema {
 			"required_providers": requiredProvidersBlockSchema(),
 			"variable":           variableBlockSchema(),
 			"output":             outputBlockSchema(),
+			"locals":             localsBlockSchema(),
 		},
 	}
 }
@@ -31,6 +32,7 @@ func DeploymentSchema(_ *version.Version) *schema.BodySchema {
 			"identity_token": identityTokenBlockSchema(),
 			"orchestrate":    orchestrateBlockSchema(),
 			"store":          storeBlockSchema(),
+			"locals":         localsBlockSchema(),
 		},
 	}
 }
