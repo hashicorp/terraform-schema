@@ -8,13 +8,22 @@ import (
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/schema"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	tfmod "github.com/hashicorp/terraform-schema/module"
 )
+
+// FunctionsStateReader exposes a set of methods to read data from the internal language server state
+// for function merging
+type FunctionsStateReader interface {
+	// ProviderSchema returns the schema for a provider we have stored in memory. The can come
+	// from different sources.
+	ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*ProviderSchema, error)
+}
 
 type FunctionsMerger struct {
 	coreFunctions    map[string]schema.FunctionSignature
 	terraformVersion *version.Version
-	stateReader      StateReader
+	stateReader      FunctionsStateReader
 }
 
 func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *FunctionsMerger {
@@ -23,7 +32,7 @@ func NewFunctionsMerger(coreFunctions map[string]schema.FunctionSignature) *Func
 	}
 }
 
-func (m *FunctionsMerger) SetStateReader(mr StateReader) {
+func (m *FunctionsMerger) SetStateReader(mr FunctionsStateReader) {
 	m.stateReader = mr
 }
 
