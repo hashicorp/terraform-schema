@@ -20,7 +20,8 @@ func orchestrateBlockSchema() *schema.BlockSchema {
 				Description:            lang.PlainText("Rule Type"),
 				IsDepKey:               true,
 				Completable:            true,
-				// TODO: auto_approve is the only one supported now, but converged, replan, rollout are possible values for the first label on the block
+				// TODO: auto_approve is the only one supported now, but converged, replan, rollout, deferral_replan are possible values for the first label on the block
+				// TODO: complete the available labels
 			},
 			{
 				Name:                   "name",
@@ -37,7 +38,7 @@ func orchestrateBlockSchema() *schema.BlockSchema {
 						Attributes: map[string]*schema.AttributeSchema{
 							"condition": {
 								Description: lang.Markdown("The condition must evaluate to true or false"),
-								Constraint:  schema.LiteralType{Type: cty.Bool},
+								Constraint:  schema.AnyExpression{OfType: cty.Bool},
 							},
 							"reason": {
 								Description: lang.Markdown("The reason must be a string"),

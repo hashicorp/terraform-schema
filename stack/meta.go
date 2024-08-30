@@ -12,6 +12,7 @@ type Meta struct {
 	Outputs              map[string]Output
 	ProviderRequirements map[string]ProviderRequirement
 
-	Deployments map[string]Deployment
-	Stores      map[string]Store
+	Deployments        map[string]Deployment
+	Stores             map[string]Store
+	OrchestrationRules map[string]OrchestrationRule
 }

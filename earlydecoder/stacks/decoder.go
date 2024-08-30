@@ -89,6 +89,11 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		stores[key] = *store
 	}
 
+	orchestrationRules := make(map[string]stack.OrchestrationRule)
+	for key, rule := range mod.OrchestrationRules {
+		orchestrationRules[key] = *rule
+	}
+
 	return &stack.Meta{
 		Path:                 path,
 		Filenames:            filenames,
@@ -98,6 +103,7 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		ProviderRequirements: providerRequirements,
 		Deployments:          deployments,
 		Stores:               stores,
+		OrchestrationRules:   orchestrationRules,
 	}, diags
 }
 
