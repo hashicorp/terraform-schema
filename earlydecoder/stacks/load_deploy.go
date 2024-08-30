@@ -6,6 +6,7 @@ package earlydecoder
 import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
+	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/terraform-schema/stack"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -51,8 +52,24 @@ func loadDeployFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 			ds.Stores[storeName] = &stack.Store{
 				Type: storeType,
 			}
-		}
+		case "orchestrate":
+			if len(block.Labels) != 2 || block.Labels[0] == "" || block.Labels[1] == "" {
+				continue
+			}
 
+			body, ok := block.Body.(*hclsyntax.Body)
+			if !ok {
+				continue
+			}
+
+			ruleType := block.Labels[0]
+			ruleName := block.Labels[1]
+
+			ds.OrchestrationRules[ruleName] = &stack.OrchestrationRule{
+				Type:  ruleType,
+				Range: body.SrcRange,
+			}
+		}
 	}
 
 	return diags

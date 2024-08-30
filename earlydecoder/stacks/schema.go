@@ -37,6 +37,10 @@ var deploymentRootSchema = &hcl.BodySchema{
 			Type:       "store",
 			LabelNames: []string{"type", "name"},
 		},
+		{
+			Type:       "orchestrate",
+			LabelNames: []string{"type", "name"},
+		},
 	},
 }
 
