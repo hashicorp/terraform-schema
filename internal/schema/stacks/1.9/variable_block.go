@@ -42,6 +42,12 @@ func variableBlockSchema() *schema.BlockSchema {
 					IsOptional:  true,
 					Description: lang.Markdown("Description to document the purpose of the variable and what value is expected"),
 				},
+				"sensitive": {
+					Constraint:   schema.LiteralType{Type: cty.Bool},
+					DefaultValue: schema.DefaultValue{Value: cty.False},
+					IsOptional:   true,
+					Description:  lang.Markdown("Whether the variable contains sensitive material and should be hidden in the UI"),
+				},
 				"ephemeral": {
 					Constraint:  schema.LiteralType{Type: cty.Bool},
 					IsOptional:  true,
