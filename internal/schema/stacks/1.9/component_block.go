@@ -50,7 +50,7 @@ func componentBlockSchema() *schema.BlockSchema {
 					IsOptional:  true,
 					Constraint: schema.Map{
 						Name: "map of input references",
-						Elem: schema.Reference{OfScopeId: refscope.ModuleScope}, // TODO: This should be refscope.InputScope ?
+						Elem: schema.AnyExpression{OfType: cty.DynamicPseudoType},
 					},
 				},
 				"version": {
