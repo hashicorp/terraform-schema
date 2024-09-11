@@ -53,11 +53,12 @@ func (m *TestSchemaMerger) SchemaForTest(meta *tftest.Meta) (*schema.BodySchema,
 
 	mergedSchema := m.coreSchema.Copy()
 
-	// TODO merge mock_provider blocks - use the label as dependency key AND the source if defined
-	// TODO merge nested mock_resource blocks - use the label as dependency key
-	// TODO merge nested mock_data blocks - use the label as dependency key
-	// TODO merge run - module blocks - use the source as dependency key
-	// TODO merge variables - source them from the Terraform module meta
+	// TODO merge mock_provider blocks - use the label as dependency key AND the source if defined TFECO-7476
+	// TODO merge nested mock_resource blocks - use the label as dependency key TFECO-7474
+	// TODO merge nested mock_data blocks - use the label as dependency key TFECO-7475
+	// TODO merge run - module blocks - use the source as dependency key TFECO-7477
+	// TODO merge variables - source them from the Terraform module meta TFECO-7478
+	// TODO merge provider - source them from the Terraform module meta requirements TFECO-7522
 
 	return mergedSchema, nil
 }

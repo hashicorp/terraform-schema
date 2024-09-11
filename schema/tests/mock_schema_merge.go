@@ -39,8 +39,8 @@ func (m *MockSchemaMerger) SchemaForMock(meta *tftest.Meta) (*schema.BodySchema,
 
 	mergedSchema := m.coreSchema.Copy()
 
-	// TODO merge mock_resource blocks - use the label as dependency key
-	// TODO merge mock_data blocks - use the label as dependency key
+	// TODO merge mock_resource blocks - use the label as dependency key TFECO-7471
+	// TODO merge mock_data blocks - use the label as dependency key TFECO-7472
 
 	return mergedSchema, nil
 }
