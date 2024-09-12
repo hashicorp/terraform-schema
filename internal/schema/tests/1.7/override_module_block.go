@@ -11,7 +11,7 @@ import (
 
 func overrideModuleBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
-		Description: lang.PlainText(""), // TODO!
+		Description: lang.PlainText("Allows overriding the outputs of a specific module in the targeted configuration"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"target": {
@@ -19,14 +19,14 @@ func overrideModuleBlockSchema() *schema.BlockSchema {
 						OfScopeId: refscope.ModuleScope,
 					},
 					IsRequired:  true,
-					Description: lang.Markdown(""), // TODO!
+					Description: lang.Markdown("Reference to the module to override"),
 				},
 				"outputs": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown(""), // TODO!
+					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
 				},
 			},
 		},

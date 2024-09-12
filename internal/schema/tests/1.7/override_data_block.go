@@ -11,7 +11,7 @@ import (
 
 func overrideDataBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
-		Description: lang.PlainText(""), // TODO!
+		Description: lang.PlainText("Allows overriding the values of a specific data source in the targeted configuration"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"target": {
@@ -19,14 +19,14 @@ func overrideDataBlockSchema() *schema.BlockSchema {
 						OfScopeId: refscope.DataScope,
 					},
 					IsRequired:  true,
-					Description: lang.Markdown(""), // TODO!
+					Description: lang.Markdown("Reference to the data source to override"),
 				},
 				"values": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown(""), // TODO!
+					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
 				},
 			},
 		},

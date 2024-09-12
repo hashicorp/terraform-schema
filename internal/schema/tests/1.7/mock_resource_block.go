@@ -20,7 +20,7 @@ func mockResourceBlockSchema() *schema.BlockSchema {
 				Completable:            true,
 			},
 		},
-		Description: lang.PlainText(""), // TODO!
+		Description: lang.PlainText("Allows to specify specific values for targeted resources"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"defaults": {
@@ -28,7 +28,7 @@ func mockResourceBlockSchema() *schema.BlockSchema {
 						Attributes: schema.ObjectAttributes{},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown(""), // TODO!
+					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
 				},
 			},
 		},

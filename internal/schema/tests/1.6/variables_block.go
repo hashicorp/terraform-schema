@@ -15,7 +15,7 @@ func variablesBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		MaxItems:               1,
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Variables},
-		Description:            lang.Markdown(""), // TODO!
+		Description:            lang.Markdown("Provides values for input variables within your configuration directly from your test files"),
 		Body: &schema.BodySchema{
 			AnyAttribute: &schema.AttributeSchema{
 				Address: &schema.AttributeAddrSchema{
