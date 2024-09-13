@@ -19,6 +19,7 @@ func StackSchema(_ *version.Version) *schema.BodySchema {
 			"variable":           variableBlockSchema(),
 			"output":             outputBlockSchema(),
 			"locals":             localsBlockSchema(),
+			"removed":            removedBlockSchema(),
 		},
 	}
 }
