@@ -82,11 +82,3 @@ var outputSchema = &hcl.BodySchema{
 		},
 	},
 }
-
-var deploymentSchema = &hcl.BodySchema{
-	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "inputs",
-		},
-	},
-}
