@@ -4,7 +4,6 @@
 package earlydecoder
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 
@@ -14,9 +13,9 @@ import (
 	"github.com/hashicorp/terraform-schema/stack"
 )
 
-func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagnostics) {
-	var diags hcl.Diagnostics
+func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, map[string]hcl.Diagnostics) {
 	filenames := make([]string, 0)
+	sdiags := make(map[string]hcl.Diagnostics, 0)
 
 	mod := newDecodedStack()
 	for filename, f := range files {
@@ -24,10 +23,10 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 
 		if isStackFilename(filename) {
 			fDiags := loadStackFromFile(f, mod)
-			diags = append(diags, fDiags...)
+			sdiags[filename] = fDiags // map of diags
 		} else if isDeployFilename(filename) {
 			fDiags := loadDeployFromFile(f, mod)
-			diags = append(diags, fDiags...)
+			sdiags[filename] = fDiags // map of diags
 		}
 	}
 
@@ -55,21 +54,23 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		var err error
 		src, err = tfaddr.ParseProviderSource(req.Source)
 		if err != nil {
-			diags = append(diags, &hcl.Diagnostic{
-				Severity: hcl.DiagError,
-				Summary:  fmt.Sprintf("Unable to parse provider source for %q", name),
-				Detail:   fmt.Sprintf("%q provider source (%q) is not a valid source string", name, req.Source),
-			})
+			// TODO
+			// diags = append(diags, &hcl.Diagnostic{
+			// 	Severity: hcl.DiagError,
+			// 	Summary:  fmt.Sprintf("Unable to parse provider source for %q", name),
+			// 	Detail:   fmt.Sprintf("%q provider source (%q) is not a valid source string", name, req.Source),
+			// })
 			continue
 		}
 
 		constraints, err := version.NewConstraint(req.VersionConstraints)
 		if err != nil {
-			diags = append(diags, &hcl.Diagnostic{
-				Severity: hcl.DiagError,
-				Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
-				Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", req.VersionConstraints, err),
-			})
+			// TODO
+			// diags = append(diags, &hcl.Diagnostic{
+			// 	Severity: hcl.DiagError,
+			// 	Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
+			// 	Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", req.VersionConstraints, err),
+			// })
 			continue
 		}
 
@@ -104,7 +105,7 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		Deployments:          deployments,
 		Stores:               stores,
 		OrchestrationRules:   orchestrationRules,
-	}, diags
+	}, sdiags
 }
 
 func isStackFilename(name string) bool {
