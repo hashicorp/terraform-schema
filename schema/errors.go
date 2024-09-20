@@ -9,9 +9,9 @@ import (
 	"github.com/hashicorp/go-version"
 )
 
-type coreSchemaRequiredErr struct{}
+type CoreSchemaRequiredErr struct{}
 
-func (e coreSchemaRequiredErr) Error() string {
+func (e CoreSchemaRequiredErr) Error() string {
 	return "core schema required (none provided)"
 }
 
