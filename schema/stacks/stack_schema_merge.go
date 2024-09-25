@@ -30,6 +30,10 @@ type StateReader interface {
 	// from different sources.
 	ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*tfschema.ProviderSchema, error)
 
+	// InstalledModulePath checks if there is an installed module available for
+	// the given normalized source address.
+	InstalledModulePath(rootPath string, normalizedSource string) (string, bool)
+
 	// LocalModuleMeta returns the module meta data for a local module. This is the result
 	// of the [earlydecoder] when processing module files
 	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
@@ -127,6 +131,22 @@ func (m *StackSchemaMerger) SchemaForStack(meta *stack.Meta) (*schema.BodySchema
 					mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
 			}
+		case tfmod.RemoteSourceAddr:
+			installedDir, ok := m.stateReader.InstalledModulePath(meta.Path, sourceAddr.String())
+			if !ok {
+				continue
+			}
+			path := filepath.Join(meta.Path, installedDir)
+
+			// TODO: how to ensure this dir is parsed and available?
+			modMeta, err := m.stateReader.LocalModuleMeta(path)
+			if err == nil {
+				depSchema, err := schemaForDependentComponentBlock(modMeta, comp, name)
+				if err == nil {
+					mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				}
+			}
+			// TODO: do the same for tfaddr.Module (i.e. registry modules)
 		}
 	}
 
