@@ -5,6 +5,7 @@ package schema
 
 import (
 	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/zclconf/go-cty/cty"
 
@@ -15,12 +16,14 @@ func ModuleSchema(v *version.Version) *schema.BodySchema {
 	bs := v1_9_mod.ModuleSchema(v)
 
 	bs.Blocks["variable"].Body.Attributes["ephemeral"] = &schema.AttributeSchema{
-		IsOptional: true,
-		Constraint: schema.LiteralType{Type: cty.Bool},
+		IsOptional:  true,
+		Constraint:  schema.LiteralType{Type: cty.Bool},
+		Description: lang.PlainText("Whether the value is ephemeral and should not be persisted in the state"),
 	}
 	bs.Blocks["output"].Body.Attributes["ephemeral"] = &schema.AttributeSchema{
-		IsOptional: true,
-		Constraint: schema.LiteralType{Type: cty.Bool},
+		IsOptional:  true,
+		Constraint:  schema.LiteralType{Type: cty.Bool},
+		Description: lang.PlainText("Whether the value is ephemeral and should not be persisted in the state"),
 	}
 
 	return bs

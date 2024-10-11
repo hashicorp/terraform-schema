@@ -48,6 +48,11 @@ func outputBlockSchema() *schema.BlockSchema {
 					IsRequired:  true,
 					Description: lang.PlainText("Type of the output value"),
 				},
+				"ephemeral": {
+					Constraint:  schema.LiteralType{Type: cty.Bool},
+					IsOptional:  true,
+					Description: lang.PlainText("Whether the value is ephemeral and should not be persisted in the state"),
+				},
 			},
 		},
 	}

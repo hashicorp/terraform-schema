@@ -51,7 +51,7 @@ func variableBlockSchema() *schema.BlockSchema {
 				"ephemeral": {
 					Constraint:  schema.LiteralType{Type: cty.Bool},
 					IsOptional:  true,
-					Description: lang.Markdown("Ephemeral values are not saved in the state file and are not visible in the UI"),
+					Description: lang.PlainText("Whether the value is ephemeral and should not be persisted in the state"),
 				},
 				"type": {
 					Constraint:  schema.TypeDeclaration{},
