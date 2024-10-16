@@ -61,7 +61,7 @@ func componentBlockSchema() *schema.BlockSchema {
 					},
 				},
 				"providers": {
-					Description: lang.Markdown(" A mapping of provider names to providers declared in the stack configuration. Providers must be declared in the top level of the stack and passed into each component in the stack. Components cannot configure their own providers"),
+					Description: lang.Markdown("A mapping of provider names to providers declared in the stack configuration. Providers must be declared in the top level of the stack and passed into each component in the stack. Components cannot configure their own providers"),
 					IsOptional:  true,
 					Constraint: schema.Map{
 						Name: "map of provider references",
