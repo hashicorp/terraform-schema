@@ -48,6 +48,17 @@ func outputBlockSchema() *schema.BlockSchema {
 					IsRequired:  true,
 					Description: lang.PlainText("Type of the output value"),
 				},
+				"sensitive": {
+					Constraint:   schema.LiteralType{Type: cty.Bool},
+					DefaultValue: schema.DefaultValue{Value: cty.False},
+					IsOptional:   true,
+					Description:  lang.Markdown("Whether the output contains sensitive material and should be hidden in the UI"),
+				},
+				"ephemeral": {
+					Constraint:  schema.LiteralType{Type: cty.Bool},
+					IsOptional:  true,
+					Description: lang.PlainText("Whether the value is ephemeral and should not be persisted in the state"),
+				},
 			},
 		},
 	}
