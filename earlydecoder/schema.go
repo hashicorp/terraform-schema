@@ -21,6 +21,10 @@ var rootSchema = &hcl.BodySchema{
 			LabelNames: []string{"type", "name"},
 		},
 		{
+			Type:       "ephemeral",
+			LabelNames: []string{"type", "name"},
+		},
+		{
 			Type:       "data",
 			LabelNames: []string{"type", "name"},
 		},

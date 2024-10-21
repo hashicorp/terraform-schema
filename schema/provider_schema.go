@@ -10,10 +10,11 @@ import (
 )
 
 type ProviderSchema struct {
-	Provider    *schema.BodySchema
-	Resources   map[string]*schema.BodySchema
-	DataSources map[string]*schema.BodySchema
-	Functions   map[string]*schema.FunctionSignature
+	Provider           *schema.BodySchema
+	Resources          map[string]*schema.BodySchema
+	EphemeralResources map[string]*schema.BodySchema
+	DataSources        map[string]*schema.BodySchema
+	Functions          map[string]*schema.FunctionSignature
 }
 
 func (ps *ProviderSchema) Copy() *ProviderSchema {
@@ -29,6 +30,13 @@ func (ps *ProviderSchema) Copy() *ProviderSchema {
 		newPs.Resources = make(map[string]*schema.BodySchema, len(ps.Resources))
 		for name, rSchema := range ps.Resources {
 			newPs.Resources[name] = rSchema.Copy()
+		}
+	}
+
+	if ps.EphemeralResources != nil {
+		newPs.EphemeralResources = make(map[string]*schema.BodySchema, len(ps.EphemeralResources))
+		for name, erSchema := range ps.EphemeralResources {
+			newPs.EphemeralResources[name] = erSchema.Copy()
 		}
 	}
 
@@ -57,6 +65,9 @@ func (ps *ProviderSchema) SetProviderVersion(pAddr tfaddr.Provider, v *version.V
 	}
 	for _, rSchema := range ps.Resources {
 		rSchema.Detail = detailForSrcAddr(pAddr, v)
+	}
+	for _, erSchema := range ps.EphemeralResources {
+		erSchema.Detail = detailForSrcAddr(pAddr, v)
 	}
 	for _, dsSchema := range ps.DataSources {
 		dsSchema.Detail = detailForSrcAddr(pAddr, v)

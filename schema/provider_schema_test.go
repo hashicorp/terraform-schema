@@ -28,6 +28,16 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 				},
 			},
 		},
+		EphemeralResources: map[string]*schema.BodySchema{
+			"eph": {
+				Attributes: map[string]*schema.AttributeSchema{
+					"str": {
+						Constraint: schema.LiteralType{Type: cty.String},
+						IsOptional: true,
+					},
+				},
+			},
+		},
 		DataSources: map[string]*schema.BodySchema{
 			"bar": {
 				Attributes: map[string]*schema.AttributeSchema{
@@ -62,6 +72,17 @@ func TestProviderSchema_SetProviderVersion(t *testing.T) {
 		},
 		Resources: map[string]*schema.BodySchema{
 			"foo": {
+				Detail: "hashicorp/aws 1.2.5",
+				Attributes: map[string]*schema.AttributeSchema{
+					"str": {
+						Constraint: schema.LiteralType{Type: cty.String},
+						IsOptional: true,
+					},
+				},
+			},
+		},
+		EphemeralResources: map[string]*schema.BodySchema{
+			"eph": {
 				Detail: "hashicorp/aws 1.2.5",
 				Attributes: map[string]*schema.AttributeSchema{
 					"str": {

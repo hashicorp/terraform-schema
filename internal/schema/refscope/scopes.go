@@ -8,14 +8,15 @@ import (
 )
 
 var (
-	BuiltinScope  = lang.ScopeId("builtin")
-	DataScope     = lang.ScopeId("data")
-	LocalScope    = lang.ScopeId("local")
-	ModuleScope   = lang.ScopeId("module")
-	OutputScope   = lang.ScopeId("output")
-	ProviderScope = lang.ScopeId("provider")
-	ResourceScope = lang.ScopeId("resource")
-	VariableScope = lang.ScopeId("variable")
+	BuiltinScope   = lang.ScopeId("builtin")
+	DataScope      = lang.ScopeId("data")
+	LocalScope     = lang.ScopeId("local")
+	ModuleScope    = lang.ScopeId("module")
+	OutputScope    = lang.ScopeId("output")
+	ProviderScope  = lang.ScopeId("provider")
+	ResourceScope  = lang.ScopeId("resource")
+	EphemeralScope = lang.ScopeId("ephemeral")
+	VariableScope  = lang.ScopeId("variable")
 
 	ComponentScope     = lang.ScopeId("component")
 	IdentityTokenScope = lang.ScopeId("identity_token")

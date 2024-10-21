@@ -17,9 +17,10 @@ import (
 
 func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Provider) *ProviderSchema {
 	ps := &ProviderSchema{
-		Resources:   map[string]*schema.BodySchema{},
-		DataSources: map[string]*schema.BodySchema{},
-		Functions:   map[string]*schema.FunctionSignature{},
+		Resources:          map[string]*schema.BodySchema{},
+		EphemeralResources: map[string]*schema.BodySchema{},
+		DataSources:        map[string]*schema.BodySchema{},
+		Functions:          map[string]*schema.FunctionSignature{},
 	}
 
 	if jsonSchema.ConfigSchema != nil {
@@ -32,6 +33,11 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 	for rName, rSchema := range jsonSchema.ResourceSchemas {
 		ps.Resources[rName] = bodySchemaFromJson(rSchema.Block)
 		ps.Resources[rName].Detail = detailForSrcAddr(pAddr, nil)
+	}
+
+	for erName, erSchema := range jsonSchema.EphemeralResourceSchemas {
+		ps.EphemeralResources[erName] = bodySchemaFromJson(erSchema.Block)
+		ps.EphemeralResources[erName].Detail = detailForSrcAddr(pAddr, nil)
 	}
 
 	for dsName, dsSchema := range jsonSchema.DataSourceSchemas {

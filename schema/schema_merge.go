@@ -81,6 +81,9 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 	if mergedSchema.Blocks["resource"].DependentBody == nil {
 		mergedSchema.Blocks["resource"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
+	if mergedSchema.Blocks["ephemeral"].DependentBody == nil {
+		mergedSchema.Blocks["ephemeral"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
+	}
 	if mergedSchema.Blocks["data"].DependentBody == nil {
 		mergedSchema.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
@@ -141,6 +144,34 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 						},
 					}
 					mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
+				}
+			}
+
+			for erName, erSchema := range pSchema.EphemeralResources {
+				depKeys := schema.DependencyKeys{
+					Labels: []schema.LabelDependent{
+						{Index: 0, Value: erName},
+					},
+					Attributes: []schema.AttributeDependent{
+						{
+							Name: "provider",
+							Expr: schema.ExpressionValue{
+								Address: providerAddr,
+							},
+						},
+					},
+				}
+				mergedSchema.Blocks["ephemeral"].DependentBody[schema.NewSchemaKey(depKeys)] = erSchema
+
+				// No explicit association is required
+				// if the ephemeral resource prefix matches provider name
+				if typeBelongsToProvider(erName, localRef) {
+					depKeys := schema.DependencyKeys{
+						Labels: []schema.LabelDependent{
+							{Index: 0, Value: erName},
+						},
+					}
+					mergedSchema.Blocks["ephemeral"].DependentBody[schema.NewSchemaKey(depKeys)] = erSchema
 				}
 			}
 

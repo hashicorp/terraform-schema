@@ -14,6 +14,7 @@ var (
 	Output            = lang.SemanticTokenModifier("terraform-output")
 	Provider          = lang.SemanticTokenModifier("terraform-provider")
 	Resource          = lang.SemanticTokenModifier("terraform-resource")
+	Ephemeral         = lang.SemanticTokenModifier("terraform-ephemeral")
 	Provisioner       = lang.SemanticTokenModifier("terraform-provisioner")
 	Connection        = lang.SemanticTokenModifier("terraform-connection")
 	Variable          = lang.SemanticTokenModifier("terraform-variable")
