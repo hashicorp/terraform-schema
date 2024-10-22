@@ -81,7 +81,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 	if mergedSchema.Blocks["resource"].DependentBody == nil {
 		mergedSchema.Blocks["resource"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
-	if mergedSchema.Blocks["ephemeral"].DependentBody == nil {
+	if ephemeralBlock, ok := mergedSchema.Blocks["ephemeral"]; ok && ephemeralBlock.DependentBody == nil {
 		mergedSchema.Blocks["ephemeral"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 	if mergedSchema.Blocks["data"].DependentBody == nil {
