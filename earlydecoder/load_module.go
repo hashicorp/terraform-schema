@@ -26,6 +26,7 @@ type decodedModule struct {
 	ProviderRequirements map[string]*providerRequirement
 	ProviderConfigs      map[string]*providerConfig
 	Resources            map[string]*resource
+	EphemeralResources   map[string]*ephemeralResource
 	DataSources          map[string]*dataSource
 	Variables            map[string]*module.Variable
 	Outputs              map[string]*module.Output
@@ -39,6 +40,7 @@ func newDecodedModule() *decodedModule {
 		ProviderRequirements: make(map[string]*providerRequirement),
 		ProviderConfigs:      make(map[string]*providerConfig),
 		Resources:            make(map[string]*resource),
+		EphemeralResources:   make(map[string]*ephemeralResource),
 		DataSources:          make(map[string]*dataSource),
 		Variables:            make(map[string]*module.Variable),
 		Outputs:              make(map[string]*module.Output),
@@ -203,6 +205,29 @@ func loadModuleFromFile(file *hcl.File, mod *decodedModule) hcl.Diagnostics {
 				// resource type.
 				r.Provider = module.ProviderRef{
 					LocalName: inferProviderNameFromType(r.Type),
+				}
+			}
+
+		case "ephemeral":
+			content, _, contentDiags := block.Body.PartialContent(resourceSchema)
+			diags = append(diags, contentDiags...)
+
+			er := &ephemeralResource{
+				Type: block.Labels[0],
+				Name: block.Labels[1],
+			}
+
+			mod.EphemeralResources[er.MapKey()] = er
+
+			if attr, defined := content.Attributes["provider"]; defined {
+				ref, aDiags := decodeProviderAttribute(attr)
+				diags = append(diags, aDiags...)
+				er.Provider = ref
+			} else {
+				// If provider _isn't_ set then we'll infer it from the
+				// ephemeral resource type.
+				er.Provider = module.ProviderRef{
+					LocalName: inferProviderNameFromType(er.Type),
 				}
 			}
 

@@ -79,6 +79,10 @@ resource "google_storage_bucket" "bucket" {
   name = "test-bucket"
 }
 
+ephemeral "random_password" "psst" {
+  length = 16
+}
+
 data "blah_foobar" "test" {
   name = "something"
 }
@@ -95,12 +99,14 @@ provider "grafana" {
 					{LocalName: "blah"}:    addr.NewLegacyProvider("blah"),
 					{LocalName: "google"}:  addr.NewLegacyProvider("google"),
 					{LocalName: "grafana"}: addr.NewLegacyProvider("grafana"),
+					{LocalName: "random"}:  addr.NewLegacyProvider("random"),
 				},
 				ProviderRequirements: map[tfaddr.Provider]version.Constraints{
 					addr.NewLegacyProvider("aws"):     {},
 					addr.NewLegacyProvider("blah"):    {},
 					addr.NewLegacyProvider("google"):  {},
 					addr.NewLegacyProvider("grafana"): {},
+					addr.NewLegacyProvider("random"):  {},
 				},
 				Variables:   map[string]module.Variable{},
 				Outputs:     map[string]module.Output{},
