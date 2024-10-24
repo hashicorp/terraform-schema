@@ -5,10 +5,8 @@ package earlydecoder
 
 import (
 	"github.com/hashicorp/hcl/v2"
-	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/terraform-schema/stack"
-	"github.com/zclconf/go-cty/cty"
 )
 
 // loadDeployFromFile reads given file, interprets it and stores in given stack
@@ -23,24 +21,29 @@ func loadDeployFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 	for _, block := range content.Blocks {
 		switch block.Type {
 		case "deployment":
-			content, _, contentDiags := block.Body.PartialContent(deploymentSchema)
-			diags = append(diags, contentDiags...)
+			// This produces incorrect diagnostics because it doesn't parse
+			// the HCL object correctly
 
-			if len(block.Labels) != 1 || block.Labels[0] == "" {
-				continue
-			}
+			// content, _, contentDiags := block.Body.PartialContent(deploymentSchema)
+			// diags = append(diags, contentDiags...)
 
-			name := block.Labels[0]
+			// if len(block.Labels) != 1 || block.Labels[0] == "" {
+			// 	continue
+			// }
 
-			inputs := make(map[string]cty.Value)
-			if attr, defined := content.Attributes["inputs"]; defined {
-				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &inputs)
-				diags = append(diags, valDiags...)
-			}
+			// name := block.Labels[0]
 
-			ds.Deployments[name] = &stack.Deployment{
-				Inputs: inputs,
-			}
+			// inputs := make(map[string]cty.Value)
+			// if attr, defined := content.Attributes["inputs"]; defined {
+
+			// 	valDiags := gohcl.DecodeExpression(attr.Expr, nil, &inputs)
+
+			// 	diags = append(diags, valDiags...)
+			// }
+
+			// ds.Deployments[name] = &stack.Deployment{
+			// 	Inputs: inputs,
+			// }
 		case "store":
 			if len(block.Labels) != 2 || block.Labels[0] == "" || block.Labels[1] == "" {
 				continue
