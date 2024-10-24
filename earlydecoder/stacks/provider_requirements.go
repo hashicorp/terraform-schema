@@ -68,7 +68,6 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 					pr.VersionConstraints = parsedVersion.AsString()
 					_, err := version.NewConstraint(pr.VersionConstraints)
 					if err != nil {
-						// TODO
 						diags = append(diags, &hcl.Diagnostic{
 							Severity: hcl.DiagError,
 							Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
@@ -102,7 +101,7 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 							Detail:   fmt.Sprintf("%q provider source (%q) is not a valid source string", name, pr.Source),
 							Subject:  attr.Expr.Range().Ptr(),
 						})
-						// continue
+						continue
 					}
 				}
 			}

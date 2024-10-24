@@ -22,8 +22,7 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, map[string
 		filenames = append(filenames, filename)
 
 		if isStackFilename(filename) {
-			fDiags := loadStackFromFile(f, mod)
-			sdiags[filename] = fDiags // map of diags
+			sdiags[filename] = loadStackFromFile(f, mod)
 		}
 	}
 
@@ -51,23 +50,13 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, map[string
 		var err error
 		src, err = tfaddr.ParseProviderSource(req.Source)
 		if err != nil {
-			// TODO
-			// diags = append(diags, &hcl.Diagnostic{
-			// 	Severity: hcl.DiagError,
-			// 	Summary:  fmt.Sprintf("Unable to parse provider source for %q", name),
-			// 	Detail:   fmt.Sprintf("%q provider source (%q) is not a valid source string", name, req.Source),
-			// })
+			// This is handled in decodeRequiredProvidersBlock now
 			continue
 		}
 
 		constraints, err := version.NewConstraint(req.VersionConstraints)
 		if err != nil {
-			// TODO
-			// diags = append(diags, &hcl.Diagnostic{
-			// 	Severity: hcl.DiagError,
-			// 	Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
-			// 	Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", req.VersionConstraints, err),
-			// })
+			// This is handled in decodeRequiredProvidersBlock now
 			continue
 		}
 
