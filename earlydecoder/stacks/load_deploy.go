@@ -21,6 +21,9 @@ func loadDeployFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 	for _, block := range content.Blocks {
 		switch block.Type {
 		case "deployment":
+			// This produces incorrect diagnostics because it doesn't parse
+			// the HCL object correctly
+
 			// content, _, contentDiags := block.Body.PartialContent(deploymentSchema)
 			// diags = append(diags, contentDiags...)
 
@@ -32,6 +35,7 @@ func loadDeployFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 
 			// inputs := make(map[string]cty.Value)
 			// if attr, defined := content.Attributes["inputs"]; defined {
+
 			// 	valDiags := gohcl.DecodeExpression(attr.Expr, nil, &inputs)
 
 			// 	diags = append(diags, valDiags...)
