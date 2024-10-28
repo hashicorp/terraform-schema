@@ -25,9 +25,6 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		if isStackFilename(filename) {
 			fDiags := loadStackFromFile(f, mod)
 			diags = append(diags, fDiags...)
-		} else if isDeployFilename(filename) {
-			fDiags := loadDeployFromFile(f, mod)
-			diags = append(diags, fDiags...)
 		}
 	}
 
@@ -79,21 +76,6 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		}
 	}
 
-	deployments := make(map[string]stack.Deployment)
-	for key, deployment := range mod.Deployments {
-		deployments[key] = *deployment
-	}
-
-	stores := make(map[string]stack.Store)
-	for key, store := range mod.Stores {
-		stores[key] = *store
-	}
-
-	orchestrationRules := make(map[string]stack.OrchestrationRule)
-	for key, rule := range mod.OrchestrationRules {
-		orchestrationRules[key] = *rule
-	}
-
 	return &stack.Meta{
 		Path:                 path,
 		Filenames:            filenames,
@@ -101,18 +83,10 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, hcl.Diagno
 		Variables:            variables,
 		Outputs:              outputs,
 		ProviderRequirements: providerRequirements,
-		Deployments:          deployments,
-		Stores:               stores,
-		OrchestrationRules:   orchestrationRules,
 	}, diags
 }
 
 func isStackFilename(name string) bool {
 	return strings.HasSuffix(name, ".tfstack.hcl") ||
 		strings.HasSuffix(name, ".tfstack.json")
-}
-
-func isDeployFilename(name string) bool {
-	return strings.HasSuffix(name, ".tfdeploy.hcl") ||
-		strings.HasSuffix(name, ".tfdeploy.json")
 }
