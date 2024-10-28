@@ -6,6 +6,7 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -13,6 +14,17 @@ import (
 func storeBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Description: lang.PlainText("A store block allows to retrieve credentials at plan and apply time. These credentials can be used as inputs to deployment blocks."),
+		Address: &schema.BlockAddrSchema{
+			Steps: []schema.AddrStep{
+				schema.StaticStep{Name: "store"},
+				schema.LabelStep{Index: 0},
+				schema.LabelStep{Index: 1},
+			},
+			FriendlyName:             "store",
+			ScopeId:                  refscope.StoreScope,
+			AsReference:              true,
+			SupportUnknownNestedRefs: true,
+		},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "type",
