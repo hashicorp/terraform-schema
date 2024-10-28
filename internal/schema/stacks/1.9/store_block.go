@@ -50,12 +50,16 @@ func storeBlockSchema() *schema.BlockSchema {
 					"id": {
 						IsRequired:  true,
 						Constraint:  schema.LiteralType{Type: cty.String},
-						Description: lang.Markdown("The id of the varset. In the form of 'varset-QKpocVOC3uQQxVrF'."),
+						Description: lang.Markdown("The id of the varset. In the form of `varset-QKpocVOC3uQQxVrF`."),
 					},
-				},
-				AnyAttribute: &schema.AttributeSchema{
-					IsComputed: true,
-					Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
+					"category": {
+						IsRequired: true,
+						Constraint: schema.OneOf{
+							schema.LiteralValue{Value: cty.StringVal("terraform")},
+							schema.LiteralValue{Value: cty.StringVal("env")},
+						},
+						Description: lang.Markdown("The category argument specifies whether to use Terraform or environment variables from the variable set."),
+					},
 				},
 			},
 		},
