@@ -22,10 +22,6 @@ type decodedStack struct {
 	Variables            map[string]*stack.Variable
 	Outputs              map[string]*stack.Output
 	ProviderRequirements map[string]*providerRequirement
-
-	Deployments        map[string]*stack.Deployment
-	Stores             map[string]*stack.Store
-	OrchestrationRules map[string]*stack.OrchestrationRule
 }
 
 func newDecodedStack() *decodedStack {
@@ -34,9 +30,6 @@ func newDecodedStack() *decodedStack {
 		Variables:            make(map[string]*stack.Variable),
 		Outputs:              make(map[string]*stack.Output),
 		ProviderRequirements: make(map[string]*providerRequirement),
-		Deployments:          make(map[string]*stack.Deployment),
-		Stores:               make(map[string]*stack.Store),
-		OrchestrationRules:   make(map[string]*stack.OrchestrationRule),
 	}
 }
 
