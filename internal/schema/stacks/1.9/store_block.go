@@ -25,7 +25,6 @@ func storeBlockSchema() *schema.BlockSchema {
 				Name:                   "name",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
 				Description:            lang.PlainText("Store name"),
-				IsDepKey:               true,
 			},
 		},
 		DependentBody: map[schema.SchemaKey]*schema.BodySchema{
