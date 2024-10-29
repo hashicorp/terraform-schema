@@ -27,11 +27,11 @@ import (
 )
 
 var (
-	terraformVersion = version.Must(version.NewVersion("1.9.0-rc1"))
+	terraformVersion = version.Must(version.NewVersion("1.10.0-alpha20241023"))
 )
 
 const (
-	functionSignatureHash = "a2a13d27adacdffe438113b347642b75d64f204b702f6d7d2453dbed34e90eb1"
+	functionSignatureHash = "325be29d6cba868f269862d38af6e0d2912a315fada31e522ec6fa49df11204c"
 )
 
 func main() {
