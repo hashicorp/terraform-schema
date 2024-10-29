@@ -27,23 +27,6 @@ var rootSchema = &hcl.BodySchema{
 	},
 }
 
-var deploymentRootSchema = &hcl.BodySchema{
-	Blocks: []hcl.BlockHeaderSchema{
-		{
-			Type:       "deployment",
-			LabelNames: []string{"name"},
-		},
-		{
-			Type:       "store",
-			LabelNames: []string{"type", "name"},
-		},
-		{
-			Type:       "orchestrate",
-			LabelNames: []string{"type", "name"},
-		},
-	},
-}
-
 var componentSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
 		{
