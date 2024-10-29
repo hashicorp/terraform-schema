@@ -54,5 +54,14 @@ func BuiltinReferences(modPath string) reference.Targets {
 			Type:        cty.String,
 			Description: lang.Markdown("The name of the currently selected workspace"),
 		},
+		{
+			Addr: lang.Address{
+				lang.RootStep{Name: "terraform"},
+				lang.AttrStep{Name: "applying"},
+			},
+			ScopeId:     refscope.BuiltinScope,
+			Type:        cty.Bool,
+			Description: lang.Markdown("True if Terraform is currently in the apply phase (including destroy mode), false otherwise"),
+		},
 	}
 }
