@@ -89,9 +89,9 @@ func loadStackFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 				if _, exists := ds.ProviderRequirements[name]; !exists {
 					ds.ProviderRequirements[name] = req
 				} else {
-					if req.Source != "" {
+					if req.Source != nil {
 						source := ds.ProviderRequirements[name].Source
-						if source != "" && source != req.Source {
+						if source != nil && source != req.Source {
 							diags = append(diags, &hcl.Diagnostic{
 								Severity: hcl.DiagError,
 								Summary:  "Multiple provider source attributes",
@@ -103,9 +103,9 @@ func loadStackFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 						}
 					}
 
-					if req.VersionConstraints != "" {
+					if req.VersionConstraints != nil {
 						existingVersionConstraints := ds.ProviderRequirements[name].VersionConstraints
-						if existingVersionConstraints != "" && existingVersionConstraints != req.VersionConstraints {
+						if existingVersionConstraints != nil && existingVersionConstraints != req.VersionConstraints {
 							diags = append(diags, &hcl.Diagnostic{
 								Severity: hcl.DiagError,
 								Summary:  "Multiple provider version constraints",

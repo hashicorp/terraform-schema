@@ -7,9 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
-	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/stack"
 )
 
@@ -43,26 +41,11 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, map[string
 		outputs[key] = *output
 	}
 
-	var providerRequirements = make(map[string]stack.ProviderRequirement, 0)
+	providerRequirements := make(map[string]stack.ProviderRequirement, len(mod.ProviderRequirements))
 	for name, req := range mod.ProviderRequirements {
-		var src tfaddr.Provider
-
-		var err error
-		src, err = tfaddr.ParseProviderSource(req.Source)
-		if err != nil {
-			// This is handled in decodeRequiredProvidersBlock now
-			continue
-		}
-
-		constraints, err := version.NewConstraint(req.VersionConstraints)
-		if err != nil {
-			// This is handled in decodeRequiredProvidersBlock now
-			continue
-		}
-
 		providerRequirements[name] = stack.ProviderRequirement{
-			Source:             src,
-			VersionConstraints: constraints,
+			Source:             *req.Source,
+			VersionConstraints: *req.VersionConstraints,
 		}
 	}
 

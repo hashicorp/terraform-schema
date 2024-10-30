@@ -14,8 +14,8 @@ import (
 )
 
 type providerRequirement struct {
-	Source             string
-	VersionConstraints string
+	Source             *tfaddr.Provider
+	VersionConstraints *version.Constraints
 }
 
 func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequirement, hcl.Diagnostics) {
@@ -65,8 +65,7 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 					continue
 				}
 				if !parsedVersion.IsNull() {
-					pr.VersionConstraints = parsedVersion.AsString()
-					_, err := version.NewConstraint(pr.VersionConstraints)
+					constraints, err := version.NewConstraint(parsedVersion.AsString())
 					if err != nil {
 						diags = append(diags, &hcl.Diagnostic{
 							Severity: hcl.DiagError,
@@ -76,6 +75,7 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 						})
 						continue
 					}
+					pr.VersionConstraints = &constraints
 				}
 
 			case "source":
@@ -91,9 +91,7 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 				}
 
 				if !source.IsNull() {
-					pr.Source = source.AsString()
-
-					_, err := tfaddr.ParseProviderSource(pr.Source)
+					src, err := tfaddr.ParseProviderSource(source.AsString())
 					if err != nil {
 						diags = append(diags, &hcl.Diagnostic{
 							Severity: hcl.DiagError,
@@ -103,6 +101,7 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 						})
 						continue
 					}
+					pr.Source = &src
 				}
 			}
 
