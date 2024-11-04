@@ -21,7 +21,7 @@ type testCase struct {
 	name          string
 	cfg           string
 	expectedMeta  *stack.Meta
-	expectedError hcl.Diagnostics
+	expectedError map[string]hcl.Diagnostics
 }
 
 var customComparer = []cmp.Option{
@@ -44,7 +44,7 @@ func TestLoadStack(t *testing.T) {
 				Outputs:              map[string]stack.Output{},
 				ProviderRequirements: map[string]stack.ProviderRequirement{},
 			},
-			nil,
+			map[string]hcl.Diagnostics{"test.tfstack.hcl": nil},
 		},
 		{
 			"complete component",
@@ -69,7 +69,7 @@ func TestLoadStack(t *testing.T) {
 				Outputs:              map[string]stack.Output{},
 				ProviderRequirements: map[string]stack.ProviderRequirement{},
 			},
-			nil,
+			map[string]hcl.Diagnostics{"test.tfstack.hcl": nil},
 		},
 		{
 			"complete required_providers",
@@ -94,7 +94,7 @@ func TestLoadStack(t *testing.T) {
 					"random": {Source: tfaddr.MustParseProviderSource("hashicorp/random"), VersionConstraints: version.MustConstraints(version.NewConstraint("~> 3.5.1"))},
 				},
 			},
-			nil,
+			map[string]hcl.Diagnostics{"test.tfstack.hcl": nil},
 		},
 	}
 
@@ -112,9 +112,11 @@ func runTestCases(testCases []testCase, t *testing.T, path string) {
 				"test.tfstack.hcl": f,
 			}
 
-			meta, diags := LoadStack(path, files)
+			// LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, map[string]hcl.Diagnostics)
+			var fdiags map[string]hcl.Diagnostics
+			meta, fdiags := LoadStack(path, files)
 
-			if diff := cmp.Diff(tc.expectedError, diags, customComparer...); diff != "" {
+			if diff := cmp.Diff(tc.expectedError, fdiags, customComparer...); diff != "" {
 				t.Fatalf("expected errors doesn't match: %s", diff)
 			}
 

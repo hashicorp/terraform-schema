@@ -7,12 +7,15 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/hcl/v2"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/zclconf/go-cty/cty"
+
+	"github.com/hashicorp/go-version"
 )
 
 type providerRequirement struct {
-	Source             string
-	VersionConstraints string
+	Source             *tfaddr.Provider
+	VersionConstraints *version.Constraints
 }
 
 func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequirement, hcl.Diagnostics) {
@@ -51,8 +54,8 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 
 			switch key.AsString() {
 			case "version":
-				version, valDiags := kv.Value.Value(nil)
-				if valDiags.HasErrors() || !version.Type().Equals(cty.String) {
+				parsedVersion, valDiags := kv.Value.Value(nil)
+				if valDiags.HasErrors() || !parsedVersion.Type().Equals(cty.String) {
 					diags = append(diags, &hcl.Diagnostic{
 						Severity: hcl.DiagError,
 						Summary:  "Unsuitable value type",
@@ -61,8 +64,18 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 					})
 					continue
 				}
-				if !version.IsNull() {
-					pr.VersionConstraints = version.AsString()
+				if !parsedVersion.IsNull() {
+					constraints, err := version.NewConstraint(parsedVersion.AsString())
+					if err != nil {
+						diags = append(diags, &hcl.Diagnostic{
+							Severity: hcl.DiagError,
+							Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
+							Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", pr.VersionConstraints, err),
+							Subject:  attr.Expr.Range().Ptr(),
+						})
+						continue
+					}
+					pr.VersionConstraints = &constraints
 				}
 
 			case "source":
@@ -78,7 +91,17 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 				}
 
 				if !source.IsNull() {
-					pr.Source = source.AsString()
+					src, err := tfaddr.ParseProviderSource(source.AsString())
+					if err != nil {
+						diags = append(diags, &hcl.Diagnostic{
+							Severity: hcl.DiagError,
+							Summary:  fmt.Sprintf("Unable to parse provider source for %q", name),
+							Detail:   fmt.Sprintf("%q provider source (%q) is not a valid source string", name, pr.Source),
+							Subject:  attr.Expr.Range().Ptr(),
+						})
+						continue
+					}
+					pr.Source = &src
 				}
 			}
 
