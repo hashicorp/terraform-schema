@@ -43,6 +43,10 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, map[string
 
 	providerRequirements := make(map[string]stack.ProviderRequirement, len(mod.ProviderRequirements))
 	for name, req := range mod.ProviderRequirements {
+		if req.Source == nil || req.VersionConstraints == nil {
+			continue
+		}
+
 		providerRequirements[name] = stack.ProviderRequirement{
 			Source:             *req.Source,
 			VersionConstraints: *req.VersionConstraints,

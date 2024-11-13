@@ -70,7 +70,7 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 						diags = append(diags, &hcl.Diagnostic{
 							Severity: hcl.DiagError,
 							Summary:  fmt.Sprintf("Unable to parse %q provider requirements", name),
-							Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", pr.VersionConstraints, err),
+							Detail:   fmt.Sprintf("Constraint %q is not a valid constraint: %s", parsedVersion.AsString(), err),
 							Subject:  attr.Expr.Range().Ptr(),
 						})
 						continue
@@ -96,7 +96,7 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*providerRequire
 						diags = append(diags, &hcl.Diagnostic{
 							Severity: hcl.DiagError,
 							Summary:  fmt.Sprintf("Unable to parse provider source for %q", name),
-							Detail:   fmt.Sprintf("%q provider source (%q) is not a valid source string", name, pr.Source),
+							Detail:   fmt.Sprintf("%q provider source (%q) is not a valid source string", name, source.AsString()),
 							Subject:  attr.Expr.Range().Ptr(),
 						})
 						continue
