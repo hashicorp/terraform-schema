@@ -6,6 +6,7 @@ package schema
 import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
+	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -13,6 +14,17 @@ import (
 func orchestrateBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Description: lang.PlainText("Defines an orchestration rule, such as a rule for when to auto-approve one or more deployments in the stack to be evaluated after a plan or apply operation. These rules allow you to define the behavior of various aspects of the stack in code, and make managing large numbers of deployments more manageable. The block labels include the rule type and the rule name, which together must be unique within the stack"),
+		Address: &schema.BlockAddrSchema{
+			Steps: []schema.AddrStep{
+				schema.StaticStep{Name: "orchestrate"},
+				schema.LabelStep{Index: 0},
+				schema.LabelStep{Index: 1},
+			},
+			FriendlyName:             "orchestrate",
+			ScopeId:                  refscope.Orchestrate,
+			AsReference:              true,
+			SupportUnknownNestedRefs: true,
+		},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "type",
@@ -27,6 +39,22 @@ func orchestrateBlockSchema() *schema.BlockSchema {
 				Name:                   "name",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
 				Description:            lang.PlainText("Rule Name"),
+			},
+		},
+		DependentBody: map[schema.SchemaKey]*schema.BodySchema{
+			schema.NewSchemaKey(schema.DependencyKeys{
+				Labels: []schema.LabelDependent{
+					{Index: 0, Value: "auto_approve"},
+				},
+			}): {
+				// TODO: determine if we need to add any attributes here or Body suffices
+			},
+			schema.NewSchemaKey(schema.DependencyKeys{
+				Labels: []schema.LabelDependent{
+					{Index: 0, Value: "replan"},
+				},
+			}): {
+				// TODO: determine if we need to add any attributes here or Body suffices
 			},
 		},
 		Body: &schema.BodySchema{
