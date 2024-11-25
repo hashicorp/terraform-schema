@@ -29,6 +29,22 @@ func orchestrateBlockSchema() *schema.BlockSchema {
 				Description:            lang.PlainText("Rule Name"),
 			},
 		},
+		DependentBody: map[schema.SchemaKey]*schema.BodySchema{
+			schema.NewSchemaKey(schema.DependencyKeys{
+				Labels: []schema.LabelDependent{
+					{Index: 0, Value: "auto_approve"},
+				},
+			}): {
+				// auto_approve does not have any additional attributes
+			},
+			schema.NewSchemaKey(schema.DependencyKeys{
+				Labels: []schema.LabelDependent{
+					{Index: 0, Value: "replan"},
+				},
+			}): {
+				// replan does not have any additional attributes
+			},
+		},
 		Body: &schema.BodySchema{
 			// TODO proper constraints for these
 			Blocks: map[string]*schema.BlockSchema{
