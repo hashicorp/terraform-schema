@@ -22,5 +22,4 @@ var (
 	IdentityTokenScope = lang.ScopeId("identity_token")
 	StoreScope         = lang.ScopeId("store")
 	OrchestrateContext = lang.ScopeId("orchestrate_context")
-	Orchestrate        = lang.ScopeId("orchestrate")
 )
