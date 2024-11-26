@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-schema/module"
 	"github.com/hashicorp/terraform-schema/stack"
 	"github.com/zclconf/go-cty-debug/ctydebug"
+	"github.com/zclconf/go-cty/cty"
 )
 
 type testCase struct {
@@ -96,6 +97,170 @@ func TestLoadStack(t *testing.T) {
 			},
 			map[string]hcl.Diagnostics{"test.tfstack.hcl": nil},
 		},
+		{
+			"variables",
+			`variable "example" {
+  type    = string
+  default = "default_value"
+}
+
+variable "example2" {
+  description = "description"
+  sensitive   = true
+}`,
+			&stack.Meta{
+				Path:       path,
+				Filenames:  []string{"test.tfstack.hcl"},
+				Components: map[string]stack.Component{},
+				Variables: map[string]stack.Variable{
+					"example": {
+						Type:         cty.String,
+						DefaultValue: cty.StringVal("default_value"),
+					},
+					"example2": {
+						Type:        cty.DynamicPseudoType,
+						Description: "description",
+						IsSensitive: true,
+					},
+				},
+				Outputs:              map[string]stack.Output{},
+				ProviderRequirements: map[string]stack.ProviderRequirement{},
+			},
+			map[string]hcl.Diagnostics{"test.tfstack.hcl": nil},
+		},
+		{
+			"outputs",
+			`output "example" {
+  value = "output_value"
+  sensitive = true
+}
+
+output "example2" {
+  description = "description"
+  value       = "another_output_value"
+}`,
+			&stack.Meta{
+				Path:       path,
+				Filenames:  []string{"test.tfstack.hcl"},
+				Components: map[string]stack.Component{},
+				Variables:  map[string]stack.Variable{},
+				Outputs: map[string]stack.Output{
+					"example": {
+						Value:       cty.StringVal("output_value"),
+						IsSensitive: true,
+					},
+					"example2": {
+						Description: "description",
+						Value:       cty.StringVal("another_output_value"),
+					},
+				},
+				ProviderRequirements: map[string]stack.ProviderRequirement{},
+			},
+			map[string]hcl.Diagnostics{"test.tfstack.hcl": nil},
+		},
+	}
+
+	runTestCases(testCases, t, path)
+}
+
+func TestLoadStackDiagnostics(t *testing.T) {
+	path := t.TempDir()
+
+	testCases := []testCase{
+		{
+			"invalid provider source",
+			`required_providers {
+  aws = {
+    source = "test/test/hashicorp/aws"
+  }
+}`,
+			&stack.Meta{
+				Path:                 path,
+				Filenames:            []string{"test.tfstack.hcl"},
+				Components:           map[string]stack.Component{},
+				Variables:            map[string]stack.Variable{},
+				Outputs:              map[string]stack.Output{},
+				ProviderRequirements: map[string]stack.ProviderRequirement{},
+			},
+			map[string]hcl.Diagnostics{
+				"test.tfstack.hcl": {
+					{
+						Severity: hcl.DiagError,
+						Summary:  `Unable to parse provider source for "aws"`,
+						Detail:   `"aws" provider source ("test/test/hashicorp/aws") is not a valid source string`,
+						Subject: &hcl.Range{
+							Filename: "test.tfstack.hcl",
+							Start:    hcl.Pos{Line: 2, Column: 9, Byte: 29},
+							End:      hcl.Pos{Line: 4, Column: 4, Byte: 73},
+						},
+					},
+				},
+			},
+		},
+		{
+			"invalid provider version",
+			`required_providers {
+  aws = {
+    version = "x~> 5.7.0"
+  }
+}`,
+			&stack.Meta{
+				Path:                 path,
+				Filenames:            []string{"test.tfstack.hcl"},
+				Components:           map[string]stack.Component{},
+				Variables:            map[string]stack.Variable{},
+				Outputs:              map[string]stack.Output{},
+				ProviderRequirements: map[string]stack.ProviderRequirement{},
+			},
+			map[string]hcl.Diagnostics{
+				"test.tfstack.hcl": {
+					{
+						Severity: hcl.DiagError,
+						Summary:  `Unable to parse "aws" provider requirements`,
+						Detail:   `Constraint "x~> 5.7.0" is not a valid constraint: Malformed constraint: x~> 5.7.0`,
+						Subject: &hcl.Range{
+							Filename: "test.tfstack.hcl",
+							Start:    hcl.Pos{Line: 2, Column: 9, Byte: 29},
+							End:      hcl.Pos{Line: 4, Column: 4, Byte: 60},
+						},
+					},
+				},
+			},
+		},
+		{
+			"invalid variable default value",
+			`variable "example" {
+  type	= string
+  default = [1]
+}`,
+			&stack.Meta{
+				Path:       path,
+				Filenames:  []string{"test.tfstack.hcl"},
+				Components: map[string]stack.Component{},
+				Variables: map[string]stack.Variable{
+					"example": {
+						Type:         cty.String,
+						DefaultValue: cty.DynamicVal,
+					},
+				},
+				Outputs:              map[string]stack.Output{},
+				ProviderRequirements: map[string]stack.ProviderRequirement{},
+			},
+			map[string]hcl.Diagnostics{
+				"test.tfstack.hcl": {
+					{
+						Severity: hcl.DiagError,
+						Summary:  `Invalid default value for variable`,
+						Detail:   `This default value is not compatible with the variable's type constraint: string required.`,
+						Subject: &hcl.Range{
+							Filename: "test.tfstack.hcl",
+							Start:    hcl.Pos{Line: 3, Column: 13, Byte: 49},
+							End:      hcl.Pos{Line: 3, Column: 16, Byte: 52},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	runTestCases(testCases, t, path)
@@ -112,7 +277,6 @@ func runTestCases(testCases []testCase, t *testing.T, path string) {
 				"test.tfstack.hcl": f,
 			}
 
-			// LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, map[string]hcl.Diagnostics)
 			var fdiags map[string]hcl.Diagnostics
 			meta, fdiags := LoadStack(path, files)
 
