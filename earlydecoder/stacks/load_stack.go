@@ -196,7 +196,7 @@ func loadStackFromFile(file *hcl.File, ds *decodedStack) hcl.Diagnostics {
 				diags = append(diags, valDiags...)
 			}
 
-			if attr, defined := content.Attributes["type"]; defined {
+			if attr, defined := content.Attributes["sensitive"]; defined {
 				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &isSensitive)
 				diags = append(diags, valDiags...)
 			}
