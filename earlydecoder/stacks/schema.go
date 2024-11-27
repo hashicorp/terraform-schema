@@ -49,6 +49,9 @@ var variableSchema = &hcl.BodySchema{
 		{
 			Name: "default",
 		},
+		{
+			Name: "sensitive",
+		},
 	},
 }
 
@@ -61,7 +64,7 @@ var outputSchema = &hcl.BodySchema{
 			Name: "value",
 		},
 		{
-			Name: "type",
+			Name: "sensitive",
 		},
 	},
 }
