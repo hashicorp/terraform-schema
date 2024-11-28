@@ -131,6 +131,38 @@ func (m *StackSchemaMerger) SchemaForStack(meta *stack.Meta) (*schema.BodySchema
 					mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
 			}
+		case tfaddr.Module:
+			// make sure there always is a dependent body schema, even if we've errors and can't get the module schema
+			mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)] = &schema.BodySchema{}
+
+			installedDir, ok := m.stateReader.InstalledModulePath(meta.Path, sourceAddr.String())
+			if ok {
+				path := filepath.Join(meta.Path, installedDir)
+
+				// TODO: how to ensure this dir is parsed and available?
+				modMeta, err := m.stateReader.LocalModuleMeta(path)
+
+				if err == nil {
+					depSchema, err := schemaForDependentComponentBlock(modMeta, comp, name)
+					if err == nil {
+						mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+					}
+				}
+			}
+
+			// components with a source pointing to a registry module require a version constraint
+			if mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)].Attributes == nil {
+				mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)].Attributes = make(map[string]*schema.AttributeSchema)
+			}
+
+			mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)].Attributes["version"] = &schema.AttributeSchema{
+				Constraint:  schema.LiteralType{Type: cty.String},
+				Description: lang.Markdown("Accepts a comma-separated list of version constraints for registry modules. Required for registry modules"),
+				IsRequired:  true,
+			}
+
+			// TODO: support API based schema for registry modules (would require GetModuleDataFromRegistry() job in stacks feature as well)
+
 		case tfmod.RemoteSourceAddr:
 			installedDir, ok := m.stateReader.InstalledModulePath(meta.Path, sourceAddr.String())
 			if !ok {
@@ -146,7 +178,6 @@ func (m *StackSchemaMerger) SchemaForStack(meta *stack.Meta) (*schema.BodySchema
 					mergedSchema.Blocks["component"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
 				}
 			}
-			// TODO: do the same for tfaddr.Module (i.e. registry modules)
 		}
 	}
 
