@@ -56,9 +56,7 @@ func componentBlockSchema() *schema.BlockSchema {
 				"version": {
 					Description: lang.Markdown("Accepts a comma-separated list of version constraints for registry modules"),
 					IsOptional:  true,
-					Constraint: schema.List{
-						Elem: schema.AnyExpression{OfType: cty.String}, // TODO: comma separated list
-					},
+					Constraint:  schema.LiteralType{Type: cty.String},
 				},
 				"providers": {
 					Description: lang.Markdown("A mapping of provider names to providers declared in the stack configuration. Providers must be declared in the top level of the stack and passed into each component in the stack. Components cannot configure their own providers"),
