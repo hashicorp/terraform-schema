@@ -30,10 +30,7 @@ func (m *DeploySchemaMerger) SchemaForDeployment(meta *stack.Meta) (*schema.Body
 
 	mergedSchema := m.coreSchema.Copy()
 
-	constr, err := constraintForDeploymentInputs(*meta)
-	if err != nil {
-		return mergedSchema, err
-	}
+	constr := constraintForDeploymentInputs(*meta)
 
 	// TODO: isOptional should be set to true if at least one input is required
 	mergedSchema.Blocks["deployment"].Body.Attributes["inputs"].Constraint = constr
@@ -41,7 +38,7 @@ func (m *DeploySchemaMerger) SchemaForDeployment(meta *stack.Meta) (*schema.Body
 	return mergedSchema, nil
 }
 
-func constraintForDeploymentInputs(stackMeta stack.Meta) (schema.Constraint, error) {
+func constraintForDeploymentInputs(stackMeta stack.Meta) schema.Constraint {
 	inputs := make(map[string]*schema.AttributeSchema, 0)
 
 	for name, variable := range stackMeta.Variables {
@@ -72,7 +69,7 @@ func constraintForDeploymentInputs(stackMeta stack.Meta) (schema.Constraint, err
 
 	return schema.Object{
 		Attributes: inputs,
-	}, nil
+	}
 }
 
 func StackVarToAttribute(stackVar stack.Variable) *schema.AttributeSchema {
