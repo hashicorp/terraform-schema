@@ -1,9 +1,10 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package stack
+package test
 
 type Meta struct {
-	Path      string
-	Filenames []string
+	Path string
+
+	RunBlocks []string // TODO: just for testing, change to proper type
 }
