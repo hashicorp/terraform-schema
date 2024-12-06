@@ -9,6 +9,9 @@ import (
 
 // decodedTest is the type representing a decoded Terraform test.
 type decodedTest struct {
+
+	// all the blocks of a single test file
+
 }
 
 func newDecodedTest() *decodedTest {

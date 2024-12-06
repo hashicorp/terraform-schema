@@ -35,8 +35,7 @@ func TestLoadTest(t *testing.T) {
 			"empty config",
 			``,
 			&tftest.Meta{
-				Path:      path,
-				Filenames: []string{"test.tftest.hcl"},
+				Path: path,
 			},
 			nil,
 		},
@@ -49,15 +48,13 @@ func TestLoadTest(t *testing.T) {
 func runTestCases(testCases []testCase, t *testing.T, path string) {
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d-%s", i, tc.name), func(t *testing.T) {
-			f, diags := hclsyntax.ParseConfig([]byte(tc.cfg), "test.tftest.hcl", hcl.InitialPos)
+			file, diags := hclsyntax.ParseConfig([]byte(tc.cfg), "test.tftest.hcl", hcl.InitialPos)
 			if len(diags) > 0 {
 				t.Fatal(diags)
 			}
-			files := map[string]*hcl.File{
-				"test.tftest.hcl": f,
-			}
+			filename := "test.tftest.hcl"
 
-			meta, diags := LoadTest(path, files)
+			meta, diags := LoadTest(path, filename, file)
 
 			if diff := cmp.Diff(tc.expectedError, diags, customComparer...); diff != "" {
 				t.Fatalf("expected errors doesn't match: %s", diff)
