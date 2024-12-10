@@ -47,7 +47,7 @@ func constraintForDeploymentInputs(stackMeta stack.Meta) schema.Constraint {
 			varType = cty.DynamicPseudoType
 		}
 		aSchema := StackVarToAttribute(variable)
-		aSchema.Constraint = tfschema.ConvertAttributeTypeToConstraint(varType)
+		aSchema.Constraint = tfschema.ConvertAttributeTypeToConstraint(varType, nil)
 
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{

@@ -10,6 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
+	"github.com/hashicorp/terraform-schema/schema/tags"
 )
 
 func variableBlockSchema() *schema.BlockSchema {
@@ -24,6 +25,9 @@ func variableBlockSchema() *schema.BlockSchema {
 			AsReference:  true,
 			AsTypeOf: &schema.BlockAsTypeOf{
 				AttributeExpr: "type",
+			},
+			ApplyTags: schema.ReferenceTags{ // TODO conditional on ephemeral attribute
+				tags.Ephemeral: struct{}{},
 			},
 		},
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Variable},

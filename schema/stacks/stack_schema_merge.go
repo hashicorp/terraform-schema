@@ -217,7 +217,7 @@ func schemaForDependentComponentBlock(modMeta *tfmod.Meta, component stack.Compo
 			varType = cty.DynamicPseudoType
 		}
 		aSchema := tfschema.ModuleVarToAttribute(modVar)
-		aSchema.Constraint = tfschema.ConvertAttributeTypeToConstraint(varType)
+		aSchema.Constraint = tfschema.ConvertAttributeTypeToConstraint(varType, nil)
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{
 				schema.StaticStep{Name: "var"},

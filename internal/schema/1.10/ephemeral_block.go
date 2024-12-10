@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
+	"github.com/hashicorp/terraform-schema/schema/tags"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -25,6 +26,9 @@ func ephemeralBlockSchema() *schema.BlockSchema {
 			DependentBodyAsData:  true,
 			InferDependentBody:   true,
 			DependentBodySelfRef: true,
+			ApplyTags: schema.ReferenceTags{
+				tags.Ephemeral: struct{}{},
+			},
 		},
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Ephemeral},
 		Labels: []*schema.LabelSchema{

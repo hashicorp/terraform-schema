@@ -34,7 +34,7 @@ func schemaForDependentRegistryModuleBlock(module module.DeclaredModuleCall, mod
 		if typ == cty.NilType {
 			typ = cty.DynamicPseudoType
 		}
-		aSchema.Constraint = ConvertAttributeTypeToConstraint(typ)
+		aSchema.Constraint = ConvertAttributeTypeToConstraint(typ, nil)
 
 		attributes[input.Name] = aSchema
 	}
@@ -114,7 +114,7 @@ func schemaForDependentModuleBlock(module module.DeclaredModuleCall, modMeta *mo
 			varType = cty.DynamicPseudoType
 		}
 		aSchema := ModuleVarToAttribute(modVar)
-		aSchema.Constraint = ConvertAttributeTypeToConstraint(varType)
+		aSchema.Constraint = ConvertAttributeTypeToConstraint(varType, nil)
 		aSchema.OriginForTarget = &schema.PathTarget{
 			Address: schema.Address{
 				schema.StaticStep{Name: "var"},
