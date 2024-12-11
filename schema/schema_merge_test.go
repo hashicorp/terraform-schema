@@ -168,6 +168,7 @@ func TestSchemaMerger_SchemaForModule_providerNameMatch(t *testing.T) {
 		},
 	}
 	sm := NewSchemaMerger(testCoreSchema)
+	sm.SetTerraformVersion(v0_15_0)
 	sm.SetStateReader(&testJsonSchemaReader{
 		ps: &tfjson.ProviderSchemas{
 			FormatVersion: "1.0",
@@ -393,6 +394,7 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 	}
 	sm := NewSchemaMerger(testCoreSchema)
 	sr := testSchemaReader(t, filepath.Join("testdata", "provider-schemas-0.15.json"), false, false)
+	sm.SetTerraformVersion(v0_15_0)
 	sm.SetStateReader(sr)
 
 	vc := version.MustConstraints(version.NewConstraint("0.0.0"))
