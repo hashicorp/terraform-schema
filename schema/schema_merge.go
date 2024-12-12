@@ -147,6 +147,8 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 				}
 			}
 
+			// Ephemeral resources were introduced in Terraform 1.10, so we don't need to
+			// merge them for older versions
 			if m.terraformVersion.GreaterThanOrEqual(v1_10) {
 				for erName, erSchema := range pSchema.EphemeralResources {
 					depKeys := schema.DependencyKeys{
