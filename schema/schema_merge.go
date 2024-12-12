@@ -147,31 +147,35 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 				}
 			}
 
-			for erName, erSchema := range pSchema.EphemeralResources {
-				depKeys := schema.DependencyKeys{
-					Labels: []schema.LabelDependent{
-						{Index: 0, Value: erName},
-					},
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "provider",
-							Expr: schema.ExpressionValue{
-								Address: providerAddr,
-							},
-						},
-					},
-				}
-				mergedSchema.Blocks["ephemeral"].DependentBody[schema.NewSchemaKey(depKeys)] = erSchema
-
-				// No explicit association is required
-				// if the ephemeral resource prefix matches provider name
-				if typeBelongsToProvider(erName, localRef) {
+			// Ephemeral resources were introduced in Terraform 1.10, so we don't need to
+			// merge them for older versions
+			if m.terraformVersion.GreaterThanOrEqual(v1_10) {
+				for erName, erSchema := range pSchema.EphemeralResources {
 					depKeys := schema.DependencyKeys{
 						Labels: []schema.LabelDependent{
 							{Index: 0, Value: erName},
 						},
+						Attributes: []schema.AttributeDependent{
+							{
+								Name: "provider",
+								Expr: schema.ExpressionValue{
+									Address: providerAddr,
+								},
+							},
+						},
 					}
 					mergedSchema.Blocks["ephemeral"].DependentBody[schema.NewSchemaKey(depKeys)] = erSchema
+
+					// No explicit association is required
+					// if the ephemeral resource prefix matches provider name
+					if typeBelongsToProvider(erName, localRef) {
+						depKeys := schema.DependencyKeys{
+							Labels: []schema.LabelDependent{
+								{Index: 0, Value: erName},
+							},
+						}
+						mergedSchema.Blocks["ephemeral"].DependentBody[schema.NewSchemaKey(depKeys)] = erSchema
+					}
 				}
 			}
 
