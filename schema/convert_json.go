@@ -122,6 +122,7 @@ func convertAttributesFromJson(attributes map[string]*tfjson.SchemaAttribute) ma
 			IsOptional:   attr.Optional,
 			IsRequired:   attr.Required,
 			IsSensitive:  attr.Sensitive,
+			IsWriteOnly:  attr.WriteOnly,
 			Constraint:   exprConstraintFromSchemaAttribute(attr),
 		}
 	}
@@ -326,6 +327,7 @@ func convertJsonAttributesToObjectConstraint(attrs map[string]*tfjson.SchemaAttr
 			IsComputed:   attr.Computed,
 			IsOptional:   attr.Optional,
 			IsRequired:   attr.Required,
+			IsWriteOnly:  attr.WriteOnly,
 			Constraint:   exprConstraintFromSchemaAttribute(attr),
 		}
 	}
