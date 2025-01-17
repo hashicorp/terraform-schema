@@ -137,7 +137,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 				// No explicit association is required
 				// if the resource prefix matches provider name
-				if typeBelongsToProvider(rName, localRef) {
+				if TypeBelongsToProvider(rName, localRef) {
 					depKeys := schema.DependencyKeys{
 						Labels: []schema.LabelDependent{
 							{Index: 0, Value: rName},
@@ -168,7 +168,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 					// No explicit association is required
 					// if the ephemeral resource prefix matches provider name
-					if typeBelongsToProvider(erName, localRef) {
+					if TypeBelongsToProvider(erName, localRef) {
 						depKeys := schema.DependencyKeys{
 							Labels: []schema.LabelDependent{
 								{Index: 0, Value: erName},
@@ -222,7 +222,7 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 
 				// No explicit association is required
 				// if the resource prefix matches provider name
-				if typeBelongsToProvider(dsName, localRef) {
+				if TypeBelongsToProvider(dsName, localRef) {
 					depKeys := schema.DependencyKeys{
 						Labels: []schema.LabelDependent{
 							{Index: 0, Value: dsName},
@@ -329,12 +329,12 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 	return mergedSchema, nil
 }
 
-// typeBelongsToProvider returns true if the given type
+// TypeBelongsToProvider returns true if the given type
 // (resource or data source) name belongs to a particular provider.
 //
 // This reflects internal implementation in Terraform at
 // https://github.com/hashicorp/terraform/blob/488bbd80/internal/addrs/resource.go#L68-L77
-func typeBelongsToProvider(typeName string, pRef tfmod.ProviderRef) bool {
+func TypeBelongsToProvider(typeName string, pRef tfmod.ProviderRef) bool {
 	return typeName == pRef.LocalName || strings.HasPrefix(typeName, pRef.LocalName+"_")
 }
 
