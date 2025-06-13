@@ -64,8 +64,9 @@ func LoadStack(path string, files map[string]*hcl.File) (*stack.Meta, map[string
 }
 
 func isStackFilename(name string) bool {
-	return strings.HasSuffix(name, ".tfstack.hcl") ||
-		strings.HasSuffix(name, ".tfstack.json") ||
-		strings.HasSuffix(name, ".tfcomponent.hcl") ||
-		strings.HasSuffix(name, ".tfcomponent.json")
+	return strings.HasSuffix(name, ".tfcomponent.hcl") ||
+		strings.HasSuffix(name, ".tfcomponent.json") ||
+		strings.HasSuffix(name, ".tfstack.hcl") ||
+		strings.HasSuffix(name, ".tfstack.json")
+
 }
