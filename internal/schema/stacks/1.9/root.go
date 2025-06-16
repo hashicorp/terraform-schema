@@ -9,7 +9,7 @@ import (
 )
 
 // StackSchema returns the static schema for a stack
-// configuration (*.tfstack.hcl) file.
+// configuration (*.tfstack.hcl, *.tfcomponent.hcl) file.
 func StackSchema(_ *version.Version) *schema.BodySchema {
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
