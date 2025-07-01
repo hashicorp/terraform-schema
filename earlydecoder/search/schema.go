@@ -25,8 +25,22 @@ var listSchema = &hcl.BodySchema{
 		{
 			Name: "include_resource",
 		},
+	},
+}
+
+var variableSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
 		{
-			Name: "limit",
+			Name: "description",
+		},
+		{
+			Name: "type",
+		},
+		{
+			Name: "default",
+		},
+		{
+			Name: "sensitive",
 		},
 	},
 }
