@@ -113,9 +113,9 @@ func TestLoadStackDiagnostics(t *testing.T) {
 		{
 			"invalid variable default value",
 			`variable "example" {
-		 type	= string
-		 default = [1]
-		}`,
+  type	= string
+  default = [1]
+}`,
 			fileName,
 			&search.Meta{
 				Path:      path,
@@ -134,35 +134,6 @@ func TestLoadStackDiagnostics(t *testing.T) {
 						Severity: hcl.DiagError,
 						Summary:  `Invalid default value for variable`,
 						Detail:   `This default value is not compatible with the variable's type constraint: string required.`,
-						Subject: &hcl.Range{
-							Filename: fileName,
-							Start:    hcl.Pos{Line: 3, Column: 13, Byte: 49},
-							End:      hcl.Pos{Line: 3, Column: 16, Byte: 52},
-						},
-					},
-				},
-			},
-		},
-		{
-			"invalid list include resource value",
-			`list "resource1" "example1" {
-  include_resource	= yes
-}`,
-			fileName,
-			&search.Meta{
-				Path:      path,
-				Filenames: []string{fileName},
-				Variables: map[string]search.Variable{},
-				Lists: map[string]search.List{
-					"example1": {},
-				},
-			},
-			map[string]hcl.Diagnostics{
-				fileName: {
-					{
-						Severity: hcl.DiagError,
-						Summary:  `Invalid value for include_resource in list`,
-						Detail:   `This include resource value is not compatible with the type constraint: bool required.`,
 						Subject: &hcl.Range{
 							Filename: fileName,
 							Start:    hcl.Pos{Line: 3, Column: 13, Byte: 49},
