@@ -57,7 +57,7 @@ func listBlockSchema() *schema.BlockSchema {
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 				},
 				"include_resource": {
-					Constraint:   schema.LiteralType{Type: cty.Number},
+					Constraint:   schema.LiteralType{Type: cty.Bool},
 					DefaultValue: schema.DefaultValue{Value: cty.False},
 					IsOptional:   true,
 					Description: lang.Markdown("By default, the results of a list resource only include the identities of the discovered resources. " +
