@@ -64,7 +64,8 @@ func listBlockSchema() *schema.BlockSchema {
 						"If it is marked true then the provider should include the resource data in the result."),
 				},
 				"limit": {
-					Constraint: schema.LiteralType{Type: cty.Number},
+					// Constraint: schema.LiteralType{Type: cty.Number},
+					Constraint: schema.AnyExpression{OfType: cty.Number},
 					IsOptional: true,
 					Description: lang.Markdown("Limit is an optional value that can be used to limit the " +
 						"number of results returned by the list resource."),
