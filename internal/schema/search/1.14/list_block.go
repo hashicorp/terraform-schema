@@ -20,13 +20,12 @@ func listBlockSchema() *schema.BlockSchema {
 				schema.LabelStep{Index: 1},
 			},
 			FriendlyName:         "list",
-			ScopeId:              refscope.DataScope,
+			ScopeId:              refscope.ListScope,
 			AsReference:          true,
 			DependentBodyAsData:  true,
 			InferDependentBody:   true,
 			DependentBodySelfRef: true,
 		},
-		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "type",
@@ -51,7 +50,7 @@ func listBlockSchema() *schema.BlockSchema {
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
 					Constraint:             schema.Reference{OfScopeId: refscope.ProviderScope},
-					IsOptional:             false,
+					IsRequired:             true,
 					Description:            lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 					IsDepKey:               true,
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
@@ -84,6 +83,7 @@ func listBlockSchema() *schema.BlockSchema {
 				"config": {
 					Description: lang.Markdown("Filters specific to the list type"),
 					MaxItems:    1,
+					MinItems:    1,
 				},
 			},
 		},
