@@ -5,6 +5,7 @@ package earlydecoder
 
 import (
 	"fmt"
+
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/hashicorp/hcl/v2/gohcl"
@@ -92,20 +93,6 @@ func loadSearchFromFile(file *hcl.File, ds *decodedSearch) hcl.Diagnostics {
 				DefaultValue: defaultValue,
 				TypeDefaults: defaults,
 				IsSensitive:  isSensitive,
-			}
-		case "list":
-			content, _, contentDiags := block.Body.PartialContent(listSchema)
-			diags = append(diags, contentDiags...)
-			name := block.Labels[1]
-			var includeResource bool
-			var valDiags hcl.Diagnostics
-			if attr, defined := content.Attributes["include_resource"]; defined {
-				valDiags = gohcl.DecodeExpression(attr.Expr, nil, &includeResource)
-				diags = append(diags, valDiags...)
-			}
-
-			ds.List[name] = &search.List{
-				IncludeResource: includeResource,
 			}
 		}
 	}

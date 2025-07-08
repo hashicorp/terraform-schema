@@ -56,14 +56,13 @@ func listBlockSchema() *schema.BlockSchema {
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 				},
 				"include_resource": {
-					Constraint:   schema.LiteralType{Type: cty.Bool},
+					Constraint:   schema.AnyExpression{OfType: cty.Bool},
 					DefaultValue: schema.DefaultValue{Value: cty.False},
 					IsOptional:   true,
 					Description: lang.Markdown("By default, the results of a list resource only include the identities of the discovered resources. " +
 						"If it is marked true then the provider should include the resource data in the result."),
 				},
 				"limit": {
-					// Constraint: schema.LiteralType{Type: cty.Number},
 					Constraint: schema.AnyExpression{OfType: cty.Number},
 					IsOptional: true,
 					Description: lang.Markdown("Limit is an optional value that can be used to limit the " +
