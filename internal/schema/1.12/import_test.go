@@ -11,16 +11,16 @@ import (
 
 func TestImportBlock(t *testing.T) {
 	schema := importBlock()
-	
+
 	// Test basic schema properties
 	if schema.Description != lang.Markdown("Import resources into Terraform to bring them under Terraform's management") {
 		t.Errorf("unexpected description: %v", schema.Description)
 	}
-	
+
 	if schema.Body.HoverURL != "https://developer.hashicorp.com/terraform/language/import" {
 		t.Errorf("unexpected hover URL: %v", schema.Body.HoverURL)
 	}
-	
+
 	// Test that all expected attributes are present
 	expectedAttrs := []string{"provider", "id", "identity", "to"}
 	for _, attr := range expectedAttrs {
@@ -28,7 +28,7 @@ func TestImportBlock(t *testing.T) {
 			t.Errorf("missing expected attribute: %s", attr)
 		}
 	}
-	
+
 	// Test id attribute
 	idAttr := schema.Body.Attributes["id"]
 	if !idAttr.IsOptional {
@@ -37,7 +37,7 @@ func TestImportBlock(t *testing.T) {
 	if idAttr.Description != lang.Markdown("ID of the resource to be imported. e.g. `i-abcd1234`. Either `id` or `identity` must be specified, but not both.") {
 		t.Errorf("unexpected id description: %v", idAttr.Description)
 	}
-	
+
 	// Test identity attribute
 	identityAttr := schema.Body.Attributes["identity"]
 	if !identityAttr.IsOptional {
@@ -50,7 +50,7 @@ func TestImportBlock(t *testing.T) {
 
 func TestImportBlock_Attributes(t *testing.T) {
 	schema := importBlock()
-	
+
 	// Test that all expected attributes are present
 	expectedAttrs := []string{"provider", "id", "identity", "to"}
 	for _, attr := range expectedAttrs {

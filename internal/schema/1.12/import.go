@@ -25,17 +25,17 @@ func importBlock() *schema.BlockSchema {
 					Constraint: schema.OneOf{
 						schema.AnyExpression{OfType: cty.String},
 					},
-					IsOptional:    true,
-					IsDeprecated:  false,
-					Description:   lang.Markdown("ID of the resource to be imported. e.g. `i-abcd1234`. Either `id` or `identity` must be specified, but not both."),
+					IsOptional:   true,
+					IsDeprecated: false,
+					Description:  lang.Markdown("ID of the resource to be imported. e.g. `i-abcd1234`. Either `id` or `identity` must be specified, but not both."),
 				},
 				"identity": {
 					Constraint: schema.OneOf{
 						schema.AnyExpression{OfType: cty.Map(cty.String)},
 						schema.AnyExpression{OfType: cty.Object(map[string]cty.Type{})},
 					},
-					IsOptional:    true,
-					Description:   lang.Markdown("Key-value pairs to identify the resource to be imported. Either `id` or `identity` must be specified, but not both."),
+					IsOptional:  true,
+					Description: lang.Markdown("Key-value pairs to identify the resource to be imported. Either `id` or `identity` must be specified, but not both."),
 				},
 				"to": {
 					Constraint:  schema.Reference{OfScopeId: refscope.ResourceScope},

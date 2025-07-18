@@ -15,8 +15,8 @@ import (
 	mod_v0_13 "github.com/hashicorp/terraform-schema/internal/schema/0.13"
 	mod_v0_14 "github.com/hashicorp/terraform-schema/internal/schema/0.14"
 	mod_v1_1 "github.com/hashicorp/terraform-schema/internal/schema/1.1"
-	mod_v1_2 "github.com/hashicorp/terraform-schema/internal/schema/1.2"
 	mod_v1_12 "github.com/hashicorp/terraform-schema/internal/schema/1.12"
+	mod_v1_2 "github.com/hashicorp/terraform-schema/internal/schema/1.2"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 )
 
