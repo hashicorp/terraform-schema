@@ -68,7 +68,27 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
 	}
 
-	// TODO merge provider - source them from the Terraform module meta requirements TF-27288
+	providerRefs := ProviderReferences(meta.ProviderReferences)
+
+	for pAddr, pVersionCons := range meta.ProviderRequirements {
+		pSchema, err := m.stateReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
+		if err != nil {
+			continue
+		}
+
+		refs := providerRefs.ReferencesOfProvider(pAddr)
+		for _, localRef := range refs {
+			if pSchema.Provider != nil {
+				mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
+					Labels: []schema.LabelDependent{
+						{Index: 0, Value: localRef.LocalName},
+					},
+				})] = pSchema.Provider
+			}
+
+		}
+	}
+
 	// TODO merge list config - source them from the Terraform module meta requirements TF-27260
 
 	return mergedSchema, nil
@@ -95,4 +115,18 @@ func variableDependentBody(vars map[string]tfsearch.Variable) map[schema.SchemaK
 	}
 
 	return depBodies
+}
+
+type ProviderReferences map[tfsearch.ProviderRef]tfaddr.Provider
+
+func (pr ProviderReferences) ReferencesOfProvider(addr tfaddr.Provider) []tfsearch.ProviderRef {
+	refs := make([]tfsearch.ProviderRef, 0)
+
+	for ref, pAddr := range pr {
+		if pAddr.Equals(addr) {
+			refs = append(refs, ref)
+		}
+	}
+
+	return refs
 }
