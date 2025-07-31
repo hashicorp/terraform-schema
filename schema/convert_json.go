@@ -21,6 +21,7 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 		EphemeralResources: map[string]*schema.BodySchema{},
 		DataSources:        map[string]*schema.BodySchema{},
 		Functions:          map[string]*schema.FunctionSignature{},
+		ListResources:      map[string]*schema.BodySchema{},
 	}
 
 	if jsonSchema.ConfigSchema != nil {
@@ -48,6 +49,12 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 	for fnName, fnSig := range jsonSchema.Functions {
 		ps.Functions[fnName] = functionSignatureFromJson(fnSig)
 		ps.Functions[fnName].Detail = detailForSrcAddr(pAddr, nil)
+	}
+
+	// TODO: TF-27260: after terraform-json package is modified, rename it to ListResourceSchemas
+	for lrName, lrSchema := range jsonSchema.ResourceSchemas {
+		ps.ListResources[lrName] = bodySchemaFromJson(lrSchema.Block)
+		ps.ListResources[lrName].Detail = detailForSrcAddr(pAddr, nil)
 	}
 
 	return ps
