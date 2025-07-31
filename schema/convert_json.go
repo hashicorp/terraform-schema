@@ -51,7 +51,13 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 		ps.Functions[fnName].Detail = detailForSrcAddr(pAddr, nil)
 	}
 
-	// TODO: TF-27260: after terraform-json package is modified, rename it to ListResourceSchemas
+	/*
+		TODO: TF-27260:
+		After terraform-json package is modified,
+		and new key called ListResourceSchemas is introduced
+		which reads json key from list_resource_schemas
+		modify below code to jsonSchema.ListResourceSchemas
+	*/
 	for lrName, lrSchema := range jsonSchema.ResourceSchemas {
 		ps.ListResources[lrName] = bodySchemaFromJson(lrSchema.Block)
 		ps.ListResources[lrName].Detail = detailForSrcAddr(pAddr, nil)
