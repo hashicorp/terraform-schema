@@ -59,6 +59,10 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 		mergedSchema.Blocks["list"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 
+	// if mergedSchema.Blocks["list"].Body.Blocks["config"].DependentBody == nil {
+	// 	mergedSchema.Blocks["list"].Body.Blocks["config"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
+	// }
+
 	if _, ok := mergedSchema.Blocks["variable"]; ok {
 		mergedSchema.Blocks["variable"].Labels = []*schema.LabelSchema{
 			{
@@ -113,6 +117,25 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 
 				// TODO merge list config - source them from the Terraform module meta requirements TF-27260
 				if TypeBelongsToProvider(lrName, localRef) {
+					configDepKeys := schema.DependencyKeys{
+						Labels: []schema.LabelDependent{
+							{Index: 0, Value: lrName},
+						},
+					}
+					mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(configDepKeys)] = &schema.BodySchema{
+						HoverURL:     pSchema.Provider.HoverURL,
+						DocsLink:     pSchema.Provider.DocsLink,
+						Detail:       pSchema.Provider.Detail,
+						Description:  pSchema.Provider.Description,
+						IsDeprecated: pSchema.Provider.IsDeprecated,
+						Blocks: map[string]*schema.BlockSchema{
+							"config": {
+								Body: lrSchema,
+							},
+						},
+					}
+
+					// mergedSchema.Blocks["list"].Body.Blocks["config"].DependentBody[schema.NewSchemaKey(configDepKeys)] = lrSchema
 
 				}
 			}
