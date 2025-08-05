@@ -14,15 +14,33 @@ import (
 	"github.com/zclconf/go-cty/cty/convert"
 )
 
+type providerConfig struct {
+	Name  string
+	Alias string
+}
+
 type decodedSearch struct {
-	List      map[string]*search.List
-	Variables map[string]*search.Variable
+	List            map[string]*search.List
+	Variables       map[string]*search.Variable
+	ProviderConfigs map[string]*providerConfig
+}
+
+var providerConfigSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "version",
+		},
+		{
+			Name: "alias",
+		},
+	},
 }
 
 func newDecodedSearch() *decodedSearch {
 	return &decodedSearch{
-		List:      make(map[string]*search.List),
-		Variables: make(map[string]*search.Variable),
+		List:            make(map[string]*search.List),
+		Variables:       make(map[string]*search.Variable),
+		ProviderConfigs: make(map[string]*providerConfig),
 	}
 }
 
@@ -94,7 +112,27 @@ func loadSearchFromFile(file *hcl.File, ds *decodedSearch) hcl.Diagnostics {
 				TypeDefaults: defaults,
 				IsSensitive:  isSensitive,
 			}
+
+		case "provider":
+			content, _, contentDiags := block.Body.PartialContent(providerConfigSchema)
+			diags = append(diags, contentDiags...)
+			name := block.Labels[0]
+			providerKey := name
+			var alias string
+			if attr, defined := content.Attributes["alias"]; defined {
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &alias)
+				diags = append(diags, valDiags...)
+				if !valDiags.HasErrors() && alias != "" {
+					providerKey = fmt.Sprintf("%s.%s", name, alias)
+				}
+			}
+
+			ds.ProviderConfigs[providerKey] = &providerConfig{
+				Name:  name,
+				Alias: alias,
+			}
 		}
+
 	}
 
 	return diags
