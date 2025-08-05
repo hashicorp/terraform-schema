@@ -93,7 +93,7 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 			if localRef.Alias != "" {
 				providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
 			}
-			for lrName, lrSchema := range pSchema.ListResources{
+			for lrName, lrSchema := range pSchema.ListResources {
 				depKeys := schema.DependencyKeys{
 					Labels: []schema.LabelDependent{
 						{Index: 0, Value: lrName},
@@ -122,10 +122,6 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 			}
 		}
 	}
-
-	// TODO merge provider - source them from the Terraform module meta requirements TF-27288
-	// TODO merge list config - source them from the Terraform module meta requirements TF-27260
-
 	return mergedSchema, nil
 }
 
