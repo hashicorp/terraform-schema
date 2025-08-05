@@ -12,11 +12,18 @@ type Meta struct {
 	Path      string
 	Filenames []string
 
-	Variables map[string]Variable
-	Lists     map[string]List
-
-	ProviderReferences   map[ProviderRef]tfaddr.Provider
+	Variables            map[string]Variable
+	Lists                map[string]List
 	ProviderRequirements ProviderRequirements
+	ProviderReferences   map[ProviderRef]tfaddr.Provider
+}
+
+type ProviderRef struct {
+	LocalName string
+
+	// If not empty, Alias identifies which non-default (aliased) provider
+	// configuration this address refers to.
+	Alias string
 }
 
 type ProviderRequirements map[tfaddr.Provider]version.Constraints
@@ -39,10 +46,3 @@ func (pr ProviderRequirements) Equals(reqs ProviderRequirements) bool {
 	return true
 }
 
-type ProviderRef struct {
-	LocalName string
-
-	// If not empty, Alias identifies which non-default (aliased) provider
-	// configuration this address refers to.
-	Alias string
-}

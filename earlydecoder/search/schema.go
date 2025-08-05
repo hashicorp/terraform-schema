@@ -17,6 +17,10 @@ var rootSchema = &hcl.BodySchema{
 			Type:       "variable",
 			LabelNames: []string{"name"},
 		},
+		{
+			Type:       "provider",
+			LabelNames: []string{"name"},
+		},
 	},
 }
 

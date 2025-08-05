@@ -4,14 +4,13 @@
 package schema
 
 import (
-	"strings"
-
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	tfschema "github.com/hashicorp/terraform-schema/schema"
 	tfsearch "github.com/hashicorp/terraform-schema/search"
+	"strings"
 )
 
 type SearchSchemaMerger struct {
@@ -59,10 +58,6 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 		mergedSchema.Blocks["list"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
 
-	// if mergedSchema.Blocks["list"].Body.Blocks["config"].DependentBody == nil {
-	// 	mergedSchema.Blocks["list"].Body.Blocks["config"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
-	// }
-
 	if _, ok := mergedSchema.Blocks["variable"]; ok {
 		mergedSchema.Blocks["variable"].Labels = []*schema.LabelSchema{
 			{
@@ -81,8 +76,8 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 		if err != nil {
 			continue
 		}
-
 		refs := providerRefs.ReferencesOfProvider(pAddr)
+
 		for _, localRef := range refs {
 			if pSchema.Provider != nil {
 				mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
@@ -98,8 +93,7 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 			if localRef.Alias != "" {
 				providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
 			}
-
-			for lrName, lrSchema := range pSchema.ListResources {
+			for lrName, lrSchema := range pSchema.ListResources{
 				depKeys := schema.DependencyKeys{
 					Labels: []schema.LabelDependent{
 						{Index: 0, Value: lrName},
@@ -115,33 +109,22 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 				}
 				mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = lrSchema
 
-				// TODO merge list config - source them from the Terraform module meta requirements TF-27260
+				// No explicit association is required
+				// if the resource prefix matches provider name
 				if TypeBelongsToProvider(lrName, localRef) {
-					configDepKeys := schema.DependencyKeys{
+					depKeys := schema.DependencyKeys{
 						Labels: []schema.LabelDependent{
 							{Index: 0, Value: lrName},
 						},
 					}
-					mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(configDepKeys)] = &schema.BodySchema{
-						HoverURL:     pSchema.Provider.HoverURL,
-						DocsLink:     pSchema.Provider.DocsLink,
-						Detail:       pSchema.Provider.Detail,
-						Description:  pSchema.Provider.Description,
-						IsDeprecated: pSchema.Provider.IsDeprecated,
-						Blocks: map[string]*schema.BlockSchema{
-							"config": {
-								Body: lrSchema,
-							},
-						},
-					}
-
-					// mergedSchema.Blocks["list"].Body.Blocks["config"].DependentBody[schema.NewSchemaKey(configDepKeys)] = lrSchema
-
+					mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = lrSchema
 				}
 			}
-
 		}
 	}
+
+	// TODO merge provider - source them from the Terraform module meta requirements TF-27288
+	// TODO merge list config - source them from the Terraform module meta requirements TF-27260
 
 	return mergedSchema, nil
 }
@@ -179,15 +162,9 @@ func (pr ProviderReferences) ReferencesOfProvider(addr tfaddr.Provider) []tfsear
 			refs = append(refs, ref)
 		}
 	}
-
 	return refs
 }
 
-// TypeBelongsToProvider returns true if the given type
-// (resource or data source) name belongs to a particular provider.
-//
-// This reflects internal implementation in Terraform at
-// https://github.com/hashicorp/terraform/blob/488bbd80/internal/addrs/resource.go#L68-L77
 func TypeBelongsToProvider(typeName string, pRef tfsearch.ProviderRef) bool {
 	return typeName == pRef.LocalName || strings.HasPrefix(typeName, pRef.LocalName+"_")
 }
