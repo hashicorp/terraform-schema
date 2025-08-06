@@ -264,7 +264,7 @@ func TestLoadStackDiagnostics(t *testing.T) {
 						{
 							Severity: hcl.DiagError,
 							Summary:  `Invalid default value for variable`,
-							Detail:   `This default value is not compatible with the variable's type constraint: string required.`,
+							Detail:   `This default value is not compatible with the variable's type constraint: string required, but have tuple.`,
 							Subject: &hcl.Range{
 								Filename: fileName,
 								Start:    hcl.Pos{Line: 3, Column: 13, Byte: 49},
