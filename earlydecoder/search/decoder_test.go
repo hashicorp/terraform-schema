@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
+	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/search"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
@@ -39,8 +40,12 @@ func TestLoadSearch(t *testing.T) {
 			``,
 			fileName,
 			&search.Meta{
-				Path:      path,
-				Filenames: []string{fileName}, Variables: map[string]search.Variable{}, Lists: map[string]search.List{},
+				Path:                 path,
+				Filenames:            []string{fileName},
+				Variables:            map[string]search.Variable{},
+				Lists:                map[string]search.List{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				ProviderReferences:   map[search.ProviderRef]tfaddr.Provider{},
 			},
 			map[string]hcl.Diagnostics{fileName: nil},
 		},
@@ -71,7 +76,9 @@ func TestLoadSearch(t *testing.T) {
 						IsSensitive: true,
 					},
 				},
-				Lists: map[string]search.List{},
+				Lists:                map[string]search.List{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				ProviderReferences:   map[search.ProviderRef]tfaddr.Provider{},
 			},
 			map[string]hcl.Diagnostics{fileName: nil},
 		},
@@ -106,7 +113,7 @@ func runTestCases(testCases []testCase, t *testing.T, path string) {
 	}
 }
 
-func TestLoadStackDiagnostics(t *testing.T) {
+func TestLoadSearchDiagnostics(t *testing.T) {
 	path := t.TempDir()
 
 	testCases := []testCase{
@@ -126,14 +133,16 @@ func TestLoadStackDiagnostics(t *testing.T) {
 						DefaultValue: cty.DynamicVal,
 					},
 				},
-				Lists: map[string]search.List{},
+				Lists:                map[string]search.List{},
+				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
+				ProviderReferences:   map[search.ProviderRef]tfaddr.Provider{},
 			},
 			map[string]hcl.Diagnostics{
 				fileName: {
 					{
 						Severity: hcl.DiagError,
 						Summary:  `Invalid default value for variable`,
-						Detail:   `This default value is not compatible with the variable's type constraint: string required.`,
+						Detail:   `This default value is not compatible with the variable's type constraint: string required, but have tuple.`,
 						Subject: &hcl.Range{
 							Filename: fileName,
 							Start:    hcl.Pos{Line: 3, Column: 13, Byte: 49},

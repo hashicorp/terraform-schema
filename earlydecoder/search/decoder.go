@@ -36,6 +36,7 @@ func LoadSearch(path string, files map[string]*hcl.File) (*search.Meta, map[stri
 	}
 
 	refs := make(map[search.ProviderRef]tfaddr.Provider, 0)
+	requirements := make(search.ProviderRequirements, 0)
 
 	for _, cfg := range mod.ProviderConfigs {
 		src := refs[search.ProviderRef{
@@ -50,11 +51,12 @@ func LoadSearch(path string, files map[string]*hcl.File) (*search.Meta, map[stri
 	}
 
 	return &search.Meta{
-		Path:               path,
-		Filenames:          filenames,
-		Variables:          variables,
-		Lists:              lists,
-		ProviderReferences: refs,
+		Path:                 path,
+		Filenames:            filenames,
+		Variables:            variables,
+		Lists:                lists,
+		ProviderReferences:   refs,
+		ProviderRequirements: requirements,
 	}, diags
 }
 
