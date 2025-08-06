@@ -45,4 +45,3 @@ func (pr ProviderRequirements) Equals(reqs ProviderRequirements) bool {
 
 	return true
 }
-
