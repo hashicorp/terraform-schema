@@ -12,6 +12,7 @@ type Meta struct {
 	Path      string
 	Filenames []string
 
+	CoreRequirements     version.Constraints
 	Variables            map[string]Variable
 	Lists                map[string]List
 	ProviderRequirements ProviderRequirements
