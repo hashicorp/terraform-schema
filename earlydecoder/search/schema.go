@@ -24,14 +24,6 @@ var rootSchema = &hcl.BodySchema{
 	},
 }
 
-var listSchema = &hcl.BodySchema{
-	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "include_resource",
-		},
-	},
-}
-
 var variableSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
 		{
