@@ -4,13 +4,14 @@
 package schema
 
 import (
+	"strings"
+
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	tfschema "github.com/hashicorp/terraform-schema/schema"
 	tfsearch "github.com/hashicorp/terraform-schema/search"
-	"strings"
 )
 
 type SearchSchemaMerger struct {
