@@ -126,16 +126,6 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 				}
 				mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = listBodySchema
 
-				// No explicit association is required
-				// if the resource prefix matches provider name
-				if TypeBelongsToProvider(lrName, localRef) {
-					depKeys := schema.DependencyKeys{
-						Labels: []schema.LabelDependent{
-							{Index: 0, Value: lrName},
-						},
-					}
-					mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = listBodySchema
-				}
 			}
 		}
 	}
