@@ -103,18 +103,13 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 					Description:  lrSchema.Description,
 					IsDeprecated: lrSchema.IsDeprecated,
 				}
-				// If the list resource schema already has blocks (including config), use them
-				if len(lrSchema.Blocks) > 0 {
-					listBodySchema.Blocks = lrSchema.Blocks
-				} else {
-					// If there's no config block, create one with the list resource schema
-					listBodySchema.Blocks = map[string]*schema.BlockSchema{
-						"config": {
-							Description: lang.Markdown("Filters specific to the list type"),
-							MaxItems:    1,
-							Body:        lrSchema,
-						},
-					}
+
+				listBodySchema.Blocks = map[string]*schema.BlockSchema{
+					"config": {
+						Description: lang.Markdown("Filters specific to the list type"),
+						MaxItems:    1,
+						Body:        lrSchema,
+					},
 				}
 				depKeys := schema.DependencyKeys{
 					Labels: []schema.LabelDependent{
