@@ -78,13 +78,6 @@ func listBlockSchema() *schema.BlockSchema {
 					Description: lang.Markdown("Set of references to hidden dependencies, e.g. other list"),
 				},
 			},
-			Blocks: map[string]*schema.BlockSchema{
-				"config": {
-					Description: lang.Markdown("Filters specific to the list type"),
-					MaxItems:    1,
-					MinItems:    1,
-				},
-			},
 		},
 	}
 }

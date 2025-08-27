@@ -4,13 +4,14 @@
 package schema
 
 import (
+	"strings"
+
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	tfschema "github.com/hashicorp/terraform-schema/schema"
 	tfsearch "github.com/hashicorp/terraform-schema/search"
-	"strings"
 )
 
 type SearchSchemaMerger struct {
@@ -94,6 +95,30 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 				providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
 			}
 			for lrName, lrSchema := range pSchema.ListResources {
+				// Create a BodySchema that ensures a config block exists
+				listBodySchema := &schema.BodySchema{
+					HoverURL:     lrSchema.HoverURL,
+					DocsLink:     lrSchema.DocsLink,
+					Detail:       lrSchema.Detail,
+					Description:  lrSchema.Description,
+					IsDeprecated: lrSchema.IsDeprecated,
+				}
+				// If the list resource schema already has blocks (including config), use them
+				if len(lrSchema.Blocks) > 0 {
+					listBodySchema.Blocks = lrSchema.Blocks
+				} else {
+					// If there's no config block, create one with the list resource schema
+					listBodySchema.Blocks = map[string]*schema.BlockSchema{
+						"config": {
+							Description: lang.Markdown("Filters specific to the list type"),
+							MaxItems:    1,
+							Body:        lrSchema,
+						},
+					}
+				}
+				// Copy other fields from the original schema
+				listBodySchema.Attributes = lrSchema.Attributes
+				listBodySchema.AnyAttribute = lrSchema.AnyAttribute
 				depKeys := schema.DependencyKeys{
 					Labels: []schema.LabelDependent{
 						{Index: 0, Value: lrName},
@@ -107,7 +132,7 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 						},
 					},
 				}
-				mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = lrSchema
+				mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = listBodySchema
 
 				// No explicit association is required
 				// if the resource prefix matches provider name
@@ -117,7 +142,7 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 							{Index: 0, Value: lrName},
 						},
 					}
-					mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = lrSchema
+					mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = listBodySchema
 				}
 			}
 		}
