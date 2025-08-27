@@ -446,7 +446,6 @@ func TestStackSchemaMerger_SchemaForSearch_lists(t *testing.T) {
 								},
 							},
 						},
-						Attributes: map[string]*schema.AttributeSchema{},
 					},
 				},
 			},
