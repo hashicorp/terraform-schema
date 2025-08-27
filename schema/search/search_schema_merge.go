@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
+	tfmod "github.com/hashicorp/terraform-schema/module"
 	tfschema "github.com/hashicorp/terraform-schema/schema"
 	tfsearch "github.com/hashicorp/terraform-schema/search"
 )
@@ -24,6 +25,10 @@ type StateReader interface {
 	// ProviderSchema returns the schema for a provider we have stored in memory. The can come
 	// from different sources.
 	ProviderSchema(modPath string, addr tfaddr.Provider, vc version.Constraints) (*tfschema.ProviderSchema, error)
+
+	// LocalModuleMeta returns the module meta data for a local module. This is the result
+	// of the [earlydecoder] when processing module files
+	LocalModuleMeta(modPath string) (*tfmod.Meta, error)
 }
 
 func NewSearchSchemaMerger(coreSchema *schema.BodySchema) *SearchSchemaMerger {
@@ -72,63 +77,68 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 
 	providerRefs := ProviderReferences(meta.ProviderReferences)
 
-	for pAddr, pVersionCons := range meta.ProviderRequirements {
-		pSchema, err := m.stateReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
-		if err != nil {
-			continue
-		}
-		refs := providerRefs.ReferencesOfProvider(pAddr)
+	modMeta, err := m.stateReader.LocalModuleMeta(meta.Path)
+	if err == nil && modMeta != nil && modMeta.ProviderRequirements != nil {
 
-		for _, localRef := range refs {
-			if pSchema.Provider != nil {
-				mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
-					Labels: []schema.LabelDependent{
-						{Index: 0, Value: localRef.LocalName},
-					},
-				})] = pSchema.Provider
+		for pAddr, pVersionCons := range modMeta.ProviderRequirements {
+			pSchema, err := m.stateReader.ProviderSchema(meta.Path, pAddr, pVersionCons)
+			if err != nil {
+				continue
 			}
+			refs := providerRefs.ReferencesOfProvider(pAddr)
 
-			providerAddr := lang.Address{
-				lang.RootStep{Name: localRef.LocalName},
-			}
-			if localRef.Alias != "" {
-				providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
-			}
-			for lrName, lrSchema := range pSchema.ListResources {
-				// Create a BodySchema that ensures a config block exists
-				listBodySchema := &schema.BodySchema{
-					HoverURL:     lrSchema.HoverURL,
-					DocsLink:     lrSchema.DocsLink,
-					Detail:       lrSchema.Detail,
-					Description:  lrSchema.Description,
-					IsDeprecated: lrSchema.IsDeprecated,
+			for _, localRef := range refs {
+				if pSchema.Provider != nil {
+					mergedSchema.Blocks["provider"].DependentBody[schema.NewSchemaKey(schema.DependencyKeys{
+						Labels: []schema.LabelDependent{
+							{Index: 0, Value: localRef.LocalName},
+						},
+					})] = pSchema.Provider
 				}
 
-				listBodySchema.Blocks = map[string]*schema.BlockSchema{
-					"config": {
-						Description: lang.Markdown("Filters specific to the list type"),
-						MaxItems:    1,
-						Body:        lrSchema,
-					},
+				providerAddr := lang.Address{
+					lang.RootStep{Name: localRef.LocalName},
 				}
-				depKeys := schema.DependencyKeys{
-					Labels: []schema.LabelDependent{
-						{Index: 0, Value: lrName},
-					},
-					Attributes: []schema.AttributeDependent{
-						{
-							Name: "provider",
-							Expr: schema.ExpressionValue{
-								Address: providerAddr,
+				if localRef.Alias != "" {
+					providerAddr = append(providerAddr, lang.AttrStep{Name: localRef.Alias})
+				}
+				for lrName, lrSchema := range pSchema.ListResources {
+					// Create a BodySchema that ensures a config block exists
+					listBodySchema := &schema.BodySchema{
+						HoverURL:     lrSchema.HoverURL,
+						DocsLink:     lrSchema.DocsLink,
+						Detail:       lrSchema.Detail,
+						Description:  lrSchema.Description,
+						IsDeprecated: lrSchema.IsDeprecated,
+					}
+
+					listBodySchema.Blocks = map[string]*schema.BlockSchema{
+						"config": {
+							Description: lang.Markdown("Filters specific to the list type"),
+							MaxItems:    1,
+							Body:        lrSchema,
+						},
+					}
+					depKeys := schema.DependencyKeys{
+						Labels: []schema.LabelDependent{
+							{Index: 0, Value: lrName},
+						},
+						Attributes: []schema.AttributeDependent{
+							{
+								Name: "provider",
+								Expr: schema.ExpressionValue{
+									Address: providerAddr,
+								},
 							},
 						},
-					},
-				}
-				mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = listBodySchema
+					}
+					mergedSchema.Blocks["list"].DependentBody[schema.NewSchemaKey(depKeys)] = listBodySchema
 
+				}
 			}
 		}
 	}
+
 	return mergedSchema, nil
 }
 

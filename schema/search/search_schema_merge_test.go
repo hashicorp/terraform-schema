@@ -85,11 +85,9 @@ func TestSearchSchemaMerger_SchemaForSearch_providerNameMatch(t *testing.T) {
 	})
 
 	givenBodySchema, err := sm.SchemaForSearch(&tfsearch.Meta{
+		Path: "local/path",
 		ProviderReferences: map[tfsearch.ProviderRef]tfaddr.Provider{
 			{LocalName: "data"}: addr.NewDefaultProvider("data"),
-		},
-		ProviderRequirements: tfsearch.ProviderRequirements{
-			addr.NewDefaultProvider("data"): version.MustConstraints(version.NewConstraint("1.0")),
 		},
 	})
 
@@ -136,7 +134,7 @@ func TestSearchSchemaMerger_SchemaForSearch_providerNameMatch(t *testing.T) {
 	}
 }
 
-func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
+func TestSchemaMerger_SchemaForSearch_twiceMerged(t *testing.T) {
 	testCoreSchema := &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"provider": {
@@ -174,11 +172,9 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 	})
 
 	givenBodySchema, err := sm.SchemaForSearch(&tfsearch.Meta{
+		Path: "local/path",
 		ProviderReferences: map[tfsearch.ProviderRef]tfaddr.Provider{
 			{LocalName: "data"}: addr.NewDefaultProvider("data"),
-		},
-		ProviderRequirements: tfsearch.ProviderRequirements{
-			addr.NewDefaultProvider("data"): version.MustConstraints(version.NewConstraint("1.0")),
 		},
 	})
 
@@ -226,11 +222,9 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 
 	// now merge again with different local name
 	givenBodySchema, err = sm.SchemaForSearch(&tfsearch.Meta{
+		Path: "local/path",
 		ProviderReferences: map[tfsearch.ProviderRef]tfaddr.Provider{
-			{LocalName: "test_data"}: addr.NewDefaultProvider("data"),
-		},
-		ProviderRequirements: tfsearch.ProviderRequirements{
-			addr.NewDefaultProvider("data"): version.MustConstraints(version.NewConstraint("1.0")),
+			{LocalName: "data"}: addr.NewDefaultProvider("data"),
 		},
 	})
 
@@ -249,7 +243,7 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 					},
 				},
 				DependentBody: map[schema.SchemaKey]*schema.BodySchema{
-					`{"labels":[{"index":0,"value":"test_data"}]}`: {
+					`{"labels":[{"index":0,"value":"data"}]}`: {
 						Blocks: map[string]*schema.BlockSchema{},
 						Attributes: map[string]*schema.AttributeSchema{
 							"foobar": {
@@ -277,7 +271,7 @@ func TestSchemaMerger_SchemaForModule_twiceMerged(t *testing.T) {
 	}
 }
 
-func TestStackSchemaMerger_SchemaForStack_variables(t *testing.T) {
+func TestSearchSchemaMerger_SchemaForSearch_variables(t *testing.T) {
 	testCoreSchema := &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"provider": {},
@@ -326,7 +320,7 @@ func TestStackSchemaMerger_SchemaForStack_variables(t *testing.T) {
 	}
 }
 
-func TestStackSchemaMerger_SchemaForSearch_lists(t *testing.T) {
+func TestSearchSchemaMerger_SchemaForSearch_lists(t *testing.T) {
 	testCoreSchema := &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"provider": {
@@ -386,11 +380,9 @@ func TestStackSchemaMerger_SchemaForSearch_lists(t *testing.T) {
 	})
 
 	givenBodySchema, err := sm.SchemaForSearch(&tfsearch.Meta{
+		Path: "local/path",
 		ProviderReferences: map[tfsearch.ProviderRef]tfaddr.Provider{
 			{LocalName: "data"}: addr.NewDefaultProvider("data"),
-		},
-		ProviderRequirements: tfsearch.ProviderRequirements{
-			addr.NewDefaultProvider("data"): version.MustConstraints(version.NewConstraint("1.0")),
 		},
 	})
 	if err != nil {
@@ -434,15 +426,25 @@ func TestStackSchemaMerger_SchemaForSearch_lists(t *testing.T) {
 						Detail: "hashicorp/data",
 						Blocks: map[string]*schema.BlockSchema{
 							"config": {
-								Labels: []*schema.LabelSchema{},
+								Description: lang.Markdown("Filters specific to the list type"),
+								MaxItems:    1,
 								Body: &schema.BodySchema{
-									Blocks: map[string]*schema.BlockSchema{},
-									Attributes: map[string]*schema.AttributeSchema{
-										"count": {
-											IsOptional: true,
-											Constraint: schema.AnyExpression{OfType: cty.Number},
+									Blocks: map[string]*schema.BlockSchema{
+										"config": {
+											Labels: []*schema.LabelSchema{},
+											Body: &schema.BodySchema{
+												Blocks: map[string]*schema.BlockSchema{},
+												Attributes: map[string]*schema.AttributeSchema{
+													"count": {
+														IsOptional: true,
+														Constraint: schema.AnyExpression{OfType: cty.Number},
+													},
+												},
+											},
 										},
 									},
+									Attributes: map[string]*schema.AttributeSchema{},
+									Detail:     "hashicorp/data",
 								},
 							},
 						},
@@ -499,6 +501,9 @@ func (r *testSearchSchemaReader) LocalModuleMeta(modPath string) (*tfmod.Meta, e
 		return &tfmod.Meta{
 			ProviderReferences: map[tfmod.ProviderRef]tfaddr.Provider{
 				{LocalName: "test"}: tfaddr.NewProvider("registry.terraform.io", "hashicorp", "test"),
+			},
+			ProviderRequirements: tfmod.ProviderRequirements{
+				addr.NewDefaultProvider("data"): version.MustConstraints(version.NewConstraint("1.0")),
 			},
 			Filenames: []string{"main.tf"},
 		}, nil

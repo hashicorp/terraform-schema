@@ -4,11 +4,12 @@
 package earlydecoder
 
 import (
+	"sort"
+	"strings"
+
 	"github.com/hashicorp/hcl/v2"
 	tfaddr "github.com/hashicorp/terraform-registry-address"
 	"github.com/hashicorp/terraform-schema/search"
-	"sort"
-	"strings"
 )
 
 func LoadSearch(path string, files map[string]*hcl.File) (*search.Meta, map[string]hcl.Diagnostics) {
@@ -36,7 +37,6 @@ func LoadSearch(path string, files map[string]*hcl.File) (*search.Meta, map[stri
 	}
 
 	refs := make(map[search.ProviderRef]tfaddr.Provider, 0)
-	requirements := make(search.ProviderRequirements, 0)
 
 	for _, cfg := range mod.ProviderConfigs {
 		src := refs[search.ProviderRef{
@@ -51,12 +51,11 @@ func LoadSearch(path string, files map[string]*hcl.File) (*search.Meta, map[stri
 	}
 
 	return &search.Meta{
-		Path:                 path,
-		Filenames:            filenames,
-		Variables:            variables,
-		Lists:                lists,
-		ProviderReferences:   refs,
-		ProviderRequirements: requirements,
+		Path:               path,
+		Filenames:          filenames,
+		Variables:          variables,
+		Lists:              lists,
+		ProviderReferences: refs,
 	}, diags
 }
 

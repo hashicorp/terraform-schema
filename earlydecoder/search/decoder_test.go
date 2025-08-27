@@ -5,6 +5,8 @@ package earlydecoder
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
@@ -13,7 +15,6 @@ import (
 	"github.com/hashicorp/terraform-schema/search"
 	"github.com/zclconf/go-cty-debug/ctydebug"
 	"github.com/zclconf/go-cty/cty"
-	"testing"
 )
 
 type testCase struct {
@@ -40,12 +41,11 @@ func TestLoadSearch(t *testing.T) {
 			``,
 			fileName,
 			&search.Meta{
-				Path:                 path,
-				Filenames:            []string{fileName},
-				Variables:            map[string]search.Variable{},
-				Lists:                map[string]search.List{},
-				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
-				ProviderReferences:   map[search.ProviderRef]tfaddr.Provider{},
+				Path:               path,
+				Filenames:          []string{fileName},
+				Variables:          map[string]search.Variable{},
+				Lists:              map[string]search.List{},
+				ProviderReferences: map[search.ProviderRef]tfaddr.Provider{},
 			},
 			map[string]hcl.Diagnostics{fileName: nil},
 		},
@@ -76,9 +76,8 @@ func TestLoadSearch(t *testing.T) {
 						IsSensitive: true,
 					},
 				},
-				Lists:                map[string]search.List{},
-				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
-				ProviderReferences:   map[search.ProviderRef]tfaddr.Provider{},
+				Lists:              map[string]search.List{},
+				ProviderReferences: map[search.ProviderRef]tfaddr.Provider{},
 			},
 			map[string]hcl.Diagnostics{fileName: nil},
 		},
@@ -133,9 +132,8 @@ func TestLoadSearchDiagnostics(t *testing.T) {
 						DefaultValue: cty.DynamicVal,
 					},
 				},
-				Lists:                map[string]search.List{},
-				ProviderRequirements: map[tfaddr.Provider]version.Constraints{},
-				ProviderReferences:   map[search.ProviderRef]tfaddr.Provider{},
+				Lists:              map[string]search.List{},
+				ProviderReferences: map[search.ProviderRef]tfaddr.Provider{},
 			},
 			map[string]hcl.Diagnostics{
 				fileName: {

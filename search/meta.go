@@ -12,11 +12,9 @@ type Meta struct {
 	Path      string
 	Filenames []string
 
-	CoreRequirements     version.Constraints
-	Variables            map[string]Variable
-	Lists                map[string]List
-	ProviderRequirements ProviderRequirements
-	ProviderReferences   map[ProviderRef]tfaddr.Provider
+	Variables          map[string]Variable
+	Lists              map[string]List
+	ProviderReferences map[ProviderRef]tfaddr.Provider
 }
 
 type ProviderRef struct {
