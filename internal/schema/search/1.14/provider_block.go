@@ -43,13 +43,6 @@ func providerBlockSchema() *schema.BlockSchema {
 					IsOptional:  true,
 					Description: lang.Markdown("Alias for using the same provider with different configurations for different resources, e.g. `eu-west`"),
 				},
-				"version": {
-					Constraint:   schema.LiteralType{Type: cty.String},
-					IsOptional:   true,
-					IsDeprecated: true,
-					Description: lang.Markdown("Specifies a version constraint for the provider. e.g. `~> 1.0`.\n" +
-						"**DEPRECATED:** Use `required_providers` block to manage provider version instead."),
-				},
 			},
 		},
 	}
