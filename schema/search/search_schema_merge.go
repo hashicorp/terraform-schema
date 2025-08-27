@@ -116,9 +116,6 @@ func (m *SearchSchemaMerger) SchemaForSearch(meta *tfsearch.Meta) (*schema.BodyS
 						},
 					}
 				}
-				// Copy other fields from the original schema
-				listBodySchema.Attributes = lrSchema.Attributes
-				listBodySchema.AnyAttribute = lrSchema.AnyAttribute
 				depKeys := schema.DependencyKeys{
 					Labels: []schema.LabelDependent{
 						{Index: 0, Value: lrName},
