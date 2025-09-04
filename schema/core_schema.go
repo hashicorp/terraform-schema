@@ -13,6 +13,7 @@ import (
 	mod_v1_1 "github.com/hashicorp/terraform-schema/internal/schema/1.1"
 	mod_v1_10 "github.com/hashicorp/terraform-schema/internal/schema/1.10"
 	mod_v1_12 "github.com/hashicorp/terraform-schema/internal/schema/1.12"
+	mod_v1_14 "github.com/hashicorp/terraform-schema/internal/schema/1.14"
 	mod_v1_2 "github.com/hashicorp/terraform-schema/internal/schema/1.2"
 	mod_v1_4 "github.com/hashicorp/terraform-schema/internal/schema/1.4"
 	mod_v1_5 "github.com/hashicorp/terraform-schema/internal/schema/1.5"
@@ -38,6 +39,7 @@ var (
 	v1_9  = version.Must(version.NewVersion("1.9"))
 	v1_10 = version.Must(version.NewVersion("1.10"))
 	v1_12 = version.Must(version.NewVersion("1.12"))
+	v1_14 = version.Must(version.NewVersion("1.14.0-alpha20250827")) // TODO: Modify to 1.14
 )
 
 // CoreModuleSchemaForVersion finds a module schema which is relevant
@@ -45,6 +47,9 @@ var (
 // It will return error if such schema cannot be found.
 func CoreModuleSchemaForVersion(v *version.Version) (*schema.BodySchema, error) {
 	ver := v.Core()
+	if ver.GreaterThanOrEqual(v1_14) {
+		return mod_v1_14.ModuleSchema(ver), nil
+	}
 	if ver.GreaterThanOrEqual(v1_12) {
 		return mod_v1_12.ModuleSchema(ver), nil
 	}
