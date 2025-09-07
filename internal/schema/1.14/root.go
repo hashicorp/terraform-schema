@@ -14,7 +14,7 @@ func ModuleSchema(v *version.Version) *schema.BodySchema {
 	bs := v1_12_mod.ModuleSchema(v)
 
 	bs.Blocks["action"] = actionBlockSchema()
-	bs.Blocks["resource"].Body.Blocks["lifecycle"].Body.Blocks["action_trigger"] = resourceLifecycleActionTriggerBlockSchema()
+	bs.Blocks["resource"].Body.Blocks["lifecycle"].Body.Blocks["action_trigger"] = resourceLifecycleActionTriggerBlock()
 
 	return bs
 }

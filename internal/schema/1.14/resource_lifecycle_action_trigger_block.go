@@ -10,7 +10,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func resourceLifecycleActionTriggerBlockSchema() *schema.BlockSchema {
+func resourceLifecycleActionTriggerBlock() *schema.BlockSchema {
 	bs := &schema.BlockSchema{
 		Description: lang.Markdown("a block that defines an action or actions to run depending on the condition (optional) and event (required)."),
 		Body: &schema.BodySchema{
