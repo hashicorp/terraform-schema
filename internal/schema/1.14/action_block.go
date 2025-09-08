@@ -52,16 +52,6 @@ func actionBlockSchema() *schema.BlockSchema {
 					Description:            lang.Markdown("Reference to a `provider` configuration block, e.g. `mycloud.west` or `mycloud`"),
 					SemanticTokenModifiers: lang.SemanticTokenModifiers{lang.TokenModifierDependent},
 				},
-				/* "linked_resource": {
-					Constraint:  schema.Reference{OfScopeId: refscope.ResourceScope},
-					IsOptional:  true,
-					Description: lang.Markdown("Reference to a single resource for lifecycle actions"),
-				},
-				"linked_resources": {
-					Constraint:  schema.List{Elem: schema.Reference{OfScopeId: refscope.ResourceScope}},
-					IsOptional:  true,
-					Description: lang.Markdown("List of resource references for linked actions"),
-				}, */
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"config": {
