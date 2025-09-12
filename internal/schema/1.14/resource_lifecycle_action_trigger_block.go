@@ -12,12 +12,12 @@ import (
 
 func resourceLifecycleActionTriggerBlock() *schema.BlockSchema {
 	bs := &schema.BlockSchema{
-		Description: lang.Markdown("a block that defines an action or actions to run depending on the condition (optional) and event (required)."),
+		Description: lang.Markdown("A block that defines an action or actions to run depending on the condition (optional) and event (required)."),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"events": {
 					IsRequired:  true,
-					Description: lang.Markdown("(Required, list): A list of events which will trigger the action in this"),
+					Description: lang.Markdown("A list of events which will trigger the action in this"),
 					Constraint: schema.Set{
 						Elem: schema.OneOf{
 							schema.Keyword{
@@ -61,7 +61,7 @@ func resourceLifecycleActionTriggerBlock() *schema.BlockSchema {
 				},
 				"condition": {
 					IsOptional:  true,
-					Description: lang.Markdown("(optional): an optional boolean expression which can be used to further control whether or not Terraform invokes the actions defined by the given action_trigger; the actions will be invoked if this condition evaluates to true."),
+					Description: lang.Markdown("Condition, a boolean expression which can be used to further control whether or not Terraform invokes the actions defined by the given action_trigger; the actions will be invoked if this condition evaluates to true."),
 					Constraint:  schema.AnyExpression{OfType: cty.Bool},
 				},
 				"actions": {
