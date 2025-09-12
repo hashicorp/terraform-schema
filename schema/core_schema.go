@@ -39,7 +39,7 @@ var (
 	v1_9  = version.Must(version.NewVersion("1.9"))
 	v1_10 = version.Must(version.NewVersion("1.10"))
 	v1_12 = version.Must(version.NewVersion("1.12"))
-	v1_14 = version.Must(version.NewVersion("1.14.0-alpha20250827")) // TODO: Modify to 1.14
+	v1_14 = version.Must(version.NewVersion("1.14.0-alpha20250827"))
 )
 
 // CoreModuleSchemaForVersion finds a module schema which is relevant
