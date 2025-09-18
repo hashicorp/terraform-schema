@@ -8,12 +8,12 @@ require (
 	github.com/hashicorp/go-version v1.7.0
 	github.com/hashicorp/hc-install v0.9.2
 	github.com/hashicorp/hcl-lang v0.0.0-20250613065305-ef4e1a57cead
-	github.com/hashicorp/hcl/v2 v2.23.0
-	github.com/hashicorp/terraform-exec v0.23.0
-	github.com/hashicorp/terraform-json v0.26.0
-	github.com/hashicorp/terraform-registry-address v0.3.0
+	github.com/hashicorp/hcl/v2 v2.24.0
+	github.com/hashicorp/terraform-exec v0.23.1
+	github.com/hashicorp/terraform-json v0.27.2
+	github.com/hashicorp/terraform-registry-address v0.4.0
 	github.com/mh-cbon/go-fmt-fail v0.0.0-20160815164508-67765b3fbcb5
-	github.com/zclconf/go-cty v1.16.3
+	github.com/zclconf/go-cty v1.17.0
 	github.com/zclconf/go-cty-debug v0.0.0-20240509010212-0d6042c53940
 )
 
@@ -26,12 +26,12 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.7 // indirect
 	github.com/hashicorp/terraform-svchost v0.1.1 // indirect
-	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
-	golang.org/x/crypto v0.39.0 // indirect
-	golang.org/x/mod v0.25.0 // indirect
-	golang.org/x/net v0.41.0 // indirect
-	golang.org/x/sync v0.15.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
-	golang.org/x/text v0.26.0 // indirect
-	golang.org/x/tools v0.34.0 // indirect
+	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
+	golang.org/x/crypto v0.41.0 // indirect
+	golang.org/x/mod v0.26.0 // indirect
+	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
+	golang.org/x/sys v0.35.0 // indirect
+	golang.org/x/text v0.28.0 // indirect
+	golang.org/x/tools v0.35.0 // indirect
 )
