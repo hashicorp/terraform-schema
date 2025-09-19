@@ -24,4 +24,6 @@ var (
 	OrchestrateContext = lang.ScopeId("orchestrate_context")
 
 	ListScope = lang.ScopeId("list")
+
+	ActionScope = lang.ScopeId("action")
 )
