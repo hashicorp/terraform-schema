@@ -29,32 +29,12 @@ func resourceLifecycleActionTriggerBlock() *schema.BlockSchema {
 								Description: lang.Markdown("Run the trigger before the resource is updated"),
 							},
 							schema.Keyword{
-								Keyword:     "before_destroy",
-								Description: lang.Markdown("Run the trigger before the resource is destroyed"),
-							},
-							schema.Keyword{
 								Keyword:     "after_create",
 								Description: lang.Markdown("Run the trigger after the resource is created"),
 							},
 							schema.Keyword{
 								Keyword:     "after_update",
 								Description: lang.Markdown("Run the trigger after the resource is updated"),
-							},
-							schema.Keyword{
-								Keyword:     "after_destroy",
-								Description: lang.Markdown("Run the trigger after the resource is destroyed"),
-							},
-							schema.Keyword{
-								Keyword:     "on_create",
-								Description: lang.Markdown("Run the trigger when the resource is created"),
-							},
-							schema.Keyword{
-								Keyword:     "on_update",
-								Description: lang.Markdown("Run the trigger when the resource is updated"),
-							},
-							schema.Keyword{
-								Keyword:     "on_destroy",
-								Description: lang.Markdown("Run the trigger when the resource is destroyed"),
 							},
 						},
 					},
