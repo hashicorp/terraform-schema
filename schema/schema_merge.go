@@ -93,6 +93,9 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 	if checkBlock, ok := mergedSchema.Blocks["check"]; ok && checkBlock.Body.Blocks["data"].DependentBody == nil {
 		mergedSchema.Blocks["check"].Body.Blocks["data"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
 	}
+	if actionBlock, ok := mergedSchema.Blocks["action"]; ok && actionBlock.DependentBody == nil {
+		mergedSchema.Blocks["action"].DependentBody = make(map[schema.SchemaKey]*schema.BodySchema)
+	}
 
 	providerRefs := ProviderReferences(meta.ProviderReferences)
 
@@ -144,6 +147,50 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 						},
 					}
 					mergedSchema.Blocks["resource"].DependentBody[schema.NewSchemaKey(depKeys)] = rSchema
+				}
+			}
+
+			if m.terraformVersion.GreaterThanOrEqual(v1_14) {
+				for arName, arSchema := range pSchema.ActionResources {
+					// Create a BodySchema that ensures a config block exists
+					actionBodySchema := &schema.BodySchema{
+						HoverURL:     arSchema.HoverURL,
+						DocsLink:     arSchema.DocsLink,
+						Detail:       arSchema.Detail,
+						Description:  arSchema.Description,
+						IsDeprecated: arSchema.IsDeprecated,
+						Blocks: map[string]*schema.BlockSchema{
+							"config": {
+								Description: lang.Markdown("Provider specific action configuration"),
+								MaxItems:    1,
+								Body:        arSchema,
+							},
+						},
+					}
+
+					depKeys := schema.DependencyKeys{
+						Labels: []schema.LabelDependent{
+							{Index: 0, Value: arName},
+						},
+						Attributes: []schema.AttributeDependent{
+							{
+								Name: "provider",
+								Expr: schema.ExpressionValue{
+									Address: providerAddr,
+								},
+							},
+						},
+					}
+					mergedSchema.Blocks["action"].DependentBody[schema.NewSchemaKey(depKeys)] = actionBodySchema
+
+					if TypeBelongsToProvider(arName, localRef) {
+						depKeys := schema.DependencyKeys{
+							Labels: []schema.LabelDependent{
+								{Index: 0, Value: arName},
+							},
+						}
+						mergedSchema.Blocks["action"].DependentBody[schema.NewSchemaKey(depKeys)] = actionBodySchema
+					}
 				}
 			}
 

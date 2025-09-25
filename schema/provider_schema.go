@@ -16,6 +16,7 @@ type ProviderSchema struct {
 	DataSources        map[string]*schema.BodySchema
 	Functions          map[string]*schema.FunctionSignature
 	ListResources      map[string]*schema.BodySchema
+	ActionResources    map[string]*schema.BodySchema
 }
 
 func (ps *ProviderSchema) Copy() *ProviderSchema {
@@ -62,6 +63,13 @@ func (ps *ProviderSchema) Copy() *ProviderSchema {
 		}
 	}
 
+	if ps.ActionResources != nil {
+		newPs.ActionResources = make(map[string]*schema.BodySchema, len(ps.ActionResources))
+		for name, arSchema := range ps.ActionResources {
+			newPs.ActionResources[name] = arSchema.Copy()
+		}
+	}
+
 	return newPs
 }
 
@@ -85,5 +93,8 @@ func (ps *ProviderSchema) SetProviderVersion(pAddr tfaddr.Provider, v *version.V
 	}
 	for _, lsSchema := range ps.ListResources {
 		lsSchema.Detail = detailForSrcAddr(pAddr, v)
+	}
+	for _, arSchema := range ps.ActionResources {
+		arSchema.Detail = detailForSrcAddr(pAddr, v)
 	}
 }

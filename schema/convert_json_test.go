@@ -28,6 +28,7 @@ func TestProviderSchemaFromJson_empty(t *testing.T) {
 		DataSources:        map[string]*schema.BodySchema{},
 		Functions:          map[string]*schema.FunctionSignature{},
 		ListResources:      map[string]*schema.BodySchema{},
+		ActionResources:    map[string]*schema.BodySchema{},
 	}
 
 	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
@@ -299,6 +300,7 @@ func TestProviderSchemaFromJson_basic(t *testing.T) {
 		DataSources:        map[string]*schema.BodySchema{},
 		Functions:          map[string]*schema.FunctionSignature{},
 		ListResources:      map[string]*schema.BodySchema{},
+		ActionResources:    map[string]*schema.BodySchema{},
 	}
 
 	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
@@ -509,6 +511,7 @@ func TestProviderSchemaFromJson_nested_set_list(t *testing.T) {
 		DataSources:        map[string]*schema.BodySchema{},
 		Functions:          map[string]*schema.FunctionSignature{},
 		ListResources:      map[string]*schema.BodySchema{},
+		ActionResources:    map[string]*schema.BodySchema{},
 	}
 
 	if diff := cmp.Diff(expectedPs, ps, ctydebug.CmpOptions); diff != "" {
@@ -559,7 +562,8 @@ func TestProviderSchemaFromJson_function(t *testing.T) {
 						VarParam: nil,
 					},
 				},
-				ListResources: map[string]*schema.BodySchema{},
+				ListResources:   map[string]*schema.BodySchema{},
+				ActionResources: map[string]*schema.BodySchema{},
 			},
 		},
 		{
@@ -587,7 +591,8 @@ func TestProviderSchemaFromJson_function(t *testing.T) {
 						VarParam:    nil,
 					},
 				},
-				ListResources: map[string]*schema.BodySchema{},
+				ListResources:   map[string]*schema.BodySchema{},
+				ActionResources: map[string]*schema.BodySchema{},
 			},
 		},
 		{
@@ -636,7 +641,8 @@ func TestProviderSchemaFromJson_function(t *testing.T) {
 						},
 					},
 				},
-				ListResources: map[string]*schema.BodySchema{},
+				ListResources:   map[string]*schema.BodySchema{},
+				ActionResources: map[string]*schema.BodySchema{},
 			},
 		},
 	}
