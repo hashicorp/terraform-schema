@@ -22,6 +22,7 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 		DataSources:        map[string]*schema.BodySchema{},
 		Functions:          map[string]*schema.FunctionSignature{},
 		ListResources:      map[string]*schema.BodySchema{},
+		ActionResources:    map[string]*schema.BodySchema{},
 	}
 
 	if jsonSchema.ConfigSchema != nil {
@@ -56,6 +57,10 @@ func ProviderSchemaFromJson(jsonSchema *tfjson.ProviderSchema, pAddr tfaddr.Prov
 		ps.ListResources[lrName].Detail = detailForSrcAddr(pAddr, nil)
 	}
 
+	for arName, arSchema := range jsonSchema.ActionSchemas {
+		ps.ActionResources[arName] = bodySchemaFromJson(arSchema.Block)
+		ps.ActionResources[arName].Detail = detailForSrcAddr(pAddr, nil)
+	}
 	return ps
 }
 
