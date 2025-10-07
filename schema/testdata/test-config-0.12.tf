@@ -3,7 +3,7 @@
 terraform {
   required_providers {
     random = "3.0.0"
-    null = "3.0.0"
+    null   = "3.0.0"
   }
 }
 

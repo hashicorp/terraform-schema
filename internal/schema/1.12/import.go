@@ -14,6 +14,9 @@ func importBlock() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Description: lang.Markdown("Import resources into Terraform to bring them under Terraform's management"),
 		Body: &schema.BodySchema{
+			Extensions: &schema.BodyExtensions{
+				ForEach: true,
+			},
 			HoverURL: "https://developer.hashicorp.com/terraform/language/import",
 			Attributes: map[string]*schema.AttributeSchema{
 				"provider": {
