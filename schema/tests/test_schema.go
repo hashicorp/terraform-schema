@@ -6,6 +6,7 @@ package schema
 import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl-lang/schema"
+	test_v1_11 "github.com/hashicorp/terraform-schema/internal/schema/tests/1.11"
 	test_v1_6 "github.com/hashicorp/terraform-schema/internal/schema/tests/1.6"
 	test_v1_7 "github.com/hashicorp/terraform-schema/internal/schema/tests/1.7"
 	test_v1_9 "github.com/hashicorp/terraform-schema/internal/schema/tests/1.9"
@@ -13,9 +14,10 @@ import (
 )
 
 var (
-	v1_6 = version.Must(version.NewVersion("1.6"))
-	v1_7 = version.Must(version.NewVersion("1.7"))
-	v1_9 = version.Must(version.NewVersion("1.9"))
+	v1_6  = version.Must(version.NewVersion("1.6"))
+	v1_7  = version.Must(version.NewVersion("1.7"))
+	v1_9  = version.Must(version.NewVersion("1.9"))
+	v1_11 = version.Must(version.NewVersion("1.11"))
 )
 
 // CoreTestSchemaForVersion finds a schema for test configuration files
@@ -24,6 +26,9 @@ var (
 func CoreTestSchemaForVersion(v *version.Version) (*schema.BodySchema, error) {
 	ver := v.Core()
 
+	if ver.GreaterThanOrEqual(v1_11) {
+		return test_v1_11.TestSchema(ver), nil
+	}
 	if ver.GreaterThanOrEqual(v1_9) {
 		return test_v1_9.TestSchema(ver), nil
 	}
