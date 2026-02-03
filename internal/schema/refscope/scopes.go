@@ -26,4 +26,8 @@ var (
 	ListScope = lang.ScopeId("list")
 
 	ActionScope = lang.ScopeId("action")
+
+	ResourcePolicyScope = lang.ScopeId("resource_policy")
+	ProviderPolicyScope = lang.ScopeId("provider_policy")
+	ModulePolicyScope   = lang.ScopeId("module_policy")
 )
