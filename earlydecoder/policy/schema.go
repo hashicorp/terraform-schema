@@ -41,6 +41,9 @@ var policyBlockSchema = &hcl.BodySchema{
 		{
 			Type: "terraform_config",
 		},
+		{
+			Type: "plugins",
+		},
 	},
 }
 
