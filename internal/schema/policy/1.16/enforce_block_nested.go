@@ -12,6 +12,7 @@ import (
 func enforceBlockNestedSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Description: lang.Markdown("Specifies conditions that must be true for the policy to pass"),
+		MinItems:    1,
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"condition": {
