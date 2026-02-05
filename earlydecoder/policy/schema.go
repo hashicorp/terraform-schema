@@ -10,10 +10,6 @@ import (
 var rootSchema = &hcl.BodySchema{
 	Blocks: []hcl.BlockHeaderSchema{
 		{
-			Type:       "variable",
-			LabelNames: []string{"name"},
-		},
-		{
 			Type: "policy",
 		},
 		{
@@ -51,23 +47,6 @@ var terraformConfigBlockSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
 		{
 			Name: "required_version",
-		},
-	},
-}
-
-var variableSchema = &hcl.BodySchema{
-	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "description",
-		},
-		{
-			Name: "type",
-		},
-		{
-			Name: "sensitive",
-		},
-		{
-			Name: "default",
 		},
 	},
 }

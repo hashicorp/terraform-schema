@@ -13,7 +13,6 @@ type Meta struct {
 
 	CoreRequirements version.Constraints
 
-	Variables        map[string]Variable
 	ResourcePolicies map[string]ResourcePolicy
 	ProviderPolicies map[string]ProviderPolicy
 	ModulePolicies   map[string]ModulePolicy

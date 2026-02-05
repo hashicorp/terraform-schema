@@ -5,7 +5,6 @@ package schema
 
 import (
 	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/hcl-lang/lang"
 	"github.com/hashicorp/hcl-lang/schema"
 	tfpolicy "github.com/hashicorp/terraform-schema/policy"
 	tfschema "github.com/hashicorp/terraform-schema/schema"
@@ -50,39 +49,5 @@ func (m *SchemaMerger) SchemaForPolicy(meta *tfpolicy.Meta) (*schema.BodySchema,
 
 	mergedSchema := m.coreSchema.Copy()
 
-	if _, ok := mergedSchema.Blocks["variable"]; ok {
-		mergedSchema.Blocks["variable"].Labels = []*schema.LabelSchema{
-			{
-				Name:        "name",
-				IsDepKey:    true,
-				Description: lang.PlainText("Variable name"),
-			},
-		}
-		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
-	}
-
 	return mergedSchema, nil
-}
-
-func variableDependentBody(vars map[string]tfpolicy.Variable) map[schema.SchemaKey]*schema.BodySchema {
-	depBodies := make(map[schema.SchemaKey]*schema.BodySchema)
-
-	for name, mVar := range vars {
-		depKeys := schema.DependencyKeys{
-			Labels: []schema.LabelDependent{
-				{Index: 0, Value: name},
-			},
-		}
-		depBodies[schema.NewSchemaKey(depKeys)] = &schema.BodySchema{
-			Attributes: map[string]*schema.AttributeSchema{
-				"default": {
-					Constraint:  schema.LiteralType{Type: mVar.Type},
-					IsOptional:  true,
-					Description: lang.Markdown("Default value to use when variable is not explicitly set"),
-				},
-			},
-		}
-	}
-
-	return depBodies
 }

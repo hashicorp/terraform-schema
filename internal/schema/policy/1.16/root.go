@@ -18,7 +18,6 @@ func PolicySchema(_ *version.Version) *schema.BodySchema {
 			"policy":          policyBlockSchema(),
 			"provider_policy": providerPolicyBlockSchema(),
 			"resource_policy": resourcePolicyBlockSchema(),
-			// "variable":        variableBlockSchema(),
 		},
 	}
 }

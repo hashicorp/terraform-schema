@@ -49,28 +49,6 @@ func modulePolicyBlockSchema() *schema.BlockSchema {
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
-				"locals": {
-					SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Locals},
-					Description:            lang.Markdown("Local values to be used in the scope"),
-					Body:                   &schema.BodySchema{
-						// AnyAttribute: &schema.AttributeSchema{
-						// 	Address: &schema.AttributeAddrSchema{
-						// 		Steps: []schema.AddrStep{
-						// 			schema.StaticStep{Name: "local"},
-						// 			schema.AttrNameStep{},
-						// 		},
-						// 		ScopeId:     refscope.ModulePolicyScope,
-						// 		AsExprType:  true,
-						// 		AsReference: true,
-						// 	},
-						// 	Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
-						// 	// Constraint: schema.OneOf{
-						// 	// 	schema.Reference{OfType: cty.DynamicPseudoType, OfScopeId: refscope.ModulePolicyScope},
-						// 	// },
-						// },
-					},
-					MaxItems: 1,
-				},
 				"enforce": enforceBlockNestedSchema(),
 			},
 		},
