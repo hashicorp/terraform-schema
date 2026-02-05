@@ -71,3 +71,51 @@ var variableSchema = &hcl.BodySchema{
 		},
 	},
 }
+
+var resourcePolicyBlockSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "filter",
+		},
+	},
+	Blocks: []hcl.BlockHeaderSchema{
+		{
+			Type: "locals",
+		},
+		{
+			Type: "enforce",
+		},
+	},
+}
+
+var providerPolicyBlockSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "filter",
+		},
+	},
+	Blocks: []hcl.BlockHeaderSchema{
+		{
+			Type: "locals",
+		},
+		{
+			Type: "enforce",
+		},
+	},
+}
+
+var modulePolicyBlockSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "filter",
+		},
+	},
+	Blocks: []hcl.BlockHeaderSchema{
+		{
+			Type: "locals",
+		},
+		{
+			Type: "enforce",
+		},
+	},
+}

@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/hashicorp/hcl/v2/gohcl"
+	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/terraform-schema/policy"
 
 	"github.com/zclconf/go-cty/cty"
@@ -38,7 +39,7 @@ func newDecodedPolicy() *decodedPolicy {
 // This is useful for any caller which does tokenization/parsing on its own
 // e.g. because it will reuse these parsed files later for more detailed
 // interpretation.
-func loadPolicyFromFile(file *hcl.File, mod *decodedPolicy) hcl.Diagnostics {
+func loadPolicyFromFile(file *hcl.File, decodedPolicy *decodedPolicy) hcl.Diagnostics {
 	var diags hcl.Diagnostics
 	content, _, contentDiags := file.Body.PartialContent(rootSchema)
 	diags = append(diags, contentDiags...)
@@ -61,7 +62,7 @@ func loadPolicyFromFile(file *hcl.File, mod *decodedPolicy) hcl.Diagnostics {
 						valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
 						diags = append(diags, valDiags...)
 						if !valDiags.HasErrors() {
-							mod.RequiredCore = append(mod.RequiredCore, version)
+							decodedPolicy.RequiredCore = append(decodedPolicy.RequiredCore, version)
 						}
 					}
 				}
@@ -112,7 +113,7 @@ func loadPolicyFromFile(file *hcl.File, mod *decodedPolicy) hcl.Diagnostics {
 					defaultValue = val
 				}
 			}
-			mod.Variables[name] = &policy.Variable{
+			decodedPolicy.Variables[name] = &policy.Variable{
 				Type:         varType,
 				Description:  description,
 				IsSensitive:  isSensitive,
@@ -120,6 +121,71 @@ func loadPolicyFromFile(file *hcl.File, mod *decodedPolicy) hcl.Diagnostics {
 				TypeDefaults: defaults,
 			}
 
+		case "resource_policy":
+			_, _, contentDiags := block.Body.PartialContent(resourcePolicyBlockSchema)
+			diags = append(diags, contentDiags...)
+
+			if len(block.Labels) != 2 || block.Labels[0] == "" || block.Labels[1] == "" {
+				continue
+			}
+
+			body, ok := block.Body.(*hclsyntax.Body)
+			if !ok {
+				continue
+			}
+			resType := block.Labels[0]
+			resName := block.Labels[1]
+			key := resType + "." + resName
+
+			decodedPolicy.ResourcePolicies[key] = &policy.ResourcePolicy{
+				Type:  resType,
+				Name:  resName,
+				Range: body.SrcRange,
+			}
+
+		case "provider_policy":
+			_, _, contentDiags := block.Body.PartialContent(providerPolicyBlockSchema)
+			diags = append(diags, contentDiags...)
+
+			if len(block.Labels) != 2 || block.Labels[0] == "" || block.Labels[1] == "" {
+				continue
+			}
+
+			body, ok := block.Body.(*hclsyntax.Body)
+			if !ok {
+				continue
+			}
+			resType := block.Labels[0]
+			resName := block.Labels[1]
+			key := resType + "." + resName
+
+			decodedPolicy.ProviderPolicies[key] = &policy.ProviderPolicy{
+				Type:  resType,
+				Name:  resName,
+				Range: body.SrcRange,
+			}
+
+		case "module_policy":
+			_, _, contentDiags := block.Body.PartialContent(modulePolicyBlockSchema)
+			diags = append(diags, contentDiags...)
+
+			if len(block.Labels) != 2 || block.Labels[0] == "" || block.Labels[1] == "" {
+				continue
+			}
+
+			body, ok := block.Body.(*hclsyntax.Body)
+			if !ok {
+				continue
+			}
+			resType := block.Labels[0]
+			resName := block.Labels[1]
+			key := resType + "." + resName
+
+			decodedPolicy.ModulePolicies[key] = &policy.ModulePolicy{
+				Type:  resType,
+				Name:  resName,
+				Range: body.SrcRange,
+			}
 		}
 
 	}
