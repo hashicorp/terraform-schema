@@ -10,6 +10,7 @@ var (
 	LatestAvailableVersion = version.Must(version.NewVersion("1.14.4"))
 
 	terraformVersions = version.Collection{
+		version.Must(version.NewVersion("1.15.0-alpha20260204")),
 		version.Must(version.NewVersion("1.15.0-alpha20251203")),
 		version.Must(version.NewVersion("1.15.0-alpha20251119")),
 		version.Must(version.NewVersion("1.14.4")),
