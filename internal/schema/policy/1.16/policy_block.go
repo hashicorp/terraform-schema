@@ -12,6 +12,7 @@ import (
 
 func policyBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
+		MaxItems:               1,
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Policy},
 		Description:            lang.Markdown("The policy block contains high-level configuration for how tfpolicy evaluates a policy, and the conditions Terraform needs to meet to evaluate the policy."),
 		Body: &schema.BodySchema{
