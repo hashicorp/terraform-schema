@@ -21,7 +21,7 @@ func enforceBlockNestedSchema() *schema.BlockSchema {
 					Description: lang.Markdown("An expression that must evaluate to `true` for the policy to pass"),
 				},
 				"error_message": {
-					Constraint:  schema.LiteralType{Type: cty.String},
+					Constraint:  schema.AnyExpression{OfType: cty.String},
 					IsOptional:  true,
 					Description: lang.Markdown("A custom string describing why the policy failed"),
 				},
