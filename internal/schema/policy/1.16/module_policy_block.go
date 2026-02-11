@@ -50,6 +50,7 @@ func modulePolicyBlockSchema() *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"enforce": enforceBlockNestedSchema(),
+				"locals":  localsBlockNestedSchema(refscope.ModulePolicyScope),
 			},
 		},
 	}
