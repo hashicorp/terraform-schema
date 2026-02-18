@@ -31,7 +31,6 @@ func modulePolicyBlockSchema() *schema.BlockSchema {
 				Name:                   "source",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Module Source"),
-				IsDepKey:               true,
 			},
 			{
 				Name:                   "name",

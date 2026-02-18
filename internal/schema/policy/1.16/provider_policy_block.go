@@ -28,10 +28,9 @@ func providerPolicyBlockSchema() *schema.BlockSchema {
 		},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "type",
+				Name:                   "provider_type",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Provider Type"),
-				IsDepKey:               true,
 			},
 			{
 				Name:                   "name",
@@ -39,7 +38,7 @@ func providerPolicyBlockSchema() *schema.BlockSchema {
 				Description:            lang.PlainText("Policy Name"),
 			},
 		},
-		Description: lang.Markdown("Defines a policy against provider `name` of type `type`"),
+		Description: lang.Markdown("Defines a policy against provider `name` of type `provider_type`"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"filter": {

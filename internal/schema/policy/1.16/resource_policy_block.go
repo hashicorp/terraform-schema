@@ -28,10 +28,9 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 		},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "type",
+				Name:                   "resource_type",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Resource Type"),
-				IsDepKey:               true,
 			},
 			{
 				Name:                   "name",
@@ -39,7 +38,7 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 				Description:            lang.PlainText("Policy Name"),
 			},
 		},
-		Description: lang.Markdown("Defines a policy against resource `name` of type `type`"),
+		Description: lang.Markdown("Defines a policy against resource `name` of type `resource_type`"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"filter": {
