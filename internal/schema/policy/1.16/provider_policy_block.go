@@ -51,8 +51,9 @@ func providerPolicyBlockSchema() *schema.BlockSchema {
 					IsOptional:  true,
 					Description: lang.Markdown("Defines the strictness of this policy. Determines if a violation allows the Run to proceed, requires a manual override, or blocks it entirely."),
 					Constraint: schema.OneOf{
-						schema.LiteralValue{Value: cty.StringVal("mandatory-overridable")},
-						schema.LiteralValue{Value: cty.StringVal("mandatory-ov")},
+						schema.LiteralValue{Value: cty.StringVal("advisory")},
+						schema.LiteralValue{Value: cty.StringVal("mandatory_overridable")},
+						schema.LiteralValue{Value: cty.StringVal("mandatory")},
 					},
 				},
 			},
