@@ -28,10 +28,10 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 		},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "resource_type",
+				Name:                   "type",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Resource Type"),
-				//IsDepKey:               true,
+				IsDepKey:               true,
 			},
 			{
 				Name:                   "name",
