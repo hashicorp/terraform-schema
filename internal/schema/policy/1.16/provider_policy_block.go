@@ -47,6 +47,14 @@ func providerPolicyBlockSchema() *schema.BlockSchema {
 					IsOptional:  true,
 					Description: lang.Markdown("An expression that determines if the policy should be applied to a provider. If it evaluates to `false`, the policy is not applied"),
 				},
+				"enforcement_level": {
+					IsOptional:  true,
+					Description: lang.Markdown("Defines the strictness of this policy. Determines if a violation allows the Run to proceed, requires a manual override, or blocks it entirely."),
+					Constraint: schema.OneOf{
+						schema.LiteralValue{Value: cty.StringVal("mandatory-overridable")},
+						schema.LiteralValue{Value: cty.StringVal("mandatory-ov")},
+					},
+				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"enforce": enforceBlockNestedSchema(),
