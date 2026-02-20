@@ -28,7 +28,7 @@ func enforceBlockNestedSchema() *schema.BlockSchema {
 				"info_message": {
 					Constraint:  schema.AnyExpression{OfType: cty.String},
 					IsOptional:  true,
-					Description: lang.Markdown("Allows the user to print a message."),
+					Description: lang.Markdown("Allows the user to print a message"),
 				},
 			},
 		},
