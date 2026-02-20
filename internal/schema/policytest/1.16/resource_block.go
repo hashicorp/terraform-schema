@@ -28,16 +28,16 @@ func resourceBlockSchema() *schema.BlockSchema {
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "type",
+				Name:                   "resource_type",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Resource Type"),
 				IsDepKey:               true,
 				Completable:            true,
 			},
 			{
-				Name:                   "name",
+				Name:                   "test_case_name",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
-				Description:            lang.PlainText("Reference Name"),
+				Description:            lang.PlainText("Test Case Name"),
 			},
 		},
 		Description: lang.PlainText("Defines a specific infrastructure resource to be evaluated as a test case. It consists of a resource type and a unique name used to organize passing or failing scenarios."),
@@ -47,42 +47,20 @@ func resourceBlockSchema() *schema.BlockSchema {
 					Constraint:   schema.AnyExpression{OfType: cty.Bool},
 					DefaultValue: schema.DefaultValue{Value: cty.False},
 					IsOptional:   true,
-					Description:  lang.Markdown("Expect test to fail"),
+					Description:  lang.Markdown("If `true`, the test passes only if the policy engine rejects the resource"),
 				},
 				"skip": {
 					Constraint:   schema.AnyExpression{OfType: cty.Bool},
 					DefaultValue: schema.DefaultValue{Value: cty.False},
 					IsOptional:   true,
-					Description:  lang.Markdown("Whether to skip the test"),
+					Description:  lang.Markdown("If `true`, this resource is used only as a dependency/reference for other resources and is not evaluated as a standalone test case. Cannot be used with `expect_failure`"),
 				},
 				"attrs": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{},
 					},
-					IsOptional:  true,
-					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
-				},
-				"meta": {
-					Constraint: schema.Object{
-						Attributes: schema.ObjectAttributes{
-							"resource_type": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Resource type"),
-							},
-							"provider_type": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Provider powering the resource"),
-							},
-							"tfe_workspace": &schema.AttributeSchema{
-								Constraint: schema.Object{
-									Attributes: schema.ObjectAttributes{},
-								},
-								Description: lang.Markdown("Workspace config for which the resource belongs to"),
-							},
-						},
-					},
-					IsOptional:  true,
-					Description: lang.Markdown("Meta attributes of the resource"),
+					IsRequired:  true,
+					Description: lang.Markdown("A map of arguments that simulate the resource configuration"),
 				},
 			},
 		},
