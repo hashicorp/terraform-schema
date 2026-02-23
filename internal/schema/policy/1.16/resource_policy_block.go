@@ -58,6 +58,9 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"enforce": enforceBlockNestedSchema(),
+				"locals": &schema.BlockSchema{
+					MaxItems: 1,
+				},
 			},
 		},
 	}

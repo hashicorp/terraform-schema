@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/terraform-schema/policy"
 	"github.com/zclconf/go-cty-debug/ctydebug"
+	"github.com/zclconf/go-cty/cty"
 )
 
 type testCase struct {
@@ -51,6 +52,7 @@ func TestLoadPolicy(t *testing.T) {
 				ResourcePolicies: map[string]policy.ResourcePolicy{},
 				ProviderPolicies: map[string]policy.ProviderPolicy{},
 				ModulePolicies:   map[string]policy.ModulePolicy{},
+				Variables:        map[string]policy.Variable{},
 			},
 		},
 		{
@@ -69,6 +71,7 @@ policy {
 				ResourcePolicies: map[string]policy.ResourcePolicy{},
 				ProviderPolicies: map[string]policy.ProviderPolicy{},
 				ModulePolicies:   map[string]policy.ModulePolicy{},
+				Variables:        map[string]policy.Variable{},
 			},
 		},
 		{
@@ -86,6 +89,7 @@ resource_policy "aws_instance" "web" {
 				},
 				ProviderPolicies: map[string]policy.ProviderPolicy{},
 				ModulePolicies:   map[string]policy.ModulePolicy{},
+				Variables:        map[string]policy.Variable{},
 			},
 		},
 		{
@@ -100,6 +104,7 @@ resource_policy "aws_instance" "web" {
 				ModulePolicies: map[string]policy.ModulePolicy{
 					"./modules/vpc.net": {Type: "./modules/vpc", Name: "net"},
 				},
+				Variables: map[string]policy.Variable{},
 			},
 		},
 		{
@@ -113,6 +118,37 @@ resource_policy "aws_instance" "web" {
 				ModulePolicies:   map[string]policy.ModulePolicy{},
 				ProviderPolicies: map[string]policy.ProviderPolicy{
 					"hashicorp/aws.main": {Type: "hashicorp/aws", Name: "main"},
+				},
+				Variables: map[string]policy.Variable{},
+			},
+		},
+		{
+			name:     "variables",
+			fileName: "resource.policy.hcl",
+			cfg: `variable "example" {
+		 			type    = string
+		 			default = "default_value"
+				}
+				variable "example2" {
+		 			description = "description"
+		 			sensitive   = true
+				}`,
+			expectedMeta: &policy.Meta{
+				Path:             path,
+				Filenames:        []string{"resource.policy.hcl"},
+				ResourcePolicies: map[string]policy.ResourcePolicy{},
+				ProviderPolicies: map[string]policy.ProviderPolicy{},
+				ModulePolicies:   map[string]policy.ModulePolicy{},
+				Variables: map[string]policy.Variable{
+					"example": {
+						Type:         cty.String,
+						DefaultValue: cty.StringVal("default_value"),
+					},
+					"example2": {
+						Type:        cty.DynamicPseudoType,
+						Description: "description",
+						IsSensitive: true,
+					},
 				},
 			},
 		},
