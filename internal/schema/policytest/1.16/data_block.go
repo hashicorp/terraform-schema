@@ -18,21 +18,16 @@ func dataBlockSchema() *schema.BlockSchema {
 				schema.LabelStep{Index: 0},
 				schema.LabelStep{Index: 1},
 			},
-			FriendlyName:         "data",
-			ScopeId:              refscope.DataScope,
-			AsReference:          true,
-			DependentBodyAsData:  true,
-			InferDependentBody:   true,
-			DependentBodySelfRef: true,
+			FriendlyName: "data",
+			ScopeId:      refscope.DataScope,
+			AsReference:  true,
 		},
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "type",
-				Description:            lang.PlainText("Data Source Type"),
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
-				IsDepKey:               true,
-				Completable:            true,
+				Name:                   "data_type",
+				Description:            lang.PlainText("Data Type"),
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
 			},
 			{
 				Name:                   "name",
@@ -40,10 +35,19 @@ func dataBlockSchema() *schema.BlockSchema {
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
 			},
 		},
-		Description: lang.PlainText("Introduces a mock data source containing the specific values returned by a lookup. It uses two labels to refer to the data source type and name."),
+		Description: lang.PlainText("Unlike `resource`, this block contains the returned attributes of a data source. These can be referenced by other resource blocks using `data.<name>.<attribute>`"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"attrs": {
+					Address: &schema.AttributeAddrSchema{
+						Steps: []schema.AddrStep{
+							schema.StaticStep{Name: "xyz"},
+							schema.AttrNameStep{},
+						},
+						ScopeId:     refscope.DataScope,
+						AsExprType:  true,
+						AsReference: true,
+					},
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{},
 					},

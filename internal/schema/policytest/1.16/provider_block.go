@@ -59,17 +59,25 @@ func providerBlockSchema() *schema.BlockSchema {
 				"meta": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{
-							"name": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Local identifier for the provider"),
-							},
 							"source": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("The full, canonical registry address used to locate and download the provider plugin. It combines the namespace and the type"),
+								Description: lang.Markdown("The full source of the provider"),
 							},
 							"version": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Version of the provider"),
+								Description: lang.Markdown("The resolved version of the provider"),
+							},
+							"type": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("The type of provider (“aws”, “azure_rm”)"),
+							},
+							"alias": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("Alias given to the provider"),
+							},
+							"address": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("Address of the provider within Terraform"),
 							},
 						},
 					},

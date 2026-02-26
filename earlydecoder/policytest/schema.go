@@ -14,19 +14,36 @@ var rootSchema = &hcl.BodySchema{
 		},
 		{
 			Type:       "data",
-			LabelNames: []string{"type", "name"},
+			LabelNames: []string{"data_type", "name"},
 		},
 		{
-			Type:       "resource",
-			LabelNames: []string{"type", "name"},
+			Type:       "variable",
+			LabelNames: []string{"name"},
+		},
+	},
+}
+
+var variableSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "description",
 		},
 		{
-			Type:       "provider",
-			LabelNames: []string{"type", "name"},
+			Name: "type",
 		},
 		{
-			Type:       "module",
-			LabelNames: []string{"source", "name"},
+			Name: "default",
+		},
+		{
+			Name: "sensitive",
+		},
+	},
+}
+
+var dataSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "attrs",
 		},
 	},
 }

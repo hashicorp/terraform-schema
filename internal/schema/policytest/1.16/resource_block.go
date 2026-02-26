@@ -62,6 +62,30 @@ func resourceBlockSchema() *schema.BlockSchema {
 					IsRequired:  true,
 					Description: lang.Markdown("A map of arguments that simulate the resource configuration"),
 				},
+				"meta": {
+					Constraint: schema.Object{
+						Attributes: schema.ObjectAttributes{
+							"type": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("Type of resource (“aws_s3_bucket”, “azurerm_managed_disk”)"),
+							},
+							"provider_type": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("Provider of the resource"),
+							},
+							"tfe_workspace": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("Information on the workspace. The only key available within this is ‘tags’. Please see this section for how to use this meta attribute"),
+							},
+							"address": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("Address of the resource within Terraform"),
+							},
+						},
+					},
+					IsRequired:  true,
+					Description: lang.Markdown("Mocks the `required_providers` information"),
+				},
 			},
 		},
 	}
