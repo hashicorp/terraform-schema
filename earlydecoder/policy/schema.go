@@ -24,6 +24,10 @@ var rootSchema = &hcl.BodySchema{
 			Type:       "module_policy",
 			LabelNames: []string{"source", "name"},
 		},
+		{
+			Type:       "variable",
+			LabelNames: []string{"name"},
+		},
 	},
 }
 
@@ -95,6 +99,23 @@ var modulePolicyBlockSchema = &hcl.BodySchema{
 		},
 		{
 			Type: "enforce",
+		},
+	},
+}
+
+var variableSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "description",
+		},
+		{
+			Name: "type",
+		},
+		{
+			Name: "default",
+		},
+		{
+			Name: "sensitive",
 		},
 	},
 }

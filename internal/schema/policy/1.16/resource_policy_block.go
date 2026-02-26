@@ -28,10 +28,9 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 		},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "type",
+				Name:                   "resource_type",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Resource Type"),
-				IsDepKey:               true,
 			},
 			{
 				Name:                   "name",
@@ -39,7 +38,7 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 				Description:            lang.PlainText("Policy Name"),
 			},
 		},
-		Description: lang.Markdown("Defines a policy against resource `name` of type `type`"),
+		Description: lang.Markdown("Defines a policy against resource `name` of type `resource_type`"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"filter": {
@@ -47,9 +46,21 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 					IsOptional:  true,
 					Description: lang.Markdown("An expression that determines if the policy should be applied to a resource instance. If it evaluates to `false`, the policy is not applied"),
 				},
+				"enforcement_level": {
+					IsOptional:  true,
+					Description: lang.Markdown("Defines the strictness of this policy. Determines if a violation allows the run to proceed, requires a manual override, or blocks it entirely."),
+					Constraint: schema.OneOf{
+						schema.LiteralValue{Value: cty.StringVal("advisory")},
+						schema.LiteralValue{Value: cty.StringVal("mandatory_overridable")},
+						schema.LiteralValue{Value: cty.StringVal("mandatory")},
+					},
+				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"enforce": enforceBlockNestedSchema(),
+				"locals": &schema.BlockSchema{
+					MaxItems: 1,
+				},
 			},
 		},
 	}
