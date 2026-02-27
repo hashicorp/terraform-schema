@@ -6,7 +6,4 @@ package policytest
 type Meta struct {
 	Path      string
 	Filenames []string
-
-	Variables  map[string]Variable
-	DataSource map[string]DataSource
 }

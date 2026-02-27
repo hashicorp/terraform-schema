@@ -13,6 +13,18 @@ var rootSchema = &hcl.BodySchema{
 			Type: "policytest",
 		},
 		{
+			Type:       "resource",
+			LabelNames: []string{"resource_type", "test_case_name"},
+		},
+		{
+			Type:       "module",
+			LabelNames: []string{"module_source", "test_case_name"},
+		},
+		{
+			Type:       "provider",
+			LabelNames: []string{"provider_type", "test_case_name"},
+		},
+		{
 			Type:       "data",
 			LabelNames: []string{"data_type", "name"},
 		},
@@ -22,20 +34,3 @@ var rootSchema = &hcl.BodySchema{
 		},
 	},
 }
-
-//var variableSchema = &hcl.BodySchema{
-//	Attributes: []hcl.AttributeSchema{
-//		{
-//			Name: "description",
-//		},
-//		{
-//			Name: "type",
-//		},
-//		{
-//			Name: "default",
-//		},
-//		{
-//			Name: "sensitive",
-//		},
-//	},
-//}
