@@ -50,16 +50,18 @@ func (m *SchemaMerger) SchemaForPolicyTest(meta *tfpolicytest.Meta) (*schema.Bod
 
 	mergedSchema := m.coreSchema.Copy()
 
-	if _, ok := mergedSchema.Blocks["variable"]; ok {
-		mergedSchema.Blocks["variable"].Labels = []*schema.LabelSchema{
-			{
-				Name:        "name",
-				IsDepKey:    true,
-				Description: lang.PlainText("Variable name"),
-			},
-		}
-		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
-	}
+	// Variables will be added later
+
+	//if _, ok := mergedSchema.Blocks["variable"]; ok {
+	//	mergedSchema.Blocks["variable"].Labels = []*schema.LabelSchema{
+	//		{
+	//			Name:        "name",
+	//			IsDepKey:    true,
+	//			Description: lang.PlainText("Variable name"),
+	//		},
+	//	}
+	//	mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
+	//}
 
 	return mergedSchema, nil
 }

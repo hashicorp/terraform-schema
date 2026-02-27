@@ -23,27 +23,19 @@ var rootSchema = &hcl.BodySchema{
 	},
 }
 
-var variableSchema = &hcl.BodySchema{
-	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "description",
-		},
-		{
-			Name: "type",
-		},
-		{
-			Name: "default",
-		},
-		{
-			Name: "sensitive",
-		},
-	},
-}
-
-var dataSchema = &hcl.BodySchema{
-	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "attrs",
-		},
-	},
-}
+//var variableSchema = &hcl.BodySchema{
+//	Attributes: []hcl.AttributeSchema{
+//		{
+//			Name: "description",
+//		},
+//		{
+//			Name: "type",
+//		},
+//		{
+//			Name: "default",
+//		},
+//		{
+//			Name: "sensitive",
+//		},
+//	},
+//}

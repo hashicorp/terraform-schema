@@ -24,6 +24,8 @@ func resourceBlockSchema() *schema.BlockSchema {
 			AsReference:         true,
 			DependentBodyAsData: true,
 			InferDependentBody:  true,
+			BodyAsData:          true,
+			InferBody:           true,
 		},
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 		Labels: []*schema.LabelSchema{
@@ -56,11 +58,15 @@ func resourceBlockSchema() *schema.BlockSchema {
 					Description:  lang.Markdown("If `true`, this resource is used only as a dependency/reference for other resources and is not evaluated as a standalone test case. Cannot be used with `expect_failure`"),
 				},
 				"attrs": {
-					Constraint: schema.Object{
-						Attributes: schema.ObjectAttributes{},
+					Address: &schema.AttributeAddrSchema{
+						Steps: []schema.AddrStep{
+							schema.Skip{},
+						},
+						ScopeId: refscope.DataScope,
 					},
-					IsRequired:  true,
 					Description: lang.Markdown("A map of arguments that simulate the resource configuration"),
+					Constraint:  schema.AnyExpression{OfType: cty.DynamicPseudoType},
+					IsRequired:  true,
 				},
 				"meta": {
 					Constraint: schema.Object{
