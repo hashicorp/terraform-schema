@@ -43,9 +43,7 @@ func dataBlockSchema() *schema.BlockSchema {
 			Attributes: map[string]*schema.AttributeSchema{
 				"attrs": {
 					Address: &schema.AttributeAddrSchema{
-						Steps: []schema.AddrStep{
-							schema.Skip{},
-						},
+						Skip:    true,
 						ScopeId: refscope.DataScope,
 					},
 					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
