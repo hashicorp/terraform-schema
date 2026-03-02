@@ -18,10 +18,15 @@ var (
 	EphemeralScope = lang.ScopeId("ephemeral")
 	VariableScope  = lang.ScopeId("variable")
 
-	ComponentScope     = lang.ScopeId("component")
-	IdentityTokenScope = lang.ScopeId("identity_token")
-	StoreScope         = lang.ScopeId("store")
-	OrchestrateContext = lang.ScopeId("orchestrate_context")
+	ComponentScope             = lang.ScopeId("component")
+	StackScope                 = lang.ScopeId("stack")
+	IdentityTokenScope         = lang.ScopeId("identity_token")
+	StoreScope                 = lang.ScopeId("store")
+	OrchestrateContext         = lang.ScopeId("orchestrate_context")
+	UpstreamInputScope         = lang.ScopeId("upstream_input")
+	DeploymentAutoApproveScope = lang.ScopeId("deployment_auto_approve")
+	DeploymentGroupScope       = lang.ScopeId("deployment_group")
+	DeploymentScope            = lang.ScopeId("deployment")
 
 	ListScope = lang.ScopeId("list")
 

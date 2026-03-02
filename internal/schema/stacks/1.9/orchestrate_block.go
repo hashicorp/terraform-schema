@@ -12,7 +12,8 @@ import (
 
 func orchestrateBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
-		Description: lang.PlainText("Defines an orchestration rule, such as a rule for when to auto-approve one or more deployments in the stack to be evaluated after a plan or apply operation. These rules allow you to define the behavior of various aspects of the stack in code, and make managing large numbers of deployments more manageable. The block labels include the rule type and the rule name, which together must be unique within the stack"),
+		IsDeprecated: true,
+		Description:  lang.PlainText("Use other blocks like 'deployment_auto_approve' block to define rules. Block 'deployment_auto_approve' defines rules that automatically approve deployment plans when specific conditions are met."),
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "type",
