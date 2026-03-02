@@ -31,10 +31,8 @@ func resourceBlockSchema() *schema.BlockSchema {
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "resource_type",
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Resource Type"),
-				IsDepKey:               true,
-				Completable:            true,
 			},
 			{
 				Name:                   "test_case_name",

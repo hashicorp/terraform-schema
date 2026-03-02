@@ -29,10 +29,8 @@ func providerBlockSchema() *schema.BlockSchema {
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "provider_type",
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Provider Type"),
-				IsDepKey:               true,
-				Completable:            true,
 			},
 			{
 				Name:                   "test_case_name",

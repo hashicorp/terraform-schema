@@ -30,7 +30,7 @@ func dataBlockSchema() *schema.BlockSchema {
 			{
 				Name:                   "data_type",
 				Description:            lang.PlainText("Data Type"),
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 			},
 			{
 				Name:                   "name",

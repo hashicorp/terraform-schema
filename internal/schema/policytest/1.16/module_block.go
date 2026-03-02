@@ -29,10 +29,8 @@ func moduleBlockSchema() *schema.BlockSchema {
 		Labels: []*schema.LabelSchema{
 			{
 				Name:                   "module_source",
-				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
+				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Module Source"),
-				IsDepKey:               true,
-				Completable:            true,
 			},
 			{
 				Name:                   "test_case_name",
