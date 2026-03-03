@@ -9,11 +9,12 @@ import (
 )
 
 // StackSchema returns the static schema for a stack
-// configuration (*.tfstack.hcl, *.tfcomponent.hcl) file.
+// configuration (*.tfcomponent.hcl) file.
 func StackSchema(_ *version.Version) *schema.BodySchema {
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"component":          componentBlockSchema(),
+			"stack":              stackBlockSchema(),
 			"provider":           providerBlockSchema(),
 			"required_providers": requiredProvidersBlockSchema(),
 			"variable":           variableBlockSchema(),
@@ -29,11 +30,15 @@ func StackSchema(_ *version.Version) *schema.BodySchema {
 func DeploymentSchema(_ *version.Version) *schema.BodySchema {
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
-			"deployment":     deploymentBlockSchema(),
-			"identity_token": identityTokenBlockSchema(),
-			"orchestrate":    orchestrateBlockSchema(),
-			"store":          storeBlockSchema(),
-			"locals":         localsBlockSchema(),
+			"deployment":              deploymentBlockSchema(),
+			"identity_token":          identityTokenBlockSchema(),
+			"orchestrate":             orchestrateBlockSchema(),
+			"store":                   storeBlockSchema(),
+			"locals":                  localsBlockSchema(),
+			"publish_output":          publishOutputBlockSchema(),
+			"upstream_input":          upstreamInputBlockSchema(),
+			"deployment_auto_approve": deploymentAutoApproveBlockSchema(),
+			"deployment_group":        deploymentGroupBlockSchema(),
 		},
 	}
 }
