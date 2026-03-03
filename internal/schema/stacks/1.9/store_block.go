@@ -60,9 +60,12 @@ func storeBlockSchema() *schema.BlockSchema {
 			}): {
 				Attributes: map[string]*schema.AttributeSchema{
 					"id": {
-						IsRequired:  true,
 						Constraint:  schema.LiteralType{Type: cty.String},
-						Description: lang.Markdown("The id of the varset. In the form of `varset-QKpocVOC3uQQxVrF`."),
+						Description: lang.Markdown("The id of the varset. In the form of `varset-QKpocVOC3uQQxVrF`. Mutually exclusive with `name`."),
+					},
+					"name": {
+						Constraint:  schema.LiteralType{Type: cty.String},
+						Description: lang.Markdown("The name of the variable set you want to access. Mutually exclusive with `id`."),
 					},
 					"category": {
 						IsRequired: true,
