@@ -56,9 +56,11 @@ func resourceBlockSchema() *schema.BlockSchema {
 					Description:  lang.Markdown("If `true`, this resource is used only as a dependency/reference for other resources and is not evaluated as a standalone test case. Cannot be used with `expect_failure`"),
 				},
 				"attrs": {
-					Constraint: schema.Object{
-						Attributes: schema.ObjectAttributes{},
+					Address: &schema.AttributeAddrSchema{
+						Skip:    true,
+						ScopeId: refscope.ResourceScope,
 					},
+					Constraint:  schema.AnyExpression{OfType: cty.DynamicPseudoType},
 					Description: lang.Markdown("A map of arguments that simulate the resource configuration"),
 					IsOptional:  true,
 				},
