@@ -79,7 +79,7 @@ func providerBlockSchema() *schema.BlockSchema {
 							},
 						},
 					},
-					IsRequired:  true,
+					IsOptional:  true,
 					Description: lang.Markdown("Mocks the `required_providers` information"),
 				},
 			},

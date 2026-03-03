@@ -47,14 +47,13 @@ func moduleBlockSchema() *schema.BlockSchema {
 					IsOptional:   true,
 					Description:  lang.Markdown("Expect test to fail"),
 				},
-				// Note : Not Supported at current moment but will be introduced in the future.
-				//"attrs": {
-				//	Constraint: schema.Object{
-				//		Attributes: schema.ObjectAttributes{},
-				//	},
-				//	IsOptional:  true,
-				//	Description: lang.Markdown("Mocks the input variables passed to the module"),
-				//},
+				"attrs": {
+					Constraint: schema.Object{
+						Attributes: schema.ObjectAttributes{},
+					},
+					IsOptional:  true,
+					Description: lang.Markdown("Mocks the input variables passed to the module"),
+				},
 				"meta": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{
@@ -72,7 +71,7 @@ func moduleBlockSchema() *schema.BlockSchema {
 							},
 						},
 					},
-					IsRequired:  true,
+					IsOptional:  true,
 					Description: lang.Markdown("Mocks the static module identifiers"),
 				},
 			},

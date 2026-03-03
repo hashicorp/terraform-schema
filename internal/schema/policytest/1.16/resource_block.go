@@ -60,12 +60,12 @@ func resourceBlockSchema() *schema.BlockSchema {
 						Attributes: schema.ObjectAttributes{},
 					},
 					Description: lang.Markdown("A map of arguments that simulate the resource configuration"),
-					IsRequired:  true,
+					IsOptional:  true,
 				},
 				"meta": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{
-							"type": &schema.AttributeSchema{
+							"resource_type": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("Type of resource (“aws_s3_bucket”, “azurerm_managed_disk”)"),
 							},
