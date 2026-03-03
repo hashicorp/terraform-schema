@@ -19,11 +19,12 @@ func dataBlockSchema() *schema.BlockSchema {
 				schema.LabelStep{Index: 0},
 				schema.LabelStep{Index: 1},
 			},
-			FriendlyName: "data",
-			ScopeId:      refscope.DataScope,
-			AsReference:  true,
-			InferBody:    true,
-			BodyAsData:   true,
+			FriendlyName:         "data",
+			ScopeId:              refscope.DataScope,
+			AsReference:          true,
+			DependentBodyAsData:  true,
+			InferDependentBody:   true,
+			DependentBodySelfRef: true,
 		},
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 		Labels: []*schema.LabelSchema{
@@ -43,8 +44,9 @@ func dataBlockSchema() *schema.BlockSchema {
 			Attributes: map[string]*schema.AttributeSchema{
 				"attrs": {
 					Address: &schema.AttributeAddrSchema{
-						Skip:    true,
-						ScopeId: refscope.DataScope,
+						Skip:       true,
+						ScopeId:    refscope.DataScope,
+						AsExprType: true,
 					},
 					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
 					Constraint:  schema.AnyExpression{OfType: cty.DynamicPseudoType},

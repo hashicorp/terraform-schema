@@ -15,17 +15,15 @@ func resourceBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		Address: &schema.BlockAddrSchema{
 			Steps: []schema.AddrStep{
-				schema.StaticStep{Name: "resource"},
 				schema.LabelStep{Index: 0},
 				schema.LabelStep{Index: 1},
 			},
-			FriendlyName:        "resource",
-			ScopeId:             refscope.ResourceScope,
-			AsReference:         true,
-			DependentBodyAsData: true,
-			InferDependentBody:  true,
-			BodyAsData:          true,
-			InferBody:           true,
+			FriendlyName:         "resource",
+			ScopeId:              refscope.ResourceScope,
+			AsReference:          true,
+			DependentBodyAsData:  true,
+			InferDependentBody:   true,
+			DependentBodySelfRef: true,
 		},
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Resource},
 		Labels: []*schema.LabelSchema{
@@ -57,8 +55,9 @@ func resourceBlockSchema() *schema.BlockSchema {
 				},
 				"attrs": {
 					Address: &schema.AttributeAddrSchema{
-						Skip:    true,
-						ScopeId: refscope.ResourceScope,
+						Skip:       true,
+						ScopeId:    refscope.ResourceScope,
+						AsExprType: true,
 					},
 					Constraint:  schema.AnyExpression{OfType: cty.DynamicPseudoType},
 					Description: lang.Markdown("A map of arguments that simulate the resource configuration"),
