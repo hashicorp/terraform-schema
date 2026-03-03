@@ -28,69 +28,59 @@ func providerBlockSchema() *schema.BlockSchema {
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Provider},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "type",
+				Name:                   "provider_type",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Provider Type"),
-				IsDepKey:               true,
-				Completable:            true,
 			},
 			{
-				Name:                   "name",
+				Name:                   "test_case_name",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
-				Description:            lang.PlainText("Reference Name"),
+				Description:            lang.PlainText("Test Case Name"),
 			},
 		},
-		Description: lang.PlainText("Defines a 'mock' provider configuration used to test provider_policy rules. It allows you to simulate provider metadata and configuration settings"),
+		Description: lang.PlainText("Used to validate `provider_policy` blocks by mocking provider configuration and metadata"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"expect_failure": {
 					Constraint:   schema.AnyExpression{OfType: cty.Bool},
 					DefaultValue: schema.DefaultValue{Value: cty.False},
 					IsOptional:   true,
-					Description:  lang.Markdown("Expect test to fail"),
+					Description:  lang.Markdown("Anticipates a policy failure based on provider source, version or config"),
 				},
 				"attrs": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
+					Description: lang.Markdown("Mocks the actual provider configuration (e.g., `region`, `alias`)"),
 				},
 				"meta": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{
-							"name": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Local identifier for the provider"),
-							},
-							"alias": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Local alias of the provider"),
-							},
-							"type": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("The official, short name of the provider. This is the simple identifier used to declare a provider block or resource type"),
-							},
-							"namespace": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("In the context of the registry, this is the organization or user who publishes the provider. It is the first segment of the provider's source address"),
-							},
 							"source": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("The full, canonical registry address used to locate and download the provider plugin. It combines the namespace and the type"),
-							},
-							"module_path": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Root module path"),
+								Description: lang.Markdown("The full source of the provider"),
 							},
 							"version": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Version of the provider"),
+								Description: lang.Markdown("The resolved version of the provider"),
+							},
+							"type": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("The type of provider (“aws”, “azure_rm”)"),
+							},
+							"alias": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("Alias given to the provider"),
+							},
+							"address": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("Address of the provider within Terraform"),
 							},
 						},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown("Meta attributes of the provider"),
+					Description: lang.Markdown("Mocks the `required_providers` information"),
 				},
 			},
 		},

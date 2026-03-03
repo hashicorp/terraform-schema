@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
+	"github.com/zclconf/go-cty/cty"
 )
 
 func dataBlockSchema() *schema.BlockSchema {
@@ -28,11 +29,9 @@ func dataBlockSchema() *schema.BlockSchema {
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Data},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "type",
-				Description:            lang.PlainText("Data Source Type"),
+				Name:                   "data_type",
+				Description:            lang.PlainText("Data Type"),
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
-				IsDepKey:               true,
-				Completable:            true,
 			},
 			{
 				Name:                   "name",
@@ -40,15 +39,18 @@ func dataBlockSchema() *schema.BlockSchema {
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
 			},
 		},
-		Description: lang.PlainText("Introduces a mock data source containing the specific values returned by a lookup. It uses two labels to refer to the data source type and name."),
+		Description: lang.PlainText("Unlike `resource`, this block contains the returned attributes of a data source. These can be referenced by other resource blocks using `data.<name>.<attribute>`"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"attrs": {
-					Constraint: schema.Object{
-						Attributes: schema.ObjectAttributes{},
+					Address: &schema.AttributeAddrSchema{
+						Skip:       true,
+						ScopeId:    refscope.DataScope,
+						AsExprType: true,
 					},
-					IsRequired:  true,
 					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
+					Constraint:  schema.AnyExpression{OfType: cty.DynamicPseudoType},
+					IsRequired:  true,
 				},
 			},
 		},

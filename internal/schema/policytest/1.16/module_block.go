@@ -28,19 +28,17 @@ func moduleBlockSchema() *schema.BlockSchema {
 		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Module},
 		Labels: []*schema.LabelSchema{
 			{
-				Name:                   "type",
+				Name:                   "module_source",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Type, lang.TokenModifierDependent},
 				Description:            lang.PlainText("Module Source"),
-				IsDepKey:               true,
-				Completable:            true,
 			},
 			{
-				Name:                   "name",
+				Name:                   "test_case_name",
 				SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Name},
-				Description:            lang.PlainText("Reference Name"),
+				Description:            lang.PlainText("Test case name"),
 			},
 		},
-		Description: lang.PlainText("Defines a `mock` module configuration to test policies targeting module usage."),
+		Description: lang.PlainText("Used to validate policies that govern module usage, sources, and versions"),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"expect_failure": {
@@ -54,7 +52,7 @@ func moduleBlockSchema() *schema.BlockSchema {
 						Attributes: schema.ObjectAttributes{},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
+					Description: lang.Markdown("Mocks the input variables passed to the module"),
 				},
 				"meta": {
 					Constraint: schema.Object{
@@ -74,7 +72,7 @@ func moduleBlockSchema() *schema.BlockSchema {
 						},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown("Meta attributes of the module"),
+					Description: lang.Markdown("Mocks the static module identifiers"),
 				},
 			},
 		},

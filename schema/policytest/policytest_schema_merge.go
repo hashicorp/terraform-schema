@@ -47,5 +47,7 @@ func (m *SchemaMerger) SchemaForPolicyTest(meta *tfpolicytest.Meta) (*schema.Bod
 		return m.coreSchema, nil
 	}
 
-	return m.coreSchema, nil
+	mergedSchema := m.coreSchema.Copy()
+
+	return mergedSchema, nil
 }
