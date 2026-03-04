@@ -9,13 +9,10 @@ import (
 
 // decodedPolicyTest is the type representing a decoded Terraform policytest.
 type decodedPolicyTest struct {
-	//Variables   map[string]*policytest.Variable
 }
 
 func newDecodedPolicyTest() *decodedPolicyTest {
-	return &decodedPolicyTest{
-		//Variables:   make(map[string]*policytest.Variable),
-	}
+	return &decodedPolicyTest{}
 }
 
 // loadPolicyTestFromFile reads given file, interprets it and stores in given PolicyTest

@@ -43,8 +43,10 @@ func dataBlockSchema() *schema.BlockSchema {
 			Attributes: map[string]*schema.AttributeSchema{
 				"attrs": {
 					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
-					Constraint:  schema.Object{},
-					IsRequired:  true,
+					Constraint: schema.Object{
+						Attributes: schema.ObjectAttributes{},
+					},
+					IsRequired: true,
 				},
 			},
 		},

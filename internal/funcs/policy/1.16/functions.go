@@ -19,14 +19,16 @@ func Functions(v *version.Version) map[string]schema.FunctionSignature {
 		panic(err)
 	}
 
-	functions := make(map[string]schema.FunctionSignature, len(coreFunctions)+2)
+	policyFns := policyFunctions()
+
+	functions := make(map[string]schema.FunctionSignature, len(coreFunctions)+len(policyFns))
 
 	for name, signature := range coreFunctions {
 		functions["core::"+name] = signature
 	}
 
 	// Policy-specific functions
-	for name, signature := range policyFunctions() {
+	for name, signature := range policyFns {
 		functions["core::"+name] = signature
 	}
 
