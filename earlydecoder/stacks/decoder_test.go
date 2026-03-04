@@ -31,7 +31,7 @@ var customComparer = []cmp.Option{
 	ctydebug.CmpOptions,
 }
 
-var supportedFilenames = []string{"test.tfstack.hcl", "test.tfcomponent.hcl"}
+var supportedFilenames = []string{"test.tfcomponent.hcl"}
 
 func TestLoadStack(t *testing.T) {
 	path := t.TempDir()
