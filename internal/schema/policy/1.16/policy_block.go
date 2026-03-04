@@ -19,20 +19,17 @@ func policyBlockSchema() *schema.BlockSchema {
 			Attributes: map[string]*schema.AttributeSchema{
 				"enforcement_level": {
 					IsOptional:  true,
-					Description: lang.Markdown("Describes how 'strict' the policy is. It determines whether a failure merely warns the user or strictly halts the infrastructure run"),
+					Description: lang.Markdown("Defines the strictness of this policy. Determines if a violation allows the run to proceed, requires a manual override, or blocks it entirely."),
 					Constraint: schema.OneOf{
-						schema.Keyword{
-							Keyword:     "advisory",
-							Description: lang.Markdown("Informational only, no enforcement"),
-						},
-						schema.Keyword{
-							Keyword:     "soft-mandatory",
-							Description: lang.Markdown("Enforced with acknowledgment or justification"),
-						},
-						schema.Keyword{
-							Keyword:     "hard-mandatory",
-							Description: lang.Markdown("Strictly enforced, blocking"),
-						},
+						schema.LiteralValue{
+							Value:       cty.StringVal("advisory"),
+							Description: lang.Markdown("Provides warnings and best practices during the run without blocking progress")},
+						schema.LiteralValue{
+							Value:       cty.StringVal("mandatory-overridable"),
+							Description: lang.Markdown("Blocks the apply stage on failure unless an authorized user manually overrides the requirement")},
+						schema.LiteralValue{
+							Value:       cty.StringVal("mandatory"),
+							Description: lang.Markdown("Immediately halts the run on failure. Requires a configuration fix to proceed; cannot be bypassed")},
 					},
 				},
 			},

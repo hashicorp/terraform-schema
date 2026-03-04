@@ -19,10 +19,9 @@ func newDecodedPolicyTest() *decodedPolicyTest {
 // This is useful for any caller which does tokenization/parsing on its own
 // e.g. because it will reuse these parsed files later for more detailed
 // interpretation.
-func loadPolicyTestFromFile(file *hcl.File, _ *decodedPolicyTest) hcl.Diagnostics {
+func loadPolicyTestFromFile(file *hcl.File, decodedPolicyTest *decodedPolicyTest) hcl.Diagnostics {
 	var diags hcl.Diagnostics
 	_, _, contentDiags := file.Body.PartialContent(rootSchema)
 	diags = append(diags, contentDiags...)
-
 	return diags
 }
