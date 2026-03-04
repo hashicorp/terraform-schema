@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
-	"github.com/zclconf/go-cty/cty"
 )
 
 func dataBlockSchema() *schema.BlockSchema {
@@ -43,13 +42,8 @@ func dataBlockSchema() *schema.BlockSchema {
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"attrs": {
-					Address: &schema.AttributeAddrSchema{
-						Skip:       true,
-						ScopeId:    refscope.DataScope,
-						AsExprType: true,
-					},
 					Description: lang.Markdown("Specify the values that should be returned for specific attributes"),
-					Constraint:  schema.AnyExpression{OfType: cty.DynamicPseudoType},
+					Constraint:  schema.Object{},
 					IsRequired:  true,
 				},
 			},
