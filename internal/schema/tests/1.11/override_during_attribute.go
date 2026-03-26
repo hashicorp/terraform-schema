@@ -10,7 +10,7 @@ import (
 
 func overrideDuringAttributeSchema() *schema.AttributeSchema {
 	return &schema.AttributeSchema{
-		Description: lang.PlainText("Allows overriding the point in time where terraform generates data"),
+		Description: lang.Markdown("Allows overriding the point in time where terraform generates data"),
 		IsOptional:  true,
 		Constraint: schema.OneOf{
 			schema.Keyword{
