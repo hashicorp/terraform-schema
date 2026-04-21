@@ -229,7 +229,7 @@ func TestLoadStackDiagnostics(t *testing.T) {
 						{
 							Severity: hcl.DiagError,
 							Summary:  `Unable to parse "aws" provider requirements`,
-							Detail:   `Constraint "x~> 5.7.0" is not a valid constraint: Malformed constraint: x~> 5.7.0`,
+							Detail:   `Constraint "x~> 5.7.0" is not a valid constraint: malformed constraint: x~> 5.7.0`,
 							Subject: &hcl.Range{
 								Filename: fileName,
 								Start:    hcl.Pos{Line: 2, Column: 9, Byte: 29},
