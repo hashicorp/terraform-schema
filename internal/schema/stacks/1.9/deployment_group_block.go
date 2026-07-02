@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/hcl-lang/schema"
 	"github.com/hashicorp/terraform-schema/internal/schema/refscope"
 	"github.com/hashicorp/terraform-schema/internal/schema/tokmod"
+	"github.com/zclconf/go-cty/cty"
 )
 
 func deploymentGroupBlockSchema() *schema.BlockSchema {
@@ -37,6 +38,20 @@ func deploymentGroupBlockSchema() *schema.BlockSchema {
 					Constraint: schema.List{
 						Elem: schema.Reference{OfScopeId: refscope.DeploymentAutoApproveScope},
 					},
+				},
+				"failure_tolerance": {
+					Description: lang.Markdown("The maximum number of failed deployments allowed in the group. This limits the number of concurrent applies in the group and halts automated rollout of the group once the tolerance is exceeded. Legal values are integers `>= 0`. Defaults to unlimited failures allowed."),
+					IsOptional:  true,
+					Constraint:  schema.LiteralType{Type: cty.Number},
+				},
+				"eager_plan": {
+					Description: lang.Markdown("Allow groups to opt-out of having their plans start immediately. This is a performance optimization for large groups."),
+					IsOptional:  true,
+					Constraint: schema.OneOf{
+						schema.LiteralValue{Value: cty.StringVal("on")},
+						schema.LiteralValue{Value: cty.StringVal("off")},
+					},
+					DefaultValue: schema.DefaultValue{Value: cty.StringVal("on")},
 				},
 			},
 		},
