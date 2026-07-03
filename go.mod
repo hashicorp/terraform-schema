@@ -1,37 +1,37 @@
 module github.com/hashicorp/terraform-schema
 
-go 1.25.0
+go 1.25.8
 
 require (
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
-	github.com/hashicorp/go-version v1.7.0
-	github.com/hashicorp/hc-install v0.9.2
+	github.com/hashicorp/go-version v1.9.0
+	github.com/hashicorp/hc-install v0.9.5
 	github.com/hashicorp/hcl-lang v0.0.0-20260302061408-5ab1bcd010d1
 	github.com/hashicorp/hcl/v2 v2.24.0
-	github.com/hashicorp/terraform-exec v0.23.1
+	github.com/hashicorp/terraform-exec v0.25.2
 	github.com/hashicorp/terraform-json v0.27.2
 	github.com/hashicorp/terraform-registry-address v0.4.0
 	github.com/mh-cbon/go-fmt-fail v0.0.0-20160815164508-67765b3fbcb5
-	github.com/zclconf/go-cty v1.17.0
+	github.com/zclconf/go-cty v1.18.1
 	github.com/zclconf/go-cty-debug v0.0.0-20240509010212-0d6042c53940
 )
 
 require (
-	github.com/ProtonMail/go-crypto v1.1.6 // indirect
+	github.com/ProtonMail/go-crypto v1.4.1 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/hashicorp/go-retryablehttp v0.7.7 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.8 // indirect
 	github.com/hashicorp/terraform-svchost v0.1.1 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
-	golang.org/x/crypto v0.48.0 // indirect
-	golang.org/x/mod v0.33.0 // indirect
-	golang.org/x/net v0.50.0 // indirect
-	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
-	golang.org/x/text v0.34.0 // indirect
-	golang.org/x/tools v0.42.0 // indirect
+	golang.org/x/crypto v0.49.0 // indirect
+	golang.org/x/mod v0.35.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
+	golang.org/x/sync v0.20.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
+	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/tools v0.43.0 // indirect
 )

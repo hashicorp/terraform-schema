@@ -15,6 +15,7 @@ func ModuleSchema(v *version.Version) *schema.BodySchema {
 
 	bs.Blocks["variable"] = patchVariableBlockSchema(bs.Blocks["variable"])
 	bs.Blocks["output"] = patchOutputBlockSchema(bs.Blocks["output"])
+	bs.Blocks["module"] = patchModuleBlockSchema(bs.Blocks["module"])
 
 	return bs
 }

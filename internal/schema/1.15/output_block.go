@@ -15,6 +15,11 @@ func patchOutputBlockSchema(bs *schema.BlockSchema) *schema.BlockSchema {
 		IsOptional:  true,
 		Description: lang.Markdown("Setting this value marks the output as deprecated. The string value provided should describe the reason for deprecation and suggest an alternative. Any usage of a deprecated output will result in a warning being emitted to the user."),
 	}
+	bs.Body.Attributes["type"] = &schema.AttributeSchema{
+		Constraint:  schema.TypeDeclaration{},
+		IsOptional:  true,
+		Description: lang.Markdown("Type constraint restricting the type of value to accept, e.g. `string` or `list(string)`"),
+	}
 
 	return bs
 }
