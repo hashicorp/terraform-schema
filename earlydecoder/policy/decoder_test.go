@@ -52,7 +52,7 @@ func TestLoadPolicy(t *testing.T) {
 				ResourcePolicies: map[string]policy.ResourcePolicy{},
 				ProviderPolicies: map[string]policy.ProviderPolicy{},
 				ModulePolicies:   map[string]policy.ModulePolicy{},
-				Variables:        map[string]policy.Variable{},
+				Inputs:           map[string]policy.Input{},
 			},
 		},
 		{
@@ -71,7 +71,7 @@ policy {
 				ResourcePolicies: map[string]policy.ResourcePolicy{},
 				ProviderPolicies: map[string]policy.ProviderPolicy{},
 				ModulePolicies:   map[string]policy.ModulePolicy{},
-				Variables:        map[string]policy.Variable{},
+				Inputs:           map[string]policy.Input{},
 			},
 		},
 		{
@@ -89,7 +89,7 @@ resource_policy "aws_instance" "web" {
 				},
 				ProviderPolicies: map[string]policy.ProviderPolicy{},
 				ModulePolicies:   map[string]policy.ModulePolicy{},
-				Variables:        map[string]policy.Variable{},
+				Inputs:           map[string]policy.Input{},
 			},
 		},
 		{
@@ -104,7 +104,7 @@ resource_policy "aws_instance" "web" {
 				ModulePolicies: map[string]policy.ModulePolicy{
 					"./modules/vpc.net": {Type: "./modules/vpc", Name: "net"},
 				},
-				Variables: map[string]policy.Variable{},
+				Inputs: map[string]policy.Input{},
 			},
 		},
 		{
@@ -119,35 +119,29 @@ resource_policy "aws_instance" "web" {
 				ProviderPolicies: map[string]policy.ProviderPolicy{
 					"hashicorp/aws.main": {Type: "hashicorp/aws", Name: "main"},
 				},
-				Variables: map[string]policy.Variable{},
+				Inputs: map[string]policy.Input{},
 			},
 		},
 		{
-			name:     "variables",
-			fileName: "resource.policy.hcl",
-			cfg: `variable "example" {
-		 			type    = string
-		 			default = "default_value"
-				}
-				variable "example2" {
-		 			description = "description"
-		 			sensitive   = true
-				}`,
+			name:     "input block",
+			fileName: "input.policy.hcl",
+			cfg: `
+input "env" {
+	type        = string
+	description = "Environment name"
+	sensitive   = false
+}
+`,
 			expectedMeta: &policy.Meta{
 				Path:             path,
-				Filenames:        []string{"resource.policy.hcl"},
+				Filenames:        []string{"input.policy.hcl"},
 				ResourcePolicies: map[string]policy.ResourcePolicy{},
 				ProviderPolicies: map[string]policy.ProviderPolicy{},
 				ModulePolicies:   map[string]policy.ModulePolicy{},
-				Variables: map[string]policy.Variable{
-					"example": {
-						Type:         cty.String,
-						DefaultValue: cty.StringVal("default_value"),
-					},
-					"example2": {
-						Type:        cty.DynamicPseudoType,
-						Description: "description",
-						IsSensitive: true,
+				Inputs: map[string]policy.Input{
+					"env": {
+						Type:        cty.String,
+						Description: "Environment name",
 					},
 				},
 			},

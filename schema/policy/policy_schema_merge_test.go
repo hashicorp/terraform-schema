@@ -15,21 +15,21 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func TestPolicySchemaMerger_SchemaForSearch_variables(t *testing.T) {
+func TestPolicySchemaMerger_SchemaForSearch_inputs(t *testing.T) {
 	testCoreSchema := &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"module_policy":   {},
 			"resource_policy": {},
 			"provider_policy": {},
-			"variable":        {},
+			"input":           {},
 		},
 	}
 	sm := NewSchemaMerger(testCoreSchema)
 	sm.SetStateReader(&testSearchSchemaReader{})
 
 	givenBodySchema, err := sm.SchemaForPolicy(&tfpolicy.Meta{
-		Variables: map[string]tfpolicy.Variable{
-			"foo": {Type: cty.String, Description: "A foo variable", IsSensitive: true, DefaultValue: cty.StringVal("bar")},
+		Inputs: map[string]tfpolicy.Input{
+			"region": {Type: cty.String, Description: "AWS region"},
 		},
 	})
 	if err != nil {
@@ -40,14 +40,14 @@ func TestPolicySchemaMerger_SchemaForSearch_variables(t *testing.T) {
 			"module_policy":   {},
 			"resource_policy": {},
 			"provider_policy": {},
-			"variable": {
-				Labels: []*schema.LabelSchema{{Name: "name", IsDepKey: true, Description: lang.MarkupContent{Value: "Variable name", Kind: lang.PlainTextKind}}},
+			"input": {
+				Labels: []*schema.LabelSchema{{Name: "name", IsDepKey: true, Description: lang.MarkupContent{Value: "Input name", Kind: lang.PlainTextKind}}},
 				DependentBody: map[schema.SchemaKey]*schema.BodySchema{
-					`{"labels":[{"index":0,"value":"foo"}]}`: {
+					`{"labels":[{"index":0,"value":"region"}]}`: {
 						Attributes: map[string]*schema.AttributeSchema{
 							"default": {
 								Constraint:  schema.LiteralType{Type: cty.String},
-								Description: lang.MarkupContent{Value: "Default value to use when variable is not explicitly set", Kind: lang.MarkdownKind},
+								Description: lang.MarkupContent{Value: "Default value to use when input is not explicitly set", Kind: lang.MarkdownKind},
 								IsOptional:  true,
 							},
 						},

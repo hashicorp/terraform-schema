@@ -17,6 +17,7 @@ var (
 	ResourceScope  = lang.ScopeId("resource")
 	EphemeralScope = lang.ScopeId("ephemeral")
 	VariableScope  = lang.ScopeId("variable")
+	InputScope     = lang.ScopeId("input")
 
 	ComponentScope             = lang.ScopeId("component")
 	StackScope                 = lang.ScopeId("stack")

@@ -46,12 +46,12 @@ func policyFunctions() map[string]schema.FunctionSignature {
 				},
 			},
 			VarParam: &function.Parameter{
-				Name:        "config",
+				Name:        "attrs",
 				Type:        cty.DynamicPseudoType,
-				Description: "Optional configuration for filtering resources.",
+				Description: "The set of attributes that must match for a resource to be returned.",
 			},
 			ReturnType:  cty.DynamicPseudoType,
-			Description: "`getresources` retrieves resources of the given type from the current policy context.",
+			Description: "`getresources` gets matching resources from the current Terraform configuration.",
 		},
 		"getdatasource": {
 			Params: []function.Parameter{
@@ -62,12 +62,60 @@ func policyFunctions() map[string]schema.FunctionSignature {
 				},
 			},
 			VarParam: &function.Parameter{
-				Name:        "config",
+				Name:        "attrs",
 				Type:        cty.DynamicPseudoType,
-				Description: "Optional configuration for filtering data sources.",
+				Description: "The set of attributes for the data source.",
 			},
 			ReturnType:  cty.DynamicPseudoType,
-			Description: "`getdatasource` retrieves data sources of the given type from the current policy context.",
+			Description: "`getdatasource` gets a data source using the current Terraform provider.",
+		},
+		"semvercmp": {
+			Params: []function.Parameter{
+				{
+					Name:        "version_a",
+					Type:        cty.String,
+					Description: "First semver version string to compare",
+				},
+				{
+					Name:        "version_b",
+					Type:        cty.String,
+					Description: "Second semver version string to compare",
+				},
+			},
+			ReturnType:  cty.Number,
+			Description: "`semvercmp` compares two semantic versions. Returns -1 if version_a < version_b, 0 if equal, 1 if version_a > version_b.",
+		},
+		"semverconstraint": {
+			Params: []function.Parameter{
+				{
+					Name:        "version",
+					Type:        cty.String,
+					Description: "Semantic version string to evaluate",
+				},
+				{
+					Name:        "constraint",
+					Type:        cty.String,
+					Description: "Version constraint expression (e.g. \">= 1.0.0\", \"<= 5.0.0\")",
+				},
+			},
+			ReturnType:  cty.Bool,
+			Description: "`semverconstraint` returns true if the given version satisfies the constraint expression.",
+		},
+		"gethttprequest": {
+			Params: []function.Parameter{
+				{
+					Name:        "url",
+					Type:        cty.String,
+					Description: "The URL to make the HTTP request.",
+				},
+			},
+			VarParam: &function.Parameter{
+				Name:        "headers",
+				Type:        cty.DynamicPseudoType,
+				Description: "Optional map of HTTP headers to include in the request",
+			},
+			ReturnType:  cty.DynamicPseudoType,
+			Description: "`gethttprequest` makes a HTTP GET request using the go net/http package.",
 		},
 	}
 }

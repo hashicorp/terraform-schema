@@ -50,24 +50,24 @@ func (m *SchemaMerger) SchemaForPolicy(meta *tfpolicy.Meta) (*schema.BodySchema,
 
 	mergedSchema := m.coreSchema.Copy()
 
-	if _, ok := mergedSchema.Blocks["variable"]; ok {
-		mergedSchema.Blocks["variable"].Labels = []*schema.LabelSchema{
+	if _, ok := mergedSchema.Blocks["input"]; ok {
+		mergedSchema.Blocks["input"].Labels = []*schema.LabelSchema{
 			{
 				Name:        "name",
 				IsDepKey:    true,
-				Description: lang.PlainText("Variable name"),
+				Description: lang.PlainText("Input name"),
 			},
 		}
-		mergedSchema.Blocks["variable"].DependentBody = variableDependentBody(meta.Variables)
+		mergedSchema.Blocks["input"].DependentBody = inputDependentBody(meta.Inputs)
 	}
 
 	return mergedSchema, nil
 }
 
-func variableDependentBody(vars map[string]tfpolicy.Variable) map[schema.SchemaKey]*schema.BodySchema {
+func inputDependentBody(inputs map[string]tfpolicy.Input) map[schema.SchemaKey]*schema.BodySchema {
 	depBodies := make(map[schema.SchemaKey]*schema.BodySchema)
 
-	for name, mVar := range vars {
+	for name, mInput := range inputs {
 		depKeys := schema.DependencyKeys{
 			Labels: []schema.LabelDependent{
 				{Index: 0, Value: name},
@@ -76,9 +76,9 @@ func variableDependentBody(vars map[string]tfpolicy.Variable) map[schema.SchemaK
 		depBodies[schema.NewSchemaKey(depKeys)] = &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
 				"default": {
-					Constraint:  schema.LiteralType{Type: mVar.Type},
+					Constraint:  schema.LiteralType{Type: mInput.Type},
 					IsOptional:  true,
-					Description: lang.Markdown("Default value to use when variable is not explicitly set"),
+					Description: lang.Markdown("Default value to use when input is not explicitly set"),
 				},
 			},
 		}

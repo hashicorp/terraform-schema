@@ -16,5 +16,5 @@ type Meta struct {
 	ResourcePolicies map[string]ResourcePolicy
 	ProviderPolicies map[string]ProviderPolicy
 	ModulePolicies   map[string]ModulePolicy
-	Variables        map[string]Variable
+	Inputs           map[string]Input
 }
