@@ -54,9 +54,9 @@ func LoadPolicy(path string, files map[string]*hcl.File) (*policy.Meta, hcl.Diag
 		modulePolices[key] = *mp
 	}
 
-	variables := make(map[string]policy.Variable)
-	for key, variable := range mod.Variables {
-		variables[key] = *variable
+	inputs := make(map[string]policy.Input)
+	for key, input := range mod.Inputs {
+		inputs[key] = *input
 	}
 
 	return &policy.Meta{
@@ -67,6 +67,6 @@ func LoadPolicy(path string, files map[string]*hcl.File) (*policy.Meta, hcl.Diag
 		ResourcePolicies: resourcePolicies,
 		ProviderPolicies: providerPolices,
 		ModulePolicies:   modulePolices,
-		Variables:        variables,
+		Inputs:           inputs,
 	}, diags
 }

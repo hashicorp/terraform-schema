@@ -25,7 +25,7 @@ var rootSchema = &hcl.BodySchema{
 			LabelNames: []string{"source", "name"},
 		},
 		{
-			Type:       "variable",
+			Type:       "input",
 			LabelNames: []string{"name"},
 		},
 	},
@@ -103,7 +103,7 @@ var modulePolicyBlockSchema = &hcl.BodySchema{
 	},
 }
 
-var variableSchema = &hcl.BodySchema{
+var inputSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
 		{
 			Name: "description",

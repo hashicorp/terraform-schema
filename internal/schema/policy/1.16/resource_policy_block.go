@@ -61,6 +61,26 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 							Description: lang.Markdown("Immediately halts the run on failure. Requires a configuration fix to proceed; cannot be bypassed")},
 					},
 				},
+				"operations": {
+					Constraint: schema.Set{
+						Elem: schema.OneOf{
+							schema.LiteralValue{
+								Value:       cty.StringVal("create"),
+								Description: lang.Markdown("Apply policy on resource creation"),
+							},
+							schema.LiteralValue{
+								Value:       cty.StringVal("update"),
+								Description: lang.Markdown("Apply policy on resource updates"),
+							},
+							schema.LiteralValue{
+								Value:       cty.StringVal("delete"),
+								Description: lang.Markdown("Apply policy on resource deletion"),
+							},
+						},
+					},
+					IsOptional:  true,
+					Description: lang.Markdown("Scopes the policy to a specific subset of planned resource actions. Defaults to `create` and `update` if omitted."),
+				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
 				"enforce": enforceBlockNestedSchema(),
