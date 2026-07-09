@@ -8,7 +8,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-type Variable struct {
+type Input struct {
 	Description string
 	Type        cty.Type
 

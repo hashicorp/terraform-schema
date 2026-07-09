@@ -60,9 +60,34 @@ func resourceBlockSchema() *schema.BlockSchema {
 					Description: lang.Markdown("A map of arguments that simulate the resource configuration"),
 					IsOptional:  true,
 				},
+				"prior_attrs": {
+					Constraint: schema.Object{
+						Attributes: schema.ObjectAttributes{},
+					},
+					IsOptional:  true,
+					Description: lang.Markdown("A map of resource attributes representing the pre-change state, used for update and delete test scenarios"),
+				},
 				"meta": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{
+							"operation": &schema.AttributeSchema{
+								Constraint: schema.OneOf{
+									schema.LiteralValue{
+										Value:       cty.StringVal("create"),
+										Description: lang.Markdown("The resource is being created"),
+									},
+									schema.LiteralValue{
+										Value:       cty.StringVal("update"),
+										Description: lang.Markdown("The resource is being updated"),
+									},
+									schema.LiteralValue{
+										Value:       cty.StringVal("delete"),
+										Description: lang.Markdown("The resource is being deleted"),
+									},
+								},
+								IsOptional:  true,
+								Description: lang.Markdown("To declare which planned action a mock resource represents."),
+							},
 							"resource_type": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("Type of resource (“aws_s3_bucket”, “azurerm_managed_disk”)"),
