@@ -117,5 +117,18 @@ func policyFunctions() map[string]schema.FunctionSignature {
 			ReturnType:  cty.DynamicPseudoType,
 			Description: "`gethttprequest` makes a HTTP GET request using the go net/http package.",
 		},
+		"valuetostring": {
+			Params: []function.Parameter{
+				{
+					Name:         "value",
+					Type:         cty.DynamicPseudoType,
+					Description:  "The value to convert to string.",
+					AllowNull:    true,
+					AllowUnknown: true,
+				},
+			},
+			ReturnType:  cty.String,
+			Description: "`valuetostring` converts any value to a string. Primitives are rendered directly; complex types (objects, lists, maps, sets, tuples) are encoded as indented JSON. Unknown leaves render as `(unknown)` and null leaves as `(null)`.",
+		},
 	}
 }

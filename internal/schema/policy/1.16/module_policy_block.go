@@ -54,7 +54,7 @@ func modulePolicyBlockSchema() *schema.BlockSchema {
 							Value:       cty.StringVal("advisory"),
 							Description: lang.Markdown("Provides warnings and best practices during the run without blocking progress")},
 						schema.LiteralValue{
-							Value:       cty.StringVal("mandatory-overridable"),
+							Value:       cty.StringVal("mandatory_overridable"),
 							Description: lang.Markdown("Blocks the apply stage on failure unless an authorized user manually overrides the requirement")},
 						schema.LiteralValue{
 							Value:       cty.StringVal("mandatory"),
