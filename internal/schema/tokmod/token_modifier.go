@@ -25,6 +25,8 @@ var (
 	RequiredProviders = lang.SemanticTokenModifier("terraform-requiredProviders")
 	Run               = lang.SemanticTokenModifier("terraform-run")
 	Variables         = lang.SemanticTokenModifier("terraform-variables")
+	Policy            = lang.SemanticTokenModifier("terraform-policy")
+	PolicyTest        = lang.SemanticTokenModifier("terraform-policytest")
 )
 
 var SupportedModifiers = []lang.SemanticTokenModifier{

@@ -17,6 +17,7 @@ var (
 	ResourceScope  = lang.ScopeId("resource")
 	EphemeralScope = lang.ScopeId("ephemeral")
 	VariableScope  = lang.ScopeId("variable")
+	InputScope     = lang.ScopeId("input")
 
 	ComponentScope             = lang.ScopeId("component")
 	StackScope                 = lang.ScopeId("stack")
@@ -31,4 +32,8 @@ var (
 	ListScope = lang.ScopeId("list")
 
 	ActionScope = lang.ScopeId("action")
+
+	ResourcePolicyScope = lang.ScopeId("resource_policy")
+	ProviderPolicyScope = lang.ScopeId("provider_policy")
+	ModulePolicyScope   = lang.ScopeId("module_policy")
 )
