@@ -40,6 +40,9 @@ func moduleBlockSchema() *schema.BlockSchema {
 		},
 		Description: lang.PlainText("Used to validate policies that govern module usage, sources, and versions"),
 		Body: &schema.BodySchema{
+			Blocks: map[string]*schema.BlockSchema{
+				"inputs": inputsNestedBlockSchema(),
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"expect_failure": {
 					Constraint:   schema.AnyExpression{OfType: cty.Bool},
@@ -57,10 +60,6 @@ func moduleBlockSchema() *schema.BlockSchema {
 				"meta": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{
-							"address": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("The `address` is the internal, logical path used by Terraform to reference resources within a configuration for commands like state management"),
-							},
 							"source": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("The `source` is the external location where Terraform physically finds and downloads the module code"),
@@ -68,6 +67,10 @@ func moduleBlockSchema() *schema.BlockSchema {
 							"version": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("Version of the module"),
+							},
+							"address": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("The logical `address` of the module within the configuration"),
 							},
 						},
 					},

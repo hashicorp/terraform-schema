@@ -16,7 +16,10 @@ type SchemaMerger struct {
 	stateReader      StateReader
 }
 
-// StateReader exposes a set of methods to read data from the internal language server state
+// StateReader exposes a set of methods to read data from the internal language server state.
+// Future extension: implement methods here (e.g. InputsForPolicy) to allow
+// SchemaForPolicyTest to dynamically inject known input names from the linked
+// policy file into the `inputs` block body, enabling name-aware completion.
 type StateReader interface {
 }
 

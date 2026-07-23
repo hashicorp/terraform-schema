@@ -32,17 +32,16 @@ var rootSchema = &hcl.BodySchema{
 }
 
 var policyBlockSchema = &hcl.BodySchema{
-	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "enforcement_level",
-		},
-	},
+	Attributes: []hcl.AttributeSchema{},
 	Blocks: []hcl.BlockHeaderSchema{
 		{
 			Type: "terraform_config",
 		},
 		{
 			Type: "plugins",
+		},
+		{
+			Type: "required_providers",
 		},
 	},
 }
@@ -57,9 +56,9 @@ var terraformConfigBlockSchema = &hcl.BodySchema{
 
 var resourcePolicyBlockSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "filter",
-		},
+		{Name: "filter"},
+		{Name: "enforcement_level"},
+		{Name: "operations"},
 	},
 	Blocks: []hcl.BlockHeaderSchema{
 		{
@@ -73,9 +72,8 @@ var resourcePolicyBlockSchema = &hcl.BodySchema{
 
 var providerPolicyBlockSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "filter",
-		},
+		{Name: "filter"},
+		{Name: "enforcement_level"},
 	},
 	Blocks: []hcl.BlockHeaderSchema{
 		{
@@ -89,9 +87,8 @@ var providerPolicyBlockSchema = &hcl.BodySchema{
 
 var modulePolicyBlockSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "filter",
-		},
+		{Name: "filter"},
+		{Name: "enforcement_level"},
 	},
 	Blocks: []hcl.BlockHeaderSchema{
 		{
@@ -105,17 +102,10 @@ var modulePolicyBlockSchema = &hcl.BodySchema{
 
 var inputSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "description",
-		},
-		{
-			Name: "type",
-		},
-		{
-			Name: "default",
-		},
-		{
-			Name: "sensitive",
-		},
+		{Name: "description"},
+		{Name: "type"},
+		{Name: "default"},
+		{Name: "sensitive"},
+		{Name: "nullable"},
 	},
 }

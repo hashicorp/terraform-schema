@@ -40,6 +40,9 @@ func resourceBlockSchema() *schema.BlockSchema {
 		},
 		Description: lang.PlainText("Defines a specific infrastructure resource to be evaluated as a test case. It consists of a resource type and a unique name used to organize passing or failing scenarios."),
 		Body: &schema.BodySchema{
+			Blocks: map[string]*schema.BlockSchema{
+				"inputs": inputsNestedBlockSchema(),
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"expect_failure": {
 					Constraint:   schema.AnyExpression{OfType: cty.Bool},
@@ -70,6 +73,10 @@ func resourceBlockSchema() *schema.BlockSchema {
 				"meta": {
 					Constraint: schema.Object{
 						Attributes: schema.ObjectAttributes{
+							"module_path": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("The module path the resource belongs to"),
+							},
 							"operation": &schema.AttributeSchema{
 								Constraint: schema.OneOf{
 									schema.LiteralValue{
@@ -86,28 +93,20 @@ func resourceBlockSchema() *schema.BlockSchema {
 									},
 								},
 								IsOptional:  true,
-								Description: lang.Markdown("To declare which planned action a mock resource represents."),
-							},
-							"resource_type": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Type of resource (“aws_s3_bucket”, “azurerm_managed_disk”)"),
+								Description: lang.Markdown("To declare which planned action a mock resource represents"),
 							},
 							"provider_type": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("Provider of the resource"),
 							},
-							"tfe_workspace": &schema.AttributeSchema{
+							"type": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Information on the workspace. The only key available within this is ‘tags’. Please see this section for how to use this meta attribute"),
-							},
-							"address": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Address of the resource within Terraform"),
+								Description: lang.Markdown("The resource type, e.g. \"aws_s3_bucket\" or \"azurerm_managed_disk\""),
 							},
 						},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown("Mocks the `required_providers` information"),
+					Description: lang.Markdown("Mocks the metadata for the mock resource"),
 				},
 			},
 		},
