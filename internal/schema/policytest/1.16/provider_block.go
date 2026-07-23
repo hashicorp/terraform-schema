@@ -40,6 +40,9 @@ func providerBlockSchema() *schema.BlockSchema {
 		},
 		Description: lang.PlainText("Used to validate `provider_policy` blocks by mocking provider configuration and metadata"),
 		Body: &schema.BodySchema{
+			Blocks: map[string]*schema.BlockSchema{
+				"inputs": inputsNestedBlockSchema(),
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"expect_failure": {
 					Constraint:   schema.AnyExpression{OfType: cty.Bool},
@@ -65,17 +68,22 @@ func providerBlockSchema() *schema.BlockSchema {
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("The resolved version of the provider"),
 							},
-							"type": &schema.AttributeSchema{
-								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("The type of provider (“aws”, “azure_rm”)"),
-							},
 							"alias": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("Alias given to the provider"),
 							},
-							"address": &schema.AttributeSchema{
+							"name": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
-								Description: lang.Markdown("Address of the provider within Terraform"),
+								Description: lang.Markdown("The local name of the provider"),
+							},
+							"namespace": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("The provider's registry namespace"),
+							},
+
+							"type": &schema.AttributeSchema{
+								Constraint:  schema.AnyExpression{OfType: cty.String},
+								Description: lang.Markdown("The official, short name of the provider. This is the simple identifier used to declare a provider block or resource type"),
 							},
 						},
 					},

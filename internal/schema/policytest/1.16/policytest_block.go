@@ -13,7 +13,7 @@ import (
 func policytestBlockSchema() *schema.BlockSchema {
 	return &schema.BlockSchema{
 		MaxItems:               1,
-		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.Policy},
+		SemanticTokenModifiers: lang.SemanticTokenModifiers{tokmod.PolicyTest},
 		Description:            lang.Markdown("A top-level block that specifies the policies against which the resources in the test file must be evaluated. If omitted, the framework executes all policies against the file as an integration test."),
 		Body: &schema.BodySchema{
 			Attributes: map[string]*schema.AttributeSchema{
@@ -26,6 +26,20 @@ func policytestBlockSchema() *schema.BlockSchema {
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{
+				"terraform_config": {
+					Description: lang.Markdown("Defines a configuration which is specific to Terraform"),
+					MaxItems:    1,
+					Body: &schema.BodySchema{
+						Attributes: map[string]*schema.AttributeSchema{
+							"required_version": {
+								Constraint: schema.LiteralType{Type: cty.String},
+								IsOptional: true,
+								Description: lang.Markdown("Constraint to specify which versions of Terraform can be used " +
+									"with this configuration, e.g. `~> 1.16`"),
+							},
+						},
+					},
+				},
 				"plugins": {
 					Description: lang.Markdown("Defines the location of custom functions that can be used in the context of that policytest file."),
 					MaxItems:    1,

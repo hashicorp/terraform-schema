@@ -9,6 +9,7 @@ import (
 
 var (
 	Data              = lang.SemanticTokenModifier("terraform-data")
+	Inputs            = lang.SemanticTokenModifier("terraform-inputs")
 	Locals            = lang.SemanticTokenModifier("terraform-locals")
 	Module            = lang.SemanticTokenModifier("terraform-module")
 	Output            = lang.SemanticTokenModifier("terraform-output")
@@ -33,10 +34,12 @@ var SupportedModifiers = []lang.SemanticTokenModifier{
 	Backend,
 	Connection,
 	Data,
+	Inputs,
 	Locals,
 	Module,
 	Name,
 	Output,
+	PolicyTest,
 	Provider,
 	Provisioner,
 	RequiredProviders,

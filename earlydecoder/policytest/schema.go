@@ -13,6 +13,12 @@ var rootSchema = &hcl.BodySchema{
 			Type: "policytest",
 		},
 		{
+			Type: "inputs",
+		},
+		{
+			Type: "locals",
+		},
+		{
 			Type:       "resource",
 			LabelNames: []string{"resource_type", "test_case_name"},
 		},
@@ -27,10 +33,6 @@ var rootSchema = &hcl.BodySchema{
 		{
 			Type:       "data",
 			LabelNames: []string{"data_type", "name"},
-		},
-		{
-			Type:       "variable",
-			LabelNames: []string{"name"},
 		},
 	},
 }

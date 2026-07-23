@@ -14,6 +14,7 @@ func PolicyTestSchema(_ *version.Version) *schema.BodySchema {
 	return &schema.BodySchema{
 		Blocks: map[string]*schema.BlockSchema{
 			"data":       dataBlockSchema(),
+			"inputs":     inputsBlockSchema(),
 			"locals":     localsBlockSchema(),
 			"module":     moduleBlockSchema(),
 			"policytest": policytestBlockSchema(),
