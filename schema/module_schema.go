@@ -17,6 +17,41 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
+// schemaForUninstalledModuleBlock returns a permissive module block body schema for
+// declared modules whose inputs and outputs are not yet available locally (for example
+// remote modules before terraform init).
+//
+// The schema enables reference origin collection for expressions used as module input
+// values (such as var.* references) without requiring child module metadata. Input
+// name completion and navigation into the child module still require the module to
+// be installed.
+func schemaForUninstalledModuleBlock(module module.DeclaredModuleCall) *schema.BodySchema {
+	bodySchema := &schema.BodySchema{
+		AnyAttribute: &schema.AttributeSchema{
+			Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
+		},
+	}
+
+	if module.LocalName == "" {
+		return bodySchema
+	}
+
+	addr := lang.Address{
+		lang.RootStep{Name: "module"},
+		lang.AttrStep{Name: module.LocalName},
+	}
+	bodySchema.TargetableAs = []*schema.Targetable{
+		{
+			Address:           addr,
+			ScopeId:           refscope.ModuleScope,
+			AsType:            cty.Object(map[string]cty.Type{}),
+			NestedTargetables: []*schema.Targetable{},
+		},
+	}
+
+	return bodySchema
+}
+
 func schemaForDependentRegistryModuleBlock(module module.DeclaredModuleCall, modMeta *registry.ModuleData) (*schema.BodySchema, error) {
 	attributes := make(map[string]*schema.AttributeSchema, 0)
 
