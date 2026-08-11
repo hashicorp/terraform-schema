@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	v1_12_0 = version.Must(version.NewVersion("1.12.0"))
 	v1_10_0 = version.Must(version.NewVersion("1.10.0"))
 	v1_9_0  = version.Must(version.NewVersion("1.9.0"))
 	v1_8_0  = version.Must(version.NewVersion("1.8.0"))
@@ -15,6 +16,9 @@ var (
 )
 
 func Functions(v *version.Version) map[string]schema.FunctionSignature {
+	if v.GreaterThanOrEqual(v1_12_0) {
+		return v1_12_0_Functions()
+	}
 	if v.GreaterThanOrEqual(v1_10_0) {
 		return v1_10_0_Functions()
 	}
