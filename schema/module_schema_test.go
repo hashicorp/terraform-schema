@@ -563,3 +563,30 @@ func TestSchemaForDeclaredDependentModuleBlock_basic(t *testing.T) {
 		t.Fatalf("schema mismatch: %s", diff)
 	}
 }
+
+func TestSchemaForUninstalledModuleBlock(t *testing.T) {
+	depSchema := schemaForUninstalledModuleBlock(module.DeclaredModuleCall{
+		LocalName: "app_infra",
+	})
+
+	expected := &schema.BodySchema{
+		AnyAttribute: &schema.AttributeSchema{
+			Constraint: schema.AnyExpression{OfType: cty.DynamicPseudoType},
+		},
+		TargetableAs: []*schema.Targetable{
+			{
+				Address: lang.Address{
+					lang.RootStep{Name: "module"},
+					lang.AttrStep{Name: "app_infra"},
+				},
+				ScopeId:           refscope.ModuleScope,
+				AsType:            cty.Object(map[string]cty.Type{}),
+				NestedTargetables: []*schema.Targetable{},
+			},
+		},
+	}
+
+	if diff := cmp.Diff(expected, depSchema, ctydebug.CmpOptions); diff != "" {
+		t.Fatalf("schema mismatch: %s", diff)
+	}
+}
