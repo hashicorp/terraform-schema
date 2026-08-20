@@ -354,7 +354,7 @@ func markupContent(value string, kind tfjson.SchemaDescriptionKind) lang.MarkupC
 	}
 	switch kind {
 	case tfjson.SchemaDescriptionKindMarkdown:
-		return lang.Markdown(value)
+		return lang.Markdown(resolveTerraformMarkdownLinks(value))
 	case tfjson.SchemaDescriptionKindPlain:
 		return lang.PlainText(value)
 	}
@@ -435,7 +435,7 @@ func functionSignatureFromJson(fnSig *tfjson.FunctionSignature) *schema.Function
 	}
 
 	return &schema.FunctionSignature{
-		Description: fnSig.Description,
+		Description: resolveTerraformMarkdownLinks(fnSig.Description),
 		ReturnType:  fnSig.ReturnType,
 		Params:      params,
 		VarParam:    varParam,
@@ -450,7 +450,7 @@ func convertParameterFromJson(param *tfjson.FunctionParameter) *function.Paramet
 	return &function.Parameter{
 		Name:        param.Name,
 		Type:        param.Type,
-		Description: param.Description,
+		Description: resolveTerraformMarkdownLinks(param.Description),
 		AllowNull:   param.IsNullable,
 	}
 }

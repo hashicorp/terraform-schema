@@ -20,23 +20,23 @@ import (
 func FunctionsForVersion(v *version.Version) (map[string]schema.FunctionSignature, error) {
 	ver := v.Core()
 	if ver.GreaterThanOrEqual(v1_4) {
-		return funcs_generated.Functions(ver), nil
+		return resolveFunctionMarkdownLinks(funcs_generated.Functions(ver)), nil
 	}
 	if ver.GreaterThanOrEqual(v1_3) {
-		return funcs_v1_3.Functions(ver), nil
+		return resolveFunctionMarkdownLinks(funcs_v1_3.Functions(ver)), nil
 	}
 	if ver.GreaterThanOrEqual(v0_15) {
-		return funcs_v0_15.Functions(ver), nil
+		return resolveFunctionMarkdownLinks(funcs_v0_15.Functions(ver)), nil
 	}
 	if ver.GreaterThanOrEqual(v0_14) {
-		return funcs_v0_14.Functions(ver), nil
+		return resolveFunctionMarkdownLinks(funcs_v0_14.Functions(ver)), nil
 	}
 	if ver.GreaterThanOrEqual(v0_13) {
-		return funcs_v0_13.Functions(ver), nil
+		return resolveFunctionMarkdownLinks(funcs_v0_13.Functions(ver)), nil
 	}
 
 	// Return the 0.12 functions for any version <= 0.12
-	return funcs_v0_12.Functions(ver), nil
+	return resolveFunctionMarkdownLinks(funcs_v0_12.Functions(ver)), nil
 }
 
 func FunctionsForConstraint(vc version.Constraints) (map[string]schema.FunctionSignature, error) {

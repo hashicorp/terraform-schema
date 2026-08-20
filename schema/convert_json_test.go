@@ -645,6 +645,47 @@ func TestProviderSchemaFromJson_function(t *testing.T) {
 				ActionResources: map[string]*schema.BodySchema{},
 			},
 		},
+		{
+			"with Terraform docs link",
+			`{
+			"functions": {
+				"example": {
+				  "description": "Marks values like [sensitive input variables](/language/values/variables#suppressing-values-in-cli-output).",
+				  "summary": "Example function",
+				  "return_type": "string",
+				  "parameters": [
+					{
+					  "name": "input",
+					  "description": "See [type constraints](/terraform/language/expressions/type-constraints).",
+					  "type": "string"
+					}
+				  ]
+				}
+			  }
+		}`,
+			ProviderSchema{
+				Resources:          map[string]*schema.BodySchema{},
+				EphemeralResources: map[string]*schema.BodySchema{},
+				DataSources:        map[string]*schema.BodySchema{},
+				Functions: map[string]*schema.FunctionSignature{
+					"example": {
+						Description: "Marks values like [sensitive input variables](https://developer.hashicorp.com/terraform/language/values/variables#suppressing-values-in-cli-output).",
+						Detail:      "hashicorp/aws",
+						ReturnType:  cty.String,
+						Params: []function.Parameter{
+							{
+								Name:        "input",
+								Description: "See [type constraints](https://developer.hashicorp.com/terraform/language/expressions/type-constraints).",
+								Type:        cty.String,
+							},
+						},
+						VarParam: nil,
+					},
+				},
+				ListResources:   map[string]*schema.BodySchema{},
+				ActionResources: map[string]*schema.BodySchema{},
+			},
+		},
 	}
 
 	for i, tc := range testCases {
