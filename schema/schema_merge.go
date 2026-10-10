@@ -315,65 +315,61 @@ func (m *SchemaMerger) SchemaForModule(meta *tfmod.Meta) (*schema.BodySchema, er
 			},
 		}
 
-		switch sourceAddr := module.SourceAddr.(type) {
-		case tfaddr.Module:
-			// 1. See if we have a local installation of the module available
-			installedDir, ok := m.stateReader.InstalledModulePath(meta.Path, sourceAddr.String())
-			if ok {
-				path := filepath.Join(meta.Path, installedDir)
+		mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = m.resolveModuleDependentBody(meta.Path, module)
+	}
 
-				modMeta, err := m.stateReader.LocalModuleMeta(path)
+	return mergedSchema, nil
+}
+
+func (m *SchemaMerger) resolveModuleDependentBody(rootPath string, module tfmod.DeclaredModuleCall) *schema.BodySchema {
+	switch sourceAddr := module.SourceAddr.(type) {
+	case tfaddr.Module:
+		if installedDir, ok := m.stateReader.InstalledModulePath(rootPath, sourceAddr.String()); ok {
+			path := filepath.Join(rootPath, installedDir)
+
+			modMeta, err := m.stateReader.LocalModuleMeta(path)
+			if err == nil {
+				depSchema, err := schemaForDependentModuleBlock(module, modMeta)
 				if err == nil {
-					depSchema, err := schemaForDependentModuleBlock(module, modMeta)
-					if err == nil {
-						mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-					}
-
-					// We continue here, so we don't end up overwriting the schema with one from the registry
-					continue
+					return depSchema
 				}
 			}
+		}
 
-			// 2. See if we have fetched the module schema from the registry
-			modMeta, err := m.stateReader.RegistryModuleMeta(sourceAddr, module.Version)
-			if err != nil {
-				continue
-			}
-
+		modMeta, err := m.stateReader.RegistryModuleMeta(sourceAddr, module.Version)
+		if err == nil {
 			depSchema, err := schemaForDependentRegistryModuleBlock(module, modMeta)
 			if err == nil {
-				mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+				return depSchema
 			}
+		}
 
-		case tfmod.RemoteSourceAddr:
-			installedDir, ok := m.stateReader.InstalledModulePath(meta.Path, sourceAddr.String())
-			if !ok {
-				continue
-			}
-			path := filepath.Join(meta.Path, installedDir)
+	case tfmod.RemoteSourceAddr:
+		if installedDir, ok := m.stateReader.InstalledModulePath(rootPath, sourceAddr.String()); ok {
+			path := filepath.Join(rootPath, installedDir)
 
 			modMeta, err := m.stateReader.LocalModuleMeta(path)
 			if err == nil {
 				depSchema, err := schemaForDependentModuleBlock(module, modMeta)
 				if err == nil {
-					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
+					return depSchema
 				}
 			}
+		}
 
-		case tfmod.LocalSourceAddr:
-			path := filepath.Join(meta.Path, sourceAddr.String())
+	case tfmod.LocalSourceAddr:
+		path := filepath.Join(rootPath, sourceAddr.String())
 
-			modMeta, err := m.stateReader.LocalModuleMeta(path)
+		modMeta, err := m.stateReader.LocalModuleMeta(path)
+		if err == nil {
+			depSchema, err := schemaForDependentModuleBlock(module, modMeta)
 			if err == nil {
-				depSchema, err := schemaForDependentModuleBlock(module, modMeta)
-				if err == nil {
-					mergedSchema.Blocks["module"].DependentBody[schema.NewSchemaKey(depKeys)] = depSchema
-				}
+				return depSchema
 			}
 		}
 	}
 
-	return mergedSchema, nil
+	return schemaForUninstalledModuleBlock(module)
 }
 
 // TypeBelongsToProvider returns true if the given type
