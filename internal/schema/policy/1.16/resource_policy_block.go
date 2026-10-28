@@ -76,10 +76,14 @@ func resourcePolicyBlockSchema() *schema.BlockSchema {
 								Value:       cty.StringVal("delete"),
 								Description: lang.Markdown("Apply policy on resource deletion"),
 							},
+							schema.LiteralValue{
+								Value:       cty.StringVal("no-op"),
+								Description: lang.Markdown("Apply policy to existing resources that remain unchanged by the run. `prior_attrs` is not available"),
+							},
 						},
 					},
 					IsOptional:  true,
-					Description: lang.Markdown("Scopes the policy to a specific subset of planned resource actions. Defaults to `create` and `update` if omitted."),
+					Description: lang.Markdown("Scopes the policy to a subset of planned resource actions: `create`, `update`, `delete`, `no-op`"),
 				},
 			},
 			Blocks: map[string]*schema.BlockSchema{

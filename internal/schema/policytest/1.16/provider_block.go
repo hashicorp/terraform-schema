@@ -80,11 +80,12 @@ func providerBlockSchema() *schema.BlockSchema {
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("The provider's registry namespace"),
 							},
-
 							"type": &schema.AttributeSchema{
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("The official, short name of the provider. This is the simple identifier used to declare a provider block or resource type"),
 							},
+							"tfe_stack":     tfeStackMetaAttribute(),
+							"tfe_workspace": tfeWorkspaceMetaAttribute(),
 						},
 					},
 					IsOptional:  true,
