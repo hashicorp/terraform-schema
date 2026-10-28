@@ -130,5 +130,48 @@ func policyFunctions() map[string]schema.FunctionSignature {
 			ReturnType:  cty.String,
 			Description: "`valuetostring` converts any value to a string. Primitives are rendered directly; complex types (objects, lists, maps, sets, tuples) are encoded as indented JSON. Unknown leaves render as `(unknown)` and null leaves as `(null)`.",
 		},
+		"contains_substring": {
+			Params: []function.Parameter{
+				{
+					Name:        "str",
+					Type:        cty.String,
+					Description: "The string to search",
+				},
+				{
+					Name:        "substr",
+					Type:        cty.String,
+					Description: "The substring to look for",
+				},
+			},
+			ReturnType:  cty.Bool,
+			Description: "`contains_substring` returns true if `str` contains `substr`.",
+		},
+		"regex_match": {
+			Params: []function.Parameter{
+				{
+					Name:        "str",
+					Type:        cty.String,
+					Description: "The string to match",
+				},
+				{
+					Name:        "pattern",
+					Type:        cty.String,
+					Description: "The regex pattern to match against",
+				},
+			},
+			ReturnType:  cty.Bool,
+			Description: "`regex_match` returns true if the string matches the regex pattern, false otherwise.",
+		},
+		"type": {
+			Params: []function.Parameter{
+				{
+					Name:        "value",
+					Type:        cty.DynamicPseudoType,
+					Description: "The value to get the type of.",
+				},
+			},
+			ReturnType:  cty.DynamicPseudoType,
+			Description: "`type` returns the type of the given value. Useful for debugging.",
+		},
 	}
 }

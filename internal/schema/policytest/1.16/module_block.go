@@ -72,6 +72,8 @@ func moduleBlockSchema() *schema.BlockSchema {
 								Constraint:  schema.AnyExpression{OfType: cty.String},
 								Description: lang.Markdown("The logical `address` of the module within the configuration"),
 							},
+							"tfe_stack":     tfeStackMetaAttribute(),
+							"tfe_workspace": tfeWorkspaceMetaAttribute(),
 						},
 					},
 					IsOptional:  true,
